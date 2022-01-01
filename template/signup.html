@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="vuetify.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-main>
+        <div class="form rounded-sm grey darken-4 pa-5 elevation-3">
+          <h2 class="mb-3">Signup</h2>
+          <v-text-field
+            type="text"
+            label="Full Name"
+            outlined
+            filled
+            dense
+            :color="theme_color"
+          ></v-text-field>
+
+          <v-text-field
+            type="text"
+            label="Username"
+            outlined
+            filled
+            dense
+            :color="theme_color"
+          ></v-text-field>
+
+          <v-text-field
+            type="password"
+            label="Password"
+            outlined
+            filled
+            dense
+            :color="theme_color"
+          ></v-text-field>
+
+          <v-text-field
+            type="password"
+            label="Password Confirmation"
+            outlined
+            filled
+            dense
+            :color="theme_color"
+          ></v-text-field>
+
+          <v-btn :color="theme_color" depressed>Submit</v-btn>
+        </div>
+      </v-main>
+    </v-app>
+  </div>
+  <script src="vue.min.js"></script>
+  <script src="vuetify.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
