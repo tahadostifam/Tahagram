@@ -6,7 +6,7 @@
 }
 
 html{
-    overflow-y: hidden;
+    // overflow-y: hidden;
 }
 
 .form{
@@ -30,9 +30,11 @@ $header_height: 60px;
 $send_message_section_height: 60px;
 
 #main_container{
-
     height: 100vh;
+
     .section_header{
+        position: relative;
+        z-index: 50;
         width: 100%;
         height: $header_height;
         display: block;
@@ -80,6 +82,9 @@ $send_message_section_height: 60px;
 .chats{
     cursor: pointer;
     padding: 25px 10px;
+    height: calc(100% - #{$header_height});
+    overflow-y: scroll;
+    overflow-x: hidden;
     .chat_row{
         position: relative;
         width: 100%;
@@ -157,6 +162,7 @@ $send_message_section_height: 60px;
         .message{
             max-width: 500px;
             border-radius: 6px;
+            overflow: hidden;
             background-color: $color_1;
             padding: 0 10px;
             margin-top: 10px;
@@ -169,7 +175,8 @@ $send_message_section_height: 60px;
             }
             .message_content{
                 user-select: text;
-                padding-bottom: 10px;
+                margin: 0;
+                padding: 0;
             }
             .message_footer{
                 display: block;
@@ -190,16 +197,16 @@ $send_message_section_height: 60px;
         }
         &.my_message{
             justify-content: flex-end;
-            .message_footer{
-
-            }
         }
         &.image_type{
             .message{
-                padding: 0;
+                padding: 0 0px;
                 .message_content{
                     padding: 0 10px;
                 }
+            }
+            .message_footer{
+                padding-right: 10px;
             }
             .image img{
                 width: 100%;
