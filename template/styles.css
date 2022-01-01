@@ -9,6 +9,10 @@
           user-select: none;
 }
 
+html {
+  overflow-y: hidden;
+}
+
 .form {
   width: 450px;
   position: absolute;
@@ -141,5 +145,107 @@
   top: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.messages_list {
+  width: 100%;
+  height: 100%;
+  height: calc(100% - 60px - 60px);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  padding: 30px;
+}
+
+.messages_list .message_row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.messages_list .message_row .message {
+  max-width: 500px;
+  border-radius: 6px;
+  background-color: #212121;
+  padding: 0 10px;
+  margin-top: 10px;
+}
+
+.messages_list .message_row .message .sender_name {
+  display: block;
+  width: 100%;
+  padding-top: 10px;
+  font-weight: 500;
+  color: #00c853;
+}
+
+.messages_list .message_row .message .message_content {
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
+  padding-bottom: 10px;
+}
+
+.messages_list .message_row .message .message_footer {
+  display: block;
+  width: 100%;
+  text-align: right;
+}
+
+.messages_list .message_row .message .message_footer .edit_state, .messages_list .message_row .message .message_footer .send_datetime {
+  font-size: 13px;
+  color: #707579;
+  padding-bottom: 5px;
+}
+
+.messages_list .message_row .message .message_footer .checkmark_state.v-icon {
+  position: relative;
+  margin-right: -5px;
+  font-size: 19px !important;
+  color: #ddd;
+}
+
+.messages_list .message_row.my_message {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.messages_list .message_row.image_type .message {
+  padding: 0;
+}
+
+.messages_list .message_row.image_type .message .message_content {
+  padding: 0 10px;
+}
+
+.messages_list .message_row.image_type .image img {
+  width: 100%;
+  height: 100%;
+}
+
+.send_message_section {
+  padding: 0 30px;
+  height: 60px;
+  background-color: brown;
 }
 /*# sourceMappingURL=styles.css.map */

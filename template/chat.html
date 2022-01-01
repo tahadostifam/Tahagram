@@ -11,9 +11,10 @@
   <div id="app">
     <v-app>
       <v-main>
-        <div id="splash_screen">
+        <div id="splash_screen" class="d-none">
           <div class="center">
             <v-progress-circular
+              class="mb-2 d-block"
               indeterminate
               :color="theme_color"
             ></v-progress-circular>
@@ -92,7 +93,57 @@
               <div class="section_header">
                 header
               </div>
-              view
+              
+              <div class="messages_list">
+
+                <div class="message_row">
+                  <div class="message">
+                    <span class="sender_name">Username</span>
+                    <p class="message_content">
+                      Message From Maximilian Tepes
+                    </p>
+                    <div class="message_footer">
+                      <span class="edit_state mr-1 font-italic">edited</span>
+                      <span class="send_datetime">1 Jan, 22:05</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="message_row my_message">
+                  <div class="message">
+                    <p class="message_content pt-2">
+                      Message From Maximilian Tepes
+                    </p>
+                    <div class="message_footer">
+                      <span class="edit_state mr-1 font-italic">edited</span>
+                      <span class="send_datetime">1 Jan, 22:05</span>
+                      <v-icon class="checkmark_state d-none">mdi-check</v-icon>
+                      <v-icon class="checkmark_state">mdi-check-all</v-icon>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="message_row my_message image_type">
+                  <div class="message">
+                    <div class="image">
+                      <img src="https://picsum.photos/900/900" onload="window.lazyImage(this)">
+                    </div>
+                    <p class="message_content pt-2">
+                      Message From Maximilian Tepes Message From Maximilian Tepes Message From Maximilian Tepes 
+                    </p>
+                    <div class="message_footer">
+                      <span class="send_datetime">1 Jan, 22:05</span>
+                      <v-icon class="checkmark_state">mdi-check-all</v-icon>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+
+              <div class="send_message_section">
+                  hello wolrd
+              </div>
+
             </div>
 
         </div>
