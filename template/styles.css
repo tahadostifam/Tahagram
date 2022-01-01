@@ -9,6 +9,10 @@
           user-select: none;
 }
 
+html {
+  overflow-y: hidden;
+}
+
 .form {
   width: 450px;
   position: absolute;
@@ -156,6 +160,11 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+}
+
+.messages-scroll {
+  overflow-y: scroll;
+  max-height: calc(100% - 60px - 60px);
 }
 
 .messages_list {

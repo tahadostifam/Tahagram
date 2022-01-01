@@ -6,7 +6,7 @@
 }
 
 html{
-    // overflow-y: hidden;
+    overflow-y: hidden;
 }
 
 .form{
@@ -146,6 +146,11 @@ $send_message_section_height: 60px;
         display: flex;
         flex-direction: column;
     }
+}
+
+.messages-scroll{
+    overflow-y: scroll;
+    max-height: calc(100% - #{$header_height} - #{$send_message_section_height});
 }
 
 .messages_list{
