@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="vuetify.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-main>
+        <div class="pa-0" id="main_container">
+        
+            <div class="chats_list">
+              <div class="section_header border">
+                <v-row class="pa-0 ma-0 align-center px-3" style="height: 100%;">
+
+                  <v-col cols="2" class="ma-0 pa-0 mr-1 ml-1">
+                    <v-menu offset-y transition="slide-y-transition">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          color="gray"
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          icon
+                          large
+                        >
+                          <v-icon color="grey">
+                            mdi-menu
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <v-list style="width: 300px;">
+                        <v-list-item v-ripple>
+                          <v-list-item-title>Settings</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item v-ripple href="https://github.com/tahadostifam/ChatApp">
+                          <v-list-item-title>Source Code</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </v-col>
+
+                  <v-col class="ma-0 pa-0">
+                    <input type="text"class="custom_input" placeholder="Search">
+                  </v-col>
+
+                </v-row>
+              </div>
+              list
+            </div>
+
+            <div class="chat_view">
+              <div class="section_header">
+                header
+              </div>
+              view
+            </div>
+
+        </div>
+      </v-main>
+    </v-app>
+  </div>
+  <script src="vue.min.js"></script>
+  <script src="vuetify.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
