@@ -11,6 +11,15 @@
   <div id="app">
     <v-app>
       <v-main>
+        <div id="splash_screen">
+          <div class="center">
+            <v-progress-circular
+              indeterminate
+              :color="theme_color"
+            ></v-progress-circular>
+          </div>
+        </div>
+
         <div class="pa-0" id="main_container">
         
             <div class="chats_list">
@@ -50,7 +59,33 @@
 
                 </v-row>
               </div>
-              list
+              
+              <div class="chats">
+                <div class="chat_row active_chat">
+                  <v-row>
+                    <v-col cols="2" class="mr-1">
+                      <div class="image">
+                        <img src="https://picsum.photos/900/900" onload="window.lazyImage(this)" class="avatar">
+                      </div>
+                    </v-col>
+                    <v-col class="pa-0 pl-5 pt-2">
+                      <span class="d-block">Username</span>
+                      <span class="d-block text--secondary">Latest Message</span>
+                    </v-col>
+                  </v-row>
+                </div>
+                <div class="chat_row">
+                  <v-row>
+                    <v-col cols="2" class="mr-1">
+                      <div class="solid_color_avatar"></div>
+                    </v-col>
+                    <v-col class="pa-0 pl-5 pt-2">
+                      <span class="d-block">Username</span>
+                      <span class="d-block text--secondary">Latest Message</span>
+                    </v-col>
+                  </v-row>
+                </div>
+              </div>
             </div>
 
             <div class="chat_view">
