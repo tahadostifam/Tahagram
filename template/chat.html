@@ -90,6 +90,7 @@
             </div>
 
             <div class="chat_view">
+
               <div class="section_header border">
                 header
               </div>
@@ -145,7 +146,23 @@
               </div>
 
               <div class="send_message_section">
-                  hello wolrd
+                  <v-row class="pa-0 ma-0">
+                    <v-col class="ma-0" style="padding: 0; padding-top: 6px;">
+                      <v-text-field solo placeholder="Message"></v-text-field>
+                    </v-col>
+                    <v-col cols="1" class="pa-0 ma-0 text-right mr-1 mt-1" style="width: 60px; flex: 0 0 60px;">
+                      <v-btn
+                          :color="theme_color"
+                          dark
+                          icon
+                          x-large
+                        >
+                          <v-icon class="pl-1" small :color="theme_color">
+                            mdi-send
+                          </v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
               </div>
 
             </div>
