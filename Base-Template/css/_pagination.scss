@@ -1,0 +1,32 @@
+.pagination{
+    .page-item{
+        &:first-child{
+            margin-left: 0;
+        }
+        &:last-child{
+            margin-right: 0;
+        }
+        margin: 0 4px;
+        .page-link{
+            cursor: pointer;
+            border-radius: 3px;
+            border: none;
+            box-shadow: 0 4px 7px -1px rgba(182, 182, 182, 0.3);
+            &, &:hover{
+                color: #222;
+                background: #fff;
+            }
+        }
+    }
+    @each $name, $color in $colors {
+        &.pagination-#{$name} .page-link.active{
+            background: $color;
+            box-shadow: 0 2px 7px -1px rgba(182, 182, 182, 0.3);
+        }
+    }
+    @each $name, $color in $colors_reverse {
+        &.pagination-#{$name} .page-link.active{
+            color: $color;
+        }
+    }
+}

@@ -1,0 +1,14 @@
+.modal{
+    .modal-header, .modal-footer{
+        border: none;
+    }
+    &.fade .modal-dialog{
+        transform: scale(65%);
+        transition: transform 0.2s ease;
+    }
+    &.show {
+        .modal-dialog{
+            transform: scale(100%);
+        }
+    }
+}

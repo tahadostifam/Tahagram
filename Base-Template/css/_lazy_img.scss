@@ -1,0 +1,14 @@
+.lazy-img{
+    background-color: $overlay_color;
+    img{
+        opacity: 0;
+        transition: 0.3s ease;
+    }
+    &.image__loaded img{
+        opacity: 1;
+    }
+}
+
+.object-fit-img{
+    object-fit: cover;
+}
