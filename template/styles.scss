@@ -63,12 +63,28 @@ html{
         float: left;
     }
 
-    .chat_view{
+    .chat_view{ 
         width: calc(100% - #{$chats_list_with});
         height: 100%;
         background-color: $color_3;
         display: inline-block;
         float: right;
+        .section_header{
+            border-left: 1px solid $color_2;
+            .image{
+                display: inline-block;
+                border-radius: 50%;
+                --size: 45px;
+                width: var(--size);
+                height: var(--size);
+                overflow: hidden;
+                background-color: $color_4;
+                .avatar{
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
     }
 }
 
@@ -94,7 +110,7 @@ html{
     cursor: pointer;
     padding: 25px 10px;
     height: calc(100% - #{$header_height});
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     .chat_row{
         position: relative;
@@ -287,4 +303,16 @@ html{
             }
         }
     }
+}
+
+.text-red{
+    color: #F44336;
+}
+
+.text-white{
+    color: #fff;
+}
+
+.cursor-pointer{
+    cursor: pointer;
 }

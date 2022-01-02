@@ -68,6 +68,25 @@ html {
   float: right;
 }
 
+#main_container .chat_view .section_header {
+  border-left: 1px solid #0f0f0f;
+}
+
+#main_container .chat_view .section_header .image {
+  display: inline-block;
+  border-radius: 50%;
+  --size: 45px;
+  width: var(--size);
+  height: var(--size);
+  overflow: hidden;
+  background-color: #181818;
+}
+
+#main_container .chat_view .section_header .image .avatar {
+  width: 100%;
+  height: 100%;
+}
+
 .custom_input {
   width: 100%;
   height: 40px;
@@ -93,7 +112,7 @@ html {
   cursor: pointer;
   padding: 25px 10px;
   height: calc(100% - 60px);
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -336,5 +355,17 @@ html {
 
 .send_message_section .send_box .emoji_picker .emoji_span:hover {
   background-color: #aaaaaa14;
+}
+
+.text-red {
+  color: #F44336;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 /*# sourceMappingURL=styles.css.map */

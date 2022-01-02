@@ -10,13 +10,13 @@ new Vue({
     data(){
         return {
             theme_color: "green accent-4",
-            input: '',
+            send_message_input: '',
             search: '',
         }
     },
     methods: {
         insert(emoji) {
-          this.input += emoji
+          this.send_message_input += emoji
         },
     },
 })
