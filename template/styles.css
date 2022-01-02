@@ -18,8 +18,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #212121;
-  background-color: red;
+  background: #0f0f0f;
   border-radius: 50px;
 }
 
@@ -309,5 +308,33 @@ html {
 
 .send_message_section .send_box #send_message_textbox {
   padding: 0 38px;
+}
+
+.send_message_section .send_box .emoji_picker #emoji_picker_card {
+  position: absolute;
+  z-index: 30;
+  bottom: 90px;
+  width: 300px;
+  height: 350px;
+  overflow-y: scroll;
+}
+
+.send_message_section .send_box .emoji_picker .set_title {
+  color: #707579;
+  text-transform: uppercase;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.send_message_section .send_box .emoji_picker .emoji_span {
+  font-size: 23px;
+  padding: 2px;
+  margin: 0 1px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.send_message_section .send_box .emoji_picker .emoji_span:hover {
+  background-color: #aaaaaa14;
 }
 /*# sourceMappingURL=styles.css.map */

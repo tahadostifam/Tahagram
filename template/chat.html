@@ -147,18 +147,50 @@
 
               <div class="send_message_section">
                 <div class="send_box">
-                  <v-btn
-                      id="emojies_button"
-                      :color="theme_color"
-                      dark
-                      icon
-                      x-large
-                    >
-                      <v-icon small :color="theme_color">
-                        mdi-emoticon
-                      </v-icon>
-                  </v-btn>
-                  <v-text-field id="send_message_textbox" aria-multiline="true" class="rounded-pill" solo placeholder="Message"></v-text-field>
+                  <!-- TODO -->
+                  <emoji-picker class="emoji_picker" @emoji="insert" :search="search">
+                    <div slot="emoji-invoker" slot-scope="{ events: { click: clickEvent } }" @click.stop="clickEvent">
+                      <v-btn
+                        id="emojies_button"
+                        :color="theme_color"
+                        dark
+                        icon
+                        x-large
+                        >
+                          <v-icon small :color="theme_color">
+                            mdi-emoticon
+                          </v-icon>
+                      </v-btn>
+                    </div>
+                    <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
+                      <v-card
+                        id="emoji_picker_card"
+                        class="rounded-lg"
+                        elevation="2"
+                      >
+                        <div class="pa-2">
+                          <div>
+                            <v-text-field class="rounded-lg" dense solo placeholder="Search" v-model="search"></v-text-field>
+                          </div>
+                          <div>
+                            <div v-for="(emojiGroup, category) in emojis" :key="category">
+                              <h5 class="set_title">{{ category }}</h5>
+                              <div>
+                                <span
+                                  class="emoji_span"
+                                  v-for="(emoji, emojiName) in emojiGroup"
+                                  :key="emojiName"
+                                  @click="insert(emoji)"
+                                  :title="emojiName"
+                                >{{ emoji }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </v-card>
+                    </div>
+                  </emoji-picker>
+                  <v-text-field id="send_message_textbox" v-model="input" aria-multiline="true" class="rounded-pill" solo placeholder="Message"></v-text-field>
                   <v-btn
                       id="send_message_button"
                       :color="theme_color"
@@ -181,6 +213,7 @@
   </div>
   <script src="vue.min.js"></script>
   <script src="vuetify.min.js"></script>
+  <script src="https://unpkg.com/vue-emoji-picker/dist/vue-emoji-picker.js"></script>
   <script src="scripts.js"></script>
 </body>
 </html>

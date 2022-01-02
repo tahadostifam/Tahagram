@@ -24,8 +24,7 @@ $header_height: 60px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: $color_1;
-    background-color: red;
+    background: $color_3;
     border-radius: 50px;
 }
 
@@ -260,6 +259,32 @@ html{
         }
         #send_message_textbox{
             padding: 0 38px;
+        }
+        .emoji_picker{
+            #emoji_picker_card{
+                position: absolute;
+                z-index: 30;
+                bottom: 90px;
+                width: 300px;
+                height: 350px;
+                overflow-y: scroll;
+            }
+            .set_title{
+                color: $color_6;
+                text-transform: uppercase;
+                margin-top: 10px;
+                margin-bottom: 5px;
+            }
+            .emoji_span{
+                font-size: 23px;
+                padding: 2px;
+                margin: 0 1px;
+                border-radius: 4px;
+                cursor: pointer;
+                &:hover{
+                    background-color: #aaaaaa14;
+                }
+            }
         }
     }
 }

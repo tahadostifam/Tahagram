@@ -1,3 +1,5 @@
+Vue.use(EmojiPicker)
+
 new Vue({
     el: '#app',
     vuetify: new Vuetify({
@@ -7,9 +9,16 @@ new Vue({
     }),
     data(){
         return {
-            theme_color: "green accent-4"
+            theme_color: "green accent-4",
+            input: '',
+            search: '',
         }
-    }
+    },
+    methods: {
+        insert(emoji) {
+          this.input += emoji
+        },
+    },
 })
 
 const avatar_random_colors = [
