@@ -1,6 +1,14 @@
 version: "3.3"
 services:
+  backend:
+    container_name: "chat_app_backend"
+    build: 
+      context: ./backend
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "2345:2345"
   nginx:
+    container_name: "chat_app_nginx"
     build: 
       context: ./backend
       dockerfile: nginx.Dockerfile
@@ -8,3 +16,19 @@ services:
       - "5000:80"
     volumes:
       - .:/app
+  mongodb:
+    image: "mongo"
+    container_name: "chat_app_mongodb"
+    environment:
+      - MONGO_INITDB_DATABASE=chatapp_db
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+    ports:
+      - '27017-27019:27017-27019'
+  redis:
+    image: "redis:latest"
+    container_name: "chat_app_redisdb"
+    ports: 
+      - "6379:6379"
+
+    
