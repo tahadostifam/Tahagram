@@ -235,7 +235,8 @@ html {
 .messages_list .message_row .message .sender_name {
   display: block;
   width: 100%;
-  padding-top: 10px;
+  padding: 0;
+  padding-top: 5px;
   font-weight: 500;
   color: #00c853;
 }
@@ -272,6 +273,10 @@ html {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
+}
+
+.messages_list .message_row.my_message .message_content {
+  padding-top: 5px;
 }
 
 .messages_list .message_row.image_type .message {

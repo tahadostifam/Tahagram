@@ -201,7 +201,8 @@ html{
             .sender_name{
                 display: block;
                 width: 100%;
-                padding-top: 10px;
+                padding: 0;
+                padding-top: 5px;
                 font-weight: 500;
                 color: $theme_color;
             }
@@ -229,6 +230,9 @@ html{
         }
         &.my_message{
             justify-content: flex-end;
+            .message_content{
+                padding-top: 5px;
+            }
         }
         &.image_type{
             .message{
