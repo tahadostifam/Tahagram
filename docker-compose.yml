@@ -8,15 +8,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "2345:2345"
+      - "2346:2346"
   nginx:
     container_name: "chat_app_nginx"
     build: 
       context: ./backend
       dockerfile: nginx.Dockerfile
     ports:
-      - "5000:80"
-    volumes:
-      - .:/app
+      - "8000:8000"
   mongodb:
     image: "mongo"
     container_name: "chat_app_mongodb"
@@ -31,5 +30,3 @@ services:
     container_name: "chat_app_redisdb"
     ports: 
       - "6379:6379"
-
-    

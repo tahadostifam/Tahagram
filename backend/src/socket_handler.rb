@@ -1,7 +1,8 @@
 require 'websocket-eventmachine-server'
+require_relative "../lib/configs_parser.rb"
 
 EM.run do
-    WebSocket::EventMachine::Server.start(:host => "0.0.0.0", :port => 2345) do |ws|
+    WebSocket::EventMachine::Server.start(:host => "0.0.0.0", :port => configs["socket"]["port"]) do |ws|
       ws.onopen do
         puts "Client connected"
       end

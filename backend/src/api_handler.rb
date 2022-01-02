@@ -6,8 +6,8 @@ class App < Sinatra::Base
   set :bind, '0.0.0.0'
   set :port, configs["api"]["port"]
 
-  get '/' do
-    "Hello from MyApp!"
+  get '/api' do
+    "<h1>Hello Ruby!</h1>"
   end
 
   run!

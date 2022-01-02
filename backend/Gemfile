@@ -17,6 +17,12 @@ gem 'rspec'
 
 # api server
 gem 'sinatra'
+gem 'thin'
+gem 'puma'
+gem 'reel'
+gem 'http'
+gem 'webrick'
+
 
 # yaml parser
 gem 'yaml'

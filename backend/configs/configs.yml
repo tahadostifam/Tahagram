@@ -1,2 +1,4 @@
 api:
-  port: 8000
+  port: 2346
+socket: 
+  port: 2345

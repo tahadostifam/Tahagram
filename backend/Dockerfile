@@ -8,5 +8,6 @@ COPY . .
 RUN bundle;
 
 EXPOSE 2345
+EXPOSE 2346
 
-CMD [ "ruby", "src/server.rb -p 2345" ]
+CMD [ "ruby", "src/server.rb" ]
