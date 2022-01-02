@@ -7,7 +7,7 @@ class App < Sinatra::Base
   set :port, configs["api"]["port"]
 
   get '/' do
-    "<h1>Hello!</h1>"
+    "<h1>Hello Ruby!</h1>"
   end
 
   run!
