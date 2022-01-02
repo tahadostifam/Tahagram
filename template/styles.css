@@ -1,7 +1,3 @@
-:root {
-  --send_message_section_height: 60px;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -61,11 +57,16 @@ html {
 }
 
 #main_container .chat_view {
+  position: relative;
   width: calc(100% - 350px);
   height: 100%;
   background-color: #0f0f0f;
   display: inline-block;
   float: right;
+}
+
+#main_container .chat_view .splash_screen .center {
+  padding-top: 60px;
 }
 
 #main_container .chat_view .section_header {
@@ -162,11 +163,10 @@ html {
   opacity: 1;
 }
 
-#splash_screen {
-  position: fixed;
+.splash_screen {
   width: 100%;
   height: 100%;
-  z-index: 90;
+  z-index: 30;
   top: 0;
   left: 0;
   bottom: 0;
@@ -176,7 +176,15 @@ html {
   transition: 0.3s ease;
 }
 
-#splash_screen .center {
+.splash_screen.fixed {
+  position: fixed;
+}
+
+.splash_screen.absolute {
+  position: absolute;
+}
+
+.splash_screen .center {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -194,15 +202,19 @@ html {
           flex-direction: column;
 }
 
+#full_splash_screen {
+  z-index: 90;
+}
+
 .messages-scroll {
   overflow-y: visible;
-  max-height: calc(100% - 60px - var(--send_message_section_height));
+  max-height: calc(100% - 60px - 60px);
 }
 
 .messages_list {
   width: 100%;
   height: 100%;
-  height: calc(100vh - 60px - var(--send_message_section_height) - 20px);
+  height: calc(100vh - 60px - 60px - 20px);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

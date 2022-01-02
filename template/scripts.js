@@ -11,7 +11,6 @@ new Vue({
         return {
             theme_color: "green accent-4",
             send_message_input: '',
-            search: '',
             context_menu_for_messages: {
                 show: false,
                 x: 0,
@@ -26,9 +25,6 @@ new Vue({
         show_contextmenu_of_message(e){
             e.preventDefault()
             this.$set(this.$data.context_menu_for_messages, 'show', false)
-            // this.showMenu = false
-            // this.x = e.clientX
-            // this.y = e.clientY
             this.$set(this.$data.context_menu_for_messages, 'x', e.clientX)
             this.$set(this.$data.context_menu_for_messages, 'y', e.clientY)
             this.$nextTick(() => {
@@ -65,7 +61,7 @@ window.lazyImage = (e) => {
 }
 
 window.handleSplashScreen = () => {
-    const splash = document.querySelector('#splash_screen');
+    const splash = document.querySelector('#full_splash_screen');
     splash.style.opacity = 0;
     setTimeout(() => {
         splash.style.display = "none";

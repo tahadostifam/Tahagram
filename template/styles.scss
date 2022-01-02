@@ -8,9 +8,7 @@ $theme_color: #00c853;
 
 $chats_list_with: 350px;
 $header_height: 60px;
-:root{
-    --send_message_section_height: 60px;
-}
+$send_message_section_height: 60px;
 
 *{
     margin: 0;
@@ -64,11 +62,17 @@ html{
     }
 
     .chat_view{ 
+        position: relative;
         width: calc(100% - #{$chats_list_with});
         height: 100%;
         background-color: $color_3;
         display: inline-block;
         float: right;
+        .splash_screen{
+            .center{
+                padding-top: $send_message_section_height;
+            }
+        }
         .section_header{
             border-left: 1px solid $color_2;
             .image{
@@ -155,11 +159,16 @@ html{
     }
 }
 
-#splash_screen{
-    position: fixed;
+.splash_screen{
+    &.fixed{
+        position: fixed;
+    }
+    &.absolute{
+        position: absolute;
+    }
     width: 100%;
     height: 100%;
-    z-index: 90;
+    z-index: 30;
     top: 0; left: 0;
     bottom: 0; right: 0;
     background-color: $color_4;
@@ -175,15 +184,19 @@ html{
     }
 }
 
+#full_splash_screen{
+    z-index: 90;
+}
+
 .messages-scroll{
     overflow-y: visible;
-    max-height: calc(100% - #{$header_height} - var(--send_message_section_height));
+    max-height: calc(100% - #{$header_height} - #{$send_message_section_height});
 }
 
 .messages_list{
     width: 100%;
     height: 100%;
-    height: calc(100vh - #{$header_height} - var(--send_message_section_height) - 20px);
+    height: calc(100vh - #{$header_height} - #{$send_message_section_height} - 20px);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;

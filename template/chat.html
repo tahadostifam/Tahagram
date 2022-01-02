@@ -11,7 +11,7 @@
   <div id="app">
     <v-app>
       <v-main>
-        <div id="splash_screen" class="d-none">
+        <div class="splash_screen fixed" id="full_splash_screen">
           <div class="center">
             <v-progress-circular
               class="mb-2 d-block"
@@ -130,6 +130,17 @@
                   </div>
                 </div>
               </div>
+
+              <!-- NOTE - Will be enabled just in backend -->
+              <!-- <div class="splash_screen absolute">
+                <div class="center">
+                  <v-progress-circular
+                    class="mb-2 d-block"
+                    indeterminate
+                    :color="theme_color"
+                  ></v-progress-circular>
+                </div>
+              </div> -->
               
               <div class="messages-scroll">
                 
@@ -235,7 +246,7 @@
               <div class="send_message_section">
                 <div class="send_box">
                   <!-- TODO -->
-                  <emoji-picker class="emoji_picker" @emoji="insert" :search="search">
+                  <emoji-picker class="emoji_picker" @emoji="insert">
                     <div slot="emoji-invoker" slot-scope="{ events: { click: clickEvent } }" @click.stop="clickEvent">
                       <v-btn
                         id="emojies_button"
@@ -256,9 +267,6 @@
                         elevation="2"
                       >
                         <div class="pa-2">
-                          <div>
-                            <v-text-field class="rounded-lg" dense solo placeholder="Search" v-model="search"></v-text-field>
-                          </div>
                           <div>
                             <div v-for="(emojiGroup, category) in emojis" :key="category">
                               <h5 class="set_title">{{ category }}</h5>
