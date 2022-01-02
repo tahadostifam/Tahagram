@@ -308,6 +308,9 @@ html{
     .send_box{
         position: relative;
         padding-top: 16px;
+        .v-text-field .v-text-field__details {
+            display: none;
+        }
         #send_message_button, #emojies_button{
             position: absolute;
             top: 19px;
@@ -330,7 +333,7 @@ html{
             #emoji_picker_card{
                 position: absolute;
                 z-index: 30;
-                bottom: 90px;
+                bottom: 75px;
                 width: 300px;
                 height: 350px;
                 overflow-y: scroll;

@@ -360,6 +360,10 @@ html {
   padding-top: 16px;
 }
 
+.send_message_section .send_box .v-text-field .v-text-field__details {
+  display: none;
+}
+
 .send_message_section .send_box #send_message_button, .send_message_section .send_box #emojies_button {
   position: absolute;
   top: 19px;
@@ -383,14 +387,10 @@ html {
   padding: 0 38px;
 }
 
-.send_message_section .send_box #send_message_textbox.v-text-field.v-text-field--solo .v-input__control {
-  background: #000;
-}
-
 .send_message_section .send_box .emoji_picker #emoji_picker_card {
   position: absolute;
   z-index: 30;
-  bottom: 90px;
+  bottom: 75px;
   width: 300px;
   height: 350px;
   overflow-y: scroll;

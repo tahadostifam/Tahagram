@@ -1,6 +1,15 @@
 <template>
   <v-app dark>
     <v-main>
+      <div class="splash_screen fixed" id="full_splash_screen">
+        <div class="center">
+        <v-progress-circular
+            class="mb-2 d-block"
+            indeterminate
+            :color="theme_color"
+        ></v-progress-circular>
+        </div>
+      </div>
       <Nuxt/>
     </v-main>
   </v-app>
@@ -11,26 +20,13 @@ export default {
   name: 'DefaultLayout',
   data () {
     return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
+      theme_color: 'green accent-4'
     }
+  },
+  mounted: function(){
+    this.$nextTick(function () {
+      require('../assets/javascript/scripts')
+    })
   }
 }
 </script>
