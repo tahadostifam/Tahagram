@@ -12,12 +12,29 @@ new Vue({
             theme_color: "green accent-4",
             send_message_input: '',
             search: '',
+            context_menu_for_messages: {
+                show: false,
+                x: 0,
+                y: 0,
+            }
         }
     },
     methods: {
         insert(emoji) {
           this.send_message_input += emoji
         },
+        show_contextmenu_of_message(e){
+            e.preventDefault()
+            this.$set(this.$data.context_menu_for_messages, 'show', false)
+            // this.showMenu = false
+            // this.x = e.clientX
+            // this.y = e.clientY
+            this.$set(this.$data.context_menu_for_messages, 'x', e.clientX)
+            this.$set(this.$data.context_menu_for_messages, 'y', e.clientY)
+            this.$nextTick(() => {
+                this.$set(this.$data.context_menu_for_messages, 'show', true)
+            })
+        }
     },
 })
 
