@@ -8,7 +8,9 @@ $theme_color: #00c853;
 
 $chats_list_with: 350px;
 $header_height: 60px;
-$send_message_section_height: 60px;
+:root{
+    --send_message_section_height: 60px;
+}
 
 *{
     margin: 0;
@@ -22,7 +24,8 @@ $send_message_section_height: 60px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: $color_1; 
+    background: $color_1;
+    background-color: red;
     border-radius: 50px;
 }
 
@@ -158,14 +161,14 @@ html{
 }
 
 .messages-scroll{
-    overflow-y: scroll;
-    max-height: calc(100% - #{$header_height} - #{$send_message_section_height});
+    overflow-y: visible;
+    max-height: calc(100% - #{$header_height} - var(--send_message_section_height));
 }
 
 .messages_list{
     width: 100%;
     height: 100%;
-    height: calc(100vh - #{$header_height} - #{$send_message_section_height} - 20px);
+    height: calc(100vh - #{$header_height} - var(--send_message_section_height) - 20px);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -235,6 +238,28 @@ html{
 }
 
 .send_message_section{
+    position: relative;
     padding: 0 30px;
-    height: $send_message_section_height;
+    .send_box{
+        position: relative;
+        padding-top: 16px;
+        #send_message_button, #emojies_button{
+            position: absolute;
+            top: 19px;
+            z-index: 20;
+            &.v-btn--icon.v-size--x-large{
+                width: 42px;
+                height: 42px;
+            }
+        }
+        #send_message_button{
+            right: 3px;
+        }
+        #emojies_button{
+            left: 3px;
+        }
+        #send_message_textbox{
+            padding: 0 38px;
+        }
+    }
 }
