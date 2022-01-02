@@ -1,10 +1,11 @@
 version: "3.3"
 services:
   backend:
+    image: "ruby:3.0.3"
     container_name: "chat_app_backend"
     build: 
       context: ./backend
-      dockerfile: nginx.Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "2345:2345"
   nginx:

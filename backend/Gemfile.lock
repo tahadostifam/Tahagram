@@ -7,6 +7,11 @@ GEM
     eventmachine (1.2.7)
     mongo (2.17.0)
       bson (>= 4.8.2, < 5.0.0)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
+    rack (2.2.3)
+    rack-protection (2.1.0)
+      rack
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -20,6 +25,13 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.3)
+    ruby2_keywords (0.0.5)
+    sinatra (2.1.0)
+      mustermann (~> 1.0)
+      rack (~> 2.2)
+      rack-protection (= 2.1.0)
+      tilt (~> 2.0)
+    tilt (2.0.10)
     websocket (1.2.9)
     websocket-eventmachine-base (1.2.0)
       eventmachine (~> 1.0)
@@ -28,6 +40,7 @@ GEM
     websocket-eventmachine-server (1.0.1)
       websocket-eventmachine-base (~> 1.0)
     websocket-native (1.0.0)
+    yaml (0.2.0)
 
 PLATFORMS
   x86_64-linux
@@ -36,7 +49,9 @@ DEPENDENCIES
   concurrent-ruby (~> 1.1, >= 1.1.9)
   mongo (~> 2)
   rspec
+  sinatra
   websocket-eventmachine-server
+  yaml
 
 BUNDLED WITH
    2.2.32

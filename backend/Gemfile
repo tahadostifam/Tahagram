@@ -14,3 +14,9 @@ gem 'websocket-eventmachine-server'
 
 # tests handler
 gem 'rspec'
+
+# api server
+gem 'sinatra'
+
+# yaml parser
+gem 'yaml'
