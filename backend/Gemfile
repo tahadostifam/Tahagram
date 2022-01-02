@@ -23,6 +23,8 @@ gem 'reel'
 gem 'http'
 gem 'webrick'
 
-
 # yaml parser
 gem 'yaml'
+
+# watch files changes
+gem 'listen'
