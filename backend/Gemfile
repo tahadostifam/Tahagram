@@ -36,3 +36,5 @@ gem 'yaml'
 
 # watch files changes
 gem 'listen'
+
+gem 'colorize'

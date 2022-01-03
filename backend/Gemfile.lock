@@ -9,6 +9,7 @@ GEM
       celluloid (>= 0.17.2)
       nio4r (>= 1.1)
       timers (>= 4.1.1)
+    colorize (0.8.1)
     concurrent-ruby (1.1.9)
     daemons (1.4.1)
     diff-lcs (1.5.0)
@@ -127,6 +128,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  colorize
   concurrent-ruby (~> 1.1, >= 1.1.9)
   hoe
   hoe-bundler

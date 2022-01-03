@@ -1,4 +1,0 @@
-ports: 
-    socket: 2345
-    api: 2346
-    nginx: 8000
