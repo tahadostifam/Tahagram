@@ -1,5 +1,5 @@
 require 'colorize'
-require './src/database_handler.rb'
+require './src/database.rb'
 
 $db = Database.new
 $db.connect
