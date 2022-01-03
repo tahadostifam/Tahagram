@@ -4,7 +4,7 @@ require_relative "../lib/configs_parser.rb"
 class Database
     def connect
         $conn = PG.connect(
-            configs["postgres"]["ip"],
+            configs["postgres"]["host"],
             configs["postgres"]["port"],
             nil,
             nil,

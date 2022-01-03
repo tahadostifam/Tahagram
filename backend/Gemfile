@@ -16,6 +16,9 @@ gem 'rdoc'
 gem 'rspec'
 gem 'pg', '~> 1.0'
 
+# redis store
+gem 'redis'
+
 # WebSocket handler
 # https://github.com/imanel/websocket-eventmachine-server
 gem 'websocket-eventmachine-server'

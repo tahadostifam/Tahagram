@@ -1,10 +1,13 @@
-api:
-  port: 2346
 socket: 
   port: 2345
 postgres:
-  ip: "127.0.0.1"
+  host: "127.0.0.1"
   port: 5432
   user: "taha"
   pass: "1234"
   db: "chatapp_db"
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  user:
+  pass:

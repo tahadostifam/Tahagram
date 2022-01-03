@@ -1,8 +1,4 @@
-class ApplicationController < Sinatra::Base
-    configure :production, :development do
-      enable :logging
-    end
-
+class ApplicationController < Sinatra::Base  
     get '/' do
       "Hello Ruby ^^"
     end
