@@ -43,3 +43,6 @@ gem 'colorize'
 
 # json parser
 gem 'json'
+
+# bcrypt
+gem 'bcrypt'

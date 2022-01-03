@@ -1,16 +1,50 @@
+class Array
+    def without_nil
+       self.select { |value| 
+        value != nil
+       }
+    end
+end
+
 def validate_params(names, values)
-    raise "names length is'nt equals with values length" if names.length != values.length
+    raise "names length isn't equals with values length" if names.length != values.length
     @errors = []
-    values.each_with_index do |item, index|
-        if item == nil || item.empty? || item.length == 0
-            @errors << "#{names[index]} cant be empty"
+    names.each_with_index do |item, index|
+        if values[index].class == NilClass || values[index] == nil || values[index].empty? || values[index].length == 0
+            @errors << {
+                input_name: item,
+                message: "#{item} can't be empty"
+            }
         end
-        if index == values.length - 1
+        if index == names.length - 1
             if @errors.length == 0
-                return true
+                return nil
             else
-                return @errors.to_a
+                puts @errors
+                return @errors
             end
         end
+    end
+end
+
+def min_length(name, value, length)
+    state = value.length <= length
+    if state == true
+        return {
+            input_name: name, 
+            message: "#{name} must be at least #{length} characters long"
+        }
+    end
+end
+
+def max_length(name, value, length)
+    state = value.length > length
+    if state == true
+        return {
+            input_name: name, 
+            message: "#{name} can be up to #{length} characters"
+        }
+    else
+        return nil
     end
 end
