@@ -20,20 +20,34 @@ class UsersController < ApplicationController
     hashed_password = BCrypt::Password.create(params["password"])
     puts hashed_password
 
-    $db.exec_query!("INSERT into tbl_users(full_name, username, password_digest) VALUES($1, $2, $3)", [
-      params[:full_name], params[:username], hashed_password
-    ]) do |state, result|
-      puts state
-      puts result
-      if state
-        response_json({message: "user created successfully"}, 201)
-      else
-        response_json({message: "an error occurred while creating the user"}, 500)
+    if validate_username_uniqueness?(params["username"])
+      $db.exec_query!("INSERT into tbl_users(full_name, username, password_digest) VALUES($1, $2, $3)", [
+        params[:full_name], params[:username], hashed_password
+      ]) do |state, result|
+        puts state
+        puts result
+        if state
+          response_json({message: "User created successfully"}, 201)
+        else
+          response_json({message: "An error occurred while creating the user"}, 500)
+        end
       end
+    else
+      response_json({message: "Username already registered"}, 409)
     end
   end
 
   private
+
+  def validate_username_uniqueness?(username)
+    $db.select("SELECT username from tbl_users WHERE username=$1", [username]) do |result|
+      if result.length == 0
+        return true
+      else
+        return false
+      end
+    end
+  end
 
   def validate_signup_params!
     errors_total = []
