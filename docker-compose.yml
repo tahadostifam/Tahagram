@@ -24,6 +24,8 @@ services:
       - backend/database.env
     volumes:
       - chatapp_postgres_volume:/var/lib/postgresql/data
+    ports: 
+      - "5432:5432"
   redis:
     image: "redis:latest"
     container_name: "chat_app_redisdb"

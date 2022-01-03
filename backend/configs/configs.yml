@@ -3,5 +3,6 @@ api:
 socket: 
   port: 2345
 postgres:
-  user: # empty
-  pass: # empty
+  user: "taha"
+  pass: "1234"
+  database: "chatapp_db"
