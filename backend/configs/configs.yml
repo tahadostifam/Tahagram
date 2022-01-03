@@ -2,3 +2,6 @@ api:
   port: 2346
 socket: 
   port: 2345
+postgres:
+  user: # empty
+  pass: # empty

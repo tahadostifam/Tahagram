@@ -17,17 +17,18 @@ services:
       dockerfile: nginx.Dockerfile
     ports:
       - "8000:8000"
-  mongodb:
-    image: "mongo"
-    container_name: "chat_app_mongodb"
-    environment:
-      - MONGO_INITDB_DATABASE=chatapp_db
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=1234
-    ports:
-      - '27017-27019:27017-27019'
+  postgres:
+    image: "postgres"
+    container_name: "chat_app_postgres"
+    env_file:
+      - backend/database.env
+    volumes:
+      - chatapp_postgres_volume:/var/lib/postgresql/data
   redis:
     image: "redis:latest"
     container_name: "chat_app_redisdb"
     ports: 
       - "6379:6379"
+  
+volumes:
+  chatapp_postgres_volume:

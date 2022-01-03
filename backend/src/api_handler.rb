@@ -9,6 +9,4 @@ class App < Sinatra::Base
   get '/' do
     "<h1>Hello Ruby!</h1>"
   end
-
-  run!
 end
