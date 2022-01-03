@@ -1,20 +1,18 @@
 require 'pg'
 require_relative "../lib/configs_parser.rb"
   
+$conn = PG.connect(
+    configs["postgres"]["host"],
+    configs["postgres"]["port"],
+    nil,
+    nil,
+    configs["postgres"]["db"],
+    configs["postgres"]["user"],
+    configs["postgres"]["pass"]
+)
+
 class Database
-    def connect
-        $conn = PG.connect(
-            configs["postgres"]["host"],
-            configs["postgres"]["port"],
-            nil,
-            nil,
-            configs["postgres"]["db"],
-            configs["postgres"]["user"],
-            configs["postgres"]["pass"]
-        )
-    end
-    
-    def gimme_db()
+    def database
         return $conn
     end
 
@@ -34,7 +32,7 @@ class Database
                 yield result.to_a
             end
         rescue PG::Error => err
-            yield nil
+            yield []
         end
     end
 
@@ -45,6 +43,6 @@ class Database
             else
                 return true
             end
-        end 
+        end
     end
 end

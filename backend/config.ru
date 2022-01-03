@@ -7,7 +7,7 @@ require_relative "./lib/configs_parser.rb"
 Dir.glob('./{controllers}/*.rb').each { |file| require file }
 
 Thread.new {
-    Database.new.connect
+    Database.new
     SocketServer.new
 }
 

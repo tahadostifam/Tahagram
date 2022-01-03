@@ -13,7 +13,6 @@ gem 'hoe-mercurial'
 gem 'rake-compiler'
 gem 'rake-compiler-dock'
 gem 'rdoc'
-gem 'rspec'
 gem 'pg', '~> 1.0'
 
 # redis store
@@ -39,4 +38,8 @@ gem 'yaml'
 # watch files changes
 gem 'listen'
 
+# colorzing texts in terminal
 gem 'colorize'
+
+# json parser
+gem 'json'
