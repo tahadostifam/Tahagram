@@ -4,7 +4,16 @@ source 'https://rubygems.org'
 # https://ruby-concurrency.github.io/concurrent-ruby/master/file.thread_pools.html
 gem 'concurrent-ruby', '~> 1.1', '>= 1.1.9'
 
-# postgresql
+# postgresql + dependencies
+gem 'hoe'
+gem 'hoe-bundler'
+gem 'hoe-deveiate'
+gem 'hoe-highline'
+gem 'hoe-mercurial'
+gem 'rake-compiler'
+gem 'rake-compiler-dock'
+gem 'rdoc'
+gem 'rspec'
 gem 'pg', '~> 1.0'
 
 # WebSocket handler

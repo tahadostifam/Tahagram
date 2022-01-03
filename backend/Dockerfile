@@ -1,5 +1,6 @@
 FROM ruby:3.0.3
 
+RUN apt update; apt install nano postgresql-client libpq5 libpq-dev -y
 WORKDIR /app
 COPY . .
 
