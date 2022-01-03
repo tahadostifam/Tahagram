@@ -285,6 +285,7 @@
 import { EmojiPicker } from 'vue-emoji-picker'
 
 export default {
+    middleware: ['check_auth'],
     components: {
         EmojiPicker,
     },
