@@ -2,7 +2,6 @@ require 'colorize'
 require './src/database.rb'
 
 $db = Database.new
-$db.connect
 
 def success(table_name)
    puts "#{table_name} initialized successfully! :)".green
@@ -16,7 +15,6 @@ def table_exists(table_name)
     puts "#{table_name} exists.".yellow
 end
 
-
 def init_table(table_name)
     file_path = Dir.getwd + "/database/#{table_name}.sql"
     if File.exist?(file_path)
@@ -25,7 +23,7 @@ def init_table(table_name)
             if $db.table_exist?(table_name)
                 table_exists table_name
             else
-                $db.gimme_db().send_query(table_query_string)
+                $db.database().send_query(table_query_string)
                 success(table_name)
             end
         end

@@ -3,7 +3,7 @@ CREATE TABLE public.tbl_users (
 	username text NOT NULL,
 	password_digest text NOT NULL,
 	bio text NULL,
-	last_seen text NOT NULL,
+	last_seen text NULL,
 	CONSTRAINT tbl_users_pk PRIMARY KEY (username)
 );
 

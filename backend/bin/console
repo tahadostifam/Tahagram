@@ -1,5 +1,5 @@
 require 'colorize'
-require './src/database_handler.rb'
+require './src/database.rb'
 require_relative './table_initializer.rb'
 
 user_command = ARGV[0].to_s.strip

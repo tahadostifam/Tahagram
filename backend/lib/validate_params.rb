@@ -1,7 +1,7 @@
 class Array
     def without_nil
        self.select { |value| 
-        value != nil
+        value != nil && value.class == NilClass
        }
     end
 end
@@ -20,7 +20,6 @@ def validate_params(names, values)
             if @errors.length == 0
                 return nil
             else
-                puts @errors
                 return @errors
             end
         end
@@ -34,6 +33,8 @@ def min_length(name, value, length)
             input_name: name, 
             message: "#{name} must be at least #{length} characters long"
         }
+    else
+        return nil
     end
 end
 
