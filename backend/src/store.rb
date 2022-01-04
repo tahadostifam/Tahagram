@@ -69,11 +69,30 @@ def set_and_gimme_token(username, client_ip, token_type, &block)
     return yield nil
 end
 
- def valid_token?(user_id_in_store)
-    state = $redis.get("maximilian_auth_t_127001")
+ def valid_token_at_store?(user_id_in_store)
+    state = $redis.get(user_id_in_store)
     if state == nil
         return false
     else
         return state
+    end
+end
+
+def get_user_with_auth_token(user_id_in_store, username, input_token, &block)
+    user_token = valid_token_at_store?(user_id_in_store)
+    if user_token != false
+      if user_token == input_token
+        $db.select("SELECT full_name, bio, last_seen from tbl_users WHERE username=$1", [username]) do |result|
+          unless result.empty?
+            yield result[0]
+          else
+            yield false
+          end
+        end
+      else
+        yield false
+      end
+    else
+        yield false
     end
 end

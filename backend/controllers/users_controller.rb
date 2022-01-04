@@ -52,25 +52,41 @@ class UsersController < ApplicationController
       return response_json({errors: auth_params_state, message: "required parameters are empty"}, 400)
     end
 
-    user_id_in_store = make_user_id(params["username"], request.ip, "auth_t")
-    user_token = valid_token?(user_id_in_store)
+    get_user_with_auth_token(make_user_id(params["username"], request.ip, 'auth_t'), params["username"], params["auth_token"]) do |callback|
+      if callback != false
+        response_json({
+          data: callback
+        }, 200)
+      else
+        unauthorized
+      end
+    end
+  end
 
-    if user_token != false
-      if user_token == params["auth_token"]
-        $db.select("SELECT full_name, bio, last_seen from tbl_users WHERE username=$1", [params["username"]]) do |result|
-          unless result.empty?
-            response_json({
-              data: result[0]
-            }, 200)
+  post '/refresh_token' do
+    refresh_token_params_state = validate_refresh_token_params!
+    if refresh_token_params_state != nil
+      return response_json({errors: refresh_token_params_state, message: "required parameters are empty"}, 400)
+    end
+
+    get_user_with_auth_token(make_user_id(params["username"], request.ip, 'refresh_t'), params["username"], params["refresh_token"]) do |callback|
+      if callback != false
+        set_and_gimme_token(params["username"], request.ip, "auth_t") do |callback|
+          if callback == nil
+            server_error
           else
-            unauthorized
+            response_json(
+              {
+                message: "auth_token changed successfully",
+                auth_token: callback
+              },
+              200
+            )
           end
         end
       else
-        unauthorized  
+        unauthorized
       end
-    else
-      unauthorized
     end
   end
 
@@ -113,6 +129,20 @@ class UsersController < ApplicationController
     presence_validating = validate_params(
       ["Username", "AuthToken"],
       [ params[:username], params[:auth_token] ]
+    )
+    errors_total << presence_validating
+    if errors_total.without_nil.length == 0
+      return nil
+    else
+      return errors_total.without_nil
+    end
+  end
+
+  def validate_refresh_token_params!
+    errors_total = []
+    presence_validating = validate_params(
+      ["Username", "RefreshToken"],
+      [ params[:username], params[:refresh_token] ]
     )
     errors_total << presence_validating
     if errors_total.without_nil.length == 0
