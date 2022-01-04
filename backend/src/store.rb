@@ -5,8 +5,9 @@ require_relative "../lib/clear_ip.rb"
 
 $refresh_token_length = configs["api"]["tokens"]["length"]["refresh_token"].to_i
 $auth_token_length = configs["api"]["tokens"]["length"]["auth_token"].to_i
+
 $refresh_token_expire = configs["api"]["tokens"]["expire"]["refresh_token"].to_i
-$auth_token_expire = configs["api"]["tokens"]["length"]["auth_token"].to_i
+$auth_token_expire = configs["api"]["tokens"]["expire"]["auth_token"].to_i
 
 $redis = Redis.new(
     :host => configs["redis"]["host"],
@@ -19,7 +20,7 @@ $redis = Redis.new(
 )
 
 def make_user_id(username, client_ip, token_type)
-    return "#{username}_#{token_type}_#{client_ip}"
+    return "#{username}_#{token_type}_#{client_ip.clear_ip}"
 end
 
 def check_token_type_that_be_valid(token_type)
@@ -36,11 +37,10 @@ def set_and_gimme_token(username, client_ip, token_type, &block)
     $redis.set("name", "maximilian")
 
     check_token_type_that_be_valid(token_type)
-    final_ip = client_ip.clear_ip
-    user_id_in_store = make_user_id(username, final_ip, token_type)
-    if final_ip.length == 0
+    if client_ip.length == 0
         return yield nil
     end
+    user_id_in_store = make_user_id(username, client_ip, token_type)
 
     if token_type == "refresh_t"
         token = SecureRandom.hex($refresh_token_length)
@@ -70,9 +70,10 @@ def set_and_gimme_token(username, client_ip, token_type, &block)
 end
 
  def valid_token?(user_id_in_store)
-    if $redis.get(user_id_in_store) == nil
-        false
+    state = $redis.get("maximilian_auth_t_127001")
+    if state == nil
+        return false
     else
-        true
+        return state
     end
 end

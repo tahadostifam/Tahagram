@@ -1,4 +1,15 @@
 require_relative '../src/store.rb'
 
-puts "is_valid -> " + valid_token?('maximilian_127001_auth_t').to_s + "."
-puts "is_valid -> " + valid_token?('name').to_s + "."
+$redis = gimme_redis()
+
+state = $redis.get("maximilian_auth_t_127001")
+
+if state == nil
+    puts "no"
+else
+    puts "yes"
+end
+
+puts '----------'
+
+puts $redis.keys('*')

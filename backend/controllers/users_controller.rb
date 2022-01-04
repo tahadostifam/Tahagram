@@ -9,12 +9,9 @@ $db = Database.new
 class UsersController < ApplicationController    
   post '/signup' do
     signup_params_state = validate_signup_params!
-    puts signup_params_state
     if signup_params_state != nil
       return response_json({errors: signup_params_state, message: "required parameters are empty"}, 400)
     end
-
-    return
 
     hashed_password = BCrypt::Password.create(params["password"])
 
@@ -50,10 +47,31 @@ class UsersController < ApplicationController
   end
 
   post '/authentication' do
+    auth_params_state = validate_authentication_params!
+    if auth_params_state != nil
+      return response_json({errors: auth_params_state, message: "required parameters are empty"}, 400)
+    end
+
     user_id_in_store = make_user_id(params["username"], request.ip, "auth_t")
-    # if valid_token?(user_id_in_store)
-      response_json({"valid": valid_token?(user_id_in_store)}, 200)
-    # end
+    user_token = valid_token?(user_id_in_store)
+
+    if user_token != false
+      if user_token == params["auth_token"]
+        $db.select("SELECT full_name, bio, last_seen from tbl_users WHERE username=$1", [params["username"]]) do |result|
+          unless result.empty?
+            response_json({
+              data: result[0]
+            }, 200)
+          else
+            unauthorized
+          end
+        end
+      else
+        unauthorized  
+      end
+    else
+      unauthorized
+    end
   end
 
   private
@@ -83,6 +101,20 @@ class UsersController < ApplicationController
       errors_total << max_length("Username", params[:username], 10)
       errors_total << min_length("Username", params[:username], 3)
     end
+    if errors_total.without_nil.length == 0
+      return nil
+    else
+      return errors_total.without_nil
+    end
+  end
+
+  def validate_authentication_params!
+    errors_total = []
+    presence_validating = validate_params(
+      ["Username", "AuthToken"],
+      [ params[:username], params[:auth_token] ]
+    )
+    errors_total << presence_validating
     if errors_total.without_nil.length == 0
       return nil
     else

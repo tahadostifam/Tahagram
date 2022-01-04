@@ -4,8 +4,8 @@ api:
       refresh_token: 100
       auth_token: 30
     expire:
-      refresh_token: 120 # 8640000 # 100d
-      auth_token: 60 # 86400 # 1d
+      refresh_token: 20000 # 8640000 # 100d
+      auth_token: 10000 # 86400 # 1d
 socket: 
   port: 2345
 postgres:
