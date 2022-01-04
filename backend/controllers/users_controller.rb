@@ -9,27 +9,37 @@ $db = Database.new
 class UsersController < ApplicationController    
   post '/signup' do
     signup_params_state = validate_signup_params!
-    
-    puts signup_params_state
-    puts signup_params_state.class
 
     if signup_params_state != nil
       return response_json({errors: signup_params_state, message: "required parameters are empty"}, 400)
     end
 
     hashed_password = BCrypt::Password.create(params["password"])
-    puts hashed_password
 
     if validate_username_uniqueness?(params["username"])
       $db.exec_query!("INSERT into tbl_users(full_name, username, password_digest) VALUES($1, $2, $3)", [
         params[:full_name], params[:username], hashed_password
       ]) do |state, result|
-        puts state
-        puts result
         if state
-          response_json({message: "User created successfully"}, 201)
+          set_and_gimme_token(params["username"], request.ip, "refresh_t") do |refresh_token_callbackfn|
+            if refresh_token_callbackfn == nil
+              delete_user params["username"]
+
+              server_error
+            else
+              set_and_gimme_token(params["username"], request.ip, "auth_t") do |auth_token_callbackfn|
+                if auth_token_callbackfn == nil
+                  delete_user params["username"]
+    
+                  server_error
+                else
+                  user_created_successfully(refresh_token_callbackfn, auth_token_callbackfn)
+                end
+              end
+            end
+          end
         else
-          response_json({message: "An error occurred while creating the user"}, 500)
+          server_error
         end
       end
     else
@@ -38,6 +48,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def delete_user(username)
+    $db.database().send_query("DELETE FROM tbl_users WHERE username=$1", [username])
+  end
 
   def validate_username_uniqueness?(username)
     $db.select("SELECT username from tbl_users WHERE username=$1", [username]) do |result|

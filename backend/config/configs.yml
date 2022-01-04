@@ -1,3 +1,11 @@
+api:
+  tokens:
+    length:
+      refresh_token: 100
+      auth_token: 30
+    expire:
+      refresh_token: 120 # 8640000 # 100d
+      auth_token: 60 # 86400 # 1d
 socket: 
   port: 2345
 postgres:

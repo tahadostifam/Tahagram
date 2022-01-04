@@ -8,4 +8,21 @@ class ApplicationController < Sinatra::Base
     not_found do
         response_json({message: "not found error"}, 404)
     end
+
+    def server_error
+        response_json({message: "An error occurred while creating the user"}, 500)
+    end
+
+    def user_created_successfully(refresh_token, auth_token)
+        response_json(
+          {
+            message: "User created successfully",
+            tokens: {
+              refresh_token: refresh_token.to_s,
+              auth_token: auth_token.to_s
+            }
+          },
+          201
+        )
+    end
 end  
