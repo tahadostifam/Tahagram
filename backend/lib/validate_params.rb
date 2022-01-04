@@ -1,7 +1,7 @@
 class Array
     def without_nil
        self.select { |value| 
-        value != nil && value.class == NilClass
+        value != nil
        }
     end
 end

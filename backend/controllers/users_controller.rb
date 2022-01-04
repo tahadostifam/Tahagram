@@ -9,10 +9,12 @@ $db = Database.new
 class UsersController < ApplicationController    
   post '/signup' do
     signup_params_state = validate_signup_params!
-
+    puts signup_params_state
     if signup_params_state != nil
       return response_json({errors: signup_params_state, message: "required parameters are empty"}, 400)
     end
+
+    return
 
     hashed_password = BCrypt::Password.create(params["password"])
 
@@ -45,6 +47,13 @@ class UsersController < ApplicationController
     else
       response_json({message: "Username already registered"}, 409)
     end
+  end
+
+  post '/authentication' do
+    user_id_in_store = make_user_id(params["username"], request.ip, "auth_t")
+    # if valid_token?(user_id_in_store)
+      response_json({"valid": valid_token?(user_id_in_store)}, 200)
+    # end
   end
 
   private

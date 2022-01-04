@@ -25,4 +25,8 @@ class ApplicationController < Sinatra::Base
           201
         )
     end
+
+    def we_need_required_params(errors)
+      response_json({errors: errors, message: "required parameters are empty"}, 400)
+    end
 end  

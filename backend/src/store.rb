@@ -1,15 +1,12 @@
 require 'redis'
 require 'securerandom'
 require_relative "../lib/configs_parser.rb"
+require_relative "../lib/clear_ip.rb"
 
-class String
-    def clear_ip
-        s = self
-        s = s.gsub('.', '')
-        s = s.gsub(':', '')
-        s
-    end
-end
+$refresh_token_length = configs["api"]["tokens"]["length"]["refresh_token"].to_i
+$auth_token_length = configs["api"]["tokens"]["length"]["auth_token"].to_i
+$refresh_token_expire = configs["api"]["tokens"]["expire"]["refresh_token"].to_i
+$auth_token_expire = configs["api"]["tokens"]["length"]["auth_token"].to_i
 
 $redis = Redis.new(
     :host => configs["redis"]["host"],
@@ -21,23 +18,26 @@ $redis = Redis.new(
     :reconnect_delay_max => 500.0,
 )
 
+def make_user_id(username, client_ip, token_type)
+    return "#{username}_#{token_type}_#{client_ip}"
+end
+
+def check_token_type_that_be_valid(token_type)
+    unless ["auth_t", "refresh_t"].include?(token_type)
+        raise "store.rb : Invalid token type at setting_refresh_token"
+    end
+end
+
 def gimme_redis
     return $redis
 end
-
-
-$refresh_token_length = configs["api"]["tokens"]["length"]["refresh_token"].to_i
-$auth_token_length = configs["api"]["tokens"]["length"]["auth_token"].to_i
-
-$refresh_token_expire = configs["api"]["tokens"]["expire"]["refresh_token"].to_i
-$auth_token_expire = configs["api"]["tokens"]["length"]["auth_token"].to_i
 
 def set_and_gimme_token(username, client_ip, token_type, &block)
     $redis.set("name", "maximilian")
 
     check_token_type_that_be_valid(token_type)
     final_ip = client_ip.clear_ip
-    user_id_in_store = "#{username}_#{token_type}_#{final_ip}"
+    user_id_in_store = make_user_id(username, final_ip, token_type)
     if final_ip.length == 0
         return yield nil
     end
@@ -69,8 +69,10 @@ def set_and_gimme_token(username, client_ip, token_type, &block)
     return yield nil
 end
 
-def check_token_type_that_be_valid(token_type)
-    unless ["auth_t", "refresh_t"].include?(token_type)
-        raise "store.rb : Invalid token type at setting_refresh_token"
+ def valid_token?(user_id_in_store)
+    if $redis.get(user_id_in_store) == nil
+        false
+    else
+        true
     end
 end

@@ -1,12 +1,4 @@
-require_relative '../src/database.rb'
+require_relative '../src/store.rb'
 
-$db = Database.new
-
-RSpec.describe "Store" do
-    context "Getting User Tokens" do
-        $db.database().send_query("DELETE FROM tbl_users WHERE username=$1", ["maximilian"])
-        $db.select("SELECT full_name, username from tbl_users", []) do |state, result|
-            it result
-        end
-    end
-end
+puts "is_valid -> " + valid_token?('maximilian_127001_auth_t').to_s + "."
+puts "is_valid -> " + valid_token?('name').to_s + "."
