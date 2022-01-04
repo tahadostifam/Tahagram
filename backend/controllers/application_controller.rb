@@ -33,5 +33,8 @@ class ApplicationController < Sinatra::Base
     def unauthorized
       response_json({message: "Unauthorized"}, 401)
     end
-    
+
+    def username_or_password_is_incorrect
+      response_json({message: "Username or password is incorrect"}, 401)
+    end
 end  
