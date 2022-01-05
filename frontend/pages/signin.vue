@@ -33,7 +33,7 @@
       <p v-for="(item, index) in form_errors" :key="index" class="item">{{item}}</p>
     </div>
 
-    <v-btn @click="submit" :color="theme_color" depressed>Submit</v-btn>
+    <v-btn @click="submit" :color="theme_color" depressed class="mt-3">Submit</v-btn>
   </div>
 </template>
 
@@ -54,18 +54,28 @@ export default {
   methods: {
     submit(){
       this.$axios.$post('/users/signin', {
-        username: 'taha', 
-        password: '1234'
+        username: this.$data.username, 
+        password: this.$data.password
       }, {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8'
         }
       })
       .then(response => { 
-        console.log(response)
+        console.log(response.tokens.refresh_token);
       })
       .catch(error => {
-          console.log(error.response.data)
+          if (error.response.data) {
+            if (error.response.data.message == 'Username or password is incorrect') {
+              this.$set(this.$data, 'form_errors', ["Username or password is incorrect"])
+            }
+            if (error.response.data.message == 'required parameters are empty') {
+              this.$set(this.$data, 'form_errors', ["Required parameters can't be are empty"])
+            }
+          }
+          else{
+            this.$set(this.$data, 'form_errors', ["An error occurred on the client side. please try again"])
+          }
       });
     }
   }

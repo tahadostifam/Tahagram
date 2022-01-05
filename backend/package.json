@@ -1,0 +1,37 @@
+{
+    "name": "chatapp_backend",
+    "version": "1.0.0",
+    "description": "chat-application backend built in nodejs",
+    "main": "server.ts",
+    "author": "Taha. Dostifam",
+    "license": "MIT",
+    "engines": {
+        "node": ">=17.3"
+    },
+    "scripts": {
+        "start": "ts-node server.ts",
+        "dev": "nodemon server.ts"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.12",
+        "@types/expect": "^24.3.0",
+        "@types/express": "^4.17.13",
+        "@types/express-validator": "^3.0.0",
+        "@types/node": "^17.0.8",
+        "@types/pg": "^8.6.3",
+        "@types/redis": "^4.0.11",
+        "ts-node": "^10.4.0",
+        "typescript": "^4.5.4"
+    },
+    "dependencies": {
+        "bcrypt": "^5.0.1",
+        "body-parser": "^1.19.1",
+        "cors": "^2.8.5",
+        "express": "^4.17.2",
+        "express-validator": "^6.14.0",
+        "nodemon": "^2.0.15",
+        "pg": "^8.7.1",
+        "redis": "^4.0.1",
+        "yaml": "^1.10.2"
+    }
+}

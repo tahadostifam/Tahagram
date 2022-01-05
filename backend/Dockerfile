@@ -1,12 +1,11 @@
-FROM ruby:3.0.3
+FROM node
 
-RUN apt update; apt install nano postgresql-client libpq5 libpq-dev -y
 WORKDIR /app
 COPY . .
 
 RUN bundle;
 
+EXPOSE 8000
 EXPOSE 2345
-EXPOSE 2346
 
-CMD [ "ruby", "src/server.rb" ]
+CMD [ "npm", "start" ]

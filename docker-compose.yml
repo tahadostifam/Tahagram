@@ -1,14 +1,14 @@
 version: "3.3"
 services:
   backend:
-    image: "ruby:3.0.3"
+    image: "node"
     container_name: "chat_app_backend"
     build: 
       context: ./backend
       dockerfile: Dockerfile
     ports:
+      - "8000:8000"
       - "2345:2345"
-      - "2346:2346"
     restart: always
   nginx:
     container_name: "chat_app_nginx"

@@ -1,0 +1,31 @@
+{
+    "api": {
+        "port": 8000,
+        "tokens": {
+            "refresh_token": {
+                "length": 60,
+                "expire": 20000
+            },
+            "auth_token": {
+                "length": 20,
+                "expire": 10000
+            }
+        }
+    },
+    "socket": {
+        "port": 2345
+    },
+    "postgres": {
+        "host": "127.0.0.1",
+        "port": 5432,
+        "user": "taha",
+        "pass": "1234",
+        "db": "chatapp_db"
+    },
+    "redis": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "user": "",
+        "pass": ""
+    }
+}
