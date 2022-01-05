@@ -52,10 +52,21 @@ export default {
     }
   },
   methods: {
-    async submit(){
-      await this.$axios.$post(configs.api_address + '/users/signin').then((response) => {
-        console.log(response.data);
+    submit(){
+      this.$axios.$post('/users/signin', {
+        username: 'taha', 
+        password: '1234'
+      }, {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        }
       })
+      .then(response => { 
+        console.log(response)
+      })
+      .catch(error => {
+          console.log(error.response.data)
+      });
     }
   }
 }

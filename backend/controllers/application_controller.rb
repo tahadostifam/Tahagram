@@ -1,18 +1,26 @@
 require 'sinatra/cross_origin'
+require_relative '../middlewares/json_body_parser.rb'
 
 class ApplicationController < Sinatra::Base
+    register Sinatra::CrossOrigin
+
+    set :allow_origin, :any
+    set :allow_methods, [:get, :post, :options]
+    set :allow_credentials, true
+    set :max_age, "1728000"
+    set :expose_headers, ['Content-Type']
+
     configure do
       enable :cross_origin
     end
-    before do
-      response.headers['Access-Control-Allow-Origin'] = '*'
-    end
-    
+
     options "*" do
-      response.headers["Allow"] = "POST"
-      response.headers["Access-Control-Allow-Origin"] = "*"
+      response.headers["Allow"] = "GET, POST, OPTIONS"
+      response.headers["Access-Control-Allow-Headers"] = "Content-Type, Accept"
       200
     end
+
+    use JsonBodyParser
 
     def response_json(object, status_code)
         content_type :json
@@ -23,6 +31,8 @@ class ApplicationController < Sinatra::Base
     not_found do
         response_json({message: "not found error"}, 404)
     end
+
+    # Http Status Codes
 
     def server_error
         response_json({message: "An error occurred while creating the user"}, 500)
