@@ -27,6 +27,7 @@ gem 'rspec'
 
 # api server
 gem 'sinatra'
+gem 'sinatra-cross_origin'
 gem 'rack'
 gem 'thin'
 gem 'puma'

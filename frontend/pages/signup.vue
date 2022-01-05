@@ -42,11 +42,13 @@
 </template>
 
 <script>
+import configs from '@/assets/javascript/configs'
+
 export default {
   name: 'SigninPage',
   data(){
     return{
-      theme_color: "green accent-4"
+      theme_color: configs.theme_color
     }
   }
 }

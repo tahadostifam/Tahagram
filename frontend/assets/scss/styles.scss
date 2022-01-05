@@ -369,3 +369,15 @@ html{
 .cursor-pointer{
     cursor: pointer;
 }
+
+.form_errors{
+    width: 100%;
+    .item{
+        color: #F44336;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        display: block;
+    }
+    margin-bottom: 10px;
+}

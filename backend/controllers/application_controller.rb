@@ -1,4 +1,19 @@
+require 'sinatra/cross_origin'
+
 class ApplicationController < Sinatra::Base
+    configure do
+      enable :cross_origin
+    end
+    before do
+      response.headers['Access-Control-Allow-Origin'] = '*'
+    end
+    
+    options "*" do
+      response.headers["Allow"] = "POST"
+      response.headers["Access-Control-Allow-Origin"] = "*"
+      200
+    end
+
     def response_json(object, status_code)
         content_type :json
         status status_code

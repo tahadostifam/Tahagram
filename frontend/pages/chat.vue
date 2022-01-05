@@ -32,7 +32,7 @@
                 </v-col>
 
                 <v-col class="ma-0 pa-0">
-                <input type="text"class="custom_input" placeholder="Search">
+                <input type="text" class="custom_input" placeholder="Search">
                 </v-col>
 
             </v-row>
@@ -237,7 +237,7 @@
                         </v-icon>
                     </v-btn>
                 </div>
-                <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
+                <div slot="emoji-picker" slot-scope="{ emojis, insert }">
                     <v-card
                     id="emoji_picker_card"
                     class="rounded-lg"
@@ -283,6 +283,7 @@
 
 <script>
 import { EmojiPicker } from 'vue-emoji-picker'
+import configs from '@/assets/javascript/configs'
 
 export default {
     middleware: ['check_auth'],
@@ -291,7 +292,7 @@ export default {
     },
     data(){
         return{
-            theme_color: 'green accent-4',
+            theme_color: configs.theme_color,
             send_message_input: '',
             context_menu_for_messages: {
                 show: false,

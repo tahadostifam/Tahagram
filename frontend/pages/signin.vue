@@ -8,6 +8,7 @@
       filled
       dense
       :color="theme_color"
+      v-model="username"
     ></v-text-field>
 
     <v-text-field
@@ -16,6 +17,7 @@
       outlined
       filled
       dense
+      v-model="password"
       :color="theme_color"
     ></v-text-field>
 
@@ -24,18 +26,36 @@
     label="Remember me"
     :color="theme_color"
     value="1"
+    v-model="remember_me"
     ></v-checkbox>
 
-    <v-btn :color="theme_color" depressed>Submit</v-btn>
+    <div v-if="form_errors" class="form_errors">
+      <p v-for="(item, index) in form_errors" :key="index" class="item">{{item}}</p>
+    </div>
+
+    <v-btn @click="submit" :color="theme_color" depressed>Submit</v-btn>
   </div>
 </template>
 
 <script>
+import configs from '@/assets/javascript/configs'
+
 export default {
   name: 'SigninPage',
   data(){
     return{
-      theme_color: "green accent-4"
+      theme_color: configs.theme_color,
+      username: '',
+      password: '',
+      remember_me: '',
+      form_errors: []
+    }
+  },
+  methods: {
+    async submit(){
+      await this.$axios.$post(configs.api_address + '/users/signin').then((response) => {
+        console.log(response.data);
+      })
     }
   }
 }

@@ -426,4 +426,17 @@ html {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.form_errors {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.form_errors .item {
+  color: #F44336;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: block;
+}
 /*# sourceMappingURL=styles.css.map */
