@@ -16,14 +16,14 @@ class UsersController < ApplicationController
       return response_json({errors: signup_params_state, message: "required parameters are empty"}, 400)
     end
 
-    hashed_password = BCrypt::Password.create(params["password"])
+    hashed_password = BCrypt::Password.create(@body["password"])
 
-    if validate_username_uniqueness?(params["username"])
+    if validate_username_uniqueness?(@body["username"])
       $db.exec_query!("INSERT into tbl_users(full_name, username, password_digest) VALUES($1, $2, $3)", [
-        params[:full_name], params[:username], hashed_password
+        @body["full_name"], @body["username"], hashed_password
       ]) do |state, result|
         if state
-          set_user_tokens(params["username"], request.ip) do |state, refresh_token, auth_token|
+          set_user_tokens(@body["username"], request.ip) do |state, refresh_token, auth_token|
             if state != false
               user_created_successfully(refresh_token, auth_token)
             else
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
       return response_json({errors: auth_params_state, message: "required parameters are empty"}, 400)
     end
 
-    get_user_with_auth_token(make_user_id(params["username"], request.ip, 'auth_t'), params["username"], params["auth_token"]) do |callback|
+    get_user_with_auth_token(make_user_id(@body["username"], request.ip, 'auth_t'), @body["username"], @body["auth_token"]) do |callback|
       if callback != false
         response_json({
           data: callback
@@ -62,9 +62,9 @@ class UsersController < ApplicationController
       return response_json({errors: refresh_token_params_state, message: "required parameters are empty"}, 400)
     end
 
-    get_user_with_auth_token(make_user_id(params["username"], request.ip, 'refresh_t'), params["username"], params["refresh_token"]) do |callback|
+    get_user_with_auth_token(make_user_id(@body["username"], request.ip, 'refresh_t'), @body["username"], @body["refresh_token"]) do |callback|
       if callback != false
-        set_and_gimme_token(params["username"], request.ip, "auth_t") do |callback|
+        set_and_gimme_token(@body["username"], request.ip, "auth_t") do |callback|
           if callback == nil
             server_error
           else
@@ -89,12 +89,12 @@ class UsersController < ApplicationController
       return response_json({errors: signin_params_state, message: "required parameters are empty"}, 400)
     end
 
-    $db.select("SELECT * from tbl_users WHERE username=$1", [params["username"]]) do |result|
+    $db.select("SELECT * from tbl_users WHERE username=$1", [@body["username"]]) do |result|
       unless result.empty?
         # success
         hashed_password = BCrypt::Password.new(result[0]["password_digest"])
-        if hashed_password == params["password"]
-          set_user_tokens(params["username"], request.ip) do |state, refresh_token, auth_token|
+        if hashed_password == @body["password"]
+          set_user_tokens(@body["username"], request.ip) do |state, refresh_token, auth_token|
             if state != false
               # removing password of data that will be send to user
               # we do it for be still in security
@@ -169,12 +169,12 @@ class UsersController < ApplicationController
     errors_total = []
     presence_validating = validate_params(
       ["Fullname", "Username", "Password"],
-      [ params[:full_name], params[:username], params[:password] ]
+      [ @body["full_name"], @body["username"], @body["password"] ]
     )
     errors_total << presence_validating
     if presence_validating == nil
-      errors_total << max_length("Username", params[:username], 10)
-      errors_total << min_length("Username", params[:username], 3)
+      errors_total << max_length("Username", @body["username"], 10)
+      errors_total << min_length("Username", @body["username"], 3)
     end
     if errors_total.without_nil.length == 0
       return nil
@@ -187,7 +187,7 @@ class UsersController < ApplicationController
     errors_total = []
     presence_validating = validate_params(
       ["Username", "Password"],
-      [ params[:username], params[:password] ]
+      [ @body["username"], @body["password"] ]
     )
     errors_total << presence_validating
     if errors_total.without_nil.length == 0
@@ -201,7 +201,7 @@ class UsersController < ApplicationController
     errors_total = []
     presence_validating = validate_params(
       ["Username", "AuthToken"],
-      [ params[:username], params[:auth_token] ]
+      [ @body["username"], @body["auth_token"] ]
     )
     errors_total << presence_validating
     if errors_total.without_nil.length == 0
@@ -215,7 +215,7 @@ class UsersController < ApplicationController
     errors_total = []
     presence_validating = validate_params(
       ["Username", "RefreshToken"],
-      [ params[:username], params[:refresh_token] ]
+      [ @body["username"], @body["refresh_token"] ]
     )
     errors_total << presence_validating
     if errors_total.without_nil.length == 0

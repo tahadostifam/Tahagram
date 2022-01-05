@@ -1,14 +1,25 @@
 require 'sinatra/cross_origin'
-require_relative '../middlewares/json_body_parser.rb'
 
 class ApplicationController < Sinatra::Base
     register Sinatra::CrossOrigin
 
     set :allow_origin, :any
     set :allow_methods, [:get, :post, :options]
-    set :allow_credentials, true
-    set :max_age, "1728000"
     set :expose_headers, ['Content-Type']
+
+    def response_json(object, status_code)
+      content_type :json
+      status status_code
+      object.to_json 
+    end
+
+    before do
+      begin
+        @body = JSON.parse(Rack::Request.new(env).body.read)
+      rescue => err
+        response_json({message: 'Content-Type of your request header should be application/json!'}, 503)
+      end
+    end
 
     configure do
       enable :cross_origin
@@ -18,14 +29,6 @@ class ApplicationController < Sinatra::Base
       response.headers["Allow"] = "GET, POST, OPTIONS"
       response.headers["Access-Control-Allow-Headers"] = "Content-Type, Accept"
       200
-    end
-
-    use JsonBodyParser
-
-    def response_json(object, status_code)
-        content_type :json
-        status status_code
-        object.to_json 
     end
 
     not_found do
