@@ -104,34 +104,55 @@ export default {
         const client_ip = clientIp(req, res)?.toString();
         if (client_ip) {
             try {
-                jwt.verify(req.body.refresh_token, secrets.refresh_token, (err: any, decoded_jwt_token: any) => {
-                    if (err || !decoded_jwt_token) return status_codes.invalid_token(req, res, next);
-                    const user_id_in_store = makeUserStoreId(decoded_jwt_token.username, "refresh", cleanIpDots(client_ip));
-                    store.get(user_id_in_store).then(async (token_in_store) => {
-                        if (String(token_in_store).trim() == String(req.body.refresh_token).trim()) {
-                            // success | requested token is valid
-                            await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
-                                async (auth_token) => {
-                                    // success
-                                    status_codes.success_signin(
-                                        {
-                                            auth_token: auth_token,
-                                        },
-                                        req,
-                                        res,
-                                        next
-                                    );
-                                },
-                                () => status_codes.error(req, res, next)
-                            );
-                        } else {
-                            status_codes.invalid_token(req, res, next);
-                        }
-                    });
-                });
+                verifyRefreshToken(req.body.refresh_token, cleanIpDots(client_ip)).then(
+                    async () => {
+                        // valid
+                        await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
+                            async (auth_token) => {
+                                // success
+                                status_codes.success_signin(
+                                    {
+                                        auth_token: auth_token,
+                                    },
+                                    req,
+                                    res,
+                                    next
+                                );
+                            },
+                            () => status_codes.error(req, res, next)
+                        );
+                    },
+                    () => status_codes.invalid_token(req, res, next)
+                );
             } catch (error) {
                 return status_codes.invalid_token(req, res, next);
             }
+        }
+    },
+
+    AuthenticationAction: (req: Request, res: Response, next: NextFunction) => {
+        const client_ip = clientIp(req, res)?.toString();
+        if (client_ip) {
+            const user_id_in_store = makeUserStoreId(req.body.username, "auth", cleanIpDots(client_ip));
+            store.get(user_id_in_store).then(async (token_in_store) => {
+                if (String(token_in_store).trim() == String(req.body.auth_token).trim()) {
+                    // success | requested token is valid
+                    database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [req.body.username]).then(
+                        (result: any) => {
+                            if (result.length == 0) return status_codes.invalid_token(req, res, next);
+                            else {
+                                res.send({
+                                    message: "success",
+                                    data: result,
+                                });
+                            }
+                        },
+                        () => status_codes.invalid_token(req, res, next)
+                    );
+                } else {
+                    status_codes.invalid_token(req, res, next);
+                }
+            });
         }
     },
 };
@@ -166,5 +187,22 @@ export function checkUsernameUniqueness(username: string) {
             },
             () => is_not_unique()
         );
+    });
+}
+
+export function verifyRefreshToken(token: string, client_ip: string) {
+    return new Promise((valid: any, is_not_valid: any) => {
+        jwt.verify(token, secrets.refresh_token, (err: any, decoded_jwt_token: any) => {
+            const user_id_in_store = makeUserStoreId(decoded_jwt_token.username, "refresh", cleanIpDots(client_ip));
+            if (err || !decoded_jwt_token) return is_not_valid();
+            store.get(user_id_in_store).then(async (token_in_store) => {
+                if (String(token_in_store).trim() == String(token).trim()) {
+                    // success | requested token is valid
+                    valid(decoded_jwt_token.username);
+                } else {
+                    is_not_valid();
+                }
+            });
+        });
     });
 }

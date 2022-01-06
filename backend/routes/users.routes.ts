@@ -36,4 +36,14 @@ router.post(
     }
 );
 
+router.post(
+    "/auth",
+    body("auth_token").notEmpty().withMessage("AuthToken can't be empty"),
+    body("username").notEmpty().withMessage("Username can't be empty"),
+    validate_body,
+    (req: Request, res: Response, next: NextFunction) => {
+        UsersController.AuthenticationAction(req, res, next);
+    }
+);
+
 export default router;
