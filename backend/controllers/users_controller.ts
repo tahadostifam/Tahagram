@@ -4,6 +4,8 @@ import { clientIp, cleanIpDots } from "../lib/client_ip";
 import * as database from "../lib/database";
 import status_codes from "../lib/status_codes";
 import store, { makeUserStoreId, setUserTokens } from "../lib/store";
+import jwt from "jsonwebtoken";
+const secrets = require("../configs/secrets.json");
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -38,7 +40,14 @@ export default {
                         () => status_codes.error(req, res, next)
                     );
                 },
-                () => status_codes.username_or_password_is_incorrect(req, res, next)
+                (state) => {
+                    if (state == "not_found") {
+                        status_codes.username_or_password_is_incorrect(req, res, next);
+                    }
+                    if (state == "error") {
+                        status_codes.error(req, res, next);
+                    }
+                }
             );
         }
     },
@@ -90,19 +99,58 @@ export default {
             );
         }
     },
+
+    RefreshTokenAction: (req: Request, res: Response, next: NextFunction) => {
+        const client_ip = clientIp(req, res)?.toString();
+        if (client_ip) {
+            try {
+                jwt.verify(req.body.refresh_token, secrets.refresh_token, (err: any, decoded_jwt_token: any) => {
+                    if (err || !decoded_jwt_token) return status_codes.invalid_token(req, res, next);
+                    const user_id_in_store = makeUserStoreId(decoded_jwt_token.username, "refresh", cleanIpDots(client_ip));
+                    store.get(user_id_in_store).then(async (token_in_store) => {
+                        if (String(token_in_store).trim() == String(req.body.refresh_token).trim()) {
+                            // success | requested token is valid
+                            await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
+                                async (auth_token) => {
+                                    // success
+                                    status_codes.success_signin(
+                                        {
+                                            auth_token: auth_token,
+                                        },
+                                        req,
+                                        res,
+                                        next
+                                    );
+                                },
+                                () => status_codes.error(req, res, next)
+                            );
+                        } else {
+                            status_codes.invalid_token(req, res, next);
+                        }
+                    });
+                });
+            } catch (error) {
+                return status_codes.invalid_token(req, res, next);
+            }
+        }
+    },
 };
 
 export function signinUserWithUserPassword(username: string, password: string) {
     return new Promise((success: any, failed: any) => {
         database.exec_query("SELECT * FROM tbl_users WHERE username=$1", [username]).then(
             (result: any) => {
-                const user = result[0];
-                comparePassword(password, user.password_digest).then(
-                    () => {
-                        success(user);
-                    },
-                    () => failed("not_found")
-                );
+                if (result.length > 0) {
+                    const user = result[0];
+                    comparePassword(password, user.password_digest).then(
+                        () => {
+                            success(user);
+                        },
+                        () => failed("not_found")
+                    );
+                } else {
+                    failed("not_found");
+                }
             },
             () => failed("error")
         );

@@ -27,4 +27,13 @@ router.post(
     }
 );
 
+router.post(
+    "/refresh_token",
+    body("refresh_token").notEmpty().withMessage("RefreshToken can't be empty"),
+    validate_body,
+    (req: Request, res: Response, next: NextFunction) => {
+        UsersController.RefreshTokenAction(req, res, next);
+    }
+);
+
 export default router;

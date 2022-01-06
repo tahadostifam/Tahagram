@@ -27,7 +27,7 @@ export function setUserTokens(username: string, token_type: string, user_ip: str
         var final_token;
 
         if (token_type == "refresh") {
-            final_token = await jwt.sign({ username: username, token_type: token_type }, secret, { algorithm: "HS512" });
+            final_token = await jwt.sign({ username: username }, secret, { algorithm: "HS512" });
         }
         if (token_type == "auth") {
             final_token = await crypto.randomBytes(configs.api.tokens.auth_token.length).toString("hex");

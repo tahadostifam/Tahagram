@@ -38,4 +38,17 @@ export default {
             message: "Username already registered",
         });
     },
+    invalid_token(req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 401;
+        res.send({
+            message: "Invalid token",
+        });
+    },
+    auth_token_changed(data: any, req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 200;
+        res.send({
+            message: "auth token changed",
+            auth_token: data.auth_token,
+        });
+    },
 };
