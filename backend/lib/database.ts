@@ -19,7 +19,7 @@ export async function disconnect() {
 
 export async function exec_query(query_string: string, values: Array<string>) {
     return new Promise(async (success, error) => {
-        client.query(query_string, async (err, res) => {
+        client.query(query_string, values, async (err, res) => {
             if (err) return error();
             success(res.rows);
         });
