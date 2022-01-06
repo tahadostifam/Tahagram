@@ -5,7 +5,6 @@ COPY . .
 
 RUN npm i;
 
-EXPOSE 8000
-EXPOSE 2345
+EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "build" ]

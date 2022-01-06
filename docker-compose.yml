@@ -1,36 +1,48 @@
 version: "3.3"
 services:
-  backend:
-    image: "node"
-    container_name: "chat_app_backend"
-    build: 
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-      - "2345:2345"
-    restart: always
-  nginx:
-    container_name: "chat_app_nginx"
-    build: 
-      context: ./backend
-      dockerfile: nginx.Dockerfile
-    ports:
-      - "8000:8000"
-  postgres:
-    image: "postgres"
-    container_name: "chat_app_postgres"
-    env_file:
-      - backend/database.env
-    volumes:
-      - chatapp_postgres_volume:/var/lib/postgresql/data
-    ports: 
-      - "5432:5432"
-  redis:
-    image: "redis:latest"
-    container_name: "chat_app_redisdb"
-    ports: 
-      - "6379:6379"
-  
+    backend:
+        image: "node"
+        container_name: "chat_app_backend"
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8000"
+            - "2345:2345"
+        restart: always
+        network_mode: "host"
+    frontend:
+        image: "node"
+        container_name: "chat_app_frontend"
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+    nginx:
+        container_name: "chat_app_nginx"
+        build:
+            context: ./backend
+            dockerfile: nginx.Dockerfile
+        ports:
+            - "5000:5000"
+        network_mode: "host"
+    postgres:
+        image: "postgres"
+        container_name: "chat_app_postgres"
+        env_file:
+            - backend/database.env
+        volumes:
+            - chatapp_postgres_volume:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        network_mode: "host"
+    redis:
+        image: "redis:latest"
+        container_name: "chat_app_redisdb"
+        ports:
+            - "6379:6379"
+        network_mode: "host"
+
 volumes:
-  chatapp_postgres_volume:
+    chatapp_postgres_volume:
