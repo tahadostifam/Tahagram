@@ -102,12 +102,13 @@ export default {
 
     RefreshTokenAction: (req: Request, res: Response, next: NextFunction) => {
         const client_ip = clientIp(req, res)?.toString();
+
         if (client_ip) {
             try {
                 verifyRefreshToken(req.body.refresh_token, cleanIpDots(client_ip)).then(
-                    async () => {
+                    async (user_username: any) => {
                         // valid
-                        await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
+                        await setUserTokens(user_username, "auth", cleanIpDots(client_ip)).then(
                             async (auth_token) => {
                                 // success
                                 status_codes.success_signin(

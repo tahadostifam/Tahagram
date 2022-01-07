@@ -80,7 +80,6 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
           if (response.message == "success") {
             this.$store.commit(
               "auth/setRefreshToken",

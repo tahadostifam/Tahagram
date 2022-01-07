@@ -27,20 +27,62 @@ export const mutations = {
 };
 
 export const actions = {
-  async Authenticate({ commit, state }) {
+  Authenticate({ commit, state }) {
+    const axios = this.$axios;
+
+    function fetch_user_data(auth_token) {
+      return new Promise((resolve, reject) => {
+        axios
+          .$post("/users/auth", {
+            username: state.auth.username,
+            auth_token: auth_token,
+          })
+          .then((response) => {
+            if (response.message == "success") {
+              return resolve(response.data);
+            } else reject();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    }
+
     return new Promise((resolve, reject) => {
-      this.$axios
-        .$post("/users/auth", {
-          username: state.auth.username,
-          auth_token: state.auth.auth_token,
+      fetch_user_data(state.auth.auth_token)
+        .then((user) => {
+          return resolve(user);
         })
-        .then((response) => {
-          if (response.message == "success") {
-            return resolve(response.data);
-          } else reject();
-        })
-        .catch((error) => {
-          reject();
+        .catch(() => {
+          console.log("getting new auth_token");
+          axios
+            .$post("/users/refresh_token", {
+              refresh_token: state.auth.refresh_token,
+            })
+            .then((response) => {
+              if (response.message == "success") {
+                // NOTE - we have new token now :)
+                // ANCHOR
+                fetch_user_data(response.tokens.auth_token).then(
+                  (new_user) => {
+                    console.log("auth_token changed");
+                    return resolve(new_user);
+                  },
+                  (error) => {
+                    console.log("1: refreshing auth_token failed");
+                    return reject();
+                  }
+                );
+                // ANCHOR
+              } else {
+                console.log("2: refreshing auth_token failed");
+                return reject();
+              }
+            })
+            .catch(() => {
+              console.log("3: refreshing auth_token failed");
+              return reject();
+            });
         });
     });
   },

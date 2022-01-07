@@ -23,7 +23,11 @@ export default {
       theme_color: "green accent-4",
     };
   },
-  mounted() {
+  async mounted() {
+    this.$nextTick(function () {
+      require("../assets/javascript/scripts");
+    });
+
     const refresh_token = window.localStorage.getItem("refresh_token");
     const auth_token = window.localStorage.getItem("auth_token");
     const username = window.localStorage.getItem("username");
@@ -33,9 +37,9 @@ export default {
       this.$store.commit("auth/setUsername", username);
       this.$store.commit("auth/setUserLoggedIn", true);
       // Get user info | Auth
-      this.$store.dispatch("auth/Authenticate").then(
+      await this.$store.dispatch("auth/Authenticate").then(
         (user_data) => {
-          console.log("logged in with saved tokens");
+          console.log("logging in with saved tokens");
           this.$store.commit("auth/setUserData", user_data);
           return this.$router.push({ path: "/chat" });
         },
@@ -44,10 +48,6 @@ export default {
         }
       );
     }
-
-    this.$nextTick(function () {
-      require("../assets/javascript/scripts");
-    });
   },
 };
 </script>
