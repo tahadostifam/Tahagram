@@ -42,14 +42,14 @@
 </template>
 
 <script>
-import configs from '@/assets/javascript/configs'
+import configs from "@/assets/javascript/configs";
 
 export default {
-  name: 'SigninPage',
-  data(){
-    return{
-      theme_color: configs.theme_color
-    }
-  }
-}
+  name: "signup",
+  data() {
+    return {
+      theme_color: configs.theme_color,
+    };
+  },
+};
 </script>
