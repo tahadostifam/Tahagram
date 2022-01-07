@@ -20,6 +20,9 @@
                 >
                   <v-list-item-title>Source Code</v-list-item-title>
                 </v-list-item>
+                <v-list-item v-ripple @click="logout">
+                  <v-list-item-title>Logout</v-list-item-title>
+                </v-list-item>
               </v-list>
             </v-menu>
           </v-col>
@@ -313,6 +316,18 @@ export default {
     };
   },
   methods: {
+    logout() {
+      this.$store.commit("auth/setRefreshToken", null);
+      this.$store.commit("auth/setAuthToken", null);
+      this.$store.commit("auth/setUserData", null);
+      this.$store.commit("auth/setUserLoggedIn", false);
+
+      window.localStorage.removeItem("refresh_token");
+      window.localStorage.removeItem("auth_token");
+      window.localStorage.removeItem("username");
+
+      this.$router.push({ path: "/signin" });
+    },
     insert(emoji) {
       this.send_message_input += emoji;
     },

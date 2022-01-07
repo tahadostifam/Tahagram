@@ -35,7 +35,7 @@ export default {
     username_already_registered(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 409;
         res.send({
-            message: "Username already registered",
+            message: "username already registered",
         });
     },
     invalid_token(req: Request, res: Response, next: NextFunction) {

@@ -68,16 +68,22 @@ body,
 }
 
 .form {
-  width: 450px;
+  width: 520px;
   position: absolute;
   top: 180px;
   left: 50%;
   transform: translate(-50%);
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 560px) {
     & {
-      width: 85%;
+      width: 95%;
     }
   }
+}
+
+.sepa {
+  position: relative;
+  width: 100%;
+  border-top: 1px solid $color_5;
 }
 
 #main_container {

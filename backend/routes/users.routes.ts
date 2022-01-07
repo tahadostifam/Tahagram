@@ -8,9 +8,9 @@ import UsersController from "../controllers/users_controller";
 router.post(
     "/signup",
     body("full_name").notEmpty().withMessage("Full Name can't be empty"),
-    body("username").notEmpty().withMessage("Full Name can't be empty"),
+    body("username").notEmpty().withMessage("Username can't be empty"),
     body("username").isLength({ min: 5, max: 15 }).withMessage("Username must be at least 5 and at most 15 characters"),
-    body("password").notEmpty().withMessage("Full Name can't be empty"),
+    body("password").notEmpty().withMessage("Password can't be empty"),
     validate_body,
     (req: Request, res: Response, next: NextFunction) => {
         UsersController.SignupAction(req, res, next);
