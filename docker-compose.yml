@@ -1,7 +1,7 @@
 version: "3.3"
 services:
     backend:
-        image: "node"
+        image: "node:14"
         container_name: "chat_app_backend"
         build:
             context: ./backend
@@ -12,13 +12,14 @@ services:
         restart: always
         network_mode: "host"
     frontend:
-        image: "node"
+        image: "node:14"
         container_name: "chat_app_frontend"
         build:
             context: ./frontend
             dockerfile: Dockerfile
         ports:
             - "3000:3000"
+        network_mode: "host"
     nginx:
         container_name: "chat_app_nginx"
         build:
@@ -29,7 +30,7 @@ services:
         network_mode: "host"
     postgres:
         image: "postgres"
-        container_name: "chat_app_postgres"
+        container_name: "chat_app_database"
         env_file:
             - backend/database.env
         volumes:
@@ -39,7 +40,7 @@ services:
         network_mode: "host"
     redis:
         image: "redis:latest"
-        container_name: "chat_app_redisdb"
+        container_name: "chat_app_redis"
         ports:
             - "6379:6379"
         network_mode: "host"

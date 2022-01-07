@@ -1,7 +1,7 @@
-FROM node
+FROM node:14
 
-WORKDIR /app
-COPY . .
+WORKDIR /server
+COPY . /server
 
 RUN npm i;
 
