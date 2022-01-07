@@ -1,6 +1,7 @@
 export const state = () => ({
   user_logged_in: false,
   auth: {
+    username: null,
     refresh_token: null,
     auth_token: null,
   },
@@ -19,5 +20,28 @@ export const mutations = {
   },
   setUserLoggedIn(state, b) {
     state.user_logged_in = b;
+  },
+  setUsername(state, username) {
+    state.auth.username = username;
+  },
+};
+
+export const actions = {
+  async Authenticate({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      this.$axios
+        .$post("/users/auth", {
+          username: state.auth.username,
+          auth_token: state.auth.auth_token,
+        })
+        .then((response) => {
+          if (response.message == "success") {
+            return resolve(response.data);
+          } else reject();
+        })
+        .catch((error) => {
+          reject();
+        });
+    });
   },
 };

@@ -143,7 +143,7 @@ export default {
                             else {
                                 res.send({
                                     message: "success",
-                                    data: result,
+                                    data: result[0],
                                 });
                             }
                         },

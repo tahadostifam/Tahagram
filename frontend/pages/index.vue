@@ -1,6 +1,6 @@
 <script>
 export default {
   name: "index",
-  middleware: ["check_auth"],
+  middleware: ["need_auth"],
 };
 </script>

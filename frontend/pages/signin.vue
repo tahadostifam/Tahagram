@@ -80,8 +80,8 @@ export default {
           }
         )
         .then((response) => {
+          console.log(response);
           if (response.message == "success") {
-            // ANCHOR
             this.$store.commit(
               "auth/setRefreshToken",
               response.tokens.refresh_token
@@ -89,6 +89,18 @@ export default {
             this.$store.commit("auth/setAuthToken", response.tokens.auth_token);
             this.$store.commit("auth/setUserData", response.data);
             this.$store.commit("auth/setUserLoggedIn", true);
+
+            if (this.$data.remember_me) {
+              window.localStorage.setItem(
+                "refresh_token",
+                response.tokens.refresh_token
+              );
+              window.localStorage.setItem(
+                "auth_token",
+                response.tokens.auth_token
+              );
+              window.localStorage.setItem("username", this.$data.username);
+            }
 
             this.$router.push({ path: "/chat" });
           } else {

@@ -297,7 +297,7 @@ import configs from "@/assets/javascript/configs";
 
 export default {
   name: "chat",
-  middleware: ["check_auth"],
+  middleware: ["need_auth"],
   components: {
     EmojiPicker,
   },
