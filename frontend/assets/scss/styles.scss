@@ -170,7 +170,18 @@ body,
       width: 100%;
     }
     .chat_view {
-      display: none;
+      & {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 100%;
+        transition: left 0.3s ease;
+      }
+      &.show {
+        display: block;
+        z-index: 70;
+        left: 0;
+      }
     }
   }
 }
@@ -194,12 +205,13 @@ body,
 }
 
 .chats {
-  cursor: pointer;
+  cursor: default;
   padding: 10px;
   height: calc(100% - #{$header_height});
   overflow-y: auto;
   overflow-x: hidden;
   .chat_row {
+    cursor: pointer;
     position: relative;
     width: 100%;
     height: 65px;
@@ -209,6 +221,7 @@ body,
       position: relative;
       top: -4px;
       margin-left: 10px;
+      margin-right: 10px;
 
       --size: 50px;
       width: var(--size);
@@ -219,6 +232,14 @@ body,
         width: 100%;
         height: 100%;
       }
+    }
+    .solid_color_avatar {
+      top: -1px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
     }
     .image {
       background-color: $color_4;
@@ -238,6 +259,8 @@ body,
       top: 8px;
       display: flex;
       .image {
+        position: relative;
+        top: -1px;
         margin-right: 10px;
       }
     }
