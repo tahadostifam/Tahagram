@@ -1,7 +1,13 @@
 <template>
   <!-- IMAGE MESSAGE -->
-  <div class="message_row my_message type_image">
+  <div
+    class="message_row type_image"
+    :class="{ my_message: my_message }"
+    @contextmenu="$emit('contextmenu')"
+  >
     <div class="message">
+      <span v-if="!my_message" style class="sender_name">{{ sender }}</span>
+
       <div class="image">
         <img :src="image_address" />
       </div>
@@ -10,7 +16,10 @@
       <div class="message_footer">
         <span class="send_datetime">{{ send_time }}</span>
         <!-- SEEN STATE -->
-        <MessageSeenState :seen_state="seen_state"></MessageSeenState>
+        <MessageSeenState
+          v-if="my_message"
+          :seen_state="seen_state"
+        ></MessageSeenState>
       </div>
     </div>
   </div>

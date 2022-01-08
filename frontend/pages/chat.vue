@@ -149,7 +149,10 @@
               <TextMessage
                 v-if="item.type == 'text'"
                 :key="index"
-                @contextmenu="show_contextmenu_of_message"
+                :message_id="item.message_id"
+                @contextmenu.native="
+                  show_contextmenu_of_message($event, item.message_id)
+                "
                 :sender="item.sender"
                 :send_time="item.send_time"
                 :text_content="item.text_content"
@@ -161,12 +164,14 @@
               <ImageMessage
                 v-if="item.type == 'image'"
                 :key="index"
-                @contextmenu="show_contextmenu_of_message"
+                message_id="item.message_id"
+                @contextmenu.native="
+                  show_contextmenu_of_message($event, item.message_id)
+                "
                 :sender="item.sender"
                 :send_time="item.send_time"
                 :text_content="item.text_content"
                 :image_address="item.image_address"
-                :image_message_downloaded="item.image_message_downloaded"
                 :edited="item.edited"
                 :my_message="item.my_message"
                 :seen_state="item.seen_state"
@@ -279,21 +284,31 @@ export default {
       ],
       messages_list: [
         {
-          type: "text",
-          sender: "Taha. Dostifam",
-          send_time: "now",
-          text_content: "سلام بچه ها",
-          edited: "false",
-          my_message: "true",
-          seen_state: "sending",
-        },
-        {
+          message_id: "a",
           type: "image",
-          sender: "Taha. Dostifam",
+          sender: "$ maximilian",
           send_time: "00:00",
           text_content: "MEOW |:",
-          edited: "false",
-          my_message: "true",
+          /* ----------------------------- edited: false, ----------------------------- */
+          my_message: false,
+          image_address: "https://picsum.photos/900/500",
+        },
+        {
+          message_id: "b",
+          type: "text",
+          sender: "$ maximilian",
+          send_time: "00:00",
+          text_content: "😂😂😂",
+          edited: false,
+          my_message: false,
+        },
+        {
+          message_id: "c",
+          type: "image",
+          send_time: "00:00",
+          text_content: "look at this, Max. <br> its very similar to you",
+          edited: false,
+          my_message: true,
           seen_state: "sended",
           image_address: "https://picsum.photos/900/500",
         },
@@ -316,7 +331,8 @@ export default {
     insert(emoji) {
       this.send_message_input += emoji;
     },
-    show_contextmenu_of_message(e) {
+    show_contextmenu_of_message(e, message_id) {
+      console.log(message_id);
       e.preventDefault();
       this.$set(this.$data.context_menu_for_messages, "show", false);
       this.$set(this.$data.context_menu_for_messages, "x", e.clientX);

@@ -458,6 +458,12 @@ body,
   z-index: 4;
 }
 
+.messages_list .message_row.type_image .message .sender_name {
+  margin-bottom: 2px;
+  margin-left: 7px;
+  padding-top: 3px;
+}
+
 .messages_list .message_row.type_image .message_footer {
   padding-right: 10px;
 }
