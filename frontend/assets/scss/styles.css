@@ -109,6 +109,25 @@ body,
   float: left;
 }
 
+#main_container .chats_list .section_header .row_flex {
+  text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: calc(100% - 20px);
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 50px calc(100% - 50px);
+      grid-template-columns: 50px calc(100% - 50px);
+}
+
+#main_container .chats_list .section_header .row_flex div:first-child {
+  margin-right: 15px;
+}
+
 #main_container .chat_view {
   position: relative;
   width: calc(100% - 350px);
@@ -141,6 +160,24 @@ body,
   height: 100%;
 }
 
+@media screen and (max-width: 1100px) {
+  #main_container .chats_list {
+    width: 300px;
+  }
+  #main_container .chat_view {
+    width: calc(100% - 300px);
+  }
+}
+
+@media screen and (max-width: 920px) {
+  #main_container .chats_list {
+    width: 100%;
+  }
+  #main_container .chat_view {
+    display: none;
+  }
+}
+
 .custom_input {
   width: 100%;
   height: 40px;
@@ -164,7 +201,7 @@ body,
 
 .chats {
   cursor: pointer;
-  padding: 25px 10px;
+  padding: 10px;
   height: calc(100% - 60px);
   overflow-y: auto;
   overflow-x: hidden;
@@ -206,6 +243,18 @@ body,
 
 .chats .chat_row.active_chat, .chats .chat_row.active_chat:hover {
   background-color: #00c853;
+}
+
+.chats .chat_row .row_flex {
+  position: relative;
+  top: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.chats .chat_row .row_flex .image {
+  margin-right: 10px;
 }
 
 .image img {
@@ -335,6 +384,12 @@ body,
   margin-right: -5px;
   font-size: 19px !important;
   color: #ddd;
+}
+
+@media screen and (max-width: 1100px) {
+  .messages_list .message_row .message {
+    max-width: 450px;
+  }
 }
 
 .messages_list .message_row.my_message {

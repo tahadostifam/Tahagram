@@ -2,8 +2,8 @@
   <div class="pa-0" id="main_container">
     <div class="chats_list">
       <div class="section_header border">
-        <v-row class="pa-0 ma-0 align-center px-3" style="height: 100%">
-          <v-col cols="2" class="ma-0 pa-0 mr-1 ml-1">
+        <div class="row_flex mx-auto" style="height: 100%">
+          <div>
             <v-menu offset-y transition="slide-y-transition">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn color="gray" dark v-bind="attrs" v-on="on" icon large>
@@ -25,43 +25,31 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-          </v-col>
-
-          <v-col class="ma-0 pa-0">
+          </div>
+          <div>
             <input type="text" class="custom_input" placeholder="Search" />
-          </v-col>
-        </v-row>
+          </div>
+        </div>
       </div>
 
       <div class="chats">
         <div class="chat_row active_chat">
-          <v-row>
-            <v-col cols="2" class="mr-1">
-              <div class="image">
-                <img
-                  src="https://picsum.photos/900/900"
-                  onload="window.lazyImage(this)"
-                  class="avatar"
-                />
-              </div>
-            </v-col>
-            <v-col class="pa-0 pl-5 pt-2">
+          <!-- TODO - Will be convert to component -->
+          <div class="row_flex">
+            <div class="image">
+              <img
+                src="https://picsum.photos/900/900"
+                onload="window.lazyImage(this)"
+                class="avatar"
+              />
+            </div>
+            <div>
               <span class="d-block">Username</span>
               <span class="d-block text--secondary">Latest Message</span>
-            </v-col>
-          </v-row>
+            </div>
+          </div>
         </div>
-        <div class="chat_row">
-          <v-row>
-            <v-col cols="2" class="mr-1">
-              <div class="solid_color_avatar"></div>
-            </v-col>
-            <v-col class="pa-0 pl-5 pt-2">
-              <span class="d-block">Username</span>
-              <span class="d-block text--secondary">Latest Message</span>
-            </v-col>
-          </v-row>
-        </div>
+        <!-- TODO - Will be convert to component -->
       </div>
     </div>
 

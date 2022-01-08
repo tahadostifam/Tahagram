@@ -10,6 +10,9 @@ $chats_list_with: 350px;
 $header_height: 60px;
 $send_message_section_height: 60px;
 
+$bk_desktop_mini: 1100px;
+$bk_mobile: 920px;
+
 * {
   margin: 0;
   padding: 0;
@@ -107,6 +110,19 @@ body,
     background-color: $color_1;
     display: inline-block;
     float: left;
+    .section_header {
+      .row_flex {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        width: calc(100% - 20px);
+        display: grid;
+        grid-template-columns: 50px calc(100% - 50px);
+        div:first-child {
+          margin-right: 15px;
+        }
+      }
+    }
   }
 
   .chat_view {
@@ -138,6 +154,25 @@ body,
       }
     }
   }
+
+  @media screen and (max-width: $bk_desktop_mini) {
+    $width: 300px;
+    .chats_list {
+      width: $width;
+    }
+    .chat_view {
+      width: calc(100% - #{$width});
+    }
+  }
+
+  @media screen and (max-width: $bk_mobile) {
+    .chats_list {
+      width: 100%;
+    }
+    .chat_view {
+      display: none;
+    }
+  }
 }
 
 .custom_input {
@@ -160,7 +195,7 @@ body,
 
 .chats {
   cursor: pointer;
-  padding: 25px 10px;
+  padding: 10px;
   height: calc(100% - #{$header_height});
   overflow-y: auto;
   overflow-x: hidden;
@@ -196,6 +231,14 @@ body,
       &,
       &:hover {
         background-color: $theme_color;
+      }
+    }
+    .row_flex {
+      position: relative;
+      top: 8px;
+      display: flex;
+      .image {
+        margin-right: 10px;
       }
     }
   }
@@ -293,6 +336,11 @@ body,
           margin-right: -5px;
           font-size: 19px !important;
           color: #ddd;
+        }
+      }
+      @media screen and (max-width: $bk_desktop_mini) {
+        & {
+          max-width: 450px;
         }
       }
     }
