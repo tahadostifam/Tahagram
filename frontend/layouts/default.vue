@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+
 export default {
   name: "DefaultLayout",
   data() {
@@ -28,9 +30,10 @@ export default {
       require("../assets/javascript/scripts");
     });
 
-    const refresh_token = window.localStorage.getItem("refresh_token");
-    const auth_token = window.localStorage.getItem("auth_token");
-    const username = window.localStorage.getItem("username");
+    const refresh_token = Cookies.get("refresh_token");
+    const auth_token = Cookies.get("auth_token");
+    const username = Cookies.get("username");
+
     if (refresh_token && auth_token && username) {
       this.$store.commit("auth/setRefreshToken", refresh_token);
       this.$store.commit("auth/setAuthToken", auth_token);

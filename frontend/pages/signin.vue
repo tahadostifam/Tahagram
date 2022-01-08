@@ -52,6 +52,7 @@
 
 <script>
 import configs from "@/assets/javascript/configs";
+import Cookies from "js-cookie";
 
 export default {
   name: "signin",
@@ -107,15 +108,9 @@ export default {
               this.$store.commit("auth/setUsername", this.$data.username);
 
               if (this.$data.remember_me) {
-                window.localStorage.setItem(
-                  "refresh_token",
-                  response.tokens.refresh_token
-                );
-                window.localStorage.setItem(
-                  "auth_token",
-                  response.tokens.auth_token
-                );
-                window.localStorage.setItem("username", this.$data.username);
+                Cookies.set("refresh_token", response.tokens.refresh_token);
+                Cookies.set("auth_token", response.tokens.auth_token);
+                Cookies.set("username", this.$data.username);
               }
 
               this.$router.push({ path: "/chat" });

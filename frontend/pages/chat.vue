@@ -308,6 +308,7 @@
 <script>
 import { EmojiPicker } from "vue-emoji-picker";
 import configs from "@/assets/javascript/configs";
+import Cookies from "js-cookie";
 
 export default {
   name: "chat",
@@ -390,9 +391,9 @@ export default {
       this.$store.commit("auth/setUserData", null);
       this.$store.commit("auth/setUserLoggedIn", false);
 
-      window.localStorage.removeItem("refresh_token");
-      window.localStorage.removeItem("auth_token");
-      window.localStorage.removeItem("username");
+      Cookies.remove("refresh_token");
+      Cookies.remove("auth_token");
+      Cookies.remove("username");
 
       this.$router.push({ path: "/signin" });
     },
