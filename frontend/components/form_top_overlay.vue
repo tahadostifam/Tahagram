@@ -4,7 +4,7 @@
     <h2>
       Developed By
       <a href="https://github.com/tahadostifam/ChatApp">TahaDostifam</a> &
-      AhmadKharazi
+      <a>AhmadKharazi</a>
     </h2>
   </div>
 </template>

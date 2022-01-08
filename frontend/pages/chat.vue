@@ -145,82 +145,33 @@
               </v-list>
             </v-menu>
 
-            <div class="message_row" @contextmenu="show_contextmenu_of_message">
-              <div class="message">
-                <span class="sender_name">Username</span>
-                <p class="message_content">
-                  Hi Taha.br <br />
-                  Whats up??
-                </p>
-                <div class="message_footer">
-                  <!-- <span class="edit_state mr-1 font-italic">edited</span> -->
-                  <span class="send_datetime">1 Jan, 22:05</span>
-                </div>
-              </div>
-            </div>
+            <template v-for="(item, index) in messages_list">
+              <TextMessage
+                v-if="item.type == 'text'"
+                :key="index"
+                @contextmenu="show_contextmenu_of_message"
+                :sender="item.sender"
+                :send_time="item.send_time"
+                :text_content="item.text_content"
+                :edited="item.edited"
+                :my_message="item.my_message"
+                :seen_state="item.seen_state"
+              ></TextMessage>
 
-            <div class="message_row" @contextmenu="show_contextmenu_of_message">
-              <div class="message">
-                <span class="sender_name">Username</span>
-                <p class="message_content">
-                  Id sunt aliqua deserunt anim officia excepteur consequat
-                  nostrud eu non non officia consequat. In velit elit duis
-                  aliqua culpa cillum eu deserunt tempor voluptate esse Lorem.
-                  Nostrud velit fugiat officia esse fugiat eiusmod id proident
-                  non magna culpa. Sit do eiusmod dolore incididunt irure
-                  deserunt id officia non sunt dolor. Aliqua ut amet aute et
-                  enim et amet. Elit proident culpa culpa irure dolore. In magna
-                  commodo duis eu pariatur laboris qui. Elit dolor do nisi
-                  consequat dolore exercitation elit ad ullamco dolor in do
-                  esse. Sint Lorem nisi ut nisi ea irure irure officia. Culpa
-                  ullamco dolor anim irure nisi tempor tempor consequat
-                  adipisicing. Incididunt aliqua voluptate laborum deserunt ut
-                  est ex mollit anim irure occaecat elit nulla
-                </p>
-                <div class="message_footer">
-                  <!-- <span class="edit_state mr-1 font-italic">edited</span> -->
-                  <span class="send_datetime">1 Jan, 22:05</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- <div class="message_row my_message">
-                    <div class="message">
-                    <p class="message_content">
-                        Message From Maximilian Tepes
-                    </p>
-                    <div class="message_footer">
-                        <span class="edit_state mr-1 font-italic">edited</span>
-                        <span class="send_datetime">1 Jan, 22:05</span>
-                        <v-icon class="checkmark_state d-none">mdi-check</v-icon>
-                        <v-icon class="checkmark_state">mdi-check-all</v-icon>
-                    </div>
-                    </div>
-                </div> -->
-
-            <!-- <div class="message_row my_message type_image">
-                    <div class="message"> 
-                    <div class="image">
-                        <img src="https://picsum.photos/900/900" onload="window.lazyImage(this)">
-                    </div>
-                    <div class="image not_downloaded_image">
-                        <img src="https://picsum.photos/900/900" onload="window.lazyImage(this)">
-                        <button @click="console.log(this)" class="download_image_message__button">
-                        <v-icon>
-                            mdi-download-outline
-                        </v-icon>
-                        </button>
-                    </div>
-
-                    <p class="message_content">
-                        Message From Maximilian Tepes Message From Maximilian Tepes Message From Maximilian Tepes 
-                    </p>
-                    <div class="message_footer">
-                        <span class="send_datetime">1 Jan, 22:05</span>
-                        <v-icon class="checkmark_state">mdi-check-all</v-icon>
-                    </div>
-                    </div>
-                </div> -->
+              <ImageMessage
+                v-if="item.type == 'image'"
+                :key="index"
+                @contextmenu="show_contextmenu_of_message"
+                :sender="item.sender"
+                :send_time="item.send_time"
+                :text_content="item.text_content"
+                :image_address="item.image_address"
+                :image_message_downloaded="item.image_message_downloaded"
+                :edited="item.edited"
+                :my_message="item.my_message"
+                :seen_state="item.seen_state"
+              ></ImageMessage>
+            </template>
           </div>
         </div>
 
@@ -324,6 +275,27 @@ export default {
           chat_id: "asdasdadsa131313adadasdad",
           chat_name: "Taha. Dostifam",
           last_message: "How is your project going?",
+        },
+      ],
+      messages_list: [
+        {
+          type: "text",
+          sender: "Taha. Dostifam",
+          send_time: "now",
+          text_content: "سلام بچه ها",
+          edited: "false",
+          my_message: "true",
+          seen_state: "sending",
+        },
+        {
+          type: "image",
+          sender: "Taha. Dostifam",
+          send_time: "00:00",
+          text_content: "MEOW |:",
+          edited: "false",
+          my_message: "true",
+          seen_state: "sended",
+          image_address: "https://picsum.photos/900/500",
         },
       ],
     };

@@ -60,7 +60,7 @@ body,
 }
 
 .form_top_overlay h2 a {
-  border-bottom: 2px solid #fff;
+  font-weight: bold;
 }
 
 .form {
@@ -371,6 +371,7 @@ body,
       -ms-flex-pack: end;
           justify-content: flex-end;
   padding: 30px;
+  padding-bottom: 0px;
 }
 
 .messages_list .message_row {
@@ -394,6 +395,7 @@ body,
   width: 100%;
   padding: 0;
   padding-top: 5px;
+  padding-right: 20px;
   font-weight: 500;
   color: #00c853;
 }
@@ -405,6 +407,8 @@ body,
           user-select: text;
   margin: 0;
   padding: 0;
+  direction: ltr;
+  text-align: left;
 }
 
 .messages_list .message_row .message .message_footer {
@@ -456,6 +460,17 @@ body,
 
 .messages_list .message_row.type_image .message_footer {
   padding-right: 10px;
+}
+
+.messages_list .message_row.type_image .image {
+  min-width: 300px;
+  min-height: 150px;
+  max-height: 450px;
+}
+
+.messages_list .message_row.type_image .image img {
+  width: 100%;
+  height: 100%;
 }
 
 .messages_list .message_row.type_image .image img,
