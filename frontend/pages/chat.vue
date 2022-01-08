@@ -166,6 +166,7 @@
           <div class="messages-scroll">
             <div class="messages_list">
               <!-- Context Menu For Messages -->
+
               <v-menu
                 v-model="context_menu_for_messages.show"
                 :position-x="context_menu_for_messages.x"
@@ -379,6 +380,8 @@ export default {
         this.$set(this.$data, "nav_drawer_width", 300);
       else this.$set(this.$data, "nav_drawer_width", 350);
     };
+    // const messages_scroll = document.querySelector(".messages-scroll");
+    // messages_scroll.scrollTop = messages_scroll.scrollHeight;
   },
   methods: {
     logout() {
