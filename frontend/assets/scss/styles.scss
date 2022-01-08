@@ -126,12 +126,15 @@ body,
   }
 
   .chat_view {
-    position: relative;
-    width: calc(100% - #{$chats_list_with});
+    position: absolute;
+    width: calc(100% - 350px);
     height: 100%;
-    background-color: $color_3;
+    background-color: #0f0f0f;
     display: inline-block;
     float: right;
+    top: 0;
+    right: 0;
+    bottom: 0;
     .splash_screen {
       .center {
         padding-top: $send_message_section_height;
@@ -164,14 +167,22 @@ body,
       width: calc(100% - #{$width});
     }
   }
-
+  #back_button_from_chat {
+    display: none;
+  }
   @media screen and (max-width: $bk_mobile) {
+    #back_button_from_chat {
+      display: block;
+    }
+
     .chats_list {
       width: 100%;
     }
     .chat_view {
       & {
         position: absolute;
+        top: 0;
+        bottom: 0;
         width: 100%;
         height: 100%;
         left: 100%;
@@ -215,7 +226,7 @@ body,
     position: relative;
     width: 100%;
     height: 65px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     .solid_color_avatar,
     .image {
       position: relative;

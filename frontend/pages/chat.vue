@@ -33,14 +33,14 @@
       </div>
 
       <div class="chats">
-        <div @click="show_chat('id')" class="chat_row active_chat">
-          <!-- TODO - Will be convert to component -->
-          <MessageRow
-            username="$ maximilian"
-            message_preview="Hello max, whatsup??"
-          ></MessageRow>
-          <!-- TODO - Will be convert to component -->
-        </div>
+        <ChatRow
+          v-for="(item, index) in message_rows_list"
+          :key="index"
+          @click_event="show_chat(item.chat_id)"
+          :chat_name="item.chat_name"
+          :message_preview="item.last_message"
+          :image_url="item.profile_photo"
+        ></ChatRow>
       </div>
 
       <div class="chat_view" v-bind:class="{ show: show_chat_view }">
@@ -49,23 +49,22 @@
             class="d-flex align-center justify-space-between"
             style="height: 100%"
           >
+            <v-btn
+              @click="leaving_chat_button"
+              icon
+              depressed
+              large
+              class="mr-3"
+              id="back_button_from_chat"
+            >
+              <v-icon> mdi-arrow-left </v-icon>
+            </v-btn>
             <!-- TODO - show profile modal -->
             <a
               href="#open_chat_profile"
               class="d-flex align-center text-decoration-none mr-5"
               style="width: 100%"
             >
-              <div>
-                <v-btn
-                  @click="leaving_chat_button"
-                  icon
-                  depressed
-                  large
-                  class="mr-3"
-                >
-                  <v-icon> mdi-arrow-left </v-icon>
-                </v-btn>
-              </div>
               <div class="image">
                 <img
                   src="https://picsum.photos/900/900"
@@ -315,6 +314,18 @@ export default {
         y: 0,
       },
       show_chat_view: true,
+      message_rows_list: [
+        {
+          chat_id: "akldmaldmadmadm",
+          chat_name: "Maximilian Tepes",
+          last_message: "Hey Max, Whatsup?",
+        },
+        {
+          chat_id: "asdasdadsa131313adadasdad",
+          chat_name: "Taha. Dostifam",
+          last_message: "How is your project going?",
+        },
+      ],
     };
   },
   methods: {
