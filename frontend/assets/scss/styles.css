@@ -591,12 +591,24 @@ body,
   background-color: #aaaaaa14;
 }
 
+.v-application #main_container .theme--dark.v-navigation-drawer {
+  background: #212121;
+}
+
 .text-red {
   color: #f44336;
 }
 
 .text-white {
   color: #fff;
+}
+
+.text-grey {
+  color: #707579;
+}
+
+.bg-theme {
+  background-color: #00c853;
 }
 
 .cursor-pointer {
@@ -614,5 +626,50 @@ body,
   margin: 0;
   width: 100%;
   display: block;
+}
+
+body .v-application .v-navigation-drawer {
+  z-index: 90;
+  background-color: #181818;
+}
+
+body .v-application .v-navigation-drawer #user_info_at_nav_drawer {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+body .v-application .v-navigation-drawer .v-item-group {
+  padding-top: 100px;
+}
+
+body .v-application .v-navigation-drawer .v-item-group .v-list--nav .v-list-item .v-list-item__title {
+  position: relative;
+  left: -9px;
+  top: 1px;
+}
+
+body .v-application .v-navigation-drawer .v-list--nav .v-list-item {
+  padding-left: 15px;
+}
+
+body .v-application .v-navigation-drawer .v-list--nav .v-list-item,
+body .v-application .v-navigation-drawer .v-list--nav .v-list-item:before {
+  border-radius: 6px;
+}
+
+body .v-application .v-navigation-drawer .nav_drawer_footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: 20px;
+}
+
+body .v-application .v-navigation-drawer .v-navigation-drawer__border {
+  display: none;
 }
 /*# sourceMappingURL=styles.css.map */
