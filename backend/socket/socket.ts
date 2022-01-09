@@ -1,68 +1,14 @@
 const configs = require("../configs/configs.json");
 import { createServer } from "http";
 import { WebSocket, WebSocketServer } from "ws";
-import { parse as parseUrl } from "url";
 import { cleanIpDots } from "../lib/client_ip";
+import { clearParams, authenticate_socket_user, getCookie, clientIp } from "./auth_socket_user";
+// import { setUserUUID } from "./room_manager";
 const server_port = configs["socket"]["port"];
-import store, { makeUserStoreId } from "../lib/store";
-import * as database from "../lib/database";
-import { Request } from "express";
 
-function clearParams(url: string) {
-    const params = url.substring(url.indexOf("?username"));
-    return url.replace(params, "").trim();
-}
+// import { parse as parseUrl } from "url";
 
-function getCookie(cookies: string, cookie_name: string | undefined) {
-    if (!cookie_name) return null;
-    let name = cookie_name + "=";
-    let decodedCookie = decodeURIComponent(cookies);
-    let ca = decodedCookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == " ") {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return null;
-}
-
-function clientIp(req: any | undefined) {
-    if (!req) return null;
-    let client_ip = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
-    if (client_ip) {
-        client_ip = client_ip.replace(/^.*:/, "");
-        return client_ip;
-    } else {
-        return null;
-    }
-}
-
-function authenticate_socket_user(username: string, client_ip: string, auth_token: string) {
-    return new Promise((success, error) => {
-        const user_id_in_store = makeUserStoreId(username, "auth", client_ip);
-        store.get(user_id_in_store).then(async (token_in_store) => {
-            if (String(token_in_store).trim() == String(auth_token).trim()) {
-                // success | requested token is valid
-                database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [username]).then(
-                    (result: any) => {
-                        if (result.length == 0) return error();
-                        else {
-                            // NOTE -> auth_token is valid
-                            success(result[0]);
-                        }
-                    },
-                    () => error()
-                );
-            } else {
-                return error();
-            }
-        });
-    });
-}
+const users: Array<object> = [];
 
 export default async function handleSocket() {
     const server = createServer();
@@ -86,11 +32,12 @@ export default async function handleSocket() {
                 authenticate_socket_user(username, client_ip, auth_token).then(
                     (user) => {
                         console.log("+ A Client Connected Successfully");
-                        return wss.handleUpgrade(request, socket, head, (ws) => {
-                            ws.send("successfully connected to socket");
-                            ws.on("message", (data) => {
-                                handleSocketConnection(data, ws);
-                            });
+                        return wss.handleUpgrade(request, socket, head, async (ws) => {
+                            // await setUserUUID(ws);
+                            handleSocketUserOnConnected(ws, username);
+                            ws.on("close", () => handleSocketUserOnDisConnected(ws, username));
+                            // After Connectes
+                            ws.on("message", (data) => handleSocketMessages(data, ws));
                         });
                     },
                     () => {
@@ -109,7 +56,31 @@ export default async function handleSocket() {
     console.log(`Socket-Server has listening on port ${server_port}`);
 }
 
-function handleSocketConnection(data: any, ws: WebSocket) {
+function handleSocketUserOnConnected(ws: any, username: string) {
+    if (!users.find((item: any) => item.username == username)) {
+        users.push({
+            username: username,
+            ws: ws,
+        });
+    }
+
+    ws.send("successfully connected to socket");
+}
+
+function handleSocketUserOnDisConnected(ws: WebSocket, username: string) {
+    const user_index = users
+        .map((e: any) => {
+            return e.username;
+        })
+        .indexOf(username);
+    if (user_index > -1) {
+        users.splice(user_index, 1);
+    }
+
+    console.log("user disconnected");
+}
+
+function handleSocketMessages(data: any, ws: WebSocket) {
     try {
         const parsedData = JSON.parse(data.toString("utf8"));
         console.log(parsedData);

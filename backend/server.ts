@@ -17,8 +17,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Importing Routers
 import UsersRoutes from "./routes/users.routes";
+import ChatsListRoutes from "./routes/chats_list.routes";
 
 app.use("/api/users", UsersRoutes);
+app.use("/api/chats_list", ChatsListRoutes);
 
 app.listen(configs.api.port, () => {
     console.clear();
