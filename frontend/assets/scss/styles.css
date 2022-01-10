@@ -603,6 +603,10 @@ body,
   color: #f44336;
 }
 
+.text-theme_color {
+  color: #00c853;
+}
+
 .text-white {
   color: #fff;
 }

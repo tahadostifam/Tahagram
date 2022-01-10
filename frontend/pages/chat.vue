@@ -38,7 +38,12 @@
             <v-list-item-title>New Channel</v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
+          <v-list-item
+            @click="
+              show_nav_drawer = false;
+              show_settings_dialog = true;
+            "
+          >
             <v-list-item-icon>
               <v-icon>mdi-cog</v-icon>
             </v-list-item-icon>
@@ -51,6 +56,197 @@
         </div>
       </v-list>
     </v-navigation-drawer>
+
+    <v-dialog max-width="450" v-model="show_settings_dialog" scrollable>
+      <v-card v-if="settings_dialog_active_section == 'home'">
+        <div class="d-flex justify-space-between align-center">
+          <v-card-title class="text-h6"> Settings </v-card-title>
+          <div class="mr-2">
+            <v-btn
+              large
+              icon
+              style="padding-top: 3px"
+              @click="show_settings_dialog = false"
+            >
+              <v-icon class="icon"> mdi-close </v-icon>
+            </v-btn>
+          </div>
+        </div>
+
+        <div class="d-flex align-center px-4 pb-5">
+          <div class="avatar">
+            <img src="https://www.enjpg.com/img/2020/boruto-3.jpg" />
+          </div>
+          <div class="ml-4">
+            <span class="text-white font-weight-medium d-block w-100"
+              >Username</span
+            >
+            <span class="text-grey d-block w-100"
+              >last seen today at 5:15 PM</span
+            >
+          </div>
+        </div>
+
+        <v-divider></v-divider>
+
+        <v-list nav tile dense>
+          <v-list-item-group>
+            <v-list-item
+              @click="settings_dialog_active_section = 'edit_profile'"
+            >
+              <v-list-item-icon>
+                <v-icon class="icon">mdi-information-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Edit Profile</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon class="icon">mdi-bell-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Notficions</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon class="icon">mdi-keyboard-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>
+                <div class="d-flex justify-space-between">
+                  <div>Language</div>
+                  <div class="mr-2">
+                    <span class="text-theme_color">English</span>
+                  </div>
+                </div>
+              </v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list nav tile dense>
+          <v-list-item-group>
+            <v-list-item href="https://github.com/tahadostifam/ChatApp">
+              <v-list-item-icon>
+                <v-icon class="icon">mdi-help-circle-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>About ChatApp</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
+      <v-card v-if="settings_dialog_active_section == 'edit_profile'">
+        <v-dialog max-width="400" v-model="settings_dialog_edit_full_name">
+          <v-card>
+            <v-card-title style="font-size: 17px" class="mb-0 pb-0 pl-4 pt-2">
+              Edit your name
+            </v-card-title>
+            <div class="px-5 pt-0">
+              <v-text-field label="First name"></v-text-field>
+              <v-text-field label="Last name"></v-text-field>
+            </div>
+            <v-card-actions class="pr-2">
+              <v-spacer></v-spacer>
+              <v-btn
+                :color="theme_color"
+                text
+                @click="settings_dialog_edit_full_name = false"
+              >
+                CANCEL
+              </v-btn>
+              <v-btn :color="theme_color" text> SAVE </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <div class="d-flex justify-space-between align-center">
+          <div class="d-flex align-center">
+            <v-btn
+              icon
+              depressed
+              large
+              class="ml-4"
+              @click="settings_dialog_active_section = 'home'"
+            >
+              <v-icon class="icon"> mdi-arrow-left </v-icon>
+            </v-btn>
+            <v-card-title class="text-h6"> Edit Profile </v-card-title>
+          </div>
+          <div class="mr-2">
+            <v-btn
+              large
+              icon
+              style="padding-top: 1px"
+              @click="show_settings_dialog = false"
+            >
+              <v-icon class="icon"> mdi-close </v-icon>
+            </v-btn>
+          </div>
+        </div>
+
+        <div class="d-flex align-center justify-center px-4 pb-5 flex-column">
+          <div class="avatar avatar_xlarge">
+            <img src="https://www.enjpg.com/img/2020/boruto-3.jpg" />
+          </div>
+          <v-btn class="rounded-pill mt-4" depressed :color="theme_color">
+            SET PROFILE PHOTO
+          </v-btn>
+        </div>
+
+        <v-divider></v-divider>
+
+        <!-- RULES -->
+        <v-list nav>
+          <v-list-item-group>
+            <v-list-item @click="settings_dialog_edit_full_name = true">
+              <v-list-item-icon class="pl-3">
+                <v-icon class="icon">mdi-account-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>
+                <div class="d-flex flex-column text-left">
+                  <span class="text-white d-block w-100">$ maximilian</span>
+                  <span
+                    class="text-grey d-block w-100 mt-1"
+                    style="font-size: 14px"
+                    >Name</span
+                  >
+                </div>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item disabled>
+              <v-list-item-icon class="pl-3">
+                <v-icon class="icon">mdi-at</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>
+                <div class="d-flex flex-column text-left">
+                  <span class="text-white d-block w-100">maximilian</span>
+                  <span
+                    class="text-grey d-block w-100 mt-1"
+                    style="font-size: 14px"
+                    >Username</span
+                  >
+                </div>
+              </v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+        <!-- RULES -->
+
+        <div class="px-5 py-3">
+          <v-text-field
+            placeholder="Bio"
+            counter="70"
+            maxlength="70"
+          ></v-text-field>
+          <p class="text-grey">
+            Any details such as age, occupation or city.
+            <br />
+            Example: 15y.o. full-stack developer from Iran.
+          </p>
+        </div>
+      </v-card>
+    </v-dialog>
+
     <div class="pa-0" id="main_container">
       <div class="chats_list">
         <div class="section_header border">
@@ -73,13 +269,16 @@
         </div>
 
         <div class="chats">
-          <ChatRow
-            v-for="(item, index) in chats_list"
-            :key="index"
-            @click_event="show_chat(item.username)"
-            :chat_name="item.full_name"
-            message_preview="TODO"
-          ></ChatRow>
+          <template v-if="chats_list && chats_list.length > 0">
+            <ChatRow
+              v-for="(item, index) in chats_list"
+              :key="index"
+              @click_event="show_chat(item.username)"
+              :chat_name="item.full_name"
+              message_preview="TODO"
+            ></ChatRow>
+          </template>
+          <ThereIsNothing v-else />
           <!-- :image_url="item.profile_photo" -->
         </div>
 
@@ -325,7 +524,7 @@ export default {
         x: 0,
         y: 0,
       },
-      show_chat_view: true,
+      show_chat_view: false,
       chats_list: [],
       messages_list: [
         {
@@ -361,17 +560,17 @@ export default {
       show_nav_drawer: false,
       username: undefined,
       nav_drawer_width: 350,
+      show_settings_dialog: false,
+      settings_dialog_active_section: "home",
+      settings_dialog_edit_full_name: false,
     };
   },
   mounted() {
     this.$set(this.$data, "username", this.$store.state.auth.auth.username);
     this.$set(this.$data, "chats_list", this.$store.state.auth.chats_list);
 
-    window.onresize = () => {
-      if (window.innerWidth <= 1100)
-        this.$set(this.$data, "nav_drawer_width", 300);
-      else this.$set(this.$data, "nav_drawer_width", 350);
-    };
+    this.handle_resize();
+    this.handle_escape_button();
   },
   methods: {
     logout() {
@@ -395,6 +594,57 @@ export default {
     show_chat(username) {
       this.$set(this.$data, "show_chat_view", true);
     },
+    handle_escape_button() {
+      let vm = this;
+      document.addEventListener("keydown", (e) => {
+        if (e.code == "Escape") {
+          if (vm.$data.show_chat_view == true) {
+            return vm.$set(vm.$data, "show_chat_view", false);
+          }
+          if (vm.$data.show_nav_drawer == true) {
+            return vm.$set(vm.$data, "show_nav_drawer", false);
+          }
+          if (vm.$data.settings_dialog_active_section != "home") {
+            return vm.$set(vm.$data, "settings_dialog_active_section", "home");
+          }
+          if (vm.$data.show_settings_dialog == true) {
+            return vm.$set(vm.$data, "show_settings_dialog", false);
+          }
+        }
+      });
+    },
+    handle_resize() {
+      let vm = this;
+      function __resize() {
+        if (window.innerWidth <= 1100)
+          vm.$set(vm.$data, "nav_drawer_width", 300);
+        else vm.$set(vm.$data, "nav_drawer_width", 350);
+      }
+      window.onresize = () => __resize();
+      __resize();
+    },
   },
 };
 </script>
+
+<style lang="scss">
+.theme--dark.v-icon.icon {
+  color: #707579;
+}
+.avatar {
+  cursor: pointer;
+  --size: 80px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  overflow: hidden;
+  &.avatar_xlarge {
+    --size: 110px;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+</style>
