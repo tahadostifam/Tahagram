@@ -106,6 +106,7 @@ export default {
               this.$store.commit("auth/setUserData", response.data);
               this.$store.commit("auth/setUserLoggedIn", true);
               this.$store.commit("auth/setUsername", this.$data.username);
+              this.$store.commit("auth/setChatsList", this.$data.chats_list);
 
               if (this.$data.remember_me) {
                 Cookies.set("refresh_token", response.tokens.refresh_token);

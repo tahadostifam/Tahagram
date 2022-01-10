@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { WebSocket, WebSocketServer } from "ws";
 import { cleanIpDots } from "../lib/client_ip";
 import { clearParams, authenticate_socket_user, getCookie, clientIp } from "./auth_socket_user";
-// import { setUserUUID } from "./room_manager";
+import { setUserUUID } from "./room_manager";
 const server_port = configs["socket"]["port"];
 
 // import { parse as parseUrl } from "url";
@@ -33,9 +33,9 @@ export default async function handleSocket() {
                     (user) => {
                         console.log("+ A Client Connected Successfully");
                         return wss.handleUpgrade(request, socket, head, async (ws) => {
-                            // await setUserUUID(ws);
-                            handleSocketUserOnConnected(ws, username);
-                            ws.on("close", () => handleSocketUserOnDisConnected(ws, username));
+                            await setUserUUID(ws);
+                            handleSocketUserOnConnected(ws);
+                            ws.on("close", () => handleSocketUserOnDisConnected(ws));
                             // After Connectes
                             ws.on("message", (data) => handleSocketMessages(data, ws));
                         });
@@ -56,10 +56,10 @@ export default async function handleSocket() {
     console.log(`Socket-Server has listening on port ${server_port}`);
 }
 
-function handleSocketUserOnConnected(ws: any, username: string) {
-    if (!users.find((item: any) => item.username == username)) {
+function handleSocketUserOnConnected(ws: any) {
+    if (!users.find((item: any) => item.uuid == ws.uuid)) {
         users.push({
-            username: username,
+            uuid: ws.uuid,
             ws: ws,
         });
     }
@@ -67,12 +67,12 @@ function handleSocketUserOnConnected(ws: any, username: string) {
     ws.send("successfully connected to socket");
 }
 
-function handleSocketUserOnDisConnected(ws: WebSocket, username: string) {
+function handleSocketUserOnDisConnected(ws: any) {
     const user_index = users
         .map((e: any) => {
-            return e.username;
+            return ws.uuid;
         })
-        .indexOf(username);
+        .indexOf(ws.uuid);
     if (user_index > -1) {
         users.splice(user_index, 1);
     }

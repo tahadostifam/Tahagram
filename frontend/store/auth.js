@@ -6,6 +6,7 @@ export const state = () => ({
     auth_token: null,
   },
   user_info: null,
+  chats_list: null,
 });
 
 export const mutations = {
@@ -24,10 +25,13 @@ export const mutations = {
   setUsername(state, username) {
     state.auth.username = username;
   },
+  setChatsList(state, list) {
+    state.chats_list = list;
+  },
 };
 
 export const actions = {
-  Authenticate({ commit, state }) {
+  Authenticate({ state }) {
     const axios = this.$axios;
 
     function fetch_user_data(auth_token) {

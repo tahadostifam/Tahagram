@@ -3,6 +3,10 @@ import WebSocket from "ws";
 
 const rooms: any = {};
 
+export function setUserUUID(ws: any) {
+    ws["uuid"] = crypto.randomBytes(12).toString("hex");
+}
+
 export function createRoom(room_name: string) {
     return new Promise(async (success, error) => {
         for (const [key, value] of Object.entries(rooms)) {

@@ -5,6 +5,7 @@ import * as database from "../lib/database";
 import status_codes from "../lib/status_codes";
 import store, { makeUserStoreId, setUserTokens } from "../lib/store";
 import jwt from "jsonwebtoken";
+import { getChatsList } from "./chats_list_controller";
 const secrets = require("../configs/secrets.json");
 
 export default {
@@ -23,15 +24,20 @@ export default {
                             await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                 async (auth_token) => {
                                     // success
-                                    status_codes.success_signin(
-                                        {
-                                            user: user,
-                                            refresh_token: refresh_token,
-                                            auth_token: auth_token,
+                                    getChatsList(req.body.username).then(
+                                        (chats_list) => {
+                                            status_codes.success_signin(
+                                                {
+                                                    user: user,
+                                                    refresh_token: refresh_token,
+                                                    auth_token: auth_token,
+                                                },
+                                                req,
+                                                res,
+                                                next
+                                            );
                                         },
-                                        req,
-                                        res,
-                                        next
+                                        () => status_codes.error(req, res, next)
                                     );
                                 },
                                 () => status_codes.error(req, res, next)
@@ -142,10 +148,18 @@ export default {
                         (result: any) => {
                             if (result.length == 0) return status_codes.invalid_token(req, res, next);
                             else {
-                                res.send({
-                                    message: "success",
-                                    data: result[0],
-                                });
+                                getChatsList(req.body.username).then(
+                                    (chats_list) => {
+                                        res.send({
+                                            message: "success",
+                                            data: {
+                                                ...result[0],
+                                                chats_list: chats_list,
+                                            },
+                                        });
+                                    },
+                                    () => status_codes.error(req, res, next)
+                                );
                             }
                         },
                         () => status_codes.invalid_token(req, res, next)

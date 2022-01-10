@@ -74,13 +74,13 @@
 
         <div class="chats">
           <ChatRow
-            v-for="(item, index) in message_rows_list"
+            v-for="(item, index) in chats_list"
             :key="index"
-            @click_event="show_chat(item.chat_id)"
-            :chat_name="item.chat_name"
-            :message_preview="item.last_message"
-            :image_url="item.profile_photo"
+            @click_event="show_chat(item.username)"
+            :chat_name="item.full_name"
+            message_preview="TODO"
           ></ChatRow>
+          <!-- :image_url="item.profile_photo" -->
         </div>
 
         <div class="chat_view" v-bind:class="{ show: show_chat_view }">
@@ -326,18 +326,7 @@ export default {
         y: 0,
       },
       show_chat_view: true,
-      message_rows_list: [
-        {
-          chat_id: "akldmaldmadmadm",
-          chat_name: "Maximilian Tepes",
-          last_message: "Hey Max, Whatsup?",
-        },
-        {
-          chat_id: "asdasdadsa131313adadasdad",
-          chat_name: "Taha. Dostifam",
-          last_message: "How is your project going?",
-        },
-      ],
+      chats_list: [],
       messages_list: [
         {
           message_id: "a",
@@ -376,13 +365,13 @@ export default {
   },
   mounted() {
     this.$set(this.$data, "username", this.$store.state.auth.auth.username);
+    this.$set(this.$data, "chats_list", this.$store.state.auth.chats_list);
+
     window.onresize = () => {
       if (window.innerWidth <= 1100)
         this.$set(this.$data, "nav_drawer_width", 300);
       else this.$set(this.$data, "nav_drawer_width", 350);
     };
-    // const messages_scroll = document.querySelector(".messages-scroll");
-    // messages_scroll.scrollTop = messages_scroll.scrollHeight;
   },
   methods: {
     logout() {
@@ -413,7 +402,7 @@ export default {
     leaving_chat_button() {
       this.$set(this.$data, "show_chat_view", false);
     },
-    show_chat(chat_id) {
+    show_chat(username) {
       this.$set(this.$data, "show_chat_view", true);
     },
   },

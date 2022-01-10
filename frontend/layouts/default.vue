@@ -43,7 +43,10 @@ export default {
       await this.$store.dispatch("auth/Authenticate").then(
         (user_data) => {
           console.log("logging in with saved tokens");
+
           this.$store.commit("auth/setUserData", user_data);
+          this.$store.commit("auth/setChatsList", user_data.chats_list);
+
           return this.$router.push({ path: "/chat" });
         },
         () => {

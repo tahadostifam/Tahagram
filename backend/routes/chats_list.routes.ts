@@ -6,8 +6,8 @@ const router = express.Router();
 
 import ChatsListController from "../controllers/chats_list_controller";
 
-router.post("/get_chats_list", auth_middleware, (req: Request, res: Response, next: NextFunction) => {
-    ChatsListController.GetChatsListAction(req, res, next);
+router.post("/", auth_middleware, (req: Request, res: Response, next: NextFunction) => {
+    // ChatsListController.GetChatsListAction(req, res, next);
 });
 
 export default router;
