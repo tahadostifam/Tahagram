@@ -18,9 +18,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Importing Routers
 import UsersRoutes from "./routes/users.routes";
 import ChatsListRoutes from "./routes/chats_list.routes";
+import ProfilePicturesRoutes from "./routes/profile_pictures.routes";
 
 app.use("/api/users", UsersRoutes);
 app.use("/api/chats_list", ChatsListRoutes);
+app.use("/api/profile_pictures", ProfilePicturesRoutes);
 
 app.listen(configs.api.port, () => {
     console.clear();

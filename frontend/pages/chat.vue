@@ -375,22 +375,12 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.commit("auth/setRefreshToken", null);
-      this.$store.commit("auth/setAuthToken", null);
-      this.$store.commit("auth/setUserData", null);
-      this.$store.commit("auth/setUserLoggedIn", false);
-
-      Cookies.remove("refresh_token");
-      Cookies.remove("auth_token");
-      Cookies.remove("username");
-
-      this.$router.push({ path: "/signin" });
+      this.$router.push({ path: "/logout" });
     },
     insert(emoji) {
       this.send_message_input += emoji;
     },
     show_contextmenu_of_message(e, message_id) {
-      console.log(message_id);
       e.preventDefault();
       this.$set(this.$data.context_menu_for_messages, "show", false);
       this.$set(this.$data.context_menu_for_messages, "x", e.clientX);

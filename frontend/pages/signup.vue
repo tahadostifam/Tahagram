@@ -1,34 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="user_created_dialog" max-width="350">
-      <v-card>
-        <v-card-title class="text-h5"> Account Created </v-card-title>
-
-        <v-card-text>
-          Your account created successfully with this information that you
-          entered at form. Now you should just signin into your account using
-          Signin Form.<br />
-          Enjoy using ChatApp :)
-        </v-card-text>
-
-        <v-card-actions class="pb-4">
-          <v-btn
-            color="green darken-1"
-            text
-            @click="user_created_dialog = false"
-          >
-            Close
-          </v-btn>
-
-          <v-spacer></v-spacer>
-
-          <v-btn color="green darken-1" text @click="goto_signin_page">
-            Go To Signin
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
+    <UserCreatedDialog v-if="user_created_dialog"></UserCreatedDialog>
     <FormTopOverlay />
     <div class="form rounded-sm grey darken-4 pa-5 elevation-3">
       <h2 class="mb-3">Signup</h2>
@@ -162,6 +134,10 @@ export default {
                 console.log(error.response);
                 this.$set(this.$data, "form_errors", [
                   "Required parameters can't be are empty",
+                ]);
+              } else if (error.response.status == 409) {
+                this.$set(this.$data, "form_errors", [
+                  "Username already registered",
                 ]);
               } else if (error.response.status == 500) {
                 this.$set(this.$data, "form_errors", [
