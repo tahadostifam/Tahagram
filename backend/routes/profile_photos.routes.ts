@@ -4,10 +4,10 @@ import validate_body from "../lib/handle_body_validator";
 import auth_middleware from "../middlewares/auth";
 const router = express.Router();
 
-import ProfilePicturesController from "../controllers/profile_pictures_controller";
+import ProfilePhotosController from "../controllers/profile_photos_controller";
 
-router.post("/upload_picture", auth_middleware, (req: Request, res: Response, next: NextFunction) => {
-    ProfilePicturesController.UploadPictureAction(req, res, next);
+router.post("/upload_photo", auth_middleware, (req: Request, res: Response, next: NextFunction) => {
+    ProfilePhotosController.UploadPhotoAction(req, res, next);
 });
 
 export default router;

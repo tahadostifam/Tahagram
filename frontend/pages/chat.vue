@@ -639,10 +639,9 @@ export default {
       const file = e.files[0];
       if (file) {
         const requestBody = new FormData();
-        requestBody.append("picture", file);
-        console.log(requestBody);
+        requestBody.append("photo", file);
         this.$axios
-          .$post("/profile_pictures/upload_picture", requestBody, {
+          .$post("/profile_photo/upload_photo", requestBody, {
             headers: {
               username: this.$store.state.auth.auth.username,
               auth_token: this.$store.state.auth.auth.auth_token,

@@ -41,16 +41,17 @@ export function authenticate_socket_user(username: string, client_ip: string, au
         store.get(user_id_in_store).then(async (token_in_store) => {
             if (String(token_in_store).trim() == String(auth_token).trim()) {
                 // success | requested token is valid
-                database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [username]).then(
-                    (result: any) => {
-                        if (result.length == 0) return error();
-                        else {
-                            // NOTE -> auth_token is valid
-                            success(result[0]);
-                        }
-                    },
-                    () => error()
-                );
+                // TODO
+                // database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [username]).then(
+                //     (result: any) => {
+                //         if (result.length == 0) return error();
+                //         else {
+                //             // NOTE -> auth_token is valid
+                //             success(result[0]);
+                //         }
+                //     },
+                //     () => error()
+                // );
             } else {
                 return error();
             }

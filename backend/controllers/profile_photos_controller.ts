@@ -6,23 +6,28 @@ import store, { makeUserStoreId, setUserTokens } from "../lib/store";
 import crypto from "crypto";
 
 export default {
-    UploadPictureAction: async (req: any, res: Response, next: NextFunction) => {
-        console.log(req.body);
-        console.log(req.files);
-
-        if (!req.files || !req.files["picture"]) {
+    UploadPhotoAction: async (req: any, res: Response, next: NextFunction) => {
+        if (!req.files || !req.files["photo"]) {
             res.statusCode = 400;
             return res.send({
                 errors: [
                     {
-                        msg: "Picture can't be empty",
-                        param: "picture",
+                        msg: "Photo can't be empty",
+                        param: "photo",
                         location: "body",
                     },
                 ],
             });
         }
+        const photo = req.files["photo"];
+
         const final_filename = await crypto.randomBytes(10).toString("hex");
-        req.files.picture.mv(process.cwd() + "/uploads/profile_pictures/" + final_filename);
+        try {
+            await photo.mv(process.cwd() + "/uploads/profile_photos/" + final_filename + ".tmp");
+        } catch {
+            status_codes.error(req, res, next);
+        }
+
+        // TODO
     },
 };

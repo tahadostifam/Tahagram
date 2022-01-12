@@ -65,38 +65,39 @@ export default {
                 () => {
                     makeHashPassword(req.body.password).then(
                         (password_digest) => {
-                            database
-                                .exec_query("INSERT INTO tbl_users(full_name, username, password_digest) VALUES ($1, $2, $3)", [
-                                    req.body.full_name,
-                                    req.body.username,
-                                    password_digest,
-                                ])
-                                .then(
-                                    async () => {
-                                        await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
-                                            async (refresh_token) => {
-                                                // success
-                                                await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
-                                                    async (auth_token) => {
-                                                        // success
-                                                        status_codes.user_created(
-                                                            {
-                                                                refresh_token: refresh_token,
-                                                                auth_token: auth_token,
-                                                            },
-                                                            req,
-                                                            res,
-                                                            next
-                                                        );
-                                                    },
-                                                    () => status_codes.error(req, res, next)
-                                                );
-                                            },
-                                            () => status_codes.error(req, res, next)
-                                        );
-                                    },
-                                    () => status_codes.error(req, res, next)
-                                );
+                            // TODO
+                            // database
+                            //     .exec_query("INSERT INTO tbl_users(full_name, username, password_digest) VALUES ($1, $2, $3)", [
+                            //         req.body.full_name,
+                            //         req.body.username,
+                            //         password_digest,
+                            //     ])
+                            //     .then(
+                            //         async () => {
+                            //             await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
+                            //                 async (refresh_token) => {
+                            //                     // success
+                            //                     await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
+                            //                         async (auth_token) => {
+                            //                             // success
+                            //                             status_codes.user_created(
+                            //                                 {
+                            //                                     refresh_token: refresh_token,
+                            //                                     auth_token: auth_token,
+                            //                                 },
+                            //                                 req,
+                            //                                 res,
+                            //                                 next
+                            //                             );
+                            //                         },
+                            //                         () => status_codes.error(req, res, next)
+                            //                     );
+                            //                 },
+                            //                 () => status_codes.error(req, res, next)
+                            //             );
+                            //         },
+                            //         () => status_codes.error(req, res, next)
+                            //     );
                         },
                         () => status_codes.error(req, res, next)
                     );
@@ -144,26 +145,27 @@ export default {
             store.get(user_id_in_store).then(async (token_in_store) => {
                 if (String(token_in_store).trim() == String(req.body.auth_token).trim()) {
                     // success | requested token is valid
-                    database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [req.body.username]).then(
-                        (result: any) => {
-                            if (result.length == 0) return status_codes.invalid_token(req, res, next);
-                            else {
-                                getChatsList(req.body.username).then(
-                                    (chats_list) => {
-                                        res.send({
-                                            message: "success",
-                                            data: {
-                                                ...result[0],
-                                                chats_list: chats_list,
-                                            },
-                                        });
-                                    },
-                                    () => status_codes.error(req, res, next)
-                                );
-                            }
-                        },
-                        () => status_codes.invalid_token(req, res, next)
-                    );
+                    // TODO
+                    // database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [req.body.username]).then(
+                    //     (result: any) => {
+                    //         if (result.length == 0) return status_codes.invalid_token(req, res, next);
+                    //         else {
+                    //             getChatsList(req.body.username).then(
+                    //                 (chats_list) => {
+                    //                     res.send({
+                    //                         message: "success",
+                    //                         data: {
+                    //                             ...result[0],
+                    //                             chats_list: chats_list,
+                    //                         },
+                    //                     });
+                    //                 },
+                    //                 () => status_codes.error(req, res, next)
+                    //             );
+                    //         }
+                    //     },
+                    //     () => status_codes.invalid_token(req, res, next)
+                    // );
                 } else {
                     status_codes.invalid_token(req, res, next);
                 }
@@ -174,34 +176,36 @@ export default {
 
 export function signinUserWithUserPassword(username: string, password: string) {
     return new Promise((success: any, failed: any) => {
-        database.exec_query("SELECT * FROM tbl_users WHERE username=$1", [username]).then(
-            (result: any) => {
-                if (result.length > 0) {
-                    const user = result[0];
-                    comparePassword(password, user.password_digest).then(
-                        () => {
-                            success(user);
-                        },
-                        () => failed("not_found")
-                    );
-                } else {
-                    failed("not_found");
-                }
-            },
-            () => failed("error")
-        );
+        // TODO
+        // database.exec_query("SELECT * FROM tbl_users WHERE username=$1", [username]).then(
+        //     (result: any) => {
+        //         if (result.length > 0) {
+        //             const user = result[0];
+        //             comparePassword(password, user.password_digest).then(
+        //                 () => {
+        //                     success(user);
+        //                 },
+        //                 () => failed("not_found")
+        //             );
+        //         } else {
+        //             failed("not_found");
+        //         }
+        //     },
+        //     () => failed("error")
+        // );
     });
 }
 
 export function checkUsernameUniqueness(username: string) {
     return new Promise((is_unique: any, is_not_unique: any) => {
-        database.exec_query("SELECT username from tbl_users WHERE username=$1", [username]).then(
-            (result: any) => {
-                if (result.length == 0) is_unique();
-                else is_not_unique();
-            },
-            () => is_not_unique()
-        );
+        // TODO
+        // database.exec_query("SELECT username from tbl_users WHERE username=$1", [username]).then(
+        //     (result: any) => {
+        //         if (result.length == 0) is_unique();
+        //         else is_not_unique();
+        //     },
+        //     () => is_not_unique()
+        // );
     });
 }
 

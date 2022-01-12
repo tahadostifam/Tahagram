@@ -19,17 +19,18 @@ export default function (req: any, res: Response, next: NextFunction) {
         store.get(user_id_in_store).then(async (token_in_store) => {
             if (String(token_in_store).trim() == String(auth_token).trim()) {
                 // success | requested token is valid
-                database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [username]).then(
-                    (result: any) => {
-                        if (result.length == 0) return status_codes.invalid_token(req, res, next);
-                        else {
-                            req["username"] = username;
-                            req["user_info"] = result[0];
-                            next();
-                        }
-                    },
-                    () => status_codes.invalid_token(req, res, next)
-                );
+                // TODO
+                // database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [username]).then(
+                //     (result: any) => {
+                //         if (result.length == 0) return status_codes.invalid_token(req, res, next);
+                //         else {
+                //             req["username"] = username;
+                //             req["user_info"] = result[0];
+                //             next();
+                //         }
+                //     },
+                //     () => status_codes.invalid_token(req, res, next)
+                // );
             } else {
                 status_codes.invalid_token(req, res, next);
             }

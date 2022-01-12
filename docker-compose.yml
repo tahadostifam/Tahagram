@@ -28,15 +28,17 @@ services:
         ports:
             - "5000:5000"
         network_mode: "host"
-    postgres:
-        image: "postgres"
+    mongo:
+        image: "mongo"
         container_name: "chat_app_database"
-        env_file:
-            - backend/database.env
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: taha
+            MONGO_INITDB_ROOT_PASSWORD: 1234
+            MONGO_INITDB_DATABASE: chatapp
         volumes:
-            - chatapp_postgres_volume:/var/lib/postgresql/data
+            - chatapp_database_volume:/data/db
         ports:
-            - "5432:5432"
+            - 27017:27017
         network_mode: "host"
     redis:
         image: "redis:latest"
@@ -46,4 +48,4 @@ services:
         network_mode: "host"
 
 volumes:
-    chatapp_postgres_volume:
+    chatapp_database_volume:

@@ -10,18 +10,19 @@ export default {
 
 export function getChatsList(username: string) {
     return new Promise((success, error) => {
-        database
-            .exec_query(
-                "SELECT tbl_users.full_name, tbl_users.username, tbl_users.bio from tbl_users RIGHT JOIN tbl_chats_list ON user_username=tbl_users.username WHERE tbl_chats_list.haver_username=$1",
-                [username]
-            )
-            .then(
-                (chats_list) => {
-                    if (chats_list) {
-                        success(chats_list);
-                    }
-                },
-                () => error()
-            );
+        database;
+        // TODO
+        // .exec_query(
+        //     "SELECT tbl_users.full_name, tbl_users.username, tbl_users.bio from tbl_users RIGHT JOIN tbl_chats_list ON user_username=tbl_users.username WHERE tbl_chats_list.haver_username=$1",
+        //     [username]
+        // )
+        // .then(
+        //     (chats_list) => {
+        //         if (chats_list) {
+        //             success(chats_list);
+        //         }
+        //     },
+        //     () => error()
+        // );
     });
 }

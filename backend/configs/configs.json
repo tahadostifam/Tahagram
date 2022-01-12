@@ -14,12 +14,12 @@
     "socket": {
         "port": 2345
     },
-    "postgres": {
+    "mongo": {
         "host": "127.0.0.1",
-        "port": 5432,
+        "port": 27017,
         "user": "taha",
         "pass": "1234",
-        "db": "chatapp_db"
+        "db": "chatapp"
     },
     "redis": {
         "host": "127.0.0.1",
