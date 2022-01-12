@@ -1,14 +1,25 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    full_name: String,
-    username: String,
-    password_digest: String,
-    chats: [
-        {
-            username: String,
-        },
-    ],
+var schema = new mongoose.Schema({
+    full_name: {
+        type: String,
+        required: true,
+    },
+    username: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    password_digest: {
+        type: String,
+        required: true,
+    },
+    chats: {
+        type: Array,
+        default: [],
+    },
 });
 
-export default mongoose.model("users", userSchema);
+var collection = mongoose.model("users", schema);
+
+export default collection;

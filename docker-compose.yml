@@ -31,10 +31,6 @@ services:
     mongo:
         image: "mongo"
         container_name: "chat_app_database"
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: taha
-            MONGO_INITDB_ROOT_PASSWORD: 1234
-            MONGO_INITDB_DATABASE: chatapp
         volumes:
             - chatapp_database_volume:/data/db
         ports:

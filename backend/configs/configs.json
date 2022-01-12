@@ -17,8 +17,8 @@
     "mongo": {
         "host": "127.0.0.1",
         "port": 27017,
-        "user": "taha",
-        "pass": "1234",
+        "user": null,
+        "pass": null,
         "db": "chatapp"
     },
     "redis": {

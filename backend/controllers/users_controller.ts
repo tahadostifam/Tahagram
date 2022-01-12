@@ -8,6 +8,8 @@ import jwt from "jsonwebtoken";
 import { getChatsList } from "./chats_list_controller";
 const secrets = require("../configs/secrets.json");
 
+import User from "../models/user";
+
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
         const client_ip = clientIp(req, res)?.toString();
@@ -24,21 +26,6 @@ export default {
                             await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                 async (auth_token) => {
                                     // success
-                                    getChatsList(req.body.username).then(
-                                        (chats_list) => {
-                                            status_codes.success_signin(
-                                                {
-                                                    user: user,
-                                                    refresh_token: refresh_token,
-                                                    auth_token: auth_token,
-                                                },
-                                                req,
-                                                res,
-                                                next
-                                            );
-                                        },
-                                        () => status_codes.error(req, res, next)
-                                    );
                                 },
                                 () => status_codes.error(req, res, next)
                             );
@@ -65,39 +52,11 @@ export default {
                 () => {
                     makeHashPassword(req.body.password).then(
                         (password_digest) => {
-                            // TODO
-                            // database
-                            //     .exec_query("INSERT INTO tbl_users(full_name, username, password_digest) VALUES ($1, $2, $3)", [
-                            //         req.body.full_name,
-                            //         req.body.username,
-                            //         password_digest,
-                            //     ])
-                            //     .then(
-                            //         async () => {
-                            //             await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
-                            //                 async (refresh_token) => {
-                            //                     // success
-                            //                     await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
-                            //                         async (auth_token) => {
-                            //                             // success
-                            //                             status_codes.user_created(
-                            //                                 {
-                            //                                     refresh_token: refresh_token,
-                            //                                     auth_token: auth_token,
-                            //                                 },
-                            //                                 req,
-                            //                                 res,
-                            //                                 next
-                            //                             );
-                            //                         },
-                            //                         () => status_codes.error(req, res, next)
-                            //                     );
-                            //                 },
-                            //                 () => status_codes.error(req, res, next)
-                            //             );
-                            //         },
-                            //         () => status_codes.error(req, res, next)
-                            //     );
+                            const user = new User({
+                                full_name: req.body.full_name,
+                                username: req.body.username,
+                                password_digest: password_digest,
+                            });
                         },
                         () => status_codes.error(req, res, next)
                     );
@@ -175,37 +134,32 @@ export default {
 };
 
 export function signinUserWithUserPassword(username: string, password: string) {
-    return new Promise((success: any, failed: any) => {
-        // TODO
-        // database.exec_query("SELECT * FROM tbl_users WHERE username=$1", [username]).then(
-        //     (result: any) => {
-        //         if (result.length > 0) {
-        //             const user = result[0];
-        //             comparePassword(password, user.password_digest).then(
-        //                 () => {
-        //                     success(user);
-        //                 },
-        //                 () => failed("not_found")
-        //             );
-        //         } else {
-        //             failed("not_found");
-        //         }
-        //     },
-        //     () => failed("error")
-        // );
+    return new Promise(async (success: any, failed: any) => {
+        const user = await User.findOne({
+            username: username,
+        });
+        if (!user) {
+            return failed("not_found");
+        }
+        comparePassword(password, user.password_digest).then(
+            () => {
+                success(user);
+            },
+            () => failed("not_found")
+        );
     });
 }
 
 export function checkUsernameUniqueness(username: string) {
-    return new Promise((is_unique: any, is_not_unique: any) => {
-        // TODO
-        // database.exec_query("SELECT username from tbl_users WHERE username=$1", [username]).then(
-        //     (result: any) => {
-        //         if (result.length == 0) is_unique();
-        //         else is_not_unique();
-        //     },
-        //     () => is_not_unique()
-        // );
+    return new Promise(async (exists: any, deos_not_exists: any) => {
+        const result = await User.findOne({
+            username: username,
+        });
+        if (result) {
+            exists();
+        } else {
+            deos_not_exists();
+        }
     });
 }
 
