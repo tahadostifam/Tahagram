@@ -14,7 +14,18 @@ var schema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    bio: {
+        type: String,
+        default: null,
+    },
+    last_seen: {
+        type: Date,
+    },
     chats: {
+        type: Array,
+        default: [],
+    },
+    profile_photos: {
         type: Array,
         default: [],
     },

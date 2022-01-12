@@ -18,14 +18,28 @@ export default {
             signinUserWithUserPassword(req.body.username, req.body.password).then(
                 async (user: any) => {
                     // success
-                    delete user["password_digest"];
 
                     await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
                         async (refresh_token) => {
                             // success
                             await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                 async (auth_token) => {
-                                    // success
+                                    status_codes.success_signin(
+                                        {
+                                            user: {
+                                                full_name: user.full_name,
+                                                username: user.username,
+                                                bio: user.bio,
+                                                last_seen: user.last_seen,
+                                                chats: [],
+                                            },
+                                            refresh_token: refresh_token,
+                                            auth_token: auth_token,
+                                        },
+                                        req,
+                                        res,
+                                        next
+                                    );
                                 },
                                 () => status_codes.error(req, res, next)
                             );
@@ -51,12 +65,34 @@ export default {
             checkUsernameUniqueness(req.body.username).then(
                 () => {
                     makeHashPassword(req.body.password).then(
-                        (password_digest) => {
-                            const user = new User({
-                                full_name: req.body.full_name,
-                                username: req.body.username,
-                                password_digest: password_digest,
-                            });
+                        async (password_digest) => {
+                            await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
+                                async (refresh_token) => {
+                                    // success
+                                    await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
+                                        async (auth_token) => {
+                                            // success
+                                            const user = new User({
+                                                full_name: req.body.full_name,
+                                                username: req.body.username,
+                                                password_digest: password_digest,
+                                            });
+                                            await user.save();
+                                            status_codes.user_created(
+                                                {
+                                                    refresh_token: null,
+                                                    auth_token: null,
+                                                },
+                                                req,
+                                                res,
+                                                next
+                                            );
+                                        },
+                                        () => status_codes.error(req, res, next)
+                                    );
+                                },
+                                () => status_codes.error(req, res, next)
+                            );
                         },
                         () => status_codes.error(req, res, next)
                     );
@@ -151,7 +187,7 @@ export function signinUserWithUserPassword(username: string, password: string) {
 }
 
 export function checkUsernameUniqueness(username: string) {
-    return new Promise(async (exists: any, deos_not_exists: any) => {
+    return new Promise(async (deos_not_exists: any, exists: any) => {
         const result = await User.findOne({
             username: username,
         });
