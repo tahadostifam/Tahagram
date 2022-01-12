@@ -3,7 +3,7 @@
         "port": 8000,
         "tokens": {
             "refresh_token": {
-                "expire": 20000
+                "expire": 200000
             },
             "auth_token": {
                 "length": 25,

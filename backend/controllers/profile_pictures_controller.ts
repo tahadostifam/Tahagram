@@ -7,6 +7,9 @@ import crypto from "crypto";
 
 export default {
     UploadPictureAction: async (req: any, res: Response, next: NextFunction) => {
+        console.log(req.body);
+        console.log(req.files);
+
         if (!req.files || !req.files["picture"]) {
             res.statusCode = 400;
             return res.send({

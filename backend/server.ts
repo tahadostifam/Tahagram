@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import initSocket from "./socket/socket";
 import * as database from "./lib/database";
 import * as store from "./lib/store";
+const fileUpload = require("express-fileupload");
 const app: any = express();
 
 app.set("base", "/api");
@@ -12,6 +13,11 @@ app.enable("trust proxy");
 app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+    fileUpload({
+        createParentPath: true,
+    })
+);
 
 // Socket Init
 

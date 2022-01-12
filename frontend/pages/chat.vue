@@ -188,7 +188,19 @@
           <div class="avatar avatar_xlarge">
             <img src="https://www.enjpg.com/img/2020/boruto-3.jpg" />
           </div>
-          <v-btn class="rounded-pill mt-4" depressed :color="theme_color">
+
+          <v-btn
+            class="rounded-pill mt-4"
+            depressed
+            :color="theme_color"
+            style="overflow: hidden"
+          >
+            <input
+              type="file"
+              id="upload_profile_photo_input"
+              style="opacity: 0; position: absolute; width: 200px; height: 40px"
+              onchange="window.upload_profile_photo(this)"
+            />
             SET PROFILE PHOTO
           </v-btn>
         </div>
@@ -275,7 +287,6 @@
               :key="index"
               @click_event="show_chat(item.username)"
               :chat_name="item.full_name"
-              message_preview="TODO"
             ></ChatRow>
           </template>
           <ThereIsNothing v-else />
@@ -560,8 +571,8 @@ export default {
       show_nav_drawer: false,
       username: undefined,
       nav_drawer_width: 350,
-      show_settings_dialog: false,
-      settings_dialog_active_section: "home",
+      show_settings_dialog: true,
+      settings_dialog_active_section: "edit_profile",
       settings_dialog_edit_full_name: false,
     };
   },
@@ -571,6 +582,7 @@ export default {
 
     this.handle_resize();
     this.handle_escape_button();
+    window.upload_profile_photo = this.handle_upload_profile_photo;
   },
   methods: {
     logout() {
@@ -622,6 +634,29 @@ export default {
       }
       window.onresize = () => __resize();
       __resize();
+    },
+    handle_upload_profile_photo(e) {
+      const file = e.files[0];
+      if (file) {
+        const requestBody = new FormData();
+        requestBody.append("picture", file);
+        console.log(requestBody);
+        this.$axios
+          .$post("/profile_pictures/upload_picture", requestBody, {
+            headers: {
+              username: this.$store.state.auth.auth.username,
+              auth_token: this.$store.state.auth.auth.auth_token,
+            },
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        console.log("no profile photo to upload");
+      }
     },
   },
 };
