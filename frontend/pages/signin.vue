@@ -82,7 +82,7 @@ export default {
         this.$set(this.$data, "submit_button_loading_state", true);
         this.$axios
           .$post(
-            "/users/signin",
+            "/api/users/signin",
             {
               username: this.$data.username,
               password: this.$data.password,
@@ -106,7 +106,7 @@ export default {
               this.$store.commit("auth/setUserData", response.data);
               this.$store.commit("auth/setUserLoggedIn", true);
               this.$store.commit("auth/setUsername", this.$data.username);
-              this.$store.commit("auth/setChatsList", this.$data.chats_list);
+              this.$store.commit("auth/setChatsList", response.chats);
 
               if (this.$data.remember_me) {
                 Cookies.set("refresh_token", response.tokens.refresh_token);

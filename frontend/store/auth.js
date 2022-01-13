@@ -37,7 +37,7 @@ export const actions = {
     function fetch_user_data(auth_token) {
       return new Promise((resolve, reject) => {
         axios
-          .$post("/users/auth", {
+          .$post("/api/users/auth", {
             username: state.auth.username,
             auth_token: auth_token,
           })
@@ -60,7 +60,7 @@ export const actions = {
         .catch(() => {
           console.log("getting new auth_token");
           axios
-            .$post("/users/refresh_token", {
+            .$post("/api/users/refresh_token", {
               refresh_token: state.auth.refresh_token,
             })
             .then((response) => {

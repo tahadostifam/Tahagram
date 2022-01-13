@@ -51,4 +51,11 @@ export default {
             auth_token: data.auth_token,
         });
     },
+    profile_photo_uploaded(data: any, req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 200;
+        res.send({
+            message: "profile photo uploaded",
+            profile_photo_url: data.profile_photo_url,
+        });
+    },
 };

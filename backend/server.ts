@@ -26,11 +26,9 @@ app.use("/uploads/profile_photos/:filename", (req, res) => {
 
 // Importing Routers
 import UsersRoutes from "./routes/users.routes";
-import ChatsListRoutes from "./routes/chats_list.routes";
 import ProfilePhotosRoutes from "./routes/profile_photos.routes";
 
 app.use("/api/users", UsersRoutes);
-app.use("/api/chats_list", ChatsListRoutes);
 app.use("/api/profile_photos", ProfilePhotosRoutes);
 
 app.listen(configs.api.port, () => {

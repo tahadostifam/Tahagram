@@ -117,7 +117,7 @@ export default {
       if (this.inputs_are_valid()) {
         this.$set(this.$data, "submit_button_loading_state", true);
         this.$axios
-          .$post("/users/signup", {
+          .$post("/api/users/signup", {
             full_name: this.$data.full_name,
             username: this.$data.username,
             password: this.$data.password,

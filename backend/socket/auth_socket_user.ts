@@ -2,6 +2,8 @@ import store, { makeUserStoreId } from "../lib/store";
 import { cleanIpDots } from "../lib/client_ip";
 import * as database from "../lib/database";
 
+import User from "../models/user";
+
 export function clearParams(url: string) {
     const params = url.substring(url.indexOf("?username"));
     return url.replace(params, "").trim();
@@ -41,17 +43,11 @@ export function authenticate_socket_user(username: string, client_ip: string, au
         store.get(user_id_in_store).then(async (token_in_store) => {
             if (String(token_in_store).trim() == String(auth_token).trim()) {
                 // success | requested token is valid
-                // TODO
-                // database.exec_query("SELECT full_name, username, bio, last_seen from tbl_users WHERE username=$1", [username]).then(
-                //     (result: any) => {
-                //         if (result.length == 0) return error();
-                //         else {
-                //             // NOTE -> auth_token is valid
-                //             success(result[0]);
-                //         }
-                //     },
-                //     () => error()
-                // );
+                const user = await User.findOne({
+                    username: username,
+                });
+                if (!user) return error();
+                success(user);
             } else {
                 return error();
             }

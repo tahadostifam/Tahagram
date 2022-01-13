@@ -11,10 +11,22 @@
           class="py-5 px-4 bg-theme rounded-0"
           id="user_info_at_nav_drawer"
         >
-          <v-list-item-avatar>
-            <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
-          </v-list-item-avatar>
-          <v-list-item-title>{{ username }}</v-list-item-title>
+          <!-- ANCHOR -->
+          <div
+            class="image ml-2"
+            style="position: relative; top: 3px"
+            v-if="user_default_avatar"
+          >
+            <img
+              :src="user_default_avatar"
+              class="avatar"
+              onload="window.lazyImage(this)"
+              style="--size: 40px"
+            />
+          </div>
+          <div class="solid_color_avatar" v-else></div>
+
+          <v-list-item-title class="ml-3">{{ username }}</v-list-item-title>
         </v-list-item>
         <v-list-item-group>
           <v-list-item>
@@ -568,20 +580,34 @@ export default {
           image_address: "https://picsum.photos/900/500",
         },
       ],
-      show_nav_drawer: false,
+      show_nav_drawer: true,
       username: undefined,
       nav_drawer_width: 350,
-      show_settings_dialog: true,
-      settings_dialog_active_section: "edit_profile",
+      show_settings_dialog: false,
+      settings_dialog_active_section: "home",
       settings_dialog_edit_full_name: false,
+      user_default_avatar: undefined,
     };
   },
   mounted() {
     this.$set(this.$data, "username", this.$store.state.auth.auth.username);
     this.$set(this.$data, "chats_list", this.$store.state.auth.chats_list);
 
+    if (this.$store.state.auth.user_info.profile_photos.length > 0) {
+      const first_photo_filename =
+        this.$store.state.auth.user_info.profile_photos[0].filename;
+      this.$set(
+        this.$data,
+        "user_default_avatar",
+        this.$axios.defaults.baseURL +
+          "/uploads/profile_photos/" +
+          first_photo_filename
+      );
+    }
+
     this.handle_resize();
     this.handle_escape_button();
+
     window.upload_profile_photo = this.handle_upload_profile_photo;
   },
   methods: {
@@ -641,17 +667,19 @@ export default {
         const requestBody = new FormData();
         requestBody.append("photo", file);
         this.$axios
-          .$post("/profile_photo/upload_photo", requestBody, {
+          .$post("/api/profile_photos/upload_photo", requestBody, {
             headers: {
               username: this.$store.state.auth.auth.username,
               auth_token: this.$store.state.auth.auth.auth_token,
             },
           })
           .then((response) => {
-            console.log(response);
+            if (response.message == "profile photo uploaded") {
+              console.log("TODO");
+            }
           })
           .catch((error) => {
-            console.log(error);
+            this.$router.push({ path: "/500" });
           });
       } else {
         console.log("no profile photo to upload");

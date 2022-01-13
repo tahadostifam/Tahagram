@@ -40,19 +40,25 @@ export default {
       this.$store.commit("auth/setUsername", username);
       this.$store.commit("auth/setUserLoggedIn", true);
       // Get user info | Auth
-      await this.$store.dispatch("auth/Authenticate").then(
-        (user_data) => {
-          console.log("logging in with saved tokens");
+      await this.$store
+        .dispatch("auth/Authenticate")
+        .then(
+          (user_data) => {
+            console.log("logging in with saved tokens");
 
-          this.$store.commit("auth/setUserData", user_data);
-          this.$store.commit("auth/setChatsList", user_data.chats_list);
+            this.$store.commit("auth/setUserData", user_data);
+            this.$store.commit("auth/setChatsList", user_data.chats);
 
-          return this.$router.push({ path: "/chat" });
-        },
-        () => {
-          console.log("login with saved tokens failed!");
-        }
-      );
+            return this.$router.push({ path: "/chat" });
+          },
+          () => {
+            console.log("login with saved tokens failed!");
+          }
+        )
+        .catch((err) => {
+          console.log(err);
+          return this.$router.push({ path: "/500" });
+        });
     }
   },
 };
