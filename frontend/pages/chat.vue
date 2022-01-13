@@ -11,7 +11,6 @@
           class="py-5 px-4 bg-theme rounded-0"
           id="user_info_at_nav_drawer"
         >
-          <!-- ANCHOR -->
           <div
             class="image ml-2"
             style="position: relative; top: 3px"
@@ -24,7 +23,6 @@
               style="--size: 40px"
             />
           </div>
-          <div class="solid_color_avatar" v-else></div>
 
           <v-list-item-title class="ml-3">{{ username }}</v-list-item-title>
         </v-list-item>
@@ -86,13 +84,22 @@
         </div>
 
         <div class="d-flex align-center px-4 pb-5">
-          <div class="avatar">
-            <img src="https://www.enjpg.com/img/2020/boruto-3.jpg" />
+          <!-- ANCHOR -->
+          <div class="avatar" v-if="user_default_avatar">
+            <img :src="user_default_avatar" />
           </div>
+
+          <template v-else>
+            <ColoredAvatar v-if="username" :value="username[0]" />
+            <ColoredAvatar v-else :value="''" />
+          </template>
+
           <div class="ml-4">
-            <span class="text-white font-weight-medium d-block w-100"
-              >Username</span
-            >
+            <span class="text-white font-weight-medium d-block w-100">
+              <template v-if="username">
+                {{ username }}
+              </template>
+            </span>
             <span class="text-grey d-block w-100"
               >last seen today at 5:15 PM</span
             >
@@ -197,9 +204,18 @@
         </div>
 
         <div class="d-flex align-center justify-center px-4 pb-5 flex-column">
-          <div class="avatar avatar_xlarge">
-            <img src="https://www.enjpg.com/img/2020/boruto-3.jpg" />
+          <!-- ANCHOR -->
+          <div class="avatar avatar_xlarge" v-if="user_default_avatar">
+            <img :src="user_default_avatar" />
           </div>
+          <template v-else>
+            <ColoredAvatar
+              v-if="username"
+              :value="username[0]"
+              style="xlarge"
+            />
+            <ColoredAvatar v-else :value="''" style="xlarge" />
+          </template>
 
           <v-btn
             class="rounded-pill mt-4"
@@ -580,10 +596,10 @@ export default {
           image_address: "https://picsum.photos/900/500",
         },
       ],
-      show_nav_drawer: true,
-      username: undefined,
+      show_nav_drawer: false,
+      username: null,
       nav_drawer_width: 350,
-      show_settings_dialog: false,
+      show_settings_dialog: true,
       settings_dialog_active_section: "home",
       settings_dialog_edit_full_name: false,
       user_default_avatar: undefined,

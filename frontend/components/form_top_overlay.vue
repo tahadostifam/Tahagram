@@ -3,8 +3,7 @@
     <h1>ChatApp</h1>
     <h2>
       Developed By
-      <a href="https://github.com/tahadostifam/ChatApp">TahaDostifam</a> &
-      <a>AhmadKharazi</a>
+      <a href="https://github.com/tahadostifam/ChatApp">TahaDostifam</a>
     </h2>
   </div>
 </template>

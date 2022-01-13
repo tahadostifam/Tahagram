@@ -9,8 +9,10 @@
         <img :src="image_url" onload="window.lazyImage(this)" class="avatar" />
       </div>
       <div v-else>
-        <div class="solid_color_avatar" ref="colored_avatar">
+        <!-- <div class="solid_color_avatar" ref="colored_avatar">
           {{ chat_name[0] }}
+        </div> -->
+        <ColoredAvatar :value="chat_name[0]"/>
         </div>
       </div>
 
@@ -27,23 +29,6 @@ import configs from "@/assets/javascript/configs";
 
 export default {
   name: "ChatRow",
-  data() {
-    return {
-      avatar_class: "grey",
-    };
-  },
-  mounted() {
-    let vm = this;
-    if (!vm.image_url) {
-      let final_class = "";
-      const random_index = Math.floor(
-        Math.random() * configs.avatar_random_colors.length
-      );
-      configs.avatar_random_colors[random_index].forEach((color) => {
-        this.$refs.colored_avatar.classList.add(color);
-      });
-    }
-  },
   props: ["chat_name", "last_message", "image_url", "active_chat"],
 };
 </script>

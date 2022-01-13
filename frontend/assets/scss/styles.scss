@@ -244,14 +244,7 @@ body,
         height: 100%;
       }
     }
-    .solid_color_avatar {
-      top: -1px;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 14px;
-    }
+
     .image {
       background-color: $color_4;
     }
@@ -276,6 +269,22 @@ body,
       }
     }
   }
+}
+
+.solid_color_avatar {
+  top: -1px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  --size: 50px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  overflow: hidden;
+  padding-top: 2px;
+  font-weight: 500;
 }
 
 .image img {

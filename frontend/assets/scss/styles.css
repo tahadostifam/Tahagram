@@ -257,21 +257,6 @@ body,
   height: 100%;
 }
 
-.chats .chat_row .solid_color_avatar {
-  top: -1px;
-  text-align: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  font-size: 14px;
-}
-
 .chats .chat_row .image {
   background-color: #181818;
 }
@@ -296,6 +281,28 @@ body,
   position: relative;
   top: -1px;
   margin-right: 10px;
+}
+
+.solid_color_avatar {
+  top: -1px;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 14px;
+  --size: 50px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  overflow: hidden;
+  padding-top: 2px;
+  font-weight: 500;
 }
 
 .image img {
