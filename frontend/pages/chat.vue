@@ -212,7 +212,7 @@
             <ColoredAvatar
               v-if="username"
               :value="username[0]"
-              style="xlarge"
+              :avatar_xlarge="true"
             />
             <ColoredAvatar v-else :value="''" style="xlarge" />
           </template>

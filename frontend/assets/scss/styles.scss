@@ -285,6 +285,10 @@ body,
   overflow: hidden;
   padding-top: 2px;
   font-weight: 500;
+  background-color: $color_3;
+}
+.avatar_xlarge {
+  --size: 110px;
 }
 
 .image img {

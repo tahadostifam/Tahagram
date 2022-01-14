@@ -303,6 +303,11 @@ body,
   overflow: hidden;
   padding-top: 2px;
   font-weight: 500;
+  background-color: #0f0f0f;
+}
+
+.avatar_xlarge {
+  --size: 110px;
 }
 
 .image img {
