@@ -55,7 +55,7 @@ export default {
         res.statusCode = 200;
         res.send({
             message: "profile photo uploaded",
-            profile_photo_url: data.profile_photo_url,
+            profile_photo_filename: data.profile_photo_filename,
         });
     },
 };

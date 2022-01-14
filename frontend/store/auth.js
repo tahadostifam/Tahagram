@@ -28,6 +28,13 @@ export const mutations = {
   setChatsList(state, list) {
     state.chats_list = list;
   },
+  addProfilePhotos(state, filename) {
+    if (filename.trim() != "") {
+      state.user_info.profile_photos.splice(0, 0, {
+        filename: filename,
+      });
+    }
+  },
 };
 
 export const actions = {

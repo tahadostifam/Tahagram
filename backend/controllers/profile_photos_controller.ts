@@ -65,7 +65,7 @@ export default {
 
         status_codes.profile_photo_uploaded(
             {
-                profile_photo_url: `/uploads/profile_photos/${final_filename}`,
+                profile_photo_filename: final_filename,
             },
             req,
             res,

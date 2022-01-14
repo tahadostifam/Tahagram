@@ -625,6 +625,19 @@ export default {
     this.handle_escape_button();
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
+
+    this.$store.watch(
+      (state) => state.auth.user_info.profile_photos,
+      (value) => {
+        this.$set(
+          this.$data,
+          "user_default_avatar",
+          this.$axios.defaults.baseURL +
+            "/uploads/profile_photos/" +
+            value[0].filename
+        );
+      }
+    );
   },
   methods: {
     logout() {
@@ -691,7 +704,10 @@ export default {
           })
           .then((response) => {
             if (response.message == "profile photo uploaded") {
-              console.log("TODO");
+              this.$store.commit(
+                "auth/addProfilePhotos",
+                response.profile_photo_filename
+              );
             }
           })
           .catch((error) => {

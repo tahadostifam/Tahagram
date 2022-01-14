@@ -23,6 +23,7 @@ export default {
                             // success
                             await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                 async (auth_token) => {
+                                    const final_profile_photos = user.profile_photos.reverse();
                                     status_codes.success_signin(
                                         {
                                             user: {
@@ -30,7 +31,7 @@ export default {
                                                 username: user.username,
                                                 bio: user.bio,
                                                 last_seen: user.last_seen,
-                                                profile_photos: user.profile_photos,
+                                                profile_photos: final_profile_photos,
                                                 chats: [],
                                             },
                                             refresh_token: refresh_token,
@@ -144,6 +145,7 @@ export default {
                         username: req.body.username,
                     });
                     if (!user) return status_codes.invalid_token(req, res, next);
+                    const final_profile_photos = user.profile_photos.reverse();
                     res.send({
                         message: "success",
                         data: {
@@ -151,7 +153,7 @@ export default {
                             username: user.username,
                             bio: user.bio,
                             last_seen: user.last_seen,
-                            profile_photos: user.profile_photos,
+                            profile_photos: final_profile_photos,
                             chats: [],
                         },
                     });
