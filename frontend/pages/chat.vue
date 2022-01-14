@@ -1,5 +1,30 @@
 <template>
   <div>
+    <div id="view_image" v-if="view_image.show">
+      <div class="controls">
+        <div class="right" @click="view_image_move_right">
+          <v-icon>mdi-chevron-right</v-icon>
+        </div>
+        <div class="left" @click="view_image_move_left">
+          <v-icon>mdi-chevron-left</v-icon>
+        </div>
+      </div>
+      <div class="close_btn" @click="view_image.show = false">
+        <v-icon>mdi-close</v-icon>
+      </div>
+
+      <div class="info_of_image">
+        <span
+          >Photo {{ view_image.active_item.index + 1 }} of
+          {{ view_image.list.length }}</span
+        >
+      </div>
+
+      <div class="image_content">
+        <img :src="view_image.active_item.src" />
+      </div>
+    </div>
+
     <v-navigation-drawer
       v-model="show_nav_drawer"
       absolute
@@ -85,7 +110,11 @@
 
         <div class="d-flex align-center px-4 pb-5">
           <!-- ANCHOR -->
-          <div class="avatar" v-if="user_default_avatar">
+          <div
+            class="avatar"
+            v-if="user_default_avatar"
+            @click="preview_self_profile"
+          >
             <img :src="user_default_avatar" />
           </div>
 
@@ -205,7 +234,11 @@
 
         <div class="d-flex align-center justify-center px-4 pb-5 flex-column">
           <!-- ANCHOR -->
-          <div class="avatar avatar_xlarge" v-if="user_default_avatar">
+          <div
+            class="avatar avatar_xlarge"
+            v-if="user_default_avatar"
+            @click="preview_self_profile"
+          >
             <img :src="user_default_avatar" />
           </div>
           <template v-else>
@@ -630,7 +663,7 @@ export default {
       show_nav_drawer: false,
       username: null,
       nav_drawer_width: 350,
-      show_settings_dialog: false,
+      show_settings_dialog: true,
       settings_dialog_active_section: "home",
       settings_dialog_edit_full_name: false,
       user_default_avatar: undefined,
@@ -639,9 +672,13 @@ export default {
         src: null,
         canvas: null,
       },
-      preview_user_profile: {
+      view_image: {
         show: false,
         list: [],
+        active_item: {
+          src: "http://127.0.0.1:8000/uploads/profile_photos/ba6f43bc85dfc0c6962e",
+          index: 0,
+        },
       },
     };
   },
@@ -668,6 +705,40 @@ export default {
     window.upload_profile_photo = this.handle_upload_profile_photo;
   },
   methods: {
+    preview_self_profile() {
+      this.$set(this.$data.view_image, "show", true);
+      let list = [];
+      this.$store.state.auth.user_info.profile_photos.forEach((item) => {
+        list.push({
+          src:
+            this.$axios.defaults.baseURL +
+            "/uploads/profile_photos/" +
+            item.filename,
+        });
+      });
+      console.log(this.$data.view_image.active_item);
+      this.$set(this.$data.view_image, "list", list);
+      this.$set(
+        this.$data.view_image.active_item,
+        "src",
+        this.$data.view_image.list[0].src
+      );
+    },
+    view_image_move_right() {
+      const active_index = this.$data.view_image.active_item.index;
+      const length = this.$data.view_image.list.length;
+      console.log(active_index);
+      console.log(length);
+      if (active_index <= length - 1) {
+        this.$set(this.$data.view_image.active_item, "index", active_index + 1);
+        this.$set(
+          this.$data.view_image.active_item,
+          "src",
+          this.$data.view_image.list[active_index + 1].src
+        );
+      }
+    },
+    view_image_move_left() {},
     logout() {
       this.$router.push({ path: "/logout" });
     },
@@ -733,10 +804,6 @@ export default {
         if (imageFile) {
           const requestBody = new FormData();
           requestBody.append("photo", imageFile);
-          console.log({
-            username: this.$store.state.auth.auth.username,
-            auth_token: this.$store.state.auth.auth.auth_token,
-          });
           this.$axios
             .$post("/api/profile_photos/upload_photo", requestBody, {
               headers: {
