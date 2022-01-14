@@ -292,6 +292,10 @@
         <cropper
           :src="crop_profile_photo.src"
           @change="crop_profile_photo_onchange"
+          :stencil-size="{
+            width: 280,
+            height: 280,
+          }"
         />
         <v-card-actions class="pr-0">
           <v-spacer></v-spacer>
@@ -634,6 +638,10 @@ export default {
         show: false,
         src: null,
         canvas: null,
+      },
+      preview_user_profile: {
+        show: false,
+        list: [],
       },
     };
   },
