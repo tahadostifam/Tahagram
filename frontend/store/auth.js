@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export const state = () => ({
   user_logged_in: false,
   auth: {
@@ -74,6 +76,7 @@ export const actions = {
               if (response.message == "success") {
                 // NOTE - we have new token now :)
                 // ANCHOR
+                Cookies.set("auth_token", response.tokens.auth_token);
                 fetch_user_data(response.tokens.auth_token).then(
                   (new_user) => {
                     console.log("auth_token changed");

@@ -287,6 +287,28 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog max-width="350" v-model="crop_profile_photo.show">
+      <v-card class="pa-5 pb-0">
+        <cropper
+          :src="crop_profile_photo.src"
+          @change="crop_profile_photo_onchange"
+        />
+        <v-card-actions class="pr-0">
+          <v-spacer></v-spacer>
+          <v-btn
+            :color="theme_color"
+            text
+            @click="crop_profile_photo.show = false"
+          >
+            CANCEL
+          </v-btn>
+          <v-btn :color="theme_color" text @click="upload_croped_profile_photo">
+            SAVE
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <div class="pa-0" id="main_container">
       <div class="chats_list">
         <div class="section_header border">
@@ -545,10 +567,15 @@
 
 <script>
 import { EmojiPicker } from "vue-emoji-picker";
+import { Cropper } from "vue-advanced-cropper";
+import "vue-advanced-cropper/dist/style.css";
 import configs from "@/assets/javascript/configs";
 import Cookies from "js-cookie";
 
 export default {
+  components: {
+    Cropper,
+  },
   name: "chat",
   middleware: ["need_auth"],
   components: {
@@ -599,10 +626,15 @@ export default {
       show_nav_drawer: false,
       username: null,
       nav_drawer_width: 350,
-      show_settings_dialog: true,
+      show_settings_dialog: false,
       settings_dialog_active_section: "home",
       settings_dialog_edit_full_name: false,
       user_default_avatar: undefined,
+      crop_profile_photo: {
+        show: false,
+        src: null,
+        canvas: null,
+      },
     };
   },
   mounted() {
@@ -623,21 +655,9 @@ export default {
 
     this.handle_resize();
     this.handle_escape_button();
+    this.watch_profile_photos_change();
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
-
-    this.$store.watch(
-      (state) => state.auth.user_info.profile_photos,
-      (value) => {
-        this.$set(
-          this.$data,
-          "user_default_avatar",
-          this.$axios.defaults.baseURL +
-            "/uploads/profile_photos/" +
-            value[0].filename
-        );
-      }
-    );
   },
   methods: {
     logout() {
@@ -692,30 +712,66 @@ export default {
     },
     handle_upload_profile_photo(e) {
       const file = e.files[0];
-      if (file) {
-        const requestBody = new FormData();
-        requestBody.append("photo", file);
-        this.$axios
-          .$post("/api/profile_photos/upload_photo", requestBody, {
-            headers: {
-              username: this.$store.state.auth.auth.username,
-              auth_token: this.$store.state.auth.auth.auth_token,
-            },
-          })
-          .then((response) => {
-            if (response.message == "profile photo uploaded") {
-              this.$store.commit(
-                "auth/addProfilePhotos",
-                response.profile_photo_filename
-              );
-            }
-          })
-          .catch((error) => {
-            this.$router.push({ path: "/500" });
+      const local_path = URL.createObjectURL(file);
+      console.log(local_path);
+      this.$set(this.$data.crop_profile_photo, "src", local_path);
+      this.$set(this.$data.crop_profile_photo, "show", true);
+    },
+    upload_croped_profile_photo() {
+      const canvas = this.$data.crop_profile_photo.canvas;
+      if (canvas) {
+        const croppedImage = canvas.toDataURL("image/png");
+        const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
+        if (imageFile) {
+          const requestBody = new FormData();
+          requestBody.append("photo", imageFile);
+          console.log({
+            username: this.$store.state.auth.auth.username,
+            auth_token: this.$store.state.auth.auth.auth_token,
           });
-      } else {
-        console.log("no profile photo to upload");
-      }
+          this.$axios
+            .$post("/api/profile_photos/upload_photo", requestBody, {
+              headers: {
+                username: this.$store.state.auth.auth.username,
+                auth_token: this.$store.state.auth.auth.auth_token,
+              },
+            })
+            .then((response) => {
+              if (response.message == "profile photo uploaded") {
+                this.$set(this.$data.crop_profile_photo, "show", false);
+                this.$store.commit(
+                  "auth/addProfilePhotos",
+                  response.profile_photo_filename
+                );
+              }
+            })
+            .catch((error) => {
+              this.$router.push({ path: "/500" });
+            });
+        } else {
+          console.log("no profile photo to upload");
+        }
+      } else
+        console.log(
+          "uploading profile photo failed! :: cropped image canvas is empty"
+        );
+    },
+    watch_profile_photos_change() {
+      this.$store.watch(
+        (state) => state.auth.user_info.profile_photos,
+        (value) => {
+          this.$set(
+            this.$data,
+            "user_default_avatar",
+            this.$axios.defaults.baseURL +
+              "/uploads/profile_photos/" +
+              value[0].filename
+          );
+        }
+      );
+    },
+    crop_profile_photo_onchange({ coordinates, canvas }) {
+      this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
   },
 };
