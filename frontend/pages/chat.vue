@@ -23,7 +23,7 @@
 
       <div class="info_of_image">
         <span
-          >Photo {{ view_image.active_item.index }} of
+          >Photo {{ view_image.active_item.index + 1 }} of
           {{ view_image.list.length }}</span
         >
       </div>
@@ -685,7 +685,7 @@ export default {
         list: [],
         active_item: {
           src: null,
-          index: 1,
+          index: 0,
         },
         controls: {
           right: true,
@@ -719,6 +719,7 @@ export default {
   methods: {
     preview_self_profile() {
       this.$set(this.$data.view_image, "show", true);
+      this.$set(this.$data.view_image.active_item, "index", 0);
       let list = [];
       this.$store.state.auth.user_info.profile_photos.forEach((item) => {
         list.push({
@@ -744,19 +745,21 @@ export default {
       const active_index = this.$data.view_image.active_item.index;
       const length = this.$data.view_image.list.length;
 
-      if (active_index < length) {
-        this.$set(this.$data.view_image.controls, "left", true);
-      }
-      if (active_index + 1 == length) {
+      const to_index = active_index + 1;
+      if (active_index + 2 > length - 1) {
         this.$set(this.$data.view_image.controls, "right", false);
       }
 
-      if (active_index + 1 <= length) {
-        this.$set(this.$data.view_image.active_item, "index", active_index + 1);
+      if (to_index > 0) {
+        this.$set(this.$data.view_image.controls, "left", true);
+      }
+
+      if (to_index < length) {
+        this.$set(this.$data.view_image.active_item, "index", to_index);
         this.$set(
           this.$data.view_image.active_item,
           "src",
-          this.$data.view_image.list[active_index].src
+          this.$data.view_image.list[to_index].src
         );
       }
     },
@@ -764,7 +767,7 @@ export default {
       const active_index = this.$data.view_image.active_item.index;
       const length = this.$data.view_image.list.length;
 
-      if (active_index >= 1) {
+      if (active_index == 1) {
         this.$set(this.$data.view_image.controls, "left", false);
         this.$set(this.$data.view_image.controls, "right", true);
       }
@@ -775,7 +778,7 @@ export default {
         this.$set(
           this.$data.view_image.active_item,
           "src",
-          this.$data.view_image.list[to_index - 1].src
+          this.$data.view_image.list[to_index].src
         );
       }
     },
