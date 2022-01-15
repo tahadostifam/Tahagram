@@ -2,10 +2,18 @@
   <div>
     <div id="view_image" v-if="view_image.show">
       <div class="controls">
-        <div class="right" @click="view_image_move_right">
+        <div
+          class="right"
+          @click="view_image_move_right"
+          v-if="view_image.controls.right"
+        >
           <v-icon>mdi-chevron-right</v-icon>
         </div>
-        <div class="left" @click="view_image_move_left">
+        <div
+          class="left"
+          @click="view_image_move_left"
+          v-if="view_image.controls.left"
+        >
           <v-icon>mdi-chevron-left</v-icon>
         </div>
       </div>
@@ -15,7 +23,7 @@
 
       <div class="info_of_image">
         <span
-          >Photo {{ view_image.active_item.index + 1 }} of
+          >Photo {{ view_image.active_item.index }} of
           {{ view_image.list.length }}</span
         >
       </div>
@@ -676,8 +684,12 @@ export default {
         show: false,
         list: [],
         active_item: {
-          src: "http://127.0.0.1:8000/uploads/profile_photos/ba6f43bc85dfc0c6962e",
-          index: 0,
+          src: null,
+          index: 1,
+        },
+        controls: {
+          right: true,
+          right: false,
         },
       },
     };
@@ -716,29 +728,57 @@ export default {
             item.filename,
         });
       });
-      console.log(this.$data.view_image.active_item);
+      const index = this.$data.view_image.active_item;
       this.$set(this.$data.view_image, "list", list);
-      this.$set(
-        this.$data.view_image.active_item,
-        "src",
-        this.$data.view_image.list[0].src
-      );
+      this.$set(index, "src", this.$data.view_image.list[0].src);
+      const length = this.$data.view_image.list.length;
+      if (length == 1) {
+        this.$set(this.$data.view_image.controls, "right", false);
+      }
+      if (length > 1) {
+        this.$set(this.$data.view_image.controls, "right", true);
+      }
+      this.$set(this.$data.view_image.controls, "left", false);
     },
     view_image_move_right() {
       const active_index = this.$data.view_image.active_item.index;
       const length = this.$data.view_image.list.length;
-      console.log(active_index);
-      console.log(length);
-      if (active_index <= length - 1) {
+
+      if (active_index < length) {
+        this.$set(this.$data.view_image.controls, "left", true);
+      }
+      if (active_index + 1 == length) {
+        this.$set(this.$data.view_image.controls, "right", false);
+      }
+
+      if (active_index + 1 <= length) {
         this.$set(this.$data.view_image.active_item, "index", active_index + 1);
         this.$set(
           this.$data.view_image.active_item,
           "src",
-          this.$data.view_image.list[active_index + 1].src
+          this.$data.view_image.list[active_index].src
         );
       }
     },
-    view_image_move_left() {},
+    view_image_move_left() {
+      const active_index = this.$data.view_image.active_item.index;
+      const length = this.$data.view_image.list.length;
+
+      if (active_index >= 1) {
+        this.$set(this.$data.view_image.controls, "left", false);
+        this.$set(this.$data.view_image.controls, "right", true);
+      }
+
+      if (active_index >= 1) {
+        const to_index = active_index - 1;
+        this.$set(this.$data.view_image.active_item, "index", to_index);
+        this.$set(
+          this.$data.view_image.active_item,
+          "src",
+          this.$data.view_image.list[to_index - 1].src
+        );
+      }
+    },
     logout() {
       this.$router.push({ path: "/logout" });
     },
@@ -766,14 +806,13 @@ export default {
         if (e.code == "Escape") {
           if (vm.$data.show_chat_view == true) {
             return vm.$set(vm.$data, "show_chat_view", false);
-          }
-          if (vm.$data.show_nav_drawer == true) {
+          } else if (vm.$data.show_nav_drawer == true) {
             return vm.$set(vm.$data, "show_nav_drawer", false);
-          }
-          if (vm.$data.settings_dialog_active_section != "home") {
+          } else if (vm.$data.view_image.show == true) {
+            return vm.$set(vm.$data.view_image, "show", false);
+          } else if (vm.$data.settings_dialog_active_section != "home") {
             return vm.$set(vm.$data, "settings_dialog_active_section", "home");
-          }
-          if (vm.$data.show_settings_dialog == true) {
+          } else if (vm.$data.show_settings_dialog == true) {
             return vm.$set(vm.$data, "show_settings_dialog", false);
           }
         }
@@ -792,7 +831,6 @@ export default {
     handle_upload_profile_photo(e) {
       const file = e.files[0];
       const local_path = URL.createObjectURL(file);
-      console.log(local_path);
       this.$set(this.$data.crop_profile_photo, "src", local_path);
       this.$set(this.$data.crop_profile_photo, "show", true);
     },
