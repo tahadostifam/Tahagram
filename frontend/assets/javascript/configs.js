@@ -1,6 +1,6 @@
 export default {
   theme_color: "green accent-4",
-  // api_address: 'http://127.0.0.1:9292',
+  socket_address: "ws://127.0.0.1:2345",
   avatar_random_colors: [
     ["pink"],
     ["deep-purple", "darken-1"],

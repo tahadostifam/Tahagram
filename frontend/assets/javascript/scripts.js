@@ -1,3 +1,26 @@
+import configs from "@/assets/javascript/configs";
+
+function initSocket() {
+  const socket = new WebSocket(configs.socket_address, null, { headers: {} });
+  socket.addEventListener("message", function (event) {
+    if (event.data == "successfully connected to socket") {
+      window.ws = socket;
+      console.log("Successfully connected to WebSocket server");
+    } else {
+      console.log(event.data);
+    }
+  });
+}
+
+window.handleSocketMessages = (vm) => {
+  console.log(vm);
+};
+
+window.onload = () => {
+  window.handleSplashScreen();
+  initSocket();
+};
+
 window.lazyImage = (e) => {
   e.classList.add("image__loaded");
 };
@@ -8,10 +31,6 @@ window.handleSplashScreen = () => {
   setTimeout(() => {
     splash.style.display = "none";
   }, 200);
-};
-
-window.onload = () => {
-  window.handleSplashScreen();
 };
 
 window.dataURLtoFile = (dataurl, filename) => {

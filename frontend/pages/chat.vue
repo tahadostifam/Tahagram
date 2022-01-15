@@ -370,22 +370,30 @@
               </v-btn>
             </div>
             <div>
-              <input type="text" class="custom_input" placeholder="Search" />
+              <input
+                type="text"
+                class="custom_input"
+                placeholder="Search"
+                v-model="search_chat_input"
+                @change="search_chat_submit"
+              />
             </div>
           </div>
         </div>
 
         <div class="chats">
-          <template v-if="chats_list && chats_list.length > 0">
-            <ChatRow
-              v-for="(item, index) in chats_list"
-              :key="index"
-              @click_event="show_chat(item.username)"
-              :chat_name="item.full_name"
-            ></ChatRow>
+          <template v-if="search_chat_input.trim().length == 0">
+            <template v-if="chats_list && chats_list.length > 0">
+              <ChatRow
+                v-for="(item, index) in chats_list"
+                :key="index"
+                @click_event="show_chat(item.username)"
+                :chat_name="item.full_name"
+              ></ChatRow>
+            </template>
+            <ThereIsNothing v-else />
+            <!-- :image_url="item.profile_photo" -->
           </template>
-          <ThereIsNothing v-else />
-          <!-- :image_url="item.profile_photo" -->
         </div>
 
         <div class="chat_view" v-bind:class="{ show: show_chat_view }">
@@ -671,7 +679,7 @@ export default {
       show_nav_drawer: false,
       username: null,
       nav_drawer_width: 350,
-      show_settings_dialog: true,
+      show_settings_dialog: false,
       settings_dialog_active_section: "home",
       settings_dialog_edit_full_name: false,
       user_default_avatar: undefined,
@@ -692,6 +700,8 @@ export default {
           right: false,
         },
       },
+      search_chat_input: "",
+      search_chat_result: null,
     };
   },
   mounted() {
@@ -715,8 +725,16 @@ export default {
     this.watch_profile_photos_change();
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
+
+    window.handleSocketMessages(this);
   },
   methods: {
+    search_chat_submit() {
+      const ws = this.$store.state.auth.ws;
+      if (ws) {
+        ws.send("Hello World");
+      } else console.log("socket is empty");
+    },
     preview_self_profile() {
       this.$set(this.$data.view_image, "show", true);
       this.$set(this.$data.view_image.active_item, "index", 0);
