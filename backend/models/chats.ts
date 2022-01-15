@@ -6,36 +6,24 @@ var schema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    full_name: {
-        type: String,
-        required: true,
-    },
     username: {
         type: String,
-        unique: true,
         required: true,
+        unique: true,
     },
-    password_digest: {
+    chat_type: {
         type: String,
         required: true,
+    },
+    messages_list: {
+        type: Array,
+        default: [],
     },
     bio: {
         type: String,
-        default: null,
-    },
-    last_seen: {
-        type: Date,
-    },
-    chats: {
-        type: Array,
-        default: [],
-    },
-    profile_photos: {
-        type: Array,
-        default: [],
     },
 });
 
-var collection = mongoose.model("users", schema);
+var collection = mongoose.model("chats", schema);
 
 export default collection;

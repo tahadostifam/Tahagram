@@ -6,9 +6,9 @@ import { clearParams, authenticate_socket_user, getCookie, clientIp } from "./au
 import { setUserUUID } from "./room_manager";
 const server_port = configs["socket"]["port"];
 
-// import { parse as parseUrl } from "url";
-
 const users: Array<object> = [];
+
+import events from "./events/events";
 
 export default async function handleSocket() {
     const server = createServer();
@@ -83,8 +83,14 @@ function handleSocketUserOnDisConnected(ws: any) {
 function handleSocketMessages(data: any, ws: WebSocket) {
     try {
         const parsedData = JSON.parse(data.toString("utf8"));
-        console.log(parsedData);
-        ws.send("message sended");
+        switch (parsedData.event) {
+            case "search_in_chats":
+                events.search_in_chats(ws, parsedData);
+                break;
+            default:
+                ws.send("command not found");
+                break;
+        }
     } catch {
         ws.send("error in parsing data");
     }
