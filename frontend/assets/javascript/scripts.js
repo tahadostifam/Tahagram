@@ -12,9 +12,7 @@ function initSocket() {
   });
 }
 
-window.handleSocketMessages = (vm) => {
-  console.log(vm);
-};
+window.handleSocketMessages = (vm) => {};
 
 window.onload = () => {
   window.handleSplashScreen();

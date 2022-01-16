@@ -8,7 +8,6 @@ export const state = () => ({
     auth_token: null,
   },
   user_info: null,
-  chats_list: null,
 });
 
 export const mutations = {

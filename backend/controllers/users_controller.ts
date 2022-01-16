@@ -5,9 +5,11 @@ import * as database from "../lib/database";
 import status_codes from "../lib/status_codes";
 import store, { makeUserStoreId, setUserTokens } from "../lib/store";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
+import UserHaveChat from "../models/user_have_chats";
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -23,6 +25,9 @@ export default {
                             // success
                             await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                 async (auth_token) => {
+                                    const chats = await UserHaveChat.find({
+                                        haver_uuid: user.uuid,
+                                    });
                                     const final_profile_photos = user.profile_photos.reverse();
                                     status_codes.success_signin(
                                         {
@@ -32,7 +37,7 @@ export default {
                                                 bio: user.bio,
                                                 last_seen: user.last_seen,
                                                 profile_photos: final_profile_photos,
-                                                chats: [],
+                                                chats: chats,
                                             },
                                             refresh_token: refresh_token,
                                             auth_token: auth_token,
@@ -73,7 +78,9 @@ export default {
                                     await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                         async (auth_token) => {
                                             // success
+                                            const user_uuid = await crypto.randomBytes(12).toString("hex");
                                             const user = new User({
+                                                uuid: user_uuid,
                                                 full_name: req.body.full_name,
                                                 username: req.body.username,
                                                 password_digest: password_digest,
@@ -145,6 +152,9 @@ export default {
                         username: req.body.username,
                     });
                     if (!user) return status_codes.invalid_token(req, res, next);
+                    const chats = await UserHaveChat.find({
+                        haver_uuid: user.uuid,
+                    });
                     const final_profile_photos = user.profile_photos.reverse();
                     res.send({
                         message: "success",
@@ -154,7 +164,7 @@ export default {
                             bio: user.bio,
                             last_seen: user.last_seen,
                             profile_photos: final_profile_photos,
-                            chats: [],
+                            chats: chats,
                         },
                     });
                 } else {
