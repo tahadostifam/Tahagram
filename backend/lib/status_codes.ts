@@ -1,13 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
 export default {
-    user_created(data: any, req: Request, res: Response, next: NextFunction) {
+    user_created(req: Request, res: Response, next: NextFunction) {
         res.send({
             message: "user created successfully",
-            tokens: {
-                refresh_token: data.refresh_token,
-                auth_token: data.auth_token,
-            },
         });
     },
     success_signin(data: any, req: Request, res: Response, next: NextFunction) {

@@ -271,7 +271,7 @@ body,
 
 .chats .chat_row .row_flex {
   position: relative;
-  top: 8px;
+  top: 11px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

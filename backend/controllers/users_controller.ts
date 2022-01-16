@@ -9,7 +9,6 @@ import crypto from "crypto";
 const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
-import UserHaveChat from "../models/user_have_chats";
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -25,27 +24,26 @@ export default {
                             // success
                             await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                 async (auth_token) => {
-                                    const chats = await UserHaveChat.find({
-                                        haver_uuid: user.uuid,
-                                    });
                                     const final_profile_photos = user.profile_photos.reverse();
-                                    status_codes.success_signin(
-                                        {
-                                            user: {
-                                                full_name: user.full_name,
-                                                username: user.username,
-                                                bio: user.bio,
-                                                last_seen: user.last_seen,
-                                                profile_photos: final_profile_photos,
-                                                chats: chats,
+                                    await getUserChats(req.body.username).then((chats) => {
+                                        status_codes.success_signin(
+                                            {
+                                                user: {
+                                                    full_name: user.full_name,
+                                                    username: user.username,
+                                                    bio: user.bio,
+                                                    last_seen: user.last_seen,
+                                                    profile_photos: final_profile_photos,
+                                                    chats: user.chats,
+                                                },
+                                                refresh_token: refresh_token,
+                                                auth_token: auth_token,
                                             },
-                                            refresh_token: refresh_token,
-                                            auth_token: auth_token,
-                                        },
-                                        req,
-                                        res,
-                                        next
-                                    );
+                                            req,
+                                            res,
+                                            next
+                                        );
+                                    });
                                 },
                                 () => status_codes.error(req, res, next)
                             );
@@ -72,35 +70,13 @@ export default {
                 () => {
                     makeHashPassword(req.body.password).then(
                         async (password_digest) => {
-                            await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
-                                async (refresh_token) => {
-                                    // success
-                                    await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
-                                        async (auth_token) => {
-                                            // success
-                                            const user_uuid = await crypto.randomBytes(12).toString("hex");
-                                            const user = new User({
-                                                uuid: user_uuid,
-                                                full_name: req.body.full_name,
-                                                username: req.body.username,
-                                                password_digest: password_digest,
-                                            });
-                                            await user.save();
-                                            status_codes.user_created(
-                                                {
-                                                    refresh_token: refresh_token,
-                                                    auth_token: auth_token,
-                                                },
-                                                req,
-                                                res,
-                                                next
-                                            );
-                                        },
-                                        () => status_codes.error(req, res, next)
-                                    );
-                                },
-                                () => status_codes.error(req, res, next)
-                            );
+                            const user = new User({
+                                full_name: req.body.full_name,
+                                username: req.body.username,
+                                password_digest: password_digest,
+                            });
+                            await user.save();
+                            status_codes.user_created(req, res, next);
                         },
                         () => status_codes.error(req, res, next)
                     );
@@ -152,20 +128,19 @@ export default {
                         username: req.body.username,
                     });
                     if (!user) return status_codes.invalid_token(req, res, next);
-                    const chats = await UserHaveChat.find({
-                        haver_uuid: user.uuid,
-                    });
                     const final_profile_photos = user.profile_photos.reverse();
-                    res.send({
-                        message: "success",
-                        data: {
-                            full_name: user.full_name,
-                            username: user.username,
-                            bio: user.bio,
-                            last_seen: user.last_seen,
-                            profile_photos: final_profile_photos,
-                            chats: chats,
-                        },
+                    await getUserChats(req.body.username).then((chats) => {
+                        res.send({
+                            message: "success",
+                            data: {
+                                full_name: user.full_name,
+                                username: user.username,
+                                bio: user.bio,
+                                last_seen: user.last_seen,
+                                profile_photos: final_profile_photos,
+                                chats: chats,
+                            },
+                        });
                     });
                 } else {
                     status_codes.invalid_token(req, res, next);
@@ -219,5 +194,37 @@ export function verifyRefreshToken(token: string, client_ip: string) {
                 }
             });
         });
+    });
+}
+
+export function getUserChats(username: string) {
+    return new Promise(async (success) => {
+        const user: any = await User.findOne({
+            username: username,
+        });
+
+        if (user.chats.length == 0) {
+            return success([]);
+        } else {
+            let chats: Array<object> = [];
+            await user.chats.forEach(async (item: any, index: number) => {
+                const chat_info = await User.findById(item.user_id);
+
+                if (chat_info) {
+                    let user_data: any = {
+                        full_name: chat_info.full_name,
+                        username: chat_info.username,
+                    };
+                    if (user.profile_photos.length > 0) {
+                        user_data["profile_photo"] = user.profile_photos[0];
+                    }
+                    chats.push(user_data);
+                }
+
+                if (index == user.chats.length - 1) {
+                    success(chats);
+                }
+            });
+        }
     });
 }

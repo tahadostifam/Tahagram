@@ -644,7 +644,7 @@ export default {
         y: 0,
       },
       show_chat_view: false,
-      chats_list: [],
+      chats_list: null,
       messages_list: [
         {
           message_id: "a",
@@ -706,11 +706,7 @@ export default {
   },
   mounted() {
     this.$set(this.$data, "username", this.$store.state.auth.auth.username);
-    this.$set(
-      this.$data,
-      "chats_list",
-      this.$store.state.auth.user_info.chats_list
-    );
+    this.$set(this.$data, "chats_list", this.$store.state.auth.user_info.chats);
 
     if (this.$store.state.auth.user_info.profile_photos.length > 0) {
       const first_photo_filename =

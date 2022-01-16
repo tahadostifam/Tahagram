@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 var schema = new mongoose.Schema({
-    uuid: {
-        type: String,
-        required: true,
-        unique: true,
-    },
     username: {
         type: String,
         required: true,
