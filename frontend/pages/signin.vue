@@ -114,8 +114,6 @@ export default {
                 Cookies.set("username", this.$data.username);
               }
 
-              this.$store.dispatch("auth/setSocket");
-
               this.$router.push({ path: "/chat" });
             } else {
               this.$set(this.$data, "form_errors", [

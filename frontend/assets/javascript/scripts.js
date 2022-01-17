@@ -1,15 +1,22 @@
 import configs from "@/assets/javascript/configs";
+import Cookies from "js-cookie";
 
 function initSocket() {
-  const socket = new WebSocket(configs.socket_address, null, { headers: {} });
-  socket.addEventListener("message", function (event) {
-    if (event.data == "successfully connected to socket") {
-      window.ws = socket;
-      console.log("Successfully connected to WebSocket server");
-    } else {
-      console.log(event.data);
-    }
-  });
+  const refresh_token = Cookies.get("refresh_token");
+  const auth_token = Cookies.get("auth_token");
+  const username = Cookies.get("username");
+
+  if (refresh_token && auth_token && username) {
+    const socket = new WebSocket(configs.socket_address, null, { headers: {} });
+    socket.addEventListener("message", function (event) {
+      if (event.data == "successfully connected to socket") {
+        window.ws = socket;
+        console.log("Successfully connected to WebSocket server");
+      } else {
+        console.log(event.data);
+      }
+    });
+  }
 }
 
 window.handleSocketMessages = (vm) => {};
