@@ -32,12 +32,13 @@ export default async function handleSocket() {
                 authenticate_socket_user(username, client_ip, auth_token).then(
                     (user) => {
                         console.log("+ A Client Connected Successfully");
-                        return wss.handleUpgrade(request, socket, head, async (ws) => {
+                        return wss.handleUpgrade(request, socket, head, async (ws: any) => {
+                            ws.user = user;
                             await setUserUUID(ws);
                             handleSocketUserOnConnected(ws);
                             ws.on("close", () => handleSocketUserOnDisConnected(ws));
                             // After Connectes
-                            ws.on("message", (data) => handleSocketMessages(data, ws));
+                            ws.on("message", (data: any) => handleSocketMessages(data, ws));
                         });
                     },
                     () => {
@@ -80,9 +81,9 @@ function handleSocketUserOnDisConnected(ws: any) {
     console.log("user disconnected");
 }
 
-function handleSocketMessages(data: any, ws: WebSocket) {
+function handleSocketMessages(data: any, ws: any) {
     try {
-        const parsedData = JSON.parse(data.toString("utf8"));
+        const parsedData: any = JSON.parse(data.toString("utf8"));
         switch (parsedData.event) {
             case "search_in_chats":
                 events.search_in_chats(ws, parsedData);

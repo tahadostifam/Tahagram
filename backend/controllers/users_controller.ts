@@ -34,7 +34,7 @@ export default {
                                                     bio: user.bio,
                                                     last_seen: user.last_seen,
                                                     profile_photos: final_profile_photos,
-                                                    chats: user.chats,
+                                                    chats: chats,
                                                 },
                                                 refresh_token: refresh_token,
                                                 auth_token: auth_token,

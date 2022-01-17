@@ -375,7 +375,7 @@
                 class="custom_input"
                 placeholder="Search"
                 v-model="search_chat_input"
-                @change="search_chat_submit"
+                @input="search_chat_submit"
               />
             </div>
           </div>
@@ -650,37 +650,6 @@ export default {
       show_chat_view: false,
       chat_is_loading: false,
       chats_list: null,
-      messages_list: [
-        {
-          message_id: "a",
-          type: "image",
-          sender: "$ maximilian",
-          send_time: "00:00",
-          text_content: "MEOW |:",
-          /* ----------------------------- edited: false, ----------------------------- */
-          my_message: false,
-          image_address: "https://picsum.photos/900/500",
-        },
-        {
-          message_id: "b",
-          type: "text",
-          sender: "$ maximilian",
-          send_time: "00:00",
-          text_content: "😂😂😂",
-          edited: false,
-          my_message: false,
-        },
-        {
-          message_id: "c",
-          type: "image",
-          send_time: "00:00",
-          text_content: "look at this, Max. <br> its very similar to you",
-          edited: false,
-          my_message: true,
-          seen_state: "sended",
-          image_address: "https://picsum.photos/900/500",
-        },
-      ],
       show_nav_drawer: false,
       username: null,
       nav_drawer_width: 350,
@@ -735,9 +704,14 @@ export default {
   },
   methods: {
     search_chat_submit() {
-      const ws = this.$store.state.auth.ws;
+      const ws = window.ws;
       if (ws) {
-        ws.send("Hello World");
+        if (this.$data.search_chat_input.trim()) {
+          ws.send(JSON.stringify({
+              event: "search_in_chats",
+              input: this.$data.search_chat_input
+          }))
+        }
       } else console.log("socket is empty");
     },
     preview_self_profile() {
@@ -901,13 +875,15 @@ export default {
       this.$store.watch(
         (state) => state.auth.user_info.profile_photos,
         (value) => {
-          this.$set(
-            this.$data,
-            "user_default_avatar",
-            this.$axios.defaults.baseURL +
-              "/uploads/profile_photos/" +
-              value[0].filename
-          );
+          if (value) {
+            this.$set(
+              this.$data,
+              "user_default_avatar",
+              this.$axios.defaults.baseURL +
+                "/uploads/profile_photos/" +
+                value[0].filename
+            );
+          }
         }
       );
     },
@@ -939,3 +915,33 @@ export default {
   }
 }
 </style>
+
+// {
+//   message_id: "a",
+//   type: "image",
+//   sender: "$ maximilian",
+//   send_time: "00:00",
+//   text_content: "MEOW |:",
+//   /* ----------------------------- edited: false, ----------------------------- */
+//   my_message: false,
+//   image_address: "https://picsum.photos/900/500",
+// },
+// {
+//   message_id: "b",
+//   type: "text",
+//   sender: "$ maximilian",
+//   send_time: "00:00",
+//   text_content: "😂😂😂",
+//   edited: false,
+//   my_message: false,
+// },
+// {
+//   message_id: "c",
+//   type: "image",
+//   send_time: "00:00",
+//   text_content: "look at this, Max. <br> its very similar to you",
+//   edited: false,
+//   my_message: true,
+//   seen_state: "sended",
+//   image_address: "https://picsum.photos/900/500",
+// },

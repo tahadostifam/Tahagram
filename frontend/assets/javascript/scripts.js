@@ -16,6 +16,22 @@ function initSocket() {
         console.log(event.data);
       }
     });
+
+    socket.onclose = function (e) {
+      console.log("Socket is closed. Reconnect will be attempted in 2 second.");
+      setTimeout(function () {
+        initSocket();
+      }, 2000);
+    };
+
+    socket.onerror = function (err) {
+      console.error(
+        "Socket encountered error: ",
+        err.message,
+        "Closing socket"
+      );
+      socket.close();
+    };
   }
 }
 

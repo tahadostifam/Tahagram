@@ -1,4 +1,21 @@
 import { WebSocket } from "ws";
 import User from "../../models/user";
 
-export default function search_in_chats(ws: WebSocket, parsedData: object) {}
+export default async function search_in_chats(ws: any, parsedData: any) {
+    if (parsedData.input && parsedData.input.trim() != "") {
+        const finded_users = await User.find(
+            {
+                $or: [{ username: { $regex: ".*" + parsedData.input + ".*" } }, { full_name: { $regex: ".*" + parsedData.input + ".*" } }],
+            },
+            {
+                password_digest: 0,
+                __v: 0,
+                _id: 0,
+                chats: 0,
+            }
+        );
+
+        console.clear();
+        console.log(finded_users);
+    }
+}
