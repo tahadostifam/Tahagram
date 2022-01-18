@@ -15,7 +15,13 @@ export default async function search_in_chats(ws: any, parsedData: any) {
             }
         );
 
-        console.clear();
-        console.log(finded_users);
+        if (finded_users) {
+            ws.send(
+                JSON.stringify({
+                    event: "search_in_chats",
+                    data: finded_users,
+                })
+            );
+        }
     }
 }

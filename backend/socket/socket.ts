@@ -31,7 +31,7 @@ export default async function handleSocket() {
             if (username && auth_token) {
                 authenticate_socket_user(username, client_ip, auth_token).then(
                     (user) => {
-                        console.log("+ A Client Connected Successfully");
+                        console.log("+ A Client Connected To Socket");
                         return wss.handleUpgrade(request, socket, head, async (ws: any) => {
                             ws.user = user;
                             await setUserUUID(ws);
@@ -65,7 +65,11 @@ function handleSocketUserOnConnected(ws: any) {
         });
     }
 
-    ws.send("successfully connected to socket");
+    ws.send(
+        JSON.stringify({
+            message: "successfully connected to socket",
+        })
+    );
 }
 
 function handleSocketUserOnDisConnected(ws: any) {

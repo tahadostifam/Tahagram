@@ -831,4 +831,9 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   border-radius: 50px;
   font-size: 14px;
 }
+
+.chat_row_badge {
+  width: 100%;
+  background-color: red;
+}
 /*# sourceMappingURL=styles.css.map */

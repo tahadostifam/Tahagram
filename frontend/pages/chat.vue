@@ -394,6 +394,15 @@
             <ThereIsNothing v-else />
             <!-- :image_url="item.profile_photo" -->
           </template>
+          <template v-else-if="search_chat_result">
+            <span class="char_row_badge">GLOBAL SEARCH</span>
+            <ChatRow
+                v-for="(item, index) in search_chat_result"
+                :key="index"
+                @click_event="show_chat(item.username)"
+                :chat_name="item.full_name"
+            ></ChatRow>
+          </template>
         </div>
 
         <div class="chat_view" v-bind:class="{ show: show_chat_view }">
@@ -700,7 +709,7 @@ export default {
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
 
-    window.handleSocketMessages(this);
+    window.vm = this;
   },
   methods: {
     search_chat_submit() {
@@ -922,7 +931,7 @@ export default {
 //   sender: "$ maximilian",
 //   send_time: "00:00",
 //   text_content: "MEOW |:",
-//   /* ----------------------------- edited: false, ----------------------------- */
+//   edited: false,
 //   my_message: false,
 //   image_address: "https://picsum.photos/900/500",
 // },

@@ -8,14 +8,27 @@ function initSocket() {
 
   if (refresh_token && auth_token && username) {
     const socket = new WebSocket(configs.socket_address, null, { headers: {} });
-    socket.addEventListener("message", function (event) {
-      if (event.data == "successfully connected to socket") {
-        window.ws = socket;
-        console.log("Successfully connected to WebSocket server");
-      } else {
-        console.log(event.data);
+
+    socket.onmessage = (event) => {
+      let parsedData;
+      try {
+        parsedData = JSON.parse(event.data);
+      } catch {
+        return console.error("Error in parsing socket response data!");
       }
-    });
+      if (parsedData) {
+        if (parsedData.message == "successfully connected to socket") {
+          window.ws = socket;
+          console.log("Successfully connected to WebSocket server");
+        } else {
+          if (window.vm) {
+            window.handleSocketMessages(window.vm, parsedData);
+          } else {
+            console.log("an error occured on the server side!");
+          }
+        }
+      }
+    };
 
     socket.onclose = function (e) {
       console.log("Socket is closed. Reconnect will be attempted in 2 second.");
@@ -35,7 +48,11 @@ function initSocket() {
   }
 }
 
-window.handleSocketMessages = (vm) => {};
+window.handleSocketMessages = (vm, parsedData) => {
+  if (parsedData.event == "search_in_chats") {
+    vm.$set(vm.$data, "search_chat_result", parsedData.data);
+  }
+};
 
 window.onload = () => {
   window.handleSplashScreen();
