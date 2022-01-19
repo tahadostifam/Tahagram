@@ -833,7 +833,14 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 .chat_row_badge {
-  width: 100%;
-  background-color: red;
+  position: relative;
+  display: block;
+  left: -9px;
+  top: -10px;
+  padding: 4px 20px;
+  width: calc(100% + 18px);
+  background-color: #2f2f2f;
+  color: #707579;
+  font-weight: 400;
 }
 /*# sourceMappingURL=styles.css.map */

@@ -722,6 +722,13 @@ body .v-application .v-navigation-drawer {
 }
 
 .chat_row_badge {
-  width: 100%;
-  background-color: red;
+  position: relative;
+  display: block;
+  left: -9px;
+  top: -10px;
+  padding: 4px 20px;
+  width: calc(100% + 18px);
+  background-color: $color_5;
+  color: $color_6;
+  font-weight: 400;
 }

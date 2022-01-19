@@ -92,6 +92,13 @@
             </v-list-item-icon>
             <v-list-item-title>Settings</v-list-item-title>
           </v-list-item>
+
+          <v-list-item @click="logout" color="red">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
         </v-list-item-group>
         <div class="nav_drawer_footer">
           <span class="text-grey">ChatApp</span><br />
@@ -395,13 +402,22 @@
             <!-- :image_url="item.profile_photo" -->
           </template>
           <template v-else-if="search_chat_result">
-            <span class="char_row_badge">GLOBAL SEARCH</span>
+            <span class="chat_row_badge">Global search</span>
             <ChatRow
                 v-for="(item, index) in search_chat_result"
                 :key="index"
                 @click_event="show_chat(item.username)"
                 :chat_name="item.full_name"
             ></ChatRow>
+            <template v-if="search_chat_in_local_result">
+              <span class="chat_row_badge mt-5">Local search</span>
+              <ChatRow
+                  v-for="(item, index) in search_chat_in_local_result"
+                  :key="index + item.username"
+                  @click_event="show_chat(item.username)"
+                  :chat_name="item.full_name"
+              ></ChatRow>
+            </template>
           </template>
         </div>
 
@@ -685,6 +701,7 @@ export default {
       },
       search_chat_input: "",
       search_chat_result: null,
+      search_chat_in_local_result: null
     };
   },
   mounted() {
@@ -713,15 +730,33 @@ export default {
   },
   methods: {
     search_chat_submit() {
-      const ws = window.ws;
-      if (ws) {
-        if (this.$data.search_chat_input.trim()) {
-          ws.send(JSON.stringify({
-              event: "search_in_chats",
-              input: this.$data.search_chat_input
-          }))
+      let chats_list = this.$data.chats_list;
+      if (typeof chats_list == Object) {
+        chats_list = Array(this.$data.chats_list);
+      }
+      const input = this.$data.search_chat_input;
+      if (input.trim()) {
+        if (chats_list) {
+          const local_search_result = chats_list.filter((item) => {
+            if (String(item.username).includes(input) || String(item.full_name).includes(input)) {
+              return true
+            }
+            return false
+          })
+          this.$set(this.$data, 'search_chat_in_local_result', local_search_result)
         }
-      } else console.log("socket is empty");
+        const ws = window.ws;
+        if (ws) {
+            ws.send(JSON.stringify({
+                event: "search_in_chats",
+                input: input
+            }))
+        } else {
+          console.error('socket is empty!');
+          window.initSocket();
+          this.search_chat_submit()
+        }
+      }
     },
     preview_self_profile() {
       this.$set(this.$data.view_image, "show", true);
@@ -881,20 +916,22 @@ export default {
         );
     },
     watch_profile_photos_change() {
-      this.$store.watch(
-        (state) => state.auth.user_info.profile_photos,
-        (value) => {
-          if (value) {
-            this.$set(
-              this.$data,
-              "user_default_avatar",
-              this.$axios.defaults.baseURL +
-                "/uploads/profile_photos/" +
-                value[0].filename
-            );
+      if (this.$store.state.auth.user_info) {
+        this.$store.watch(
+          (state) => state.auth.user_info.profile_photos,
+          (value) => {
+            if (value && value[0].filename) {
+              this.$set(
+                this.$data,
+                "user_default_avatar",
+                this.$axios.defaults.baseURL +
+                  "/uploads/profile_photos/" +
+                  value[0].filename
+              );
+            }
           }
-        }
-      );
+        );
+      }
     },
     crop_profile_photo_onchange({ coordinates, canvas }) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);

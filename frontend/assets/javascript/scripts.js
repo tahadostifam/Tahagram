@@ -1,7 +1,7 @@
 import configs from "@/assets/javascript/configs";
 import Cookies from "js-cookie";
 
-function initSocket() {
+window.initSocket = () => {
   const refresh_token = Cookies.get("refresh_token");
   const auth_token = Cookies.get("auth_token");
   const username = Cookies.get("username");
@@ -46,7 +46,7 @@ function initSocket() {
       socket.close();
     };
   }
-}
+};
 
 window.handleSocketMessages = (vm, parsedData) => {
   if (parsedData.event == "search_in_chats") {
@@ -56,7 +56,7 @@ window.handleSocketMessages = (vm, parsedData) => {
 
 window.onload = () => {
   window.handleSplashScreen();
-  initSocket();
+  window.initSocket();
 };
 
 window.lazyImage = (e) => {
