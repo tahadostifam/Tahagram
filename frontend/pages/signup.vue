@@ -123,7 +123,6 @@ export default {
             password: this.$data.password,
           })
           .then((response) => {
-            console.log(response);
             if (response.message == "user created successfully") {
               this.$set(this.$data, "user_created_dialog", true);
             }

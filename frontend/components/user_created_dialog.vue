@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="350" v-model="user_created_dialog">
+  <v-dialog max-width="350" v-model="user_created_dialog" persistent>
     <v-card>
       <v-card-title class="text-h5"> Account Created </v-card-title>
 
@@ -11,9 +11,9 @@
       </v-card-text>
 
       <v-card-actions class="pb-4">
-        <v-btn color="green darken-1" text @click="user_created_dialog = false">
+        <!-- <v-btn color="green darken-1" text @click="user_created_dialog = false">
           Close
-        </v-btn>
+        </v-btn> -->
 
         <v-spacer></v-spacer>
 

@@ -16,6 +16,12 @@ export default async function search_in_chats(ws: any, parsedData: any) {
         );
 
         if (finded_users) {
+            finded_users.forEach((item, index) => {
+                if (item && item.username == ws.user.username) {
+                    finded_users.splice(index);
+                }
+            });
+
             ws.send(
                 JSON.stringify({
                     event: "search_in_chats",
