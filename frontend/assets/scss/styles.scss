@@ -288,7 +288,9 @@ body,
   background-color: $color_3;
 }
 .avatar_xlarge {
-  padding-top: 10px;
+  &.solid_color_avatar {
+    padding-top: 10px;
+  }
   --size: 110px;
 }
 

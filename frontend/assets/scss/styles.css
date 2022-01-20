@@ -307,8 +307,11 @@ body,
 }
 
 .avatar_xlarge {
-  padding-top: 10px;
   --size: 110px;
+}
+
+.avatar_xlarge.solid_color_avatar {
+  padding-top: 10px;
 }
 
 .image img {
