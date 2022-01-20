@@ -31,10 +31,10 @@ window.initSocket = () => {
     };
 
     socket.onclose = function (e) {
-      console.log("Socket is closed. Reconnect will be attempted in 2 second.");
+      console.log("Socket is closed. Reconnect will be attempted in 1 second.");
       setTimeout(function () {
         initSocket();
-      }, 2000);
+      }, 1000);
     };
 
     socket.onerror = function (err) {
@@ -51,6 +51,9 @@ window.initSocket = () => {
 window.handleSocketMessages = (vm, parsedData) => {
   if (parsedData.event == "search_in_chats") {
     vm.$set(vm.$data, "search_chat_result", parsedData.data);
+  }
+  if (parsedData.message == "full_name updated" && parsedData.full_name) {
+    vm.$store.commit("auth/setFullName", parsedData.full_name);
   }
 };
 

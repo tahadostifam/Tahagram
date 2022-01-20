@@ -92,6 +92,9 @@ function handleSocketMessages(data: any, ws: any) {
             case "search_in_chats":
                 events.search_in_chats(ws, parsedData);
                 break;
+            case "update_full_name":
+                events.update_full_name(ws, parsedData);
+                break;
             default:
                 ws.send("command not found");
                 break;

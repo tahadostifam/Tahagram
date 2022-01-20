@@ -57,7 +57,7 @@
             />
           </div>
 
-          <v-list-item-title class="ml-3">{{ username }}</v-list-item-title>
+          <v-list-item-title class="ml-3">{{ user_info.full_name }}</v-list-item-title>
         </v-list-item>
         <v-list-item-group>
           <v-list-item>
@@ -134,14 +134,14 @@
           </div>
 
           <template v-else>
-            <ColoredAvatar v-if="username" :value="username[0]" />
+            <ColoredAvatar v-if="user_info.full_name" :value="user_info.full_name[0]" />
             <ColoredAvatar v-else :value="''" />
           </template>
 
           <div class="ml-4">
             <span class="text-white font-weight-medium d-block w-100">
-              <template v-if="username">
-                {{ username }}
+              <template v-if="user_info.full_name">
+                {{ user_info.full_name }}
               </template>
             </span>
             <span class="text-grey d-block w-100"
@@ -206,8 +206,7 @@
               Edit your name
             </v-card-title>
             <div class="px-5 pt-0">
-              <v-text-field label="First name"></v-text-field>
-              <v-text-field label="Last name"></v-text-field>
+              <v-text-field v-model="update_full_name_input" label="Full name"></v-text-field>
             </div>
             <v-card-actions class="pr-2">
               <v-spacer></v-spacer>
@@ -218,7 +217,7 @@
               >
                 CANCEL
               </v-btn>
-              <v-btn :color="theme_color" text> SAVE </v-btn>
+              <v-btn @click="submit_edit_full_name" :color="theme_color" text> SAVE </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -258,8 +257,8 @@
           </div>
           <template v-else>
             <ColoredAvatar
-              v-if="username"
-              :value="username[0]"
+              v-if="user_info.full_name"
+              :value="user_info.full_name[0]"
               :avatar_xlarge="true"
             />
             <ColoredAvatar v-else :value="''" style="xlarge" />
@@ -292,7 +291,7 @@
               </v-list-item-icon>
               <v-list-item-title>
                 <div class="d-flex flex-column text-left">
-                  <span class="text-white d-block w-100">$ maximilian</span>
+                  <span class="text-white d-block w-100">{{user_info.full_name}}</span>
                   <span
                     class="text-grey d-block w-100 mt-1"
                     style="font-size: 14px"
@@ -307,7 +306,7 @@
               </v-list-item-icon>
               <v-list-item-title>
                 <div class="d-flex flex-column text-left">
-                  <span class="text-white d-block w-100">maximilian</span>
+                  <span class="text-white d-block w-100">{{username}}</span>
                   <span
                     class="text-grey d-block w-100 mt-1"
                     style="font-size: 14px"
@@ -674,13 +673,12 @@ export default {
       },
       show_chat_view: false,
       chat_is_loading: false,
-      chats_list: null,
       show_nav_drawer: false,
-      username: null,
       nav_drawer_width: 350,
       show_settings_dialog: false,
       settings_dialog_active_section: "home",
       settings_dialog_edit_full_name: false,
+      update_full_name_input: '',
       user_default_avatar: undefined,
       crop_profile_photo: {
         show: false,
@@ -701,14 +699,42 @@ export default {
       },
       search_chat_input: "",
       search_chat_result: null,
-      search_chat_in_local_result: null
+      search_chat_in_local_result: null,
     };
   },
-  mounted() {
-    this.$set(this.$data, "username", this.$store.state.auth.auth.username);
-    this.$set(this.$data, "chats_list", this.$store.state.auth.user_info.chats);
+  mounted() {  
+    this.check_if_user_had_profile_photo();
+    this.handle_resize();
+    this.handle_escape_button();
+    this.watch_profile_photos_change();
+    this.watch_user_info_changes();
+    this.$set(this.$data, 'update_full_name_input', this.$store.state.auth.user_info.full_name)
 
-    if (this.$store.state.auth.user_info.profile_photos.length > 0) {
+    window.upload_profile_photo = this.handle_upload_profile_photo;
+
+    window.vm = this;
+  },
+  computed: {
+    username() {
+      return this.$store.state.auth.auth.username
+    },
+    chats_list() {
+      return this.$store.state.auth.user_info.chats
+    },
+    user_info() {
+      return this.$store.state.auth.user_info
+    }
+  },
+  methods: {
+    submit_edit_full_name(){
+      window.ws.send(JSON.stringify({
+          event: "update_full_name",
+          full_name: this.$data.update_full_name_input
+      }))
+      this.$set(this.$data, 'settings_dialog_edit_full_name', false)
+    },
+    check_if_user_had_profile_photo(){
+      if (this.$store.state.auth.user_info.profile_photos.length > 0) {
       const first_photo_filename =
         this.$store.state.auth.user_info.profile_photos[0].filename;
       this.$set(
@@ -718,17 +744,8 @@ export default {
           "/uploads/profile_photos/" +
           first_photo_filename
       );
-    }
-
-    this.handle_resize();
-    this.handle_escape_button();
-    this.watch_profile_photos_change();
-
-    window.upload_profile_photo = this.handle_upload_profile_photo;
-
-    window.vm = this;
-  },
-  methods: {
+      }
+    },
     search_chat_submit() {
       let chats_list = this.$data.chats_list;
       if (typeof chats_list == Object) {
@@ -927,6 +944,22 @@ export default {
                 this.$axios.defaults.baseURL +
                   "/uploads/profile_photos/" +
                   value[0].filename
+              );
+            }
+          }
+        );
+      }
+    },
+    watch_user_info_changes() {
+      if (this.$store.state.auth.user_info) {
+        this.$store.watch(
+          (state) => state.auth.user_info,
+          (value) => {
+            if (value && value[0].filename) {
+              this.$set(
+                this.$data,
+                "user_info",
+                value
               );
             }
           }

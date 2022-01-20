@@ -307,6 +307,7 @@ body,
 }
 
 .avatar_xlarge {
+  padding-top: 10px;
   --size: 110px;
 }
 

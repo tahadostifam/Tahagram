@@ -36,6 +36,9 @@ export const mutations = {
       });
     }
   },
+  setFullName(state, full_name) {
+    state.user_info.full_name = full_name;
+  },
 };
 
 export const actions = {
