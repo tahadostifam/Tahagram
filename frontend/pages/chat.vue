@@ -445,20 +445,23 @@
                   class="d-flex align-center text-decoration-none mr-5"
                   style="width: 100%"
                 >
-                  <div class="image">
+
+                  <div class="image" v-if="active_chat.profile_photos && active_chat.profile_photos.length > 0">
                     <img
-                      src="https://picsum.photos/900/900"
+                      :src="active_chat.profile_photos[0]"
                       class="avatar"
                       onload="window.lazyImage(this)"
                     />
                   </div>
+
+
                   <div>
                     <span class="d-block font-weight-bold ml-3 text-white"
-                      >Username</span
+                      >{{active_chat.full_name}}</span
                     >
                     <span
                       class="d-block text-sm-caption font-weight-bold ml-3 text--secondary"
-                      >10 Subscribers</span
+                      >online</span
                     >
                   </div>
                 </a>
@@ -502,8 +505,8 @@
               </div>
             </div>
 
-            <div class="messages-scroll">
-              <div class="messages_list">
+            <div class="messages-scroll" >
+              <div class="messages_list" v-if="active_chat.messages && active_chat.username && active_chat.full_name">
                 <!-- Context Menu For Messages -->
 
                 <v-menu
@@ -534,7 +537,7 @@
                   </v-list>
                 </v-menu>
 
-                <template v-for="(item, index) in messages_list">
+                <template v-for="(item, index) in active_chat.messages">
                   <TextMessage
                     v-if="item.type == 'text'"
                     :key="index"
@@ -566,6 +569,9 @@
                     :seen_state="item.seen_state"
                   ></ImageMessage>
                 </template>
+              </div>
+              <div id="no_chat_selected" v-else>
+                <span>ٔNo messages yet</span>
               </div>
             </div>
 
@@ -674,7 +680,7 @@ export default {
         y: 0,
       },
       show_chat_view: false,
-      chat_is_loading: false,
+      chat_is_loading: false,      
       show_nav_drawer: false,
       nav_drawer_width: 350,
       show_settings_dialog: false,
@@ -702,7 +708,13 @@ export default {
       search_chat_input: "",
       search_chat_result: null,
       search_chat_in_local_result: null,
-      bio_input: ""
+      bio_input: "",
+      active_chat: {
+        messages: null,
+        username: null,
+        full_name: null,
+        profile_photos: null
+      },
     };
   },
   mounted() {  
@@ -734,6 +746,16 @@ export default {
     }
   },
   methods: {
+    show_chat(username) {
+      if (username != this.$data.active_chat.username) {
+        ws.send(JSON.stringify({
+            event: "get_chat_info",
+            username: username
+        }))
+        this.$set(this.$data, "chat_is_loading", true);
+        this.$set(this.$data, "show_chat_view", true);
+      }
+    },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({
           event: "update_full_name",
@@ -878,9 +900,6 @@ export default {
     },
     leaving_chat_button() {
       this.$set(this.$data, "show_chat_view", false);
-    },
-    show_chat(username) {
-      this.$set(this.$data, "show_chat_view", true);
     },
     handle_escape_button() {
       let vm = this;

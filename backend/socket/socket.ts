@@ -98,6 +98,9 @@ function handleSocketMessages(data: any, ws: any) {
             case "update_bio":
                 events.update_bio(ws, parsedData);
                 break;
+            case "get_chat_info":
+                events.get_chat_info(ws, parsedData);
+                break;
             default:
                 ws.send("command not found");
                 break;

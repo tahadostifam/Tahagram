@@ -1,5 +1,6 @@
 import { WebSocket } from "ws";
 import User from "../../models/user";
+import Chats from "../../models/chats";
 
 export async function update_full_name(ws: any, parsedData: any) {
     if (parsedData.full_name && parsedData.full_name.trim() != "") {
@@ -26,7 +27,64 @@ export async function update_bio(ws: any, parsedData: any) {
             ws.send(
                 JSON.stringify({
                     message: "bio updated",
-                    full_name: parsedData.bio,
+                    bio: parsedData.bio,
+                })
+            );
+        }
+    }
+}
+
+export async function get_chat_info(ws: any, parsedData: any) {
+    if (parsedData.username && parsedData.username.trim() != "") {
+        const user = await User.findOne({
+            username: parsedData.username,
+        });
+
+        if (user) {
+            const chat = await Chats.findOne({
+                username: parsedData.username,
+            });
+            if (chat) {
+                switch (chat.chat_type) {
+                    case "private":
+                        ws.send(
+                            JSON.stringify({
+                                event: "get_chat_info",
+                                full_name: user.full_name,
+                                username: parsedData.username,
+                                bio: user.bio,
+                                profile_photos: user.profile_photos,
+                                messages_list: chat.messages_list,
+                            })
+                        );
+                        break;
+
+                    default:
+                        ws.send(
+                            JSON.stringify({
+                                event: "get_chat_info",
+                                message: "bad chat type",
+                            })
+                        );
+                        break;
+                }
+            } else {
+                ws.send(
+                    JSON.stringify({
+                        event: "get_chat_info",
+                        full_name: user.full_name,
+                        username: parsedData.username,
+                        bio: user.bio,
+                        profile_photos: user.profile_photos,
+                        messages_list: null,
+                    })
+                );
+            }
+        } else {
+            ws.send(
+                JSON.stringify({
+                    event: "get_chat_info",
+                    message: "user not found",
                 })
             );
         }
