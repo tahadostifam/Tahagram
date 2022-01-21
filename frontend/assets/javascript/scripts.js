@@ -55,6 +55,9 @@ window.handleSocketMessages = (vm, parsedData) => {
   if (parsedData.message == "full_name updated" && parsedData.full_name) {
     vm.$store.commit("auth/setFullName", parsedData.full_name);
   }
+  if (parsedData.message == "bio updated" && parsedData.bio) {
+    vm.$store.commit("auth/setBio", parsedData.bio);
+  }
 };
 
 window.onload = () => {

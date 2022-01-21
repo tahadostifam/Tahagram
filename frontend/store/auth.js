@@ -39,6 +39,9 @@ export const mutations = {
   setFullName(state, full_name) {
     state.user_info.full_name = full_name;
   },
+  setBio(state, bio) {
+    state.user_info.bio = bio;
+  },
 };
 
 export const actions = {

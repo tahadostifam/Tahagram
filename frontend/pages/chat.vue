@@ -324,6 +324,8 @@
             placeholder="Bio"
             counter="70"
             maxlength="70"
+            v-model="bio_input"
+            @input="submit_bio_change"
           ></v-text-field>
           <p class="text-grey">
             Any details such as age, occupation or city.
@@ -700,6 +702,7 @@ export default {
       search_chat_input: "",
       search_chat_result: null,
       search_chat_in_local_result: null,
+      bio_input: ""
     };
   },
   mounted() {  
@@ -713,6 +716,7 @@ export default {
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
     this.$set(this.$data, 'update_full_name_input', this.$store.state.auth.user_info.full_name)
+    this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
 
@@ -748,6 +752,19 @@ export default {
           "/uploads/profile_photos/" +
           first_photo_filename
       );
+      }
+    },
+    submit_bio_change(){
+      const ws = window.ws;
+        if (ws) {
+            ws.send(JSON.stringify({
+                event: "update_bio",
+                bio: this.$data.bio_input
+            }))
+        } else {
+          console.error('socket is empty!');
+          window.initSocket();
+          this.submit_bio_change()
       }
     },
     search_chat_submit() {
