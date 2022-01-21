@@ -59,7 +59,6 @@ window.handleSocketMessages = (vm, parsedData) => {
 
 window.onload = () => {
   window.handleSplashScreen();
-  window.initSocket();
 };
 
 window.lazyImage = (e) => {

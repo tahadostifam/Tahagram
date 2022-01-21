@@ -703,6 +703,10 @@ export default {
     };
   },
   mounted() {  
+    this.$nextTick(function () {
+      window.initSocket();
+    });
+
     this.check_if_user_had_profile_photo();
     this.handle_resize();
     this.handle_escape_button();
