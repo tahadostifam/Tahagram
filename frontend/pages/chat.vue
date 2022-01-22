@@ -395,7 +395,7 @@
               <ChatRow
                 v-for="(item, index) in chats_list"
                 :key="index"
-                @click_event="show_chat(item.chat_id)"
+                @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
                 :image_url="item.profile_photos[0]"
               ></ChatRow>
@@ -407,7 +407,7 @@
             <ChatRow
                 v-for="(item, index) in search_chat_result"
                 :key="index"
-                @click_event="show_chat(item._id)"
+                @click_event="show_chat(item._id, 'search_chat_result')"
                 :chat_name="item.full_name"
                 :image_url="item.profile_photos[0]"
             ></ChatRow>
@@ -416,7 +416,7 @@
               <ChatRow
                   v-for="(item, index) in search_chat_in_local_result"
                   :key="index + item.username"
-                  @click_event="show_chat(item._id)"
+                  @click_event="show_chat(item._id, 'search_chat_in_local')"
                   :chat_name="item.full_name"
                   :image_url="item.profile_photos[0]"
               ></ChatRow>
@@ -508,7 +508,7 @@
             </div>
 
             <div class="messages-scroll" >
-              <div class="messages_list" v-if="active_chat.messages && active_chat.username && active_chat.full_name">
+              <div class="messages_list" v-if="active_chat.messages && active_chat.messages.length > 0 && active_chat.username && active_chat.full_name">
                 <!-- Context Menu For Messages -->
 
                 <v-menu
@@ -765,8 +765,40 @@ export default {
         }
       }
     },
-    show_chat(chat_id) {
-      console.log(this);
+    async show_chat(chat_id, chat_location) {
+      this.$set(this.$data, 'chat_is_loading', true);
+
+      let list = null;
+      switch (chat_location) {
+        case 'chats_list':
+          list = this.$data.chats_list
+          break;
+        case 'search_chat_result':
+          list = this.$data.search_chat_result
+          break;
+        case 'search_chat_in_local':
+          list = this.$data.search_chat_in_local_result
+          break;
+      }
+      console.log(chat_location);
+      const chat = list.find( ({chat_id}) => chat_id === chat_id )
+      if (chat) {
+        this.set_the_active_chat(chat)
+        const msgs_list = await this.fetch_chat_messages_list(chat_id);
+        this.$set(this.$data.active_chat, 'messages', msgs_list)
+
+        this.$set(this.$data, 'chat_is_loading', false);
+        this.$set(this.$data, 'show_chat_view', true);
+      }
+    },
+    set_the_active_chat(chat){
+      this.$set(this.$data.active_chat, 'chat_id', chat._id);
+      this.$set(this.$data.active_chat, 'username', chat.username);
+      this.$set(this.$data.active_chat, 'full_name', chat.full_name);
+      this.$set(this.$data.active_chat, 'profile_photos', chat.profile_photos);
+    },
+    fetch_chat_messages_list(chat_id){
+      return null
     },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({
