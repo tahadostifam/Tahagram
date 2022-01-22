@@ -798,6 +798,21 @@ export default {
       this.$set(this.$data.active_chat, 'profile_photos', chat.profile_photos);
     },
     fetch_chat_messages_list(chat_id){
+      // ANCHOR
+      // NOTE 
+      /*
+        set the messages of chat
+      */
+      const messages = [
+        {
+          message_id: "adaskdmaldkmakldm",
+          sender_username: "maximilian",
+          message_type: "text",
+          send_time: Date.now(),
+          content: "Hey max, Whatsup?",
+          edited: false,
+        }
+      ]
       return null
     },
     submit_edit_full_name(){
