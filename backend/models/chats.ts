@@ -1,11 +1,18 @@
 import mongoose from "mongoose";
 
 var schema = new mongoose.Schema({
+    // SECTION - Private
+    sides: {
+        type: Object,
+    },
+    // SECTION - Channel & Groups
     username: {
         type: String,
-        required: true,
-        unique: true,
     },
+    bio: {
+        type: String,
+    },
+    // SECTION - Common
     chat_type: {
         type: String,
         required: true,
@@ -13,9 +20,6 @@ var schema = new mongoose.Schema({
     messages_list: {
         type: Array,
         default: [],
-    },
-    bio: {
-        type: String,
     },
 });
 

@@ -9,6 +9,28 @@ console.clear();
 async function main() {
     connect();
 
+    // NOTE Making a private chat
+    const chat = new Chats({
+        chat_type: "private",
+        messages_list: [
+            {
+                sender_username: "maximilian",
+                message_type: "text",
+                send_time: Date.now(),
+                content: "Hey max, Whatsup?",
+                edited: false,
+            },
+        ],
+        sides: {
+            user_1: "maximilian",
+            user_2: "rocks_crew",
+        },
+    });
+
+    await chat.save();
+
+    console.log("A private chat created.");
+
     // const user = await User.findOneAndUpdate(
     //     {
     //         username: "maximilian",
@@ -21,30 +43,6 @@ async function main() {
     //         },
     //     }
     // );
-
-    const user: any = await User.findOne({
-        username: "maximilian",
-    });
-
-    let chats: Array<object> = [];
-    await user.chats.forEach(async (item: any, index: number) => {
-        const chat_info = await User.findById(item.user_id);
-
-        if (chat_info) {
-            let user_data: any = {
-                full_name: chat_info.full_name,
-                username: chat_info.username,
-            };
-            if (user.profile_photos.length > 0) {
-                user_data["profile_photo"] = user.profile_photos[0];
-            }
-            chats.push(user_data);
-        }
-
-        if (index == user.chats.length - 1) {
-            console.log(chats);
-        }
-    });
 }
 
 main();

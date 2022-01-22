@@ -625,7 +625,7 @@
                 </emoji-picker>
                 <v-text-field
                   id="send_message_textbox"
-                  v-model="send_message_input"
+                  v-model="send_text_message_input"
                   aria-multiline="true"
                   class="rounded-pill"
                   solo
@@ -633,6 +633,7 @@
                 ></v-text-field>
                 <v-btn
                   id="send_message_button"
+                  @click="submit_send_text_messages"
                   :color="theme_color"
                   dark
                   icon
@@ -673,7 +674,7 @@ export default {
   data() {
     return {
       theme_color: configs.theme_color,
-      send_message_input: "",
+      send_text_message_input: "",
       context_menu_for_messages: {
         show: false,
         x: 0,
@@ -746,6 +747,21 @@ export default {
     }
   },
   methods: {
+    submit_send_text_messages(){
+      if (this.$data.send_text_message_input.trim() != "") {
+        const ws = window.ws;
+        if (ws) {
+            ws.send(JSON.stringify({
+                event: "send_text_message",
+                content: this.$data.send_text_message_input.trim()
+            }))
+        } else {
+          console.error('socket is empty!');
+          window.initSocket();
+          this.submit_send_text_messages()
+        }
+      }
+    },
     show_chat(username) {
       if (username != this.$data.active_chat.username) {
         ws.send(JSON.stringify({
@@ -887,7 +903,7 @@ export default {
       this.$router.push({ path: "/logout" });
     },
     insert(emoji) {
-      this.send_message_input += emoji;
+      this.send_text_message_input += emoji;
     },
     show_contextmenu_of_message(e, message_id) {
       e.preventDefault();

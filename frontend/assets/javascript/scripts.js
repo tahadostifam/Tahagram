@@ -51,14 +51,14 @@ window.initSocket = () => {
 window.handleSocketMessages = (vm, parsedData) => {
   if (parsedData.event == "search_in_chats") {
     vm.$set(vm.$data, "search_chat_result", parsedData.data);
-  }
-  if (parsedData.message == "full_name updated" && parsedData.full_name) {
+  } else if (
+    parsedData.message == "full_name updated" &&
+    parsedData.full_name
+  ) {
     vm.$store.commit("auth/setFullName", parsedData.full_name);
-  }
-  if (parsedData.message == "bio updated" && parsedData.bio) {
+  } else if (parsedData.message == "bio updated" && parsedData.bio) {
     vm.$store.commit("auth/setBio", parsedData.bio);
-  }
-  if (parsedData.event == "get_chat_info") {
+  } else if (parsedData.event == "get_chat_info") {
     vm.$set(vm.$data.active_chat, "username", parsedData.username);
     vm.$set(vm.$data.active_chat, "full_name", parsedData.full_name);
     vm.$set(vm.$data.active_chat, "messages", parsedData.messages_list);

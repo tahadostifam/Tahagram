@@ -101,6 +101,9 @@ function handleSocketMessages(data: any, ws: any) {
             case "get_chat_info":
                 events.get_chat_info(ws, parsedData);
                 break;
+            case "send_text_message":
+                events.send_text_message(ws, parsedData);
+                break;
             default:
                 ws.send("command not found");
                 break;

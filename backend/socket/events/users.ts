@@ -90,3 +90,19 @@ export async function get_chat_info(ws: any, parsedData: any) {
         }
     }
 }
+
+export async function send_text_message(ws: any, parsedData: any) {
+    if (parsedData.send_text_message_input && parsedData.send_text_message_input.trim() != "") {
+        const chat = await Chats.findOne({
+            username: parsedData.chat_username,
+        });
+        // ANCHOR
+        if (chat) {
+            console.log(":))))");
+        } else {
+            const new_chat = new Chats({
+                username: "",
+            });
+        }
+    }
+}
