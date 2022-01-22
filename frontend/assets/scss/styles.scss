@@ -137,7 +137,7 @@ body,
     bottom: 0;
     .splash_screen {
       .center {
-        padding-top: $send_message_section_height;
+        padding-top: calc(#{$send_message_section_height} - 20px);
       }
     }
     .section_header {

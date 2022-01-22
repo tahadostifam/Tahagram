@@ -395,28 +395,30 @@
               <ChatRow
                 v-for="(item, index) in chats_list"
                 :key="index"
-                @click_event="show_chat(item.username)"
+                @click_event="show_chat(item.chat_id)"
                 :chat_name="item.full_name"
+                :image_url="item.profile_photos[0]"
               ></ChatRow>
             </template>
             <ThereIsNothing v-else />
-            <!-- :image_url="item.profile_photo" -->
           </template>
           <template v-else-if="search_chat_result">
             <span class="chat_row_badge">Global search</span>
             <ChatRow
                 v-for="(item, index) in search_chat_result"
                 :key="index"
-                @click_event="show_chat(item.username)"
+                @click_event="show_chat(item._id)"
                 :chat_name="item.full_name"
+                :image_url="item.profile_photos[0]"
             ></ChatRow>
             <template v-if="search_chat_in_local_result">
               <span class="chat_row_badge mt-5">Local search</span>
               <ChatRow
                   v-for="(item, index) in search_chat_in_local_result"
                   :key="index + item.username"
-                  @click_event="show_chat(item.username)"
+                  @click_event="show_chat(item._id)"
                   :chat_name="item.full_name"
+                  :image_url="item.profile_photos[0]"
               ></ChatRow>
             </template>
           </template>
@@ -711,6 +713,7 @@ export default {
       search_chat_in_local_result: null,
       bio_input: "",
       active_chat: {
+        chat_id: null,
         messages: null,
         username: null,
         full_name: null,
@@ -762,15 +765,8 @@ export default {
         }
       }
     },
-    show_chat(username) {
-      if (username != this.$data.active_chat.username) {
-        ws.send(JSON.stringify({
-            event: "get_chat_info",
-            username: username
-        }))
-        this.$set(this.$data, "chat_is_loading", true);
-        this.$set(this.$data, "show_chat_view", true);
-      }
+    show_chat(chat_id) {
+      console.log(this);
     },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({
@@ -932,6 +928,11 @@ export default {
           } else if (vm.$data.show_settings_dialog == true) {
             return vm.$set(vm.$data, "show_settings_dialog", false);
           } else if (vm.$data.show_chat_view == true) {
+            vm.$set(vm.$data.active_chat, "chat_id", null);
+            vm.$set(vm.$data.active_chat, "username", null);
+            vm.$set(vm.$data.active_chat, "full_name", null);
+            vm.$set(vm.$data.active_chat, "messages", null);
+            vm.$set(vm.$data.active_chat, "profile_photos", null);
             return vm.$set(vm.$data, "show_chat_view", false);
           }
         }

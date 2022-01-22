@@ -10,7 +10,6 @@ export default async function search_in_chats(ws: any, parsedData: any) {
             {
                 password_digest: 0,
                 __v: 0,
-                _id: 0,
                 chats: 0,
             }
         );

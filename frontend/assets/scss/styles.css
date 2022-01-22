@@ -141,7 +141,7 @@ body,
 }
 
 #main_container .chat_view .splash_screen .center {
-  padding-top: 70px;
+  padding-top: calc(70px - 20px);
 }
 
 #main_container .chat_view .section_header {

@@ -212,6 +212,7 @@ export function getUserChats(username: string) {
 
                 if (chat_info) {
                     let user_data: any = {
+                        chat_id: chat_info._id,
                         full_name: chat_info.full_name,
                         username: chat_info.username,
                     };
