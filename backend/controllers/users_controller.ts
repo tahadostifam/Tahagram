@@ -27,23 +27,26 @@ export default {
                                 async (auth_token) => {
                                     const final_profile_photos = user.profile_photos.reverse();
                                     await getUserChats(req.body.username).then((chats) => {
-                                        status_codes.success_signin(
-                                            {
-                                                user: {
-                                                    full_name: user.full_name,
-                                                    username: user.username,
-                                                    bio: user.bio,
-                                                    last_seen: user.last_seen,
-                                                    profile_photos: final_profile_photos,
-                                                    chats: chats,
+                                        getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
+                                            status_codes.success_signin(
+                                                {
+                                                    user: {
+                                                        full_name: user.full_name,
+                                                        username: user.username,
+                                                        bio: user.bio,
+                                                        last_seen: user.last_seen,
+                                                        profile_photos: final_profile_photos,
+                                                        chats: chats,
+                                                        chats_messages: chats_messages,
+                                                    },
+                                                    refresh_token: refresh_token,
+                                                    auth_token: auth_token,
                                                 },
-                                                refresh_token: refresh_token,
-                                                auth_token: auth_token,
-                                            },
-                                            req,
-                                            res,
-                                            next
-                                        );
+                                                req,
+                                                res,
+                                                next
+                                            );
+                                        });
                                     });
                                 },
                                 () => status_codes.error(req, res, next)
@@ -244,9 +247,6 @@ export function getUserChatsMessages(username: string, user_chats_list: any) {
             chat_messages = JSON.parse(JSON.stringify(chat_messages));
 
             let final_list: Array<any> = [];
-
-            console.log("chat_messages", chat_messages);
-            console.log("user_chats_list", user_chats_list);
 
             await user_chats_list.forEach((item: any) => {
                 const ctemp = chat_messages.find(({ _id }) => _id === String(item.user_id).trim());

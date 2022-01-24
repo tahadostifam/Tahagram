@@ -449,11 +449,11 @@
                 >
 
                   <div class="image" v-if="active_chat.profile_photos && active_chat.profile_photos.length > 0">
-                    <img
+                    <!-- <img
                       :src="active_chat.profile_photos[0]"
                       class="avatar"
                       onload="window.lazyImage(this)"
-                    />
+                    /> -->
                   </div>
 
 
@@ -734,8 +734,11 @@ export default {
     this.watch_user_info_changes();
     this.$set(this.$data, 'update_full_name_input', this.$store.state.auth.user_info.full_name)
     this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
-    // SECTION - setting user messages
+    // SECTION - fix profile_photos urls
+    this.$store.commit('auth/fixProfilePhotosUrls')
+    // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
+    // SECTION - setting user messages
     // this.$set(this.$data, 'chats_list', this.set_user_chats_messages())
 
 

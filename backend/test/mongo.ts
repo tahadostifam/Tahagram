@@ -9,7 +9,7 @@ console.clear();
 async function main() {
     connect();
 
-    // // NOTE Making a private chat
+    // SECTION Making a private chat
     // const chat = new Chats({
     //     chat_type: "private",
     //     messages_list: [
@@ -31,18 +31,19 @@ async function main() {
 
     // console.log("A private chat created.");
 
-    const user = await User.findOneAndUpdate(
-        {
-            username: "luffy",
-        },
-        {
-            $push: {
-                chats: {
-                    user_id: "61ebd575814f12cce0791549",
-                },
-            },
-        }
-    );
+    // SECTION - add chat into user chats_list
+    // const user = await User.findOneAndUpdate(
+    //     {
+    //         username: "luffy",
+    //     },
+    //     {
+    //         $push: {
+    //             chats: {
+    //                 user_id: "61ebd575814f12cce0791549",
+    //             },
+    //         },
+    //     }
+    // );
 }
 
 main();
