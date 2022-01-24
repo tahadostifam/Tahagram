@@ -541,21 +541,21 @@
 
                 <template v-for="(item, index) in active_chat.messages">
                   <TextMessage
-                    v-if="item.type == 'text'"
+                    v-if="item.message_type == 'text'"
                     :key="index"
                     :message_id="item.message_id"
                     @contextmenu.native="
                       show_contextmenu_of_message($event, item.message_id)
                     "
-                    :sender="item.sender"
+                    :sender="item.sender_username"
                     :send_time="item.send_time"
-                    :text_content="item.text_content"
+                    :text_content="item.content"
                     :edited="item.edited"
                     :my_message="item.my_message"
                     :seen_state="item.seen_state"
                   ></TextMessage>
 
-                  <ImageMessage
+                  <!-- <ImageMessage
                     v-if="item.type == 'image'"
                     :key="index"
                     message_id="item.message_id"
@@ -569,7 +569,7 @@
                     :edited="item.edited"
                     :my_message="item.my_message"
                     :seen_state="item.seen_state"
-                  ></ImageMessage>
+                  ></ImageMessage> -->
                 </template>
               </div>
               <div id="no_chat_selected" v-else>
@@ -719,6 +719,7 @@ export default {
         full_name: null,
         profile_photos: null
       },
+      chats_list: null
     };
   },
   mounted() {  
@@ -733,17 +734,17 @@ export default {
     this.watch_user_info_changes();
     this.$set(this.$data, 'update_full_name_input', this.$store.state.auth.user_info.full_name)
     this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
+    // SECTION - setting user messages
+    this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
+    // this.$set(this.$data, 'chats_list', this.set_user_chats_messages())
+
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
-
     window.vm = this;
   },
   computed: {
     username() {
       return this.$store.state.auth.auth.username
-    },
-    chats_list() {
-      return this.$store.state.auth.user_info.chats
     },
     user_info() {
       return this.$store.state.auth.user_info
@@ -780,11 +781,11 @@ export default {
           list = this.$data.search_chat_in_local_result
           break;
       }
-      console.log(chat_location);
+      
       const chat = list.find( ({chat_id}) => chat_id === chat_id )
       if (chat) {
         this.set_the_active_chat(chat)
-        const msgs_list = await this.fetch_chat_messages_list(chat_id);
+        const msgs_list = await this.set_user_chats_messages(chat_id, chat_location);
         this.$set(this.$data.active_chat, 'messages', msgs_list)
 
         this.$set(this.$data, 'chat_is_loading', false);
@@ -797,12 +798,7 @@ export default {
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
       this.$set(this.$data.active_chat, 'profile_photos', chat.profile_photos);
     },
-    fetch_chat_messages_list(chat_id){
-      // ANCHOR
-      // NOTE 
-      /*
-        set the messages of chat
-      */
+    set_user_chats_messages(chat_id){
       const messages = [
         {
           message_id: "adaskdmaldkmakldm",
@@ -811,9 +807,15 @@ export default {
           send_time: Date.now(),
           content: "Hey max, Whatsup?",
           edited: false,
+          my_message: false,
+          seen_state: false
         }
       ]
-      return null
+
+      return messages;
+    },
+    fetch_chat_messages_list(chat_id, chat_location){
+      return // messages of chat
     },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({
