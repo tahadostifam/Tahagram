@@ -397,7 +397,7 @@
                 :key="index"
                 @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
-                :image_url="item.profile_photos[0]"
+                :image_url="item.profile_photo.filename"
               ></ChatRow>
             </template>
             <ThereIsNothing v-else />
@@ -409,7 +409,7 @@
                 :key="index"
                 @click_event="show_chat(item._id, 'search_chat_result')"
                 :chat_name="item.full_name"
-                :image_url="item.profile_photos[0]"
+                :image_url="item.profile_photo.filename"
             ></ChatRow>
             <template v-if="search_chat_in_local_result">
               <span class="chat_row_badge mt-5">Local search</span>
@@ -418,7 +418,7 @@
                   :key="index + item.username"
                   @click_event="show_chat(item._id, 'search_chat_in_local')"
                   :chat_name="item.full_name"
-                  :image_url="item.profile_photos[0]"
+                  :image_url="item.profile_photo.filename"
               ></ChatRow>
             </template>
           </template>
@@ -447,15 +447,13 @@
                   class="d-flex align-center text-decoration-none mr-5"
                   style="width: 100%"
                 >
-
-                  <div class="image" v-if="active_chat.profile_photos && active_chat.profile_photos.length > 0">
-                    <!-- <img
-                      :src="active_chat.profile_photos[0]"
+                  <div class="image" v-if="active_chat.profile_photo && active_chat.profile_photo.filename">
+                    <img
+                      :src="active_chat.profile_photo.filename"
                       class="avatar"
                       onload="window.lazyImage(this)"
-                    /> -->
+                    />
                   </div>
-
 
                   <div>
                     <span class="d-block font-weight-bold ml-3 text-white"
@@ -717,7 +715,7 @@ export default {
         messages: null,
         username: null,
         full_name: null,
-        profile_photos: null
+        profile_photo: null
       },
       chats_list: null
     };
@@ -740,7 +738,6 @@ export default {
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     // SECTION - setting user messages
     // this.$set(this.$data, 'chats_list', this.set_user_chats_messages())
-
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.vm = this;
@@ -786,7 +783,7 @@ export default {
       }
       
       const chat = list.find( ({chat_id}) => chat_id === chat_id )
-      if (chat) {
+      if (chat) {        
         this.set_the_active_chat(chat)
         const msgs_list = await this.set_user_chats_messages(chat_id, chat_location);
         this.$set(this.$data.active_chat, 'messages', msgs_list)
@@ -799,7 +796,7 @@ export default {
       this.$set(this.$data.active_chat, 'chat_id', chat._id);
       this.$set(this.$data.active_chat, 'username', chat.username);
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
-      this.$set(this.$data.active_chat, 'profile_photos', chat.profile_photos);
+      this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
     },
     set_user_chats_messages(chat_id){
       const messages = [

@@ -43,12 +43,12 @@ export const mutations = {
     state.user_info.bio = bio;
   },
   fixProfilePhotosUrls(state) {
-    if (state.user_info.profile_photos) {
-      state.user_info.profile_photos.forEach((item, index) => {
-        state.user_info.profile_photos[index].filename =
+    if (state.user_info.chats) {
+      state.user_info.chats.forEach((chat, chat_index) => {
+        state.user_info.chats[chat_index].profile_photo.filename =
           this.$axios.defaults.baseURL +
           "/uploads/profile_photos/" +
-          item.filename;
+          chat.profile_photo.filename;
       });
     }
   },
