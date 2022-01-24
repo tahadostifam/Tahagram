@@ -9,6 +9,7 @@ import crypto from "crypto";
 const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
+import Chats from "../models/chats";
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -130,16 +131,19 @@ export default {
                     if (!user) return status_codes.invalid_token(req, res, next);
                     const final_profile_photos = user.profile_photos.reverse();
                     await getUserChats(req.body.username).then((chats) => {
-                        res.send({
-                            message: "success",
-                            data: {
-                                full_name: user.full_name,
-                                username: user.username,
-                                bio: user.bio,
-                                last_seen: user.last_seen,
-                                profile_photos: final_profile_photos,
-                                chats: chats,
-                            },
+                        getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
+                            res.send({
+                                message: "success",
+                                data: {
+                                    full_name: user.full_name,
+                                    username: user.username,
+                                    bio: user.bio,
+                                    last_seen: user.last_seen,
+                                    profile_photos: final_profile_photos,
+                                    chats: chats,
+                                    chats_messages: chats_messages,
+                                },
+                            });
                         });
                     });
                 } else {
@@ -226,6 +230,34 @@ export function getUserChats(username: string) {
                     success(chats);
                 }
             });
+        }
+    });
+}
+
+export function getUserChatsMessages(username: string, user_chats_list: any) {
+    return new Promise(async (success) => {
+        let chat_messages = await Chats.find({
+            $or: [{ username: username }, { "sides.user_1": username }, { "sides.user_2": username }],
+        });
+
+        if (chat_messages) {
+            chat_messages = JSON.parse(JSON.stringify(chat_messages));
+
+            let final_list: Array<any> = [];
+
+            console.log("chat_messages", chat_messages);
+            console.log("user_chats_list", user_chats_list);
+
+            await user_chats_list.forEach((item: any) => {
+                const ctemp = chat_messages.find(({ _id }) => _id === String(item.user_id).trim());
+                if (ctemp) {
+                    final_list.push(ctemp);
+                }
+            });
+
+            success(final_list);
+        } else {
+            success([]);
         }
     });
 }

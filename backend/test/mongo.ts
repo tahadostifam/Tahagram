@@ -33,12 +33,12 @@ async function main() {
 
     const user = await User.findOneAndUpdate(
         {
-            username: "maximilian",
+            username: "luffy",
         },
         {
             $push: {
                 chats: {
-                    user_id: "61e41439eff84037be819e9e",
+                    user_id: "61ebd575814f12cce0791549",
                 },
             },
         }
