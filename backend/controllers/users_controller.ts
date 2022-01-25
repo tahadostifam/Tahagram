@@ -269,7 +269,7 @@ export function getUserChatsMessages(username: string, user_chats_list: any) {
             let final_list: Array<any> = [];
 
             await user_chats_list.forEach((item: any) => {
-                const ctemp = chat_messages.find(({ _id }) => _id === String(item.user_id).trim());
+                const ctemp = chat_messages.find(({ _id }) => _id === String(item.chat_id).trim());
                 if (ctemp) {
                     final_list.push(ctemp);
                 }
