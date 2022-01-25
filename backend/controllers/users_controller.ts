@@ -214,19 +214,39 @@ export function getUserChats(username: string) {
             return success([]);
         } else {
             let chats: Array<object> = [];
+
             await user.chats.forEach(async (item: any, index: number) => {
-                const chat_info = await User.findById(item.user_id);
+                const chat_info = await Chats.findById(item.chat_id);
 
                 if (chat_info) {
-                    let user_data: any = {
-                        chat_id: chat_info._id,
-                        full_name: chat_info.full_name,
-                        username: chat_info.username,
-                    };
-                    if (user.profile_photos.length > 0) {
-                        user_data["profile_photo"] = user.profile_photos[0];
+                    // going to detect that user target _id is in the user_1 or user_2
+                    switch (chat_info.chat_type) {
+                        case "private":
+                            // now, we should get UserInfo from UserModel
+                            async function doNext(target_username: String) {
+                                const target_user_info = await User.findOne({
+                                    username: target_username,
+                                });
+                                if (target_user_info) {
+                                    let user_data: any = {
+                                        chat_id: target_user_info._id,
+                                        full_name: target_user_info.full_name,
+                                        username: target_user_info.username,
+                                    };
+                                    if (target_user_info.profile_photos.length > 0) {
+                                        user_data["profile_photo"] = target_user_info.profile_photos[0];
+                                    }
+                                    chats.push(user_data);
+                                }
+                            }
+
+                            if (String(chat_info.sides.user_1).trim() != username.trim()) {
+                                await doNext(chat_info.sides.user_1);
+                            } else if (String(chat_info.sides.user_2).trim() != username.trim()) {
+                                await doNext(chat_info.sides.user_2);
+                            }
+                            break;
                     }
-                    chats.push(user_data);
                 }
 
                 if (index == user.chats.length - 1) {

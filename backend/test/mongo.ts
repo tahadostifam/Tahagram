@@ -32,18 +32,18 @@ async function main() {
     // console.log("A private chat created.");
 
     // SECTION - add chat into user chats_list
-    // const user = await User.findOneAndUpdate(
-    //     {
-    //         username: "luffy",
-    //     },
-    //     {
-    //         $push: {
-    //             chats: {
-    //                 user_id: "61ebd575814f12cce0791549",
-    //             },
-    //         },
-    //     }
-    // );
+    const user = await User.findOneAndUpdate(
+        {
+            username: "maximilian",
+        },
+        {
+            $push: {
+                chats: {
+                    chat_id: "61ebc82ce8515bea71daa202", // the id of chat [chats collection]
+                },
+            },
+        }
+    );
 }
 
 main();
