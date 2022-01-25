@@ -717,7 +717,8 @@ export default {
         full_name: null,
         profile_photo: null
       },
-      chats_list: null
+      chats_list: null,
+      user_chats_messages: null
     };
   },
   mounted() {  
@@ -737,7 +738,7 @@ export default {
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     // SECTION - setting user messages
-    // this.$set(this.$data, 'chats_list', this.set_user_chats_messages())
+    this.$set(this.$data, 'user_chats_messages', this.set_user_chats_messages())
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.vm = this;
@@ -785,7 +786,7 @@ export default {
       const chat = list.find( ({chat_id}) => chat_id === chat_id )
       if (chat) {        
         this.set_the_active_chat(chat)
-        const msgs_list = await this.set_user_chats_messages(chat_id, chat_location);
+        const msgs_list = await this.fetch_chat_messages_list(chat_id);
         this.$set(this.$data.active_chat, 'messages', msgs_list)
 
         this.$set(this.$data, 'chat_is_loading', false);
@@ -798,24 +799,32 @@ export default {
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
       this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
     },
-    set_user_chats_messages(chat_id){
-      const messages = [
-        {
-          message_id: "adaskdmaldkmakldm",
-          sender_username: "maximilian",
-          message_type: "text",
-          send_time: Date.now(),
-          content: "Hey max, Whatsup?",
-          edited: false,
-          my_message: false,
-          seen_state: false
-        }
-      ]
-
-      return messages;
+    set_user_chats_messages(){
+      return this.$store.state.auth.user_info.chats_messages
     },
-    fetch_chat_messages_list(chat_id, chat_location){
+    fetch_chat_messages_list(chat_id){
+      // NOTE
+      // this method will be work when user clicked on the a chat
+      // when it happend... we should going to user_chats_messages and finding the messages for that chat
+
+        console.log(this.$data.user_chats_messages);
+
       return // messages of chat
+
+      // const messages = [
+      //   {
+      //     message_id: "adaskdmaldkmakldm",
+      //     sender_username: "maximilian",
+      //     message_type: "text",
+      //     send_time: Date.now(),
+      //     content: "Hey max, Whatsup?",
+      //     edited: false,
+      //     my_message: false,
+      //     seen_state: false
+      //   }
+      // ]
+
+      // return messages;
     },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({
