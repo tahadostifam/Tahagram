@@ -3,7 +3,7 @@ import User from "../../models/user";
 
 export default async function search_in_chats(ws: any, parsedData: any) {
     if (parsedData.input && parsedData.input.trim() != "") {
-        const finded_users = await User.find(
+        let finded_users = await User.find(
             {
                 $or: [{ username: { $regex: ".*" + parsedData.input + ".*" } }, { full_name: { $regex: ".*" + parsedData.input + ".*" } }],
             },
@@ -13,9 +13,15 @@ export default async function search_in_chats(ws: any, parsedData: any) {
                 chats: 0,
             }
         );
+        finded_users = JSON.parse(JSON.stringify(finded_users));
 
         if (finded_users) {
             finded_users.forEach((item, index) => {
+                if (item.profile_photos && item.profile_photos.length > 0) {
+                    finded_users[index]["profile_photo"] = item.profile_photos[0];
+                    delete finded_users[index].profile_photos;
+                }
+
                 if (item && item.username == ws.user.username) {
                     finded_users.splice(index);
                 }

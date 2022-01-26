@@ -50,17 +50,17 @@ window.initSocket = () => {
 
 window.handleSocketMessages = (vm, parsedData) => {
   if (parsedData.event == "search_in_chats") {
-    parsedData.data.forEach((chat, chat_index) => {
-      const profile_photos = [];
-      chat.profile_photos.forEach((item) => {
-        profile_photos.push(
-          vm.$axios.defaults.baseURL +
-            "/uploads/profile_photos/" +
-            item.filename
-        );
-      });
-      parsedData.data[chat_index].profile_photos = profile_photos;
-    });
+    // parsedData.data.forEach((chat, chat_index) => {
+    //   const profile_photos = [];
+    //   chat.profile_photos.forEach((item) => {
+    //     profile_photos.push(
+    //       vm.$axios.defaults.baseURL +
+    //         "/uploads/profile_photos/" +
+    //         item.filename
+    //     );
+    //   });
+    //   parsedData.data[chat_index].profile_photos = profile_photos;
+    // });
     vm.$set(vm.$data, "search_chat_result", parsedData.data);
   } else if (
     parsedData.message == "full_name updated" &&

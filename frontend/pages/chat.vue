@@ -397,8 +397,10 @@
                 :key="index"
                 @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
-                :image_url="item.profile_photo.filename"
+                :active_chat="item.chat_id == active_chat.chat_id"
+                :image_url="gimme_profile_photo_link_addr(item.profile_photo.filename)"
               ></ChatRow>
+              <!-- :image_url="item.profile_photo.filename" -->
             </template>
             <ThereIsNothing v-else />
           </template>
@@ -409,7 +411,7 @@
                 :key="index"
                 @click_event="show_chat(item._id, 'search_chat_result')"
                 :chat_name="item.full_name"
-                :image_url="item.profile_photo.filename"
+                :image_url="gimme_profile_photo_link_addr(item.profile_photo.filename)"
             ></ChatRow>
             <template v-if="search_chat_in_local_result">
               <span class="chat_row_badge mt-5">Local search</span>
@@ -418,7 +420,7 @@
                   :key="index + item.username"
                   @click_event="show_chat(item._id, 'search_chat_in_local')"
                   :chat_name="item.full_name"
-                  :image_url="item.profile_photo.filename"
+                  :image_url="gimme_profile_photo_link_addr(item.profile_photo.filename)"
               ></ChatRow>
             </template>
           </template>
@@ -449,7 +451,7 @@
                 >
                   <div class="image" v-if="active_chat.profile_photo && active_chat.profile_photo.filename">
                     <img
-                      :src="active_chat.profile_photo.filename"
+                      :src="gimme_profile_photo_link_addr(active_chat.profile_photo.filename)"
                       class="avatar"
                       onload="window.lazyImage(this)"
                     />
@@ -734,7 +736,7 @@ export default {
     this.$set(this.$data, 'update_full_name_input', this.$store.state.auth.user_info.full_name)
     this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
     // SECTION - fix profile_photos urls
-    this.$store.commit('auth/fixProfilePhotosUrls')
+    // this.$store.commit('auth/fixProfilePhotosUrls')
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     // SECTION - setting user messages
@@ -787,13 +789,14 @@ export default {
       if (chat) {        
         this.set_the_active_chat(chat)
         const msgs_list = await this.fetch_chat_messages_list(chat_id);
-        this.$set(this.$data.active_chat, 'messages', msgs_list)
+
+        this.$set(this.$data.active_chat, 'messages', msgs_list);
         this.$set(this.$data, 'chat_is_loading', false);
         this.$set(this.$data, 'show_chat_view', true);
       }
     },
     set_the_active_chat(chat){
-      this.$set(this.$data.active_chat, 'chat_id', chat._id);
+      this.$set(this.$data.active_chat, 'chat_id', chat.chat_id);
       this.$set(this.$data.active_chat, 'username', chat.username);
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
       this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
@@ -826,6 +829,10 @@ export default {
     },
     set_user_chats_messages(){
       this.$set(this.$data, 'user_chats_messages', this.$store.state.auth.user_info.chats_messages)
+    },
+    gimme_profile_photo_link_addr(filename){
+      return this.$axios.defaults.baseURL +
+          "/uploads/profile_photos/" + filename;
     },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({
@@ -976,9 +983,7 @@ export default {
       let vm = this;
       document.addEventListener("keydown", (e) => {
         if (e.code == "Escape") {
-          if (vm.$data.show_chat_view == true) {
-            return vm.$set(vm.$data, "show_chat_view", false);
-          } else if (vm.$data.show_nav_drawer == true) {
+          if (vm.$data.show_nav_drawer == true) {
             return vm.$set(vm.$data, "show_nav_drawer", false);
           } else if (vm.$data.view_image.show == true) {
             return vm.$set(vm.$data.view_image, "show", false);

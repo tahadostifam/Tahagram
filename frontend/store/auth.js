@@ -42,16 +42,6 @@ export const mutations = {
   setBio(state, bio) {
     state.user_info.bio = bio;
   },
-  fixProfilePhotosUrls(state) {
-    if (state.user_info.chats) {
-      state.user_info.chats.forEach((chat, chat_index) => {
-        state.user_info.chats[chat_index].profile_photo.filename =
-          this.$axios.defaults.baseURL +
-          "/uploads/profile_photos/" +
-          chat.profile_photo.filename;
-      });
-    }
-  },
 };
 
 export const actions = {
