@@ -25,9 +25,8 @@ export function setUserTokens(username: string, token_type: string, user_ip: str
         if (token_type == "auth") secret = secrets.auth_token;
 
         var final_token;
-
         if (token_type == "refresh") {
-            final_token = await jwt.sign({ username: username }, secret, { algorithm: "HS512" });
+            final_token = await jwt.sign({ username: username }, secret, { algorithm: "HS256" });
         }
         if (token_type == "auth") {
             final_token = await crypto.randomBytes(configs.api.tokens.auth_token.length).toString("hex");
@@ -43,9 +42,11 @@ export function setUserTokens(username: string, token_type: string, user_ip: str
         else return error();
 
         let user_id = makeUserStoreId(username, token_type, user_ip);
+
         if (final_token) {
             await client.set(user_id, final_token);
             await client.expire(user_id, token_expire);
+
             success(final_token);
         } else {
             error();

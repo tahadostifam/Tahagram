@@ -19,7 +19,6 @@ export default {
             signinUserWithUserPassword(req.body.username, req.body.password).then(
                 async (user: any) => {
                     // success
-
                     await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
                         async (refresh_token) => {
                             // success
@@ -162,6 +161,7 @@ export function signinUserWithUserPassword(username: string, password: string) {
         const user = await User.findOne({
             username: username,
         });
+
         if (!user) {
             return failed("not_found");
         }
@@ -260,32 +260,34 @@ export function getUserChats(username: string) {
 export function getUserChatsMessages(username: string, user_chats_list: any) {
     return new Promise(async (success) => {
         let final_list: Array<any> = [];
-
-        await user_chats_list.forEach(async (item: any, index: number) => {
-            let chat = await Chats.findOne({
-                _id: item.chat_id,
-            });
-            chat = JSON.parse(JSON.stringify(chat));
-            if (chat) {
-                switch (chat.chat_type) {
-                    case "private":
-                        let target_username = null;
-                        if (String(chat.sides.user_1).trim() != username.trim()) {
-                            target_username = chat.sides.user_1;
-                        } else if (String(chat.sides.user_2).trim() != username.trim()) {
-                            target_username = chat.sides.user_2;
-                        }
-                        chat["target_username"] = target_username;
-                        delete chat["__v"];
-                        delete chat["sides"];
-                        break;
+        if (user_chats_list.length > 0) {
+            return await user_chats_list.forEach(async (item: any, index: number) => {
+                let chat = await Chats.findOne({
+                    _id: item.chat_id,
+                });
+                chat = JSON.parse(JSON.stringify(chat));
+                if (chat) {
+                    switch (chat.chat_type) {
+                        case "private":
+                            let target_username = null;
+                            if (String(chat.sides.user_1).trim() != username.trim()) {
+                                target_username = chat.sides.user_1;
+                            } else if (String(chat.sides.user_2).trim() != username.trim()) {
+                                target_username = chat.sides.user_2;
+                            }
+                            chat["target_username"] = target_username;
+                            delete chat["__v"];
+                            delete chat["sides"];
+                            break;
+                    }
+                    final_list.push(chat);
                 }
-                final_list.push(chat);
-            }
-            // if forEach finished
-            if (index == user_chats_list.length - 1) {
-                success(final_list);
-            }
-        });
+                // if forEach finished
+                if (index == user_chats_list.length - 1) {
+                    success(final_list);
+                }
+            });
+        }
+        success([]);
     });
 }
