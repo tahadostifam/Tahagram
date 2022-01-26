@@ -49,6 +49,7 @@ export async function send_text_message(ws: any, parsedData: any) {
                 send_time: Date.now(),
                 content: message_text,
                 edited: false,
+                my_message: true,
             };
             const result = await Chats.findOneAndUpdate(
                 { _id: chat_id },
