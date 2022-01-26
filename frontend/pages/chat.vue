@@ -761,11 +761,18 @@ export default {
             // TODO
             // NOTE - we must make a ThreadsList 
             // it means if a message not send we should know that and after few seconds try again
-            ws.send(JSON.stringify({
+            let data_to_send = {
                 event: "send_text_message",
                 send_text_message_input: this.$data.send_text_message_input.trim(),
                 chat_id: this.$data.active_chat.chat_id
-            }))
+            }
+            if (this.$data.active_chat.non_created_chat) {
+              // FIXME
+              data_to_send["target_username"] = this.$data.active_chat.username
+            }
+            console.log(data_to_send);
+
+            ws.send(JSON.stringify(data_to_send))
           }
         } else {
           console.error('socket is empty!');
@@ -782,34 +789,34 @@ export default {
       switch (chat_location) {
         case 'chats_list':
           chat = this.$data.chats_list.find( ({chat_id}) => chat_id === chat_id )
+          if (chat) {        
+            this.set_the_active_chat(chat)
+            const msgs_list = await this.fetch_chat_messages_list(chat_id);
+            this.$set(this.$data.active_chat, 'messages', msgs_list);
+          }
           break;
         case 'search_chat_result':
-          // this.$data.search_chat_result
-          // TODO
-          console.log('comming soon 1');
-          this.$set(this.$data, 'search_chat_input', '')
+          const chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
+          if (this.$data.user_chats_messages && this.$data.user_chats_messages.length > 0) {
+            console.log('finding the user in messages_list by sides.user_1/2'); 
+          }else{
+            chat["non_created_chat"] = true
+          }
+          this.set_the_active_chat(chat)
           break;
         case 'search_chat_in_local':
           // this.$data.search_chat_in_local_result
           // TODO
           console.log('comming soon 2');
-          this.$set(this.$data, 'search_chat_input', '')
           break;
       }
+      // this.$set(this.$data, 'search_chat_input', '')
       
-      if (chat) {        
-        this.set_the_active_chat(chat)
-        const msgs_list = await this.fetch_chat_messages_list(chat_id);
-        this.$set(this.$data.active_chat, 'messages', msgs_list);
-        this.$set(this.$data, 'show_chat_view', true);
-      }
+      this.$set(this.$data, 'show_chat_view', true);
       this.$set(this.$data, 'chat_is_loading', false);
     },
     set_the_active_chat(chat){
-      this.$set(this.$data.active_chat, 'chat_id', chat.chat_id);
-      this.$set(this.$data.active_chat, 'username', chat.username);
-      this.$set(this.$data.active_chat, 'full_name', chat.full_name);
-      this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
+      this.$set(this.$data, 'active_chat', chat);
     }, 
     fetch_chat_messages_list(chat_id){
       // NOTE
