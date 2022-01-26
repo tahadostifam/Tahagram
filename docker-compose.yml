@@ -9,7 +9,6 @@ services:
         ports:
             - "8000:8000"
             - "2345:2345"
-        restart: always
         network_mode: "host"
     frontend:
         image: "node:14"
@@ -36,12 +35,14 @@ services:
         ports:
             - 27017:27017
         network_mode: "host"
+        restart: always
     redis:
         image: "redis:latest"
         container_name: "chat_app_redis"
         ports:
             - "6379:6379"
         network_mode: "host"
+        restart: always
 
 volumes:
     chatapp_database_volume:
