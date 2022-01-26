@@ -1071,14 +1071,11 @@ export default {
           (state) => state.auth.user_info.profile_photos,
           (value) => {
             if (value && value[0].filename) {
-              console.log('profile photo changed');
-              // this.$set(
-              //   this.$data,
-              //   "user_default_avatar",
-              //   this.$axios.defaults.baseURL +
-              //     "/uploads/profile_photos/" +
-              //     value[0].filename
-              // );
+              this.$set(
+                this.$data,
+                "user_default_avatar",
+                this.gimme_profile_photo_link_addr(value[0])
+              );
             }
           }
         );
