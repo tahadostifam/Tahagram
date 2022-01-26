@@ -546,7 +546,7 @@
                       show_contextmenu_of_message($event, item.message_id)
                     "
                     :sender="item.sender_username"
-                    :send_time="item.send_time"
+                    :send_time="parse_message_date(item.send_time)"
                     :text_content="item.content"
                     :edited="item.edited"
                     :my_message="item.my_message"
@@ -809,8 +809,20 @@ export default {
           return find_result.messages_list // messages of chat
         }
       }
-
       return null
+    },
+    parse_message_date(send_time){
+      const date = new Date(send_time)
+
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      let time_string = hours + ':' + minutes + ' ' + String(ampm).toUpperCase();
+
+      return time_string
     },
     set_user_chats_messages(){
       this.$set(this.$data, 'user_chats_messages', this.$store.state.auth.user_info.chats_messages)
