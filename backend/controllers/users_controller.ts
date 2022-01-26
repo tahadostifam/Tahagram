@@ -277,6 +277,7 @@ export function getUserChatsMessages(username: string, user_chats_list: any) {
                             }
                             chat["target_username"] = target_username;
                             delete chat["__v"];
+                            // NOTE
                             // const sender_info = await User.findOne({
                             //     usename: username
                             // })
