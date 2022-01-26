@@ -398,7 +398,7 @@
                 @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
                 :active_chat="item.chat_id == active_chat.chat_id"
-                :image_url="gimme_profile_photo_link_addr(item.profile_photo.filename)"
+                :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
               ></ChatRow>
               <!-- :image_url="item.profile_photo.filename" -->
             </template>
@@ -411,7 +411,7 @@
                 :key="index"
                 @click_event="show_chat(item._id, 'search_chat_result')"
                 :chat_name="item.full_name"
-                :image_url="gimme_profile_photo_link_addr(item.profile_photo.filename)"
+                :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
             ></ChatRow>
             <template v-if="search_chat_in_local_result">
               <span class="chat_row_badge mt-5">Local search</span>
@@ -420,7 +420,7 @@
                   :key="index + item.username"
                   @click_event="show_chat(item._id, 'search_chat_in_local')"
                   :chat_name="item.full_name"
-                  :image_url="gimme_profile_photo_link_addr(item.profile_photo.filename)"
+                  :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
               ></ChatRow>
             </template>
           </template>
@@ -451,7 +451,7 @@
                 >
                   <div class="image" v-if="active_chat.profile_photo && active_chat.profile_photo.filename">
                     <img
-                      :src="gimme_profile_photo_link_addr(active_chat.profile_photo.filename)"
+                      :src="gimme_profile_photo_link_addr(active_chat.profile_photo)"
                       class="avatar"
                       onload="window.lazyImage(this)"
                     />
@@ -632,6 +632,7 @@
                   class="rounded-pill"
                   solo
                   placeholder="Message"
+                  v-on:keydown.enter="submit_send_text_messages()"
                 ></v-text-field>
                 <v-btn
                   id="send_message_button"
@@ -756,16 +757,23 @@ export default {
       if (this.$data.send_text_message_input.trim() != "") {
         const ws = window.ws;
         if (ws) {
+          if (this.$data.active_chat.chat_id) {
+            // TODO
+            // NOTE - we must make a ThreadsList 
+            // it means if a message not send we should know that and after few seconds try again
             ws.send(JSON.stringify({
                 event: "send_text_message",
-                content: this.$data.send_text_message_input.trim()
+                send_text_message_input: this.$data.send_text_message_input.trim(),
+                chat_id: this.$data.active_chat.chat_id
             }))
+          }
         } else {
           console.error('socket is empty!');
           window.initSocket();
           this.submit_send_text_messages()
         }
       }
+      this.$set(this.$data, 'send_text_message_input', '');
     },
     async show_chat(chat_id, chat_location) {
       this.$set(this.$data, 'chat_is_loading', true);
@@ -832,9 +840,11 @@ export default {
     set_user_chats_messages(){
       this.$set(this.$data, 'user_chats_messages', this.$store.state.auth.user_info.chats_messages)
     },
-    gimme_profile_photo_link_addr(filename){
-      return this.$axios.defaults.baseURL +
-          "/uploads/profile_photos/" + filename;
+    gimme_profile_photo_link_addr(profile_photo){
+      if (profile_photo && profile_photo.filename) {
+        return this.$axios.defaults.baseURL +
+            "/uploads/profile_photos/" + profile_photo.filename;
+      }
     },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({

@@ -62,8 +62,10 @@ window.handleSocketMessages = (vm, parsedData) => {
     parsedData.message == "message sended" &&
     parsedData.message_callback
   ) {
-    console.log("message_callback", parsedData.message_callback);
-    vm.$data.user_chats_messages.push(parsedData.message_callback);
+    vm.$store.commit("auth/addNewMessage", {
+      message: parsedData.message_callback,
+      chat_id: parsedData.chat_id,
+    });
   } else {
     console.log(parsedData);
   }

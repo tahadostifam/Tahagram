@@ -11,6 +11,16 @@ export const state = () => ({
 });
 
 export const mutations = {
+  addNewMessage(state, { chat_id, message }) {
+    const chat = state.user_info.chats_messages.find(
+      ({ _id }) => _id == chat_id
+    );
+    if (chat) {
+      if (chat.messages_list) {
+        chat.messages_list.push(message);
+      }
+    }
+  },
   setRefreshToken(state, token) {
     state.auth.refresh_token = token;
   },

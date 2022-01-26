@@ -62,6 +62,7 @@ export async function send_text_message(ws: any, parsedData: any) {
             ws.send(
                 JSON.stringify({
                     event: "send_text_message",
+                    chat_id: chat_id,
                     message: "message sended",
                     message_callback: message,
                 })
