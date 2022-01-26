@@ -735,8 +735,6 @@ export default {
     this.watch_user_info_changes();
     this.$set(this.$data, 'update_full_name_input', this.$store.state.auth.user_info.full_name)
     this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
-    // SECTION - fix profile_photos urls
-    // this.$store.commit('auth/fixProfilePhotosUrls')
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     // SECTION - setting user messages
@@ -772,28 +770,32 @@ export default {
     async show_chat(chat_id, chat_location) {
       this.$set(this.$data, 'chat_is_loading', true);
 
-      let list = null;
+      let chat = null;
       switch (chat_location) {
         case 'chats_list':
-          list = this.$data.chats_list
+          chat = this.$data.chats_list.find( ({chat_id}) => chat_id === chat_id )
           break;
         case 'search_chat_result':
-          list = this.$data.search_chat_result
+          // this.$data.search_chat_result
+          // TODO
+          console.log('comming soon 1');
+          this.$set(this.$data, 'search_chat_input', '')
           break;
         case 'search_chat_in_local':
-          list = this.$data.search_chat_in_local_result
+          // this.$data.search_chat_in_local_result
+          // TODO
+          console.log('comming soon 2');
+          this.$set(this.$data, 'search_chat_input', '')
           break;
       }
       
-      const chat = list.find( ({chat_id}) => chat_id === chat_id )
       if (chat) {        
         this.set_the_active_chat(chat)
         const msgs_list = await this.fetch_chat_messages_list(chat_id);
-
         this.$set(this.$data.active_chat, 'messages', msgs_list);
-        this.$set(this.$data, 'chat_is_loading', false);
         this.$set(this.$data, 'show_chat_view', true);
       }
+      this.$set(this.$data, 'chat_is_loading', false);
     },
     set_the_active_chat(chat){
       this.$set(this.$data.active_chat, 'chat_id', chat.chat_id);

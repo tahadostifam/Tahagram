@@ -50,17 +50,6 @@ window.initSocket = () => {
 
 window.handleSocketMessages = (vm, parsedData) => {
   if (parsedData.event == "search_in_chats") {
-    // parsedData.data.forEach((chat, chat_index) => {
-    //   const profile_photos = [];
-    //   chat.profile_photos.forEach((item) => {
-    //     profile_photos.push(
-    //       vm.$axios.defaults.baseURL +
-    //         "/uploads/profile_photos/" +
-    //         item.filename
-    //     );
-    //   });
-    //   parsedData.data[chat_index].profile_photos = profile_photos;
-    // });
     vm.$set(vm.$data, "search_chat_result", parsedData.data);
   } else if (
     parsedData.message == "full_name updated" &&
@@ -69,6 +58,12 @@ window.handleSocketMessages = (vm, parsedData) => {
     vm.$store.commit("auth/setFullName", parsedData.full_name);
   } else if (parsedData.message == "bio updated" && parsedData.bio) {
     vm.$store.commit("auth/setBio", parsedData.bio);
+  } else if (
+    parsedData.message == "message sended" &&
+    parsedData.message_callback
+  ) {
+    console.log("message_callback", parsedData.message_callback);
+    vm.$data.user_chats_messages.push(parsedData.message_callback);
   } else {
     console.log(parsedData);
   }

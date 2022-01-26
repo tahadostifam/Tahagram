@@ -1,6 +1,13 @@
+import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 
 var schema = new mongoose.Schema({
+    _id: {
+        type: String,
+        default: function () {
+            return new ObjectId().toString();
+        },
+    },
     full_name: {
         type: String,
         required: true,

@@ -17,33 +17,31 @@ async function main() {
     //             sender_username: "maximilian",
     //             message_type: "text",
     //             send_time: Date.now(),
-    //             content: "Hey max, Whatsup?",
+    //             content: "Hey Guys!",
     //             edited: false,
     //         },
     //     ],
     //     sides: {
     //         user_1: "maximilian",
-    //         user_2: "rocks_crew",
+    //         user_2: "luffy",
     //     },
     // });
-
     // await chat.save();
-
     // console.log("A private chat created.");
 
     // SECTION - add chat into user chats_list
-    const user = await User.findOneAndUpdate(
-        {
-            username: "maximilian",
-        },
-        {
-            $push: {
-                chats: {
-                    chat_id: "61ebc82ce8515bea71daa202", // the id of chat [chats collection]
-                },
-            },
-        }
-    );
+    // const user = await User.findOneAndUpdate(
+    //     {
+    //         username: "maximilian",
+    //     },
+    //     {
+    //         $push: {
+    //             chats: {
+    //                 chat_id: "61ebc82ce8515bea71daa202", // the id of chat [chats collection]
+    //             },
+    //         },
+    //     }
+    // );
 }
 
 main();
