@@ -37,7 +37,7 @@ async function main() {
     //     {
     //         $push: {
     //             chats: {
-    //                 chat_id: "61ebc82ce8515bea71daa202", // the id of chat [chats collection]
+    //                 chat_id: "61f1b757ac7ebac12eb5081c", // the id of chat [chats collection]
     //             },
     //         },
     //     }

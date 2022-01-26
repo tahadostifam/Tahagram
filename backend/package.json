@@ -10,7 +10,7 @@
     },
     "scripts": {
         "start": "ts-node server.ts",
-        "dev": "nodemon server.ts"
+        "dev": "nodemon --ignore 'test/*.*' server.ts"
     },
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",

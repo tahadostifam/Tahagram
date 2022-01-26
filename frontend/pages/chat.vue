@@ -551,7 +551,7 @@
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.content"
                     :edited="item.edited"
-                    :my_message="item.my_message"
+                    :my_message="item.sender_username == user_info.username"
                     :seen_state="item.seen_state"
                   ></TextMessage>
 
@@ -767,10 +767,8 @@ export default {
                 chat_id: this.$data.active_chat.chat_id
             }
             if (this.$data.active_chat.non_created_chat) {
-              // FIXME
               data_to_send["target_username"] = this.$data.active_chat.username
             }
-            console.log(data_to_send);
 
             ws.send(JSON.stringify(data_to_send))
           }
@@ -796,7 +794,7 @@ export default {
           }
           break;
         case 'search_chat_result':
-          const chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
+          let chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
           if (this.$data.user_chats_messages && this.$data.user_chats_messages.length > 0) {
             console.log('finding the user in messages_list by sides.user_1/2'); 
           }else{
@@ -816,7 +814,14 @@ export default {
       this.$set(this.$data, 'chat_is_loading', false);
     },
     set_the_active_chat(chat){
-      this.$set(this.$data, 'active_chat', chat);
+      console.log(chat);
+      this.$set(this.$data.active_chat, 'chat_id', chat._id);
+      this.$set(this.$data.active_chat, 'username', chat.username);
+      this.$set(this.$data.active_chat, 'full_name', chat.full_name);
+      this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
+      if (chat.non_created_chat) {
+        this.$set(this.$data.active_chat, 'non_created_chat', true);
+      }
     }, 
     fetch_chat_messages_list(chat_id){
       // NOTE
