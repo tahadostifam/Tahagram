@@ -783,8 +783,28 @@ export default {
     },
     async show_chat(chat_id, chat_location) {
       this.$set(this.$data, 'chat_is_loading', true);
-
+      const vm = this;
       let chat = null;
+      function doGetChatMessages() {
+         if (vm.$data.user_chats_messages && vm.$data.user_chats_messages.length > 0) {
+          vm.set_the_active_chat(chat)
+          const chats_messages = vm.$data.user_chats_messages
+          if (chats_messages) {
+            const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
+            if (find_result) {
+              vm.$set(vm.$data.active_chat, 'messages', find_result.messages_list);
+            }else{
+              vm.$set(vm.$data.active_chat, 'messages', null);
+            }
+          }
+          else{
+            vm.$set(vm.$data.active_chat, 'messages', null);
+          }
+        }else{
+          chat["non_created_chat"] = true
+        }
+        vm.set_the_active_chat(chat)
+      }
       switch (chat_location) {
         case 'chats_list':
           chat = this.$data.chats_list.find( ({chat_id}) => chat_id === chat_id )
@@ -795,30 +815,13 @@ export default {
           }
           break;
         case 'search_chat_result':
-          let chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
-          if (this.$data.user_chats_messages && this.$data.user_chats_messages.length > 0) {
-            this.set_the_active_chat(chat)
-            const chats_messages = this.$data.user_chats_messages
-            if (chats_messages) {
-              const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
-              if (find_result) {
-                this.$set(this.$data.active_chat, 'messages', find_result.messages_list);
-              }else{
-                this.$set(this.$data.active_chat, 'messages', null);
-              }
-            }
-            else{
-              this.$set(this.$data.active_chat, 'messages', null);
-            }
-          }else{
-            chat["non_created_chat"] = true
-          }
-          this.set_the_active_chat(chat)
+          chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
+          doGetChatMessages();
           break;
         case 'search_chat_in_local':
           // this.$data.search_chat_in_local_result
-          // TODO
-          console.log('comming soon 2');
+          chat = this.$data.search_chat_in_local_result.find(({ _id }) => _id == chat_id)
+          doGetChatMessages();
           break;
       }
       // this.$set(this.$data, 'search_chat_input', '')
