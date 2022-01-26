@@ -259,25 +259,34 @@ export function getUserChats(username: string) {
 
 export function getUserChatsMessages(username: string, user_chats_list: any) {
     return new Promise(async (success) => {
-        let chat_messages = await Chats.find({
-            $or: [{ username: username }, { "sides.user_1": username }, { "sides.user_2": username }],
-        });
+        let final_list: Array<any> = [];
 
-        if (chat_messages) {
-            chat_messages = JSON.parse(JSON.stringify(chat_messages));
-
-            let final_list: Array<any> = [];
-
-            await user_chats_list.forEach((item: any) => {
-                const ctemp = chat_messages.find(({ _id }) => _id === String(item.chat_id).trim());
-                if (ctemp) {
-                    final_list.push(ctemp);
-                }
+        await user_chats_list.forEach(async (item: any, index: number) => {
+            let chat = await Chats.findOne({
+                _id: item.chat_id,
             });
-
-            success(final_list);
-        } else {
-            success([]);
-        }
+            chat = JSON.parse(JSON.stringify(chat));
+            if (chat) {
+                switch (chat.chat_type) {
+                    case "private":
+                        let target_username = null;
+                        if (String(chat.sides.user_1).trim() != username.trim()) {
+                            target_username = chat.sides.user_1;
+                        } else if (String(chat.sides.user_2).trim() != username.trim()) {
+                            target_username = chat.sides.user_2;
+                        }
+                        chat["target_username"] = target_username;
+                        delete chat["__v"];
+                        delete chat["sides"];
+                        break;
+                }
+                final_list.push(chat);
+            }
+            // if forEach finished
+            if (index == user_chats_list.length - 1) {
+                console.log("finally ", final_list);
+                success(final_list);
+            }
+        });
     });
 }
