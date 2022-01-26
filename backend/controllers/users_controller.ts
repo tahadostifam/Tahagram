@@ -229,7 +229,7 @@ export function getUserChats(username: string) {
                                 });
                                 if (target_user_info) {
                                     let user_data: any = {
-                                        chat_id: target_user_info._id,
+                                        chat_id: item.chat_id,
                                         full_name: target_user_info.full_name,
                                         username: target_user_info.username,
                                     };
@@ -284,7 +284,6 @@ export function getUserChatsMessages(username: string, user_chats_list: any) {
             }
             // if forEach finished
             if (index == user_chats_list.length - 1) {
-                console.log("finally ", final_list);
                 success(final_list);
             }
         });

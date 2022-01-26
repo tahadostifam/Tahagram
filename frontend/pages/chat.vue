@@ -738,7 +738,7 @@ export default {
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     // SECTION - setting user messages
-    this.$set(this.$data, 'user_chats_messages', this.set_user_chats_messages())
+    this.set_user_chats_messages();
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.vm = this;
@@ -788,7 +788,6 @@ export default {
         this.set_the_active_chat(chat)
         const msgs_list = await this.fetch_chat_messages_list(chat_id);
         this.$set(this.$data.active_chat, 'messages', msgs_list)
-
         this.$set(this.$data, 'chat_is_loading', false);
         this.$set(this.$data, 'show_chat_view', true);
       }
@@ -798,33 +797,23 @@ export default {
       this.$set(this.$data.active_chat, 'username', chat.username);
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
       this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
-    },
-    set_user_chats_messages(){
-      return this.$store.state.auth.user_info.chats_messages
-    },
+    }, 
     fetch_chat_messages_list(chat_id){
       // NOTE
       // this method will be work when user clicked on the a chat
       // when it happend... we should going to user_chats_messages and finding the messages for that chat
+      const chats_messages = this.$data.user_chats_messages
+      if (chats_messages) {
+        const find_result = chats_messages.find( ({_id}) => _id === chat_id);
+        if (find_result) {
+          return find_result.messages_list // messages of chat
+        }
+      }
 
-        console.log(this.$data.user_chats_messages);
-
-      return // messages of chat
-
-      // const messages = [
-      //   {
-      //     message_id: "adaskdmaldkmakldm",
-      //     sender_username: "maximilian",
-      //     message_type: "text",
-      //     send_time: Date.now(),
-      //     content: "Hey max, Whatsup?",
-      //     edited: false,
-      //     my_message: false,
-      //     seen_state: false
-      //   }
-      // ]
-
-      // return messages;
+      return null
+    },
+    set_user_chats_messages(){
+      this.$set(this.$data, 'user_chats_messages', this.$store.state.auth.user_info.chats_messages)
     },
     submit_edit_full_name(){
       window.ws.send(JSON.stringify({
