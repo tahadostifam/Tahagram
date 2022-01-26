@@ -547,7 +547,7 @@
                     @contextmenu.native="
                       show_contextmenu_of_message($event, item.message_id)
                     "
-                    :sender="item.sender_username"
+                    :sender="select_message_sender_fullname()"
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.content"
                     :edited="item.edited"
@@ -771,6 +771,8 @@ export default {
             }
 
             ws.send(JSON.stringify(data_to_send))
+
+            this.$set(this.$data, 'send_text_message_input', '');
           }
         } else {
           console.error('socket is empty!');
@@ -778,7 +780,6 @@ export default {
           this.submit_send_text_messages()
         }
       }
-      this.$set(this.$data, 'send_text_message_input', '');
     },
     async show_chat(chat_id, chat_location) {
       this.$set(this.$data, 'chat_is_loading', true);
@@ -796,7 +797,19 @@ export default {
         case 'search_chat_result':
           let chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
           if (this.$data.user_chats_messages && this.$data.user_chats_messages.length > 0) {
-            console.log('finding the user in messages_list by sides.user_1/2'); 
+            this.set_the_active_chat(chat)
+            const chats_messages = this.$data.user_chats_messages
+            if (chats_messages) {
+              const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
+              if (find_result) {
+                this.$set(this.$data.active_chat, 'messages', find_result.messages_list);
+              }else{
+                this.$set(this.$data.active_chat, 'messages', null);
+              }
+            }
+            else{
+              this.$set(this.$data.active_chat, 'messages', null);
+            }
           }else{
             chat["non_created_chat"] = true
           }
@@ -814,11 +827,16 @@ export default {
       this.$set(this.$data, 'chat_is_loading', false);
     },
     set_the_active_chat(chat){
-      console.log(chat);
-      this.$set(this.$data.active_chat, 'chat_id', chat._id);
+      if (chat._id) {
+        this.$set(this.$data.active_chat, 'chat_id', chat._id);
+      }
+      if (chat.chat_id) {
+        this.$set(this.$data.active_chat, 'chat_id', chat.chat_id);
+      }
       this.$set(this.$data.active_chat, 'username', chat.username);
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
       this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
+      this.$set(this.$data.active_chat, 'chat_type', chat.chat_type);
       if (chat.non_created_chat) {
         this.$set(this.$data.active_chat, 'non_created_chat', true);
       }
@@ -848,6 +866,11 @@ export default {
       let time_string = hours + ':' + minutes + ' ' + String(ampm).toUpperCase();
 
       return time_string
+    },
+    select_message_sender_fullname(){
+      if (this.$data.active_chat.chat_type == 'private') {
+        return active_chat.full_name
+      }
     },
     set_user_chats_messages(){
       this.$set(this.$data, 'user_chats_messages', this.$store.state.auth.user_info.chats_messages)
