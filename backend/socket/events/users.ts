@@ -2,12 +2,20 @@ import User from "../../models/user";
 import Chats from "../../models/chats";
 import { ObjectId } from "mongodb";
 import { response } from "express";
+import { users } from "../socket";
 
-export async function update_full_name(ws: any, parsedData: any) {
+import { IWebSocket } from "../../lib/interfaces";
+
+export async function update_full_name(ws: IWebSocket, parsedData: any) {
     if (parsedData.full_name && parsedData.full_name.trim() != "") {
-        const update = await User.findOneAndUpdate(ws.user.username, {
-            full_name: parsedData.full_name,
-        });
+        const update = await User.findOneAndUpdate(
+            {
+                username: ws.user.username,
+            },
+            {
+                full_name: parsedData.full_name,
+            }
+        );
         if (update) {
             ws.send(
                 JSON.stringify({
@@ -19,11 +27,16 @@ export async function update_full_name(ws: any, parsedData: any) {
     }
 }
 
-export async function update_bio(ws: any, parsedData: any) {
+export async function update_bio(ws: IWebSocket, parsedData: any) {
     if (parsedData.bio && parsedData.bio.trim() != "") {
-        const update = await User.findOneAndUpdate(ws.user.username, {
-            bio: parsedData.bio,
-        });
+        const update = await User.findOneAndUpdate(
+            {
+                username: ws.user.username,
+            },
+            {
+                bio: parsedData.bio,
+            }
+        );
         if (update) {
             ws.send(
                 JSON.stringify({
@@ -35,7 +48,7 @@ export async function update_bio(ws: any, parsedData: any) {
     }
 }
 
-export async function send_text_message(ws: any, parsedData: any) {
+export async function send_text_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const message_text = parsedData.send_text_message_input;
 
@@ -137,7 +150,7 @@ export async function send_text_message(ws: any, parsedData: any) {
     }
 }
 
-export async function delete_message(ws: any, parsedData: any) {
+export async function delete_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const _message_id = parsedData.message_id;
     if (chat_id && chat_id.length > 0 && _message_id && _message_id.length > 0) {

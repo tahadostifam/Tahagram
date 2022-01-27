@@ -5,8 +5,9 @@ import { cleanIpDots } from "../lib/client_ip";
 import { clearParams, authenticate_socket_user, getCookie, clientIp } from "./auth_socket_user";
 import { setUserUUID } from "./room_manager";
 const server_port = configs["socket"]["port"];
+import { ISocketClient, IWebSocket } from "../lib/interfaces";
 
-const users: Array<object> = [];
+export let users: Array<ISocketClient> = [];
 
 import events from "./events/events";
 
@@ -57,7 +58,7 @@ export default async function handleSocket() {
     console.log(`Socket-Server has listening on port ${server_port}`);
 }
 
-function handleSocketUserOnConnected(ws: any) {
+function handleSocketUserOnConnected(ws: IWebSocket) {
     if (!users.find((item: any) => item.uuid == ws.uuid)) {
         users.push({
             uuid: ws.uuid,
@@ -72,7 +73,7 @@ function handleSocketUserOnConnected(ws: any) {
     );
 }
 
-function handleSocketUserOnDisConnected(ws: any) {
+function handleSocketUserOnDisConnected(ws: IWebSocket) {
     const user_index = users
         .map((e: any) => {
             return ws.uuid;
@@ -85,7 +86,7 @@ function handleSocketUserOnDisConnected(ws: any) {
     console.log("user disconnected");
 }
 
-function handleSocketMessages(data: any, ws: any) {
+function handleSocketMessages(data: any, ws: IWebSocket) {
     try {
         const parsedData: any = JSON.parse(data.toString("utf8"));
         switch (parsedData.event) {
