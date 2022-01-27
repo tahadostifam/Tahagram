@@ -89,6 +89,17 @@ window.handleSocketMessages = (vm, parsedData) => {
         message: parsedData.message_callback,
         chat_id: parsedData.chat_id,
       });
+      if (vm.$data.active_chat && vm.$data.active_chat.messages) {
+        vm.$set(
+          vm.$data.active_chat,
+          "messages",
+          vm.$data.active_chat.messages.concat([parsedData.message_callback])
+        );
+      } else {
+        vm.$set(vm.$data.active_chat, "messages", [
+          parsedData.message_callback,
+        ]);
+      }
     }
   } else {
     console.log(parsedData);

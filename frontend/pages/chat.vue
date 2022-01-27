@@ -721,7 +721,6 @@ export default {
         profile_photo: null
       },
       chats_list: null,
-      user_chats_messages: null
     };
   },
   mounted() {  
@@ -738,8 +737,6 @@ export default {
     this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
-    // SECTION - setting user messages
-    this.set_user_chats_messages()
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.vm = this;
@@ -786,9 +783,9 @@ export default {
       const vm = this;
       let chat = null;
       function doGetChatMessages() {
-         if (vm.$data.user_chats_messages && vm.$data.user_chats_messages.length > 0) {
+         if (vm.$store.state.auth.user_info.chats_messages && vm.$store.state.auth.user_info.chats_messages.length > 0) {
           vm.set_the_active_chat(chat)
-          const chats_messages = vm.$data.user_chats_messages
+          const chats_messages = vm.$store.state.auth.user_info.chats_messages
           if (chats_messages) {
             const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
             if (find_result) {
@@ -874,9 +871,6 @@ export default {
       if (this.$data.active_chat.chat_type == 'private') {
         return null
       }
-    },
-    set_user_chats_messages(){
-      this.$set(this.$data, 'user_chats_messages', this.$store.state.auth.user_info.chats_messages)
     },
     gimme_profile_photo_link_addr(profile_photo){
       if (profile_photo && profile_photo.filename) {
