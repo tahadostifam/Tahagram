@@ -90,11 +90,19 @@ window.handleSocketMessages = (vm, parsedData) => {
         chat_id: parsedData.chat_id,
       });
       if (vm.$data.active_chat && vm.$data.active_chat.messages) {
-        vm.$set(
-          vm.$data.active_chat,
-          "messages",
-          vm.$data.active_chat.messages.concat([parsedData.message_callback])
-        );
+        const chats_messages = vm.$store.state.auth.user_info.chats_messages;
+        if (chats_messages) {
+          const find_result = chats_messages.find(
+            ({ _id }) => _id === parsedData.chat_id
+          );
+          if (find_result) {
+            vm.$set(
+              vm.$data.active_chat,
+              "messages",
+              find_result.messages_list
+            );
+          }
+        }
       } else {
         vm.$set(vm.$data.active_chat, "messages", [
           parsedData.message_callback,
