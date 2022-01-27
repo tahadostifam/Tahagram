@@ -3,7 +3,9 @@ import { cleanIpDots } from "../lib/client_ip";
 import * as database from "../lib/database";
 
 import User from "../models/user";
-import { IMiddleWareRequest } from "../lib/interfaces";
+import { IMiddleWareRequest, IUser } from "../lib/interfaces";
+import { Request } from "express";
+import { IncomingMessage } from "http";
 
 export function clearParams(url: string) {
     const params = url.substring(url.indexOf("?username"));
@@ -27,7 +29,7 @@ export function getCookie(cookies: string, cookie_name: string | undefined) {
     return null;
 }
 
-export function clientIp(req: IMiddleWareRequest | undefined) {
+export function clientIp(req: any) {
     if (!req) return null;
     let client_ip = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
     if (client_ip) {

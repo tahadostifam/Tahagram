@@ -5,7 +5,7 @@ import { cleanIpDots } from "../lib/client_ip";
 import { clearParams, authenticate_socket_user, getCookie, clientIp } from "./auth_socket_user";
 import { setUserUUID } from "./room_manager";
 const server_port = configs["socket"]["port"];
-import { ISocketClient, IWebSocket } from "../lib/interfaces";
+import { ISocketClient, IUser, IWebSocket } from "../lib/interfaces";
 
 export let users: Array<ISocketClient> = [];
 

@@ -631,8 +631,9 @@
                   aria-multiline="true"
                   class="rounded-pill"
                   solo
-                  placeholder="Message"
+                  placeholder="پیام شما..."
                   v-on:keypress.enter="submit_send_text_messages()"
+                  dir="rtl"
                 ></v-text-field>
                 <v-btn
                   id="send_message_button"
@@ -641,6 +642,7 @@
                   dark
                   icon
                   x-large
+                  :disabled="send_text_message_input.trim().length == 0"
                 >
                   <v-icon class="pl-1" small :color="theme_color">
                     mdi-send
