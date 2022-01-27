@@ -723,7 +723,7 @@ export default {
         profile_photo: null
       },
       chats_list: null,
-      message_context_menu_message_id: null
+      message_context_menu_message_id: null,
     };
   },
   mounted() {  
@@ -789,7 +789,6 @@ export default {
          if (vm.$store.state.auth.user_info.chats_messages && vm.$store.state.auth.user_info.chats_messages.length > 0) {
           const chats_messages = vm.$store.state.auth.user_info.chats_messages
           if (chats_messages) {
-            // FIXME
             const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
             if (find_result) {
               chat = {
@@ -806,7 +805,6 @@ export default {
             }else{
               vm.$set(vm.$data.active_chat, 'messages', null);
             }
-            // FIXME
           }
           else{
             vm.$set(vm.$data.active_chat, 'messages', null);
