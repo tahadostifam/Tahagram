@@ -71,12 +71,14 @@ window.handleSocketMessages = (vm, parsedData) => {
           ({ message_id }) =>
             message_id === vm.$data.message_context_menu_message_id
         );
-        if (message_index) {
+        if (message_index != null) {
+          console.log("message_index", message_index);
+          console.log("finded_chat_index", finded_chat_index);
+
           vm.$store.commit("auth/removeMessage", {
             message_index: message_index,
             chat_index: finded_chat_index,
           });
-          // vm.$set(vm.$data.active_chat, "messages", find_result.messages_list);
         }
       }
     }
