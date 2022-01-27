@@ -3,6 +3,7 @@ import { WebSocket } from "ws";
 
 export interface ISocketClient {
     uuid: string;
+    username: string;
     ws: IWebSocket;
 }
 
@@ -55,4 +56,15 @@ export interface IImageMessage {
 export interface IMiddleWareRequest extends Request {
     username: string;
     user_info: IUser;
+}
+
+export interface IPrivateRoom {
+    user_1: {
+        username: string;
+        ws: IWebSocket;
+    };
+    user_2: {
+        username: string;
+        ws: IWebSocket;
+    };
 }

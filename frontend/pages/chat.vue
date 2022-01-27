@@ -774,9 +774,9 @@ export default {
           }
           this.$set(this.$data, 'send_text_message_input', '');
         } else {
-          console.error('socket is empty!');
-          window.initSocket();
-          this.submit_send_text_messages()
+          this.initilizing_socket_again().then(() => {
+            this.submit_send_text_messages()
+          })
         }
       }
     },
@@ -918,9 +918,9 @@ export default {
                 bio: this.$data.bio_input
             }))
         } else {
-          console.error('socket is empty!');
-          window.initSocket();
-          this.submit_bio_change()
+          this.initilizing_socket_again().then(() => {
+            this.submit_bio_change()
+          })
       }
     },
     search_chat_submit() {
@@ -946,9 +946,9 @@ export default {
                 input: input
             }))
         } else {
-          console.error('socket is empty!');
-          window.initSocket();
-          this.search_chat_submit()
+          this.initilizing_socket_again().then(() => {
+            this.search_chat_submit()
+          })
         }
       }
     },
@@ -1019,6 +1019,15 @@ export default {
     },
     logout() {
       this.$router.push({ path: "/logout" });
+    },
+    initilizing_socket_again(){
+      return new Promise((resolve) => {
+        setTimeout(async() => {
+          console.error('socket is empty!');
+          await window.initSocket();
+          resolve();
+        }, 1000);
+      });
     },
     insert(emoji) {
       this.send_text_message_input += emoji;

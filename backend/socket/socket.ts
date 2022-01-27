@@ -62,6 +62,7 @@ function handleSocketUserOnConnected(ws: IWebSocket) {
     if (!users.find((item: any) => item.uuid == ws.uuid)) {
         users.push({
             uuid: ws.uuid,
+            username: ws.user.username,
             ws: ws,
         });
     }
@@ -83,7 +84,7 @@ function handleSocketUserOnDisConnected(ws: IWebSocket) {
         users.splice(user_index, 1);
     }
 
-    console.log("user disconnected");
+    console.log("- User Disconnected");
 }
 
 function handleSocketMessages(data: any, ws: IWebSocket) {

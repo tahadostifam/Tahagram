@@ -2,9 +2,10 @@ import User from "../../models/user";
 import Chats from "../../models/chats";
 import { ObjectId } from "mongodb";
 import { response } from "express";
-import { users } from "../socket";
+import { createPrivateRoom, rooms } from "../room_manager";
 
-import { IWebSocket } from "../../lib/interfaces";
+import { IChat, IWebSocket } from "../../lib/interfaces";
+import { users } from "../socket";
 
 export async function update_full_name(ws: IWebSocket, parsedData: any) {
     if (parsedData.full_name && parsedData.full_name.trim() != "") {
@@ -62,6 +63,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             content: message_text,
             edited: false,
         };
+
         async function pushMessage(response: object) {
             const result = await Chats.findOneAndUpdate(
                 { _id: chat_id },
@@ -75,7 +77,11 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             ws.send(JSON.stringify(response));
         }
 
-        let chat = await Chats.findById(chat_id);
+        async function broadCastToOtherSide() {
+            console.log("imported", rooms);
+        }
+
+        let chat: IChat = await Chats.findById(chat_id);
         if (chat) {
             pushMessage({
                 event: "send_text_message",
@@ -83,6 +89,13 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 message: "message sended",
                 message_callback: message,
             });
+
+            if (chat.chat_type == "private") {
+                broadCastToOtherSide();
+            } else {
+                // TODO
+                console.log("chat is not private :)");
+            }
         } else {
             // we must create a new private_chat
             const target_username = parsedData.target_username;
@@ -144,6 +157,24 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         chat_type: "private",
                         target_username: target_username,
                     });
+
+                    // ANCHOR
+                    const second_side_ws = users.find(({ username }) => target_username);
+                    if (second_side_ws) {
+                        createPrivateRoom(
+                            chat._id,
+                            {
+                                username: ws.user.username,
+                                ws: ws,
+                            },
+                            {
+                                username: ws.user.username,
+                                ws: second_side_ws.ws,
+                            }
+                        ).then((room) => {
+                            broadCastToOtherSide();
+                        });
+                    }
                 }
             }
         }
