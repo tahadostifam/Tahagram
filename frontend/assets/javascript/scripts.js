@@ -62,10 +62,36 @@ window.handleSocketMessages = (vm, parsedData) => {
     parsedData.message == "message sended" &&
     parsedData.message_callback
   ) {
-    vm.$store.commit("auth/addNewMessage", {
-      message: parsedData.message_callback,
-      chat_id: parsedData.chat_id,
-    });
+    if (parsedData.chat_created && parsedData.chat_created.chat_id) {
+      const new_chat_id = parsedData.chat_created.chat_id;
+      vm.$set(vm.$data.active_chat, "chat_id", new_chat_id);
+      vm.$set(vm.$data.active_chat, "chat_type", parsedData.chat_type);
+      vm.$set(vm.$data.active_chat, "non_created_chat", false);
+      vm.$set(vm.$data.active_chat, "messages", [parsedData.message_callback]);
+
+      vm.$store.commit("auth/addChat", {
+        chat_id: vm.$data.active_chat.chat_id,
+        chat_type: vm.$data.active_chat.chat_type,
+        full_name: vm.$data.active_chat.full_name,
+        username: vm.$data.active_chat.username,
+        profile_photo: vm.$data.active_chat.profile_photo,
+      });
+
+      vm.$store.commit("auth/createNewChat", {
+        id: new_chat_id,
+        chat_type: parsedData.chat_type,
+        messages_list: [parsedData.message_callback],
+        sides: parsedData.chat_created.sides,
+        target_username: parsedData.target_username,
+      });
+
+      console.log("after", vm.$store.state.auth);
+    } else {
+      vm.$store.commit("auth/addNewMessage", {
+        message: parsedData.message_callback,
+        chat_id: parsedData.chat_id,
+      });
+    }
   } else {
     console.log(parsedData);
   }

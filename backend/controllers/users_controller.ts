@@ -232,7 +232,7 @@ export function getUserChats(username: string) {
                                         chat_id: item.chat_id,
                                         full_name: target_user_info.full_name,
                                         username: target_user_info.username,
-                                        // chat_type: chat_info.chat_type,
+                                        chat_type: chat_info.chat_type,
                                     };
                                     if (target_user_info.profile_photos.length > 0) {
                                         user_data["profile_photo"] = target_user_info.profile_photos[0];

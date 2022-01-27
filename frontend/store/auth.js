@@ -21,6 +21,9 @@ export const mutations = {
       }
     }
   },
+  createNewChat(state, chat) {
+    state.user_info.chats_messages.push(chat);
+  },
   setRefreshToken(state, token) {
     state.auth.refresh_token = token;
   },
@@ -38,6 +41,9 @@ export const mutations = {
   },
   setChatsList(state, list) {
     state.chats_list = list;
+  },
+  addChat(state, chat) {
+    state.chats_list.push(chat);
   },
   addProfilePhotos(state, filename) {
     if (filename.trim() != "") {

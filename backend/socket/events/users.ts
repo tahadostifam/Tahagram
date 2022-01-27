@@ -74,54 +74,64 @@ export async function send_text_message(ws: any, parsedData: any) {
             // we must create a new private_chat
             const target_username = parsedData.target_username;
             if (target_username && target_username.length > 0) {
-                const chat = new Chats({
-                    chat_type: "private",
-                    messages_list: message,
-                    sides: {
-                        user_1: ws.user.username,
-                        user_2: target_username,
-                    },
+                const user = await User.findOne({
+                    username: target_username,
                 });
-                await chat.save();
-                // Add this chat into user_1 and user_2 chats_list
-                async function pushChatToUserChatsList(username: String) {
-                    let user = await User.findOne({
-                        username: username,
+                if (user) {
+                    const chat = new Chats({
+                        chat_type: "private",
+                        messages_list: message,
+                        sides: {
+                            user_1: ws.user.username,
+                            user_2: target_username,
+                        },
                     });
-                    user = JSON.parse(JSON.stringify(user));
-                    if (user) {
-                        const find_result = Array(user.chats).find(({ _id }) => _id == chat._id);
-                        if (!find_result || find_result.length == 0) {
-                            return await User.updateOne(
-                                {
-                                    username: username,
-                                },
-                                {
-                                    $push: {
-                                        chats: {
-                                            chat_id: chat._id, // the id of chat [chats collection]
-                                        },
+                    await chat.save();
+                    // Add this chat into user_1 and user_2 chats_list
+                    async function pushChatToUserChatsList(username: String) {
+                        let user = await User.findOne({
+                            username: username,
+                        });
+                        user = JSON.parse(JSON.stringify(user));
+                        if (user) {
+                            const find_result = Array(user.chats).find(({ _id }) => _id == chat._id);
+                            if (!find_result || find_result.length == 0) {
+                                return await User.updateOne(
+                                    {
+                                        username: username,
                                     },
-                                }
-                            );
+                                    {
+                                        $push: {
+                                            chats: {
+                                                chat_id: chat._id, // the id of chat [chats collection]
+                                            },
+                                        },
+                                    }
+                                );
+                            }
+                            console.log("user alredy have this chat!!");
                         }
-                        console.log("user alredy have this chat!!");
                     }
+
+                    pushChatToUserChatsList(ws.user.username);
+                    pushChatToUserChatsList(target_username);
+
+                    pushMessage({
+                        chat_created: {
+                            chat_id: chat._id,
+                            sides: {
+                                user_1: ws.user.username,
+                                user_2: target_username,
+                            },
+                        },
+                        event: "send_text_message",
+                        chat_id: chat_id,
+                        message: "message sended",
+                        message_callback: message,
+                        chat_type: "private",
+                        target_username: target_username,
+                    });
                 }
-
-                pushChatToUserChatsList(ws.user.username);
-                pushChatToUserChatsList(target_username);
-
-                pushMessage({
-                    chat_created: {
-                        chat_id: chat._id,
-                    },
-                    event: "send_text_message",
-                    chat_id: chat_id,
-                    message: "message sended",
-                    message_callback: message,
-                });
-                console.log("chat_created", chat);
             }
         }
     }
