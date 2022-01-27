@@ -784,17 +784,29 @@ export default {
       this.$set(this.$data, 'chat_is_loading', true);
       const vm = this;
       let chat = null;
+
       function doGetChatMessages() {
          if (vm.$store.state.auth.user_info.chats_messages && vm.$store.state.auth.user_info.chats_messages.length > 0) {
-          vm.set_the_active_chat(chat)
           const chats_messages = vm.$store.state.auth.user_info.chats_messages
           if (chats_messages) {
+            // FIXME
             const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
             if (find_result) {
+              chat = {
+                chat_id: find_result._id,
+                username: find_result.target_username,
+
+                profile_photo: chat.profile_photo,
+                full_name: chat.full_name,
+
+                chat_type: chat.chat_type,
+              }
+              vm.set_the_active_chat(chat)
               vm.$set(vm.$data.active_chat, 'messages', find_result.messages_list);
             }else{
               vm.$set(vm.$data.active_chat, 'messages', null);
             }
+            // FIXME
           }
           else{
             vm.$set(vm.$data.active_chat, 'messages', null);
