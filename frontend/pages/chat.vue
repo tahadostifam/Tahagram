@@ -167,7 +167,7 @@
               <v-list-item-icon>
                 <v-icon class="icon">mdi-bell-outline</v-icon>
               </v-list-item-icon>
-              <v-list-item-title>Notficions</v-list-item-title>
+              <v-list-item-title>Notification</v-list-item-title>
             </v-list-item>
 
             <v-list-item>
@@ -872,7 +872,7 @@ export default {
     },
     select_message_sender_fullname(){
       if (this.$data.active_chat.chat_type == 'private') {
-        return active_chat.full_name
+        return null
       }
     },
     set_user_chats_messages(){

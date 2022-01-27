@@ -1,3 +1,13 @@
+@font-face {
+  font-family: "Roboto";
+  src: url("~/assets/fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("~/assets/fonts/Vazir.ttf");
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -24,7 +34,7 @@ html {
 
 body,
 .v-application {
-  font-family: "Roboto";
+  font-family: "Roboto", "Vazir" !important;
 }
 
 .form_top_overlay {
@@ -562,7 +572,7 @@ body,
 .send_message_section .send_box #emojies_button {
   position: absolute;
   top: 19px;
-  z-index: 20;
+  z-index: 4;
 }
 
 .send_message_section .send_box #send_message_button.v-btn--icon.v-size--x-large,

@@ -13,6 +13,16 @@ $send_message_section_height: 70px;
 $bk_desktop_mini: 1100px;
 $bk_mobile: 920px;
 
+@font-face {
+  font-family: "Roboto";
+  src: url("~/assets/fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("~/assets/fonts/Vazir.ttf");
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -35,7 +45,7 @@ html {
 
 body,
 .v-application {
-  font-family: "Roboto";
+  font-family: "Roboto", "Vazir" !important;
 }
 
 .form_top_overlay {
@@ -495,7 +505,7 @@ body,
     #emojies_button {
       position: absolute;
       top: 19px;
-      z-index: 20;
+      z-index: 4;
       &.v-btn--icon.v-size--x-large {
         width: 42px;
         height: 42px;
