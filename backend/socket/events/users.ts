@@ -136,3 +136,35 @@ export async function send_text_message(ws: any, parsedData: any) {
         }
     }
 }
+
+export async function delete_message(ws: any, parsedData: any) {
+    const chat_id = parsedData.chat_id;
+    const _message_id = parsedData.message_id;
+    if (chat_id && chat_id.length > 0 && _message_id && _message_id.length > 0) {
+        const chat = await Chats.findById(chat_id);
+        if (chat) {
+            const messages: Array<any> = chat.messages_list;
+            const message_id_exists = messages.find(({ message_id }) => message_id === _message_id);
+
+            if (message_id_exists) {
+                await Chats.updateOne(
+                    { _id: chat_id },
+                    {
+                        $pull: {
+                            messages_list: {
+                                message_id: _message_id,
+                            },
+                        },
+                    }
+                );
+                ws.send(
+                    JSON.stringify({
+                        message: "message deleted",
+                        chat_id: chat_id,
+                        message_id: _message_id,
+                    })
+                );
+            }
+        }
+    }
+}

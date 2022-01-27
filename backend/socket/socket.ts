@@ -101,6 +101,9 @@ function handleSocketMessages(data: any, ws: any) {
             case "send_text_message":
                 events.send_text_message(ws, parsedData);
                 break;
+            case "delete_message":
+                events.delete_message(ws, parsedData);
+                break;
             default:
                 ws.send("command not found");
                 break;

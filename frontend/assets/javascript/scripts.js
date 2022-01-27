@@ -58,6 +58,28 @@ window.handleSocketMessages = (vm, parsedData) => {
     vm.$store.commit("auth/setFullName", parsedData.full_name);
   } else if (parsedData.message == "bio updated" && parsedData.bio) {
     vm.$store.commit("auth/setBio", parsedData.bio);
+  } else if (parsedData.message == "message deleted") {
+    const chats_messages = vm.$store.state.auth.user_info.chats_messages;
+    if (chats_messages) {
+      const finded_chat_index = chats_messages.findIndex(
+        ({ _id }) => _id === parsedData.chat_id
+      );
+      if (finded_chat_index != null) {
+        const message_index = chats_messages[
+          finded_chat_index
+        ].messages_list.findIndex(
+          ({ message_id }) =>
+            message_id === vm.$data.message_context_menu_message_id
+        );
+        if (message_index) {
+          vm.$store.commit("auth/removeMessage", {
+            message_index: message_index,
+            chat_index: finded_chat_index,
+          });
+          // vm.$set(vm.$data.active_chat, "messages", find_result.messages_list);
+        }
+      }
+    }
   } else if (
     parsedData.message == "message sended" &&
     parsedData.message_callback

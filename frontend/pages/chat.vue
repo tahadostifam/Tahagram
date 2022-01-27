@@ -531,7 +531,7 @@
                     <v-list-item v-ripple>
                       <v-list-item-title>Select</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-ripple>
+                    <v-list-item v-ripple @click="delete_message"> 
                       <v-list-item-title class="text-red"
                         >Delete</v-list-item-title
                       >
@@ -573,7 +573,7 @@
                 </template>
               </div>
               <div id="no_chat_selected" v-else>
-                <span>ٔNo messages yet</span>
+                <span>No messages yet</span>
               </div>
             </div>
 
@@ -721,6 +721,7 @@ export default {
         profile_photo: null
       },
       chats_list: null,
+      message_context_menu_message_id: null
     };
   },
   mounted() {  
@@ -1012,6 +1013,7 @@ export default {
     },
     show_contextmenu_of_message(e, message_id) {
       e.preventDefault();
+      this.$set(this.$data, "message_context_menu_message_id", message_id);
       this.$set(this.$data.context_menu_for_messages, "show", false);
       this.$set(this.$data.context_menu_for_messages, "x", e.clientX);
       this.$set(this.$data.context_menu_for_messages, "y", e.clientY);
@@ -1131,6 +1133,17 @@ export default {
     crop_profile_photo_onchange({ coordinates, canvas }) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
+    delete_message() {
+      const message_id = this.$data.message_context_menu_message_id
+      const chat_id = this.$data.active_chat.chat_id
+      if (message_id && chat_id) {
+        ws.send(JSON.stringify({
+            event: "delete_message",
+            chat_id: chat_id,
+            message_id: message_id
+        }))
+      }
+    }
   },
 };
 </script>

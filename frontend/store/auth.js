@@ -21,6 +21,12 @@ export const mutations = {
       }
     }
   },
+  removeMessage(state, { message_index, chat_index }) {
+    state.user_info.chats_messages[chat_index].messages_list.splice(
+      message_index,
+      1
+    );
+  },
   createNewChat(state, chat) {
     state.user_info.chats_messages.push(chat);
   },
