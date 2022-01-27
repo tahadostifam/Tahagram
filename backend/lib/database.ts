@@ -8,7 +8,7 @@ export async function connect() {
     }
     connection_string += `${configs["mongo"]["host"]}:${configs["mongo"]["port"]}/${configs["mongo"]["db"]}`;
 
-    const mongodb_configs: any = {
+    const mongodb_configs: object = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     };

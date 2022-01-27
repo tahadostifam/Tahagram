@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { WebSocket } from "ws";
 
 export interface ISocketClient {
@@ -17,8 +18,8 @@ export interface IUser {
     password_digest: string;
     bio: string;
     last_seen: string;
-    chats: IChat;
     profile_photos: IProfilePhoto[];
+    chats: IChat[];
 }
 
 export interface IProfilePhoto {
@@ -26,7 +27,8 @@ export interface IProfilePhoto {
 }
 
 export interface IChat {
-    _id: string;
+    chat_id?: string;
+    _id?: string;
     sides?: {
         user_1: string;
         user_2: string;
@@ -48,4 +50,9 @@ export interface ITextMessage {
 
 export interface IImageMessage {
     // TODO
+}
+
+export interface IMiddleWareRequest extends Request {
+    username: string;
+    user_info: IUser;
 }

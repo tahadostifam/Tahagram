@@ -75,7 +75,7 @@ function handleSocketUserOnConnected(ws: IWebSocket) {
 
 function handleSocketUserOnDisConnected(ws: IWebSocket) {
     const user_index = users
-        .map((e: any) => {
+        .map(() => {
             return ws.uuid;
         })
         .indexOf(ws.uuid);

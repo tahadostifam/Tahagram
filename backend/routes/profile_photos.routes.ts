@@ -5,8 +5,9 @@ import auth_middleware from "../middlewares/auth";
 const router = express.Router();
 
 import ProfilePhotosController from "../controllers/profile_photos_controller";
+import { IMiddleWareRequest } from "../lib/interfaces";
 
-router.post("/upload_photo", auth_middleware, (req: Request, res: Response, next: NextFunction) => {
+router.post("/upload_photo", auth_middleware, (req: any, res: Response, next: NextFunction) => {
     ProfilePhotosController.UploadPhotoAction(req, res, next);
 });
 

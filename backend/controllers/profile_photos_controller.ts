@@ -10,8 +10,12 @@ import User from "../models/user";
 
 const profile_photos_directory = "/uploads/profile_photos/";
 
+export interface IRequest extends Request {
+    files: any;
+}
+
 export default {
-    UploadPhotoAction: async (req: any, res: Response, next: NextFunction) => {
+    UploadPhotoAction: async (req: IRequest, res: Response, next: NextFunction) => {
         if (!req.files || !req.files["photo"]) {
             res.statusCode = 400;
             return res.send({

@@ -10,6 +10,7 @@ const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
 import Chats from "../models/chats";
+import { IChat, IUser } from "../lib/interfaces";
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +18,7 @@ export default {
 
         if (client_ip) {
             signinUserWithUserPassword(req.body.username, req.body.password).then(
-                async (user: any) => {
+                async (user: IUser) => {
                     // success
                     await setUserTokens(req.body.username, "refresh", cleanIpDots(client_ip)).then(
                         async (refresh_token) => {
@@ -95,7 +96,7 @@ export default {
         if (client_ip) {
             try {
                 verifyRefreshToken(req.body.refresh_token, cleanIpDots(client_ip)).then(
-                    async (user_username: any) => {
+                    async (user_username: string) => {
                         // valid
                         await setUserTokens(user_username, "auth", cleanIpDots(client_ip)).then(
                             async (auth_token) => {
@@ -157,7 +158,7 @@ export default {
 };
 
 export function signinUserWithUserPassword(username: string, password: string) {
-    return new Promise(async (success: any, failed: any) => {
+    return new Promise(async (success: (user: IUser) => void, failed: (message: string) => void) => {
         const user = await User.findOne({
             username: username,
         });
@@ -188,7 +189,7 @@ export function checkUsernameUniqueness(username: string) {
 }
 
 export function verifyRefreshToken(token: string, client_ip: string) {
-    return new Promise((valid: any, is_not_valid: any) => {
+    return new Promise((valid: (user_username: string) => void, is_not_valid: () => void) => {
         jwt.verify(token, secrets.refresh_token, (err: any, decoded_jwt_token: any) => {
             const user_id_in_store = makeUserStoreId(decoded_jwt_token.username, "refresh", cleanIpDots(client_ip));
             if (err || !decoded_jwt_token) return is_not_valid();
@@ -206,7 +207,7 @@ export function verifyRefreshToken(token: string, client_ip: string) {
 
 export function getUserChats(username: string) {
     return new Promise(async (success) => {
-        const user: any = await User.findOne({
+        const user = await User.findOne({
             username: username,
         });
 
@@ -215,7 +216,7 @@ export function getUserChats(username: string) {
         } else {
             let chats: Array<object> = [];
 
-            await user.chats.forEach(async (item: any, index: number) => {
+            await user.chats.forEach(async (item: IChat, index: number) => {
                 const chat_info = await Chats.findById(item.chat_id);
 
                 if (chat_info) {
@@ -258,11 +259,11 @@ export function getUserChats(username: string) {
     });
 }
 
-export function getUserChatsMessages(username: string, user_chats_list: any) {
+export function getUserChatsMessages(username: string, user_chats_list: IChat[]) {
     return new Promise(async (success) => {
-        let final_list: Array<any> = [];
+        let final_list: Array<IChat> = [];
         if (user_chats_list.length > 0) {
-            return await user_chats_list.forEach(async (item: any, index: number) => {
+            return await user_chats_list.forEach(async (item: IChat, index: number) => {
                 let chat = await Chats.findOne({
                     _id: item.chat_id,
                 });
@@ -278,14 +279,6 @@ export function getUserChatsMessages(username: string, user_chats_list: any) {
                             }
                             chat["target_username"] = target_username;
                             delete chat["__v"];
-                            // NOTE
-                            // const sender_info = await User.findOne({
-                            //     usename: username
-                            // })
-                            // if (sender_info.full_name) {
-
-                            // }
-                            // chat["sender_fullname"] =
                             break;
                     }
                     final_list.push(chat);
