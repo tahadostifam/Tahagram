@@ -857,4 +857,23 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   color: #707579;
   font-weight: 400;
 }
+
+#page_center_error {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+          transform: translate(0, -50%);
+  text-align: center;
+  color: #f44336;
+}
+
+#page_center_error h1 {
+  font-size: 30px;
+}
+
+@media screen and (max-width: 400px) {
+  #page_center_error h1 {
+    font-size: 10vw;
+  }
+}
 /*# sourceMappingURL=styles.css.map */

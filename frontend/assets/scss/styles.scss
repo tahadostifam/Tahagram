@@ -745,3 +745,19 @@ body .v-application .v-navigation-drawer {
   color: $color_6;
   font-weight: 400;
 }
+
+#page_center_error {
+  position: relative;
+  top: 50%;
+  transform: translate(0, -50%);
+  text-align: center;
+  color: #f44336;
+  h1 {
+    font-size: 30px;
+    @media screen and (max-width: 400px) {
+      & {
+        font-size: 10vw;
+      }
+    }
+  }
+}

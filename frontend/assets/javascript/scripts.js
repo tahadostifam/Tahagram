@@ -78,14 +78,12 @@ window.handleSocketMessages = (vm, parsedData) => {
       });
 
       vm.$store.commit("auth/createNewChat", {
-        id: new_chat_id,
+        _id: new_chat_id,
         chat_type: parsedData.chat_type,
         messages_list: [parsedData.message_callback],
         sides: parsedData.chat_created.sides,
         target_username: parsedData.target_username,
       });
-
-      console.log("after", vm.$store.state.auth);
     } else {
       vm.$store.commit("auth/addNewMessage", {
         message: parsedData.message_callback,

@@ -739,7 +739,7 @@ export default {
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     // SECTION - setting user messages
-    this.set_user_chats_messages();
+    this.set_user_chats_messages()
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.vm = this;
