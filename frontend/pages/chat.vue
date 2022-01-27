@@ -632,7 +632,7 @@
                   class="rounded-pill"
                   solo
                   placeholder="Message"
-                  v-on:keydown.enter="submit_send_text_messages()"
+                  v-on:keypress.enter="submit_send_text_messages()"
                 ></v-text-field>
                 <v-btn
                   id="send_message_button"
@@ -768,9 +768,8 @@ export default {
             }
 
             ws.send(JSON.stringify(data_to_send))
-
-            this.$set(this.$data, 'send_text_message_input', '');
           }
+          this.$set(this.$data, 'send_text_message_input', '');
         } else {
           console.error('socket is empty!');
           window.initSocket();
@@ -845,7 +844,7 @@ export default {
       // NOTE
       // this method will be work when user clicked on the a chat
       // when it happend... we should going to user_chats_messages and finding the messages for that chat
-      const chats_messages = this.$data.user_chats_messages
+      const chats_messages = this.$store.state.auth.user_info.chats_messages
       if (chats_messages) {
         const find_result = chats_messages.find( ({_id}) => _id === chat_id);
         if (find_result) {
