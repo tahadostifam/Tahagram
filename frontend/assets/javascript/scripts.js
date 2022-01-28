@@ -61,28 +61,7 @@ window.handleSocketMessages = (vm, parsedData) => {
   } else if (parsedData.message == "bio updated" && parsedData.bio) {
     vm.$store.commit("auth/setBio", parsedData.bio);
   } else if (parsedData.event == "you_have_new_message") {
-    const chat_id = parsedData.chat_id;
-    console.log("chat_id from backend", chat_id);
-    const chat_exists = vm.$store.state.auth.chats_list.find(
-      ({ chat_id }) => chat_id === chat_id
-    );
-    console.log(chat_exists);
-
-    // vm.$store.commit("auth/addChat", {
-    //   chat_id: vm.$data.active_chat.chat_id,
-    //   chat_type: vm.$data.active_chat.chat_type,
-    //   full_name: vm.$data.active_chat.full_name,
-    //   username: vm.$data.active_chat.username,
-    //   profile_photo: vm.$data.active_chat.profile_photo,
-    // });
-
-    // vm.$store.commit("auth/createNewChat", {
-    //   _id: new_chat_id,
-    //   chat_type: parsedData.chat_type,
-    //   messages_list: [parsedData.message_callback],
-    //   sides: parsedData.chat_created.sides,
-    //   target_username: parsedData.target_username,
-    // });
+    we_have_new_message(vm, parsedData);
   } else if (
     parsedData.message == "message sended" &&
     parsedData.message_callback
@@ -138,6 +117,61 @@ window.handleSocketMessages = (vm, parsedData) => {
     console.log(parsedData);
   }
 };
+
+function we_have_new_message(vm, parsedData) {
+  // ANCHOR
+  if (vm.$store.state.auth.chats_list) {
+    const chat_id = parsedData.chat_id;
+    const chats_messages = vm.$store.state.auth.user_info.chats_messages;
+    const chat_exists = vm.$store.state.auth.chats_list.find(
+      ({ chat_id }) => chat_id === chat_id
+    );
+
+    if (!chat_exists) {
+      vm.$store.commit("auth/addChat", {
+        chat_id: chat_id,
+        chat_type: parsedData.new_chat.chat_type,
+        full_name: parsedData.new_chat.full_name,
+        username: parsedData.new_chat.username,
+        profile_photo: parsedData.new_chat.profile_photo,
+      });
+    }
+
+    const chat_messages = chats_messages.find(({ _id }) => _id === chat_id);
+    if (chat_messages) {
+      // we should add the message into chats_messages state
+      vm.$store.commit("auth/addNewMessage", {
+        message: parsedData.message,
+        chat_id: parsedData.chat_id,
+      });
+      if (vm.$data.active_chat && vm.$data.active_chat.messages) {
+        if (chats_messages) {
+          const find_result = chats_messages.find(
+            ({ _id }) => _id === parsedData.chat_id
+          );
+          if (find_result) {
+            vm.$set(
+              vm.$data.active_chat,
+              "messages",
+              find_result.messages_list
+            );
+          }
+        }
+      } else {
+        vm.$set(vm.$data.active_chat, "messages", [parsedData.message]);
+      }
+    } else {
+      console.log("hoha hoha");
+      vm.$store.commit("auth/createNewChat", {
+        _id: parsedData.new_chat._id,
+        chat_type: parsedData.chat_type,
+        messages_list: [parsedData.message],
+        sides: parsedData.chat_created.sides,
+        target_username: parsedData.target_username,
+      });
+    }
+  }
+}
 
 window.onload = () => {
   window.handleSplashScreen();
