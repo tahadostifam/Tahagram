@@ -58,30 +58,31 @@ window.handleSocketMessages = (vm, parsedData) => {
     vm.$store.commit("auth/setFullName", parsedData.full_name);
   } else if (parsedData.message == "bio updated" && parsedData.bio) {
     vm.$store.commit("auth/setBio", parsedData.bio);
-  } else if (parsedData.message == "message deleted") {
-    const chats_messages = vm.$store.state.auth.user_info.chats_messages;
-    if (chats_messages) {
-      const finded_chat_index = chats_messages.findIndex(
-        ({ _id }) => _id === parsedData.chat_id
-      );
-      if (finded_chat_index != null) {
-        const message_index = chats_messages[
-          finded_chat_index
-        ].messages_list.findIndex(
-          ({ message_id }) =>
-            message_id === vm.$data.message_context_menu_message_id
-        );
-        if (message_index != null) {
-          console.log("message_index", message_index);
-          console.log("finded_chat_index", finded_chat_index);
+  } else if (parsedData.message == "bio updated" && parsedData.bio) {
+    vm.$store.commit("auth/setBio", parsedData.bio);
+  } else if (parsedData.event == "you_have_new_message") {
+    const chat_id = parsedData.chat_id;
+    console.log("chat_id from backend", chat_id);
+    const chat_exists = vm.$store.state.auth.chats_list.find(
+      ({ chat_id }) => chat_id === chat_id
+    );
+    console.log(chat_exists);
 
-          vm.$store.commit("auth/removeMessage", {
-            message_index: message_index,
-            chat_index: finded_chat_index,
-          });
-        }
-      }
-    }
+    // vm.$store.commit("auth/addChat", {
+    //   chat_id: vm.$data.active_chat.chat_id,
+    //   chat_type: vm.$data.active_chat.chat_type,
+    //   full_name: vm.$data.active_chat.full_name,
+    //   username: vm.$data.active_chat.username,
+    //   profile_photo: vm.$data.active_chat.profile_photo,
+    // });
+
+    // vm.$store.commit("auth/createNewChat", {
+    //   _id: new_chat_id,
+    //   chat_type: parsedData.chat_type,
+    //   messages_list: [parsedData.message_callback],
+    //   sides: parsedData.chat_created.sides,
+    //   target_username: parsedData.target_username,
+    // });
   } else if (
     parsedData.message == "message sended" &&
     parsedData.message_callback

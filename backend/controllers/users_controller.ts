@@ -10,7 +10,7 @@ const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
 import Chats from "../models/chats";
-import { IChat, IUser } from "../lib/interfaces";
+import { IChat, IUser, IUserChatLink } from "../lib/interfaces";
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -259,11 +259,11 @@ export function getUserChats(username: string) {
     });
 }
 
-export function getUserChatsMessages(username: string, user_chats_list: IChat[]) {
+export function getUserChatsMessages(username: string, user_chats_list: IUserChatLink[]) {
     return new Promise(async (success) => {
         let final_list: Array<IChat> = [];
         if (user_chats_list.length > 0) {
-            return await user_chats_list.forEach(async (item: IChat, index: number) => {
+            return await user_chats_list.forEach(async (item: IUserChatLink, index: number) => {
                 let chat = await Chats.findOne({
                     _id: item.chat_id,
                 });

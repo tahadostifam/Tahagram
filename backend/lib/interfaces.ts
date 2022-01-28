@@ -20,7 +20,11 @@ export interface IUser {
     bio: string;
     last_seen: string;
     profile_photos: IProfilePhoto[];
-    chats: IChat[];
+    chats: IUserChatLink[];
+}
+
+export interface IUserChatLink {
+    chat_id: string;
 }
 
 export interface IProfilePhoto {

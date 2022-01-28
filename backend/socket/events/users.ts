@@ -89,7 +89,13 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             if (chat.chat_type == "private") {
                 const room = rooms[chat_id];
                 if (room) {
-                    broadCastToOtherSide(room);
+                    const target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
+                    const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+                    if (target_ws) {
+                        broadCastToOtherSide(target_ws);
+                    } else {
+                        console.error("cannot find second_side_ws");
+                    }
                 } else {
                     // FIXME
                     const target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
@@ -107,7 +113,12 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                                     ws: second_side_ws.ws,
                                 }
                             ).then((room) => {
-                                broadCastToOtherSide(room);
+                                const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+                                if (target_ws) {
+                                    broadCastToOtherSide(target_ws);
+                                } else {
+                                    console.error("cannot find second_side_ws");
+                                }
                             });
                         } else {
                             console.error("cannot find second_side_ws");
@@ -128,7 +139,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     username: target_username,
                 });
                 if (user) {
-                    const chat = new Chats({
+                    var new_chat = new Chats({
                         chat_type: "private",
                         messages_list: message,
                         sides: {
@@ -136,31 +147,21 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                             user_2: target_username,
                         },
                     });
-                    await chat.save();
+                    await new_chat.save();
                     // Add this chat into user_1 and user_2 chats_list
                     async function pushChatToUserChatsList(username: String) {
-                        let user = await User.findOne({
-                            username: username,
-                        });
-                        user = JSON.parse(JSON.stringify(user));
-                        if (user) {
-                            const find_result = Array(user.chats).find(({ _id }) => _id == chat._id);
-                            if (!find_result || find_result.length == 0) {
-                                return await User.updateOne(
-                                    {
-                                        username: username,
+                        await User.updateOne(
+                            {
+                                username: username,
+                            },
+                            {
+                                $push: {
+                                    chats: {
+                                        chat_id: new_chat._id, // the id of chat [chats collection]
                                     },
-                                    {
-                                        $push: {
-                                            chats: {
-                                                chat_id: chat._id, // the id of chat [chats collection]
-                                            },
-                                        },
-                                    }
-                                );
+                                },
                             }
-                            console.log("user alredy have this chat!!");
-                        }
+                        );
                     }
 
                     pushChatToUserChatsList(ws.user.username);
@@ -168,7 +169,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
 
                     pushMessage({
                         chat_created: {
-                            chat_id: chat._id,
+                            chat_id: new_chat._id,
                             sides: {
                                 user_1: ws.user.username,
                                 user_2: target_username,
@@ -182,47 +183,42 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         target_username: target_username,
                     });
 
-                    const second_side_ws = users.find(({ username: _username_ }) => _username_ === target_username);
-                    if (second_side_ws) {
+                    const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+                    if (target_ws) {
                         createPrivateRoom(
-                            chat._id,
+                            new_chat._id,
                             {
                                 username: ws.user.username,
                                 ws: ws,
                             },
                             {
                                 username: target_username,
-                                ws: second_side_ws.ws,
+                                ws: target_ws.ws,
                             }
                         ).then((room) => {
-                            broadCastToOtherSide(room);
+                            broadCastToOtherSide(target_ws);
                         });
                     }
                 }
             }
         }
 
-        async function broadCastToOtherSide(room: IPrivateRoom) {
-            const target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
-
-            const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
-            if (target_ws) {
-                const new_chat: any = {
-                    username: ws.user.username,
-                    full_name: ws.user.full_name,
-                };
-                if (ws.user.profile_photos.length > 0) {
-                    new_chat["profile_photo"] = ws.user.profile_photos[0];
-                }
-                target_ws.ws.send(
-                    JSON.stringify({
-                        event: "you_have_new_message",
-                        message: message,
-                        chat_id: chat_id,
-                        new_chat: new_chat,
-                    })
-                );
+        async function broadCastToOtherSide(target_ws: IRoomUser) {
+            const new_chat: any = {
+                username: target_ws.ws.user.username,
+                full_name: target_ws.ws.user.full_name,
+            };
+            if (ws.user.profile_photos.length > 0) {
+                new_chat["profile_photo"] = ws.user.profile_photos[0];
             }
+            target_ws.ws.send(
+                JSON.stringify({
+                    event: "you_have_new_message",
+                    message: message,
+                    chat_id: chat_id,
+                    new_chat: new_chat,
+                })
+            );
         }
     }
 }
