@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 import { response } from "express";
 import { createPrivateRoom, rooms } from "../room_manager";
 
-import { IChat, IWebSocket } from "../../lib/interfaces";
+import { IChat, IPrivateRoom, IRoomUser, ISocketClient, IUser, IWebSocket } from "../../lib/interfaces";
 import { users } from "../socket";
 
 export async function update_full_name(ws: IWebSocket, parsedData: any) {
@@ -77,10 +77,6 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             ws.send(JSON.stringify(response));
         }
 
-        async function broadCastToOtherSide() {
-            console.log("imported", rooms);
-        }
-
         let chat: IChat = await Chats.findById(chat_id);
         if (chat) {
             pushMessage({
@@ -91,7 +87,35 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             });
 
             if (chat.chat_type == "private") {
-                broadCastToOtherSide();
+                const room = rooms[chat_id];
+                if (room) {
+                    broadCastToOtherSide(room);
+                } else {
+                    // FIXME
+                    const target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
+                    if (chat._id && target_username) {
+                        const second_side_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+                        if (second_side_ws) {
+                            createPrivateRoom(
+                                chat._id,
+                                {
+                                    username: ws.user.username,
+                                    ws: ws,
+                                },
+                                {
+                                    username: target_username,
+                                    ws: second_side_ws.ws,
+                                }
+                            ).then((room) => {
+                                broadCastToOtherSide(room);
+                            });
+                        } else {
+                            console.error("cannot find second_side_ws");
+                        }
+                    } else {
+                        console.error("chat._id or target_username is empty");
+                    }
+                }
             } else {
                 // TODO
                 console.log("chat is not private :)");
@@ -158,8 +182,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         target_username: target_username,
                     });
 
-                    // ANCHOR
-                    const second_side_ws = users.find(({ username }) => target_username);
+                    const second_side_ws = users.find(({ username: _username_ }) => _username_ === target_username);
                     if (second_side_ws) {
                         createPrivateRoom(
                             chat._id,
@@ -168,14 +191,37 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                                 ws: ws,
                             },
                             {
-                                username: ws.user.username,
+                                username: target_username,
                                 ws: second_side_ws.ws,
                             }
                         ).then((room) => {
-                            broadCastToOtherSide();
+                            broadCastToOtherSide(room);
                         });
                     }
                 }
+            }
+        }
+
+        async function broadCastToOtherSide(room: IPrivateRoom) {
+            const target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
+
+            const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+            if (target_ws) {
+                const new_chat: any = {
+                    username: ws.user.username,
+                    full_name: ws.user.full_name,
+                };
+                if (ws.user.profile_photos.length > 0) {
+                    new_chat["profile_photo"] = ws.user.profile_photos[0];
+                }
+                target_ws.ws.send(
+                    JSON.stringify({
+                        event: "you_have_new_message",
+                        message: message,
+                        chat_id: chat_id,
+                        new_chat: new_chat,
+                    })
+                );
             }
         }
     }
@@ -211,4 +257,15 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
             }
         }
     }
+}
+
+function findOutTargetUsernameFromChat(chat: IChat, username: string): string | null {
+    if (chat.sides) {
+        if (chat.sides.user_1 != username) {
+            return chat.sides.user_1;
+        } else if (chat.sides.user_2 != username) {
+            return chat.sides.user_2;
+        }
+    }
+    return null;
 }

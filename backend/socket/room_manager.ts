@@ -1,13 +1,13 @@
 import crypto from "crypto";
 import WebSocket from "ws";
-import { IWebSocket } from "../lib/interfaces";
+import { IRoomUser, IWebSocket } from "../lib/interfaces";
 import { IPrivateRoom } from "../lib/interfaces";
 
 // TODO
 export let rooms: any = {};
 
-export function createPrivateRoom(room_name: string, user_1: { username: string; ws: IWebSocket }, user_2: { username: string; ws: IWebSocket }) {
-    return new Promise(async (success, error) => {
+export function createPrivateRoom(room_name: string, user_1: IRoomUser, user_2: IRoomUser) {
+    return new Promise(async (success: (room: IPrivateRoom) => void, error) => {
         for (const [key, value] of Object.entries(rooms)) {
             const item: any = value;
             if (item.room_name == room_name) {

@@ -68,3 +68,8 @@ export interface IPrivateRoom {
         ws: IWebSocket;
     };
 }
+
+export interface IRoomUser {
+    username: string;
+    ws: IWebSocket;
+}
