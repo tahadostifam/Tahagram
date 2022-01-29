@@ -6,18 +6,21 @@ import { IPrivateRoom } from "../lib/interfaces";
 // TODO
 export let rooms: any = {};
 
-export function createPrivateRoom(room_name: string, user_1: IRoomUser, user_2: IRoomUser) {
-    return new Promise(async (success: (room: IPrivateRoom) => void, error) => {
+interface IRoomCallback {
+    user_1: string;
+    user_2: string;
+}
+
+export function createPrivateRoom(room_id: string, user_1: string, user_2: string) {
+    return new Promise(async (success: (room: IRoomCallback) => void, error) => {
         for (const [key, value] of Object.entries(rooms)) {
             const item: any = value;
-            if (item.room_name == room_name) {
+            if (item.room_id == room_id) {
                 error("a room exists with this room_name");
             }
         }
 
-        const room_id = await crypto.randomBytes(12).toString("hex");
-
-        const room: IPrivateRoom = {
+        const room: any = {
             user_1: user_1,
             user_2: user_2,
         };

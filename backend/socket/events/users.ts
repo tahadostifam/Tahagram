@@ -52,6 +52,8 @@ export async function update_bio(ws: IWebSocket, parsedData: any) {
 export async function send_text_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const message_text = parsedData.send_text_message_input;
+    console.log("users", users);
+    console.log("rooms", rooms);
 
     if (message_text && message_text.trim() != "" && chat_id && chat_id.trim() != "") {
         const message_id = new ObjectId().toString();
@@ -78,6 +80,15 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
         }
 
         let chat: IChat = await Chats.findById(chat_id);
+        let target_username: string | null = null;
+        var target_ws: ISocketClient | undefined;
+        if (chat) {
+            target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
+            target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+            if (!target_ws || String(target_ws).trim() == "") {
+                target_ws = undefined;
+            }
+        }
         if (chat) {
             pushMessage({
                 event: "send_text_message",
@@ -89,42 +100,24 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             if (chat.chat_type == "private") {
                 const room = rooms[chat_id];
                 if (room) {
-                    const target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
-                    const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
                     if (target_ws) {
                         broadCastToOtherSide(target_ws, chat.chat_type, false);
                     } else {
                         console.error("b: cannot find second_side_ws");
                     }
                 } else {
-                    // FIXME
-                    const target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
                     if (chat._id && target_username) {
                         const second_side_ws = users.find(({ username: _username_ }) => _username_ === target_username);
                         if (second_side_ws) {
-                            createPrivateRoom(
-                                chat._id,
-                                {
-                                    username: ws.user.username,
-                                    ws: ws,
-                                },
-                                {
-                                    username: target_username,
-                                    ws: second_side_ws.ws,
-                                }
-                            ).then((room) => {
-                                const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+                            createPrivateRoom(chat._id, ws.user.username, target_username).then((room) => {
                                 if (target_ws) {
                                     broadCastToOtherSide(target_ws, chat.chat_type, true);
                                 } else {
-                                    // NOTE
-                                    console.log(users);
-
                                     console.error("c: cannot find second_side_ws");
                                 }
                             });
                         } else {
-                            console.error("a: cannot find second_side_ws");
+                            console.error("user isn't online");
                         }
                     } else {
                         console.error("chat._id or target_username is empty");
@@ -186,19 +179,8 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         target_username: target_username,
                     });
 
-                    const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
                     if (target_ws) {
-                        createPrivateRoom(
-                            new_chat._id,
-                            {
-                                username: ws.user.username,
-                                ws: ws,
-                            },
-                            {
-                                username: target_username,
-                                ws: target_ws.ws,
-                            }
-                        ).then((room) => {
+                        createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {
                             broadCastToOtherSide(target_ws, new_chat.chat_type, true);
                         });
                     }
@@ -206,28 +188,30 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             }
         }
 
-        async function broadCastToOtherSide(target_ws: IRoomUser, chat_type: string, chat_created: boolean) {
-            const new_chat: any = {
-                username: target_ws.ws.user.username,
-                full_name: target_ws.ws.user.full_name,
-                sides: {
-                    user_1: ws.user.username,
-                    user_2: target_ws.ws.user.username,
-                },
-            };
-            if (ws.user.profile_photos.length > 0) {
-                new_chat["profile_photo"] = ws.user.profile_photos[0];
+        async function broadCastToOtherSide(target_ws: ISocketClient | undefined, chat_type: string, chat_created: boolean) {
+            if (target_ws) {
+                const new_chat: any = {
+                    username: target_ws.ws.user.username,
+                    full_name: target_ws.ws.user.full_name,
+                    sides: {
+                        user_1: ws.user.username,
+                        user_2: target_ws.ws.user.username,
+                    },
+                };
+                if (ws.user.profile_photos.length > 0) {
+                    new_chat["profile_photo"] = ws.user.profile_photos[0];
+                }
+                let data_to_send: any = {
+                    event: "you_have_new_message",
+                    message: message,
+                    chat_id: chat_id,
+                };
+                if (chat_created) {
+                    data_to_send["chat_type"] = chat_type;
+                    data_to_send["new_chat"] = new_chat;
+                }
+                target_ws.ws.send(JSON.stringify(data_to_send));
             }
-            let data_to_send: any = {
-                event: "you_have_new_message",
-                message: message,
-                chat_id: chat_id,
-            };
-            if (chat_created) {
-                data_to_send["chat_type"] = chat_type;
-                data_to_send["new_chat"] = new_chat;
-            }
-            target_ws.ws.send(JSON.stringify(data_to_send));
         }
     }
 }
