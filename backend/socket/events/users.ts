@@ -1,10 +1,9 @@
 import User from "../../models/user";
 import Chats from "../../models/chats";
 import { ObjectId } from "mongodb";
-import { response } from "express";
 import { createPrivateRoom, rooms } from "../room_manager";
 
-import { IChat, IPrivateRoom, IRoomUser, ISocketClient, IUser, IWebSocket } from "../../lib/interfaces";
+import { IChat, ISocketClient, IWebSocket } from "../../lib/interfaces";
 import { users } from "../socket";
 
 export async function update_full_name(ws: IWebSocket, parsedData: any) {
@@ -52,8 +51,6 @@ export async function update_bio(ws: IWebSocket, parsedData: any) {
 export async function send_text_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const message_text = parsedData.send_text_message_input;
-    console.log("users", users);
-    console.log("rooms", rooms);
 
     if (message_text && message_text.trim() != "" && chat_id && chat_id.trim() != "") {
         const message_id = new ObjectId().toString();
@@ -103,33 +100,27 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     if (target_ws) {
                         broadCastToOtherSide(target_ws, chat.chat_type, false);
                     } else {
-                        console.error("b: cannot find second_side_ws");
+                        console.error("B :: cannot find target_ws");
                     }
                 } else {
-                    if (chat._id && target_username) {
-                        const second_side_ws = users.find(({ username: _username_ }) => _username_ === target_username);
-                        if (second_side_ws) {
-                            createPrivateRoom(chat._id, ws.user.username, target_username).then((room) => {
-                                if (target_ws) {
-                                    broadCastToOtherSide(target_ws, chat.chat_type, true);
-                                } else {
-                                    console.error("c: cannot find second_side_ws");
-                                }
-                            });
-                        } else {
-                            console.error("user isn't online");
-                        }
+                    if (chat._id && target_username && target_ws) {
+                        createPrivateRoom(chat._id, ws.user.username, target_username).then((room) => {
+                            if (target_ws) {
+                                broadCastToOtherSide(target_ws, chat.chat_type, true);
+                            } else {
+                                console.error("C :: cannot find target_ws");
+                            }
+                        });
                     } else {
                         console.error("chat._id or target_username is empty");
                     }
                 }
             } else {
                 // TODO
-                console.log("chat is not private :)");
+                console.error("chat is not private :)");
             }
         } else {
             // we must create a new private_chat
-            const target_username = parsedData.target_username;
             if (target_username && target_username.length > 0) {
                 const user = await User.findOne({
                     username: target_username,
@@ -190,6 +181,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
 
         async function broadCastToOtherSide(target_ws: ISocketClient | undefined, chat_type: string, chat_created: boolean) {
             if (target_ws) {
+                // ANCHOR
                 const new_chat: any = {
                     username: target_ws.ws.user.username,
                     full_name: target_ws.ws.user.full_name,

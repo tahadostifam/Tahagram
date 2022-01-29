@@ -1,7 +1,5 @@
 import crypto from "crypto";
-import WebSocket from "ws";
-import { IRoomUser, IWebSocket } from "../lib/interfaces";
-import { IPrivateRoom } from "../lib/interfaces";
+import { IWebSocket } from "../lib/interfaces";
 
 // TODO
 export let rooms: any = {};
