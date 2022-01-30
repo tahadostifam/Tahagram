@@ -84,7 +84,7 @@ function handleSocketUserOnDisConnected(ws: IWebSocket) {
         users.splice(user_index, 1);
     }
 
-    console.log("- User Disconnected");
+    console.log(`- ${ws.user.username} Disconnected`);
 }
 
 function handleSocketMessages(data: any, ws: IWebSocket) {

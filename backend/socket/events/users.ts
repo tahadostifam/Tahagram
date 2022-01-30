@@ -80,17 +80,14 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
         let target_username: string | null = null;
         var target_ws: ISocketClient | undefined;
 
-        // NOTE
-        console.log("chat", chat);
-
         function setTargetWs() {
             target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
-            console.log("target_ws seted", target_ws);
         }
 
         if (chat) {
             target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
             await setTargetWs();
+
             if (!target_ws || String(target_ws).trim() == "") {
                 target_ws = undefined;
             }
@@ -100,11 +97,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             }
         }
 
-        // NOTE
-        console.log("target_username", target_username);
-
         if (chat && chat._id) {
-            // ANCHOR
             await setTargetWs();
 
             pushMessage({
@@ -226,6 +219,12 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 target_ws.ws.send(JSON.stringify(data_to_send));
             }
         }
+
+        console.log("-------------------");
+        users.forEach((item) => {
+            console.log("> " + item.username);
+        });
+        console.log("-------------------");
     }
 }
 
