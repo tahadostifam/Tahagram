@@ -88,9 +88,6 @@ function message_deleted(vm, parsedData) {
           message_id === vm.$data.message_context_menu_message_id
       );
       if (message_index != null) {
-        console.log("message_index", message_index);
-        console.log("finded_chat_index", finded_chat_index);
-
         vm.$store.commit("auth/removeMessage", {
           message_index: message_index,
           chat_index: finded_chat_index,
