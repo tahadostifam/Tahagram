@@ -219,12 +219,6 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 target_ws.ws.send(JSON.stringify(data_to_send));
             }
         }
-
-        console.log("-------------------");
-        users.forEach((item) => {
-            console.log("> " + item.username);
-        });
-        console.log("-------------------");
     }
 }
 

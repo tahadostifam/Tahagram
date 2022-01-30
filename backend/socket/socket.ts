@@ -75,14 +75,9 @@ function handleSocketUserOnConnected(ws: IWebSocket) {
 }
 
 function handleSocketUserOnDisConnected(ws: IWebSocket) {
-    const user_index = users
-        .map(() => {
-            return ws.uuid;
-        })
-        .indexOf(ws.uuid);
-    if (user_index > -1) {
-        users.splice(user_index, 1);
-    }
+    users = users.filter((value, index, arr) => {
+        return value.username !== ws.user.username;
+    });
 
     console.log(`- ${ws.user.username} Disconnected`);
 }
