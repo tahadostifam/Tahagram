@@ -66,57 +66,83 @@ window.handleSocketMessages = (vm, parsedData) => {
     parsedData.message == "message sended" &&
     parsedData.message_callback
   ) {
-    if (parsedData.chat_created && parsedData.chat_created.chat_id) {
-      const new_chat_id = parsedData.chat_created.chat_id;
-      vm.$set(vm.$data.active_chat, "chat_id", new_chat_id);
-      vm.$set(vm.$data.active_chat, "chat_type", parsedData.chat_type);
-      vm.$set(vm.$data.active_chat, "non_created_chat", false);
-      vm.$set(vm.$data.active_chat, "messages", [parsedData.message_callback]);
-
-      vm.$store.commit("auth/addChat", {
-        chat_id: vm.$data.active_chat.chat_id,
-        chat_type: vm.$data.active_chat.chat_type,
-        full_name: vm.$data.active_chat.full_name,
-        username: vm.$data.active_chat.username,
-        profile_photo: vm.$data.active_chat.profile_photo,
-      });
-
-      vm.$store.commit("auth/createNewChat", {
-        _id: new_chat_id,
-        chat_type: parsedData.chat_type,
-        messages_list: [parsedData.message_callback],
-        sides: parsedData.chat_created.sides,
-        target_username: parsedData.target_username,
-      });
-    } else {
-      vm.$store.commit("auth/addNewMessage", {
-        message: parsedData.message_callback,
-        chat_id: parsedData.chat_id,
-      });
-      if (vm.$data.active_chat && vm.$data.active_chat.messages) {
-        const chats_messages = vm.$store.state.auth.user_info.chats_messages;
-        if (chats_messages) {
-          const find_result = chats_messages.find(
-            ({ _id }) => _id === parsedData.chat_id
-          );
-          if (find_result) {
-            vm.$set(
-              vm.$data.active_chat,
-              "messages",
-              find_result.messages_list
-            );
-          }
-        }
-      } else {
-        vm.$set(vm.$data.active_chat, "messages", [
-          parsedData.message_callback,
-        ]);
-      }
-    }
+    message_sended(vm, parsedData);
+  } else if (parsedData.message == "message deleted") {
+    message_deleted(vm, parsedData);
   } else {
     console.log(parsedData);
   }
 };
+
+function message_deleted(vm, parsedData) {
+  const chats_messages = vm.$store.state.auth.user_info.chats_messages;
+  if (chats_messages) {
+    const finded_chat_index = chats_messages.findIndex(
+      ({ _id }) => _id === parsedData.chat_id
+    );
+    if (finded_chat_index != null) {
+      const message_index = chats_messages[
+        finded_chat_index
+      ].messages_list.findIndex(
+        ({ message_id }) =>
+          message_id === vm.$data.message_context_menu_message_id
+      );
+      if (message_index != null) {
+        console.log("message_index", message_index);
+        console.log("finded_chat_index", finded_chat_index);
+
+        vm.$store.commit("auth/removeMessage", {
+          message_index: message_index,
+          chat_index: finded_chat_index,
+        });
+      }
+    }
+  }
+}
+
+function message_sended(vm, parsedData) {
+  if (parsedData.chat_created && parsedData.chat_created.chat_id) {
+    const new_chat_id = parsedData.chat_created.chat_id;
+    vm.$set(vm.$data.active_chat, "chat_id", new_chat_id);
+    vm.$set(vm.$data.active_chat, "chat_type", parsedData.chat_type);
+    vm.$set(vm.$data.active_chat, "non_created_chat", false);
+    vm.$set(vm.$data.active_chat, "messages", [parsedData.message_callback]);
+
+    vm.$store.commit("auth/addChat", {
+      chat_id: vm.$data.active_chat.chat_id,
+      chat_type: vm.$data.active_chat.chat_type,
+      full_name: vm.$data.active_chat.full_name,
+      username: vm.$data.active_chat.username,
+      profile_photo: vm.$data.active_chat.profile_photo,
+    });
+
+    vm.$store.commit("auth/createNewChat", {
+      _id: new_chat_id,
+      chat_type: parsedData.chat_type,
+      messages_list: [parsedData.message_callback],
+      sides: parsedData.chat_created.sides,
+      target_username: parsedData.target_username,
+    });
+  } else {
+    vm.$store.commit("auth/addNewMessage", {
+      message: parsedData.message_callback,
+      chat_id: parsedData.chat_id,
+    });
+    if (vm.$data.active_chat && vm.$data.active_chat.messages) {
+      const chats_messages = vm.$store.state.auth.user_info.chats_messages;
+      if (chats_messages) {
+        const find_result = chats_messages.find(
+          ({ _id }) => _id === parsedData.chat_id
+        );
+        if (find_result) {
+          vm.$set(vm.$data.active_chat, "messages", find_result.messages_list);
+        }
+      }
+    } else {
+      vm.$set(vm.$data.active_chat, "messages", [parsedData.message_callback]);
+    }
+  }
+}
 
 function we_have_new_message(vm, parsedData) {
   if (vm.$store.state.auth.chats_list) {
