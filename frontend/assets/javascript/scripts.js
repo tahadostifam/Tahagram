@@ -119,7 +119,6 @@ window.handleSocketMessages = (vm, parsedData) => {
 };
 
 function we_have_new_message(vm, parsedData) {
-  // ANCHOR
   if (vm.$store.state.auth.chats_list) {
     const chat_id = parsedData.chat_id;
     const chats_messages = vm.$store.state.auth.user_info.chats_messages;

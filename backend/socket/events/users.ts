@@ -79,14 +79,34 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
         let chat: IChat = await Chats.findById(chat_id);
         let target_username: string | null = null;
         var target_ws: ISocketClient | undefined;
+
+        // NOTE
+        console.log("chat", chat);
+
+        function setTargetWs() {
+            target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+            console.log("target_ws seted", target_ws);
+        }
+
         if (chat) {
             target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
-            target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+            await setTargetWs();
             if (!target_ws || String(target_ws).trim() == "") {
                 target_ws = undefined;
             }
+        } else {
+            if (parsedData.target_username) {
+                target_username = parsedData.target_username;
+            }
         }
-        if (chat) {
+
+        // NOTE
+        console.log("target_username", target_username);
+
+        if (chat && chat._id) {
+            // ANCHOR
+            await setTargetWs();
+
             pushMessage({
                 event: "send_text_message",
                 chat_id: chat_id,
@@ -103,7 +123,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         console.error("B :: cannot find target_ws");
                     }
                 } else {
-                    if (chat._id && target_username && target_ws) {
+                    if (chat._id && target_username) {
                         createPrivateRoom(chat._id, ws.user.username, target_username).then((room) => {
                             if (target_ws) {
                                 broadCastToOtherSide(target_ws, chat.chat_type, true);
@@ -112,7 +132,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                             }
                         });
                     } else {
-                        console.error("chat._id or target_username is empty");
+                        console.error("chat._id or target_username or target_ws is empty");
                     }
                 }
             } else {
@@ -154,7 +174,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     pushChatToUserChatsList(ws.user.username);
                     pushChatToUserChatsList(target_username);
 
-                    pushMessage({
+                    const a = {
                         chat_created: {
                             chat_id: new_chat._id,
                             sides: {
@@ -168,7 +188,8 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         message_callback: message,
                         chat_type: "private",
                         target_username: target_username,
-                    });
+                    };
+                    pushMessage(a);
 
                     if (target_ws) {
                         createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {
