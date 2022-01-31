@@ -130,79 +130,85 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 console.error("chat is not private :)");
             }
         } else {
-            await setTargetWs();
+            if (target_username != ws.user.username) {
+                await setTargetWs();
 
-            // we must create a new private_chat
-            const user = await User.findOne({
-                username: target_username,
-            });
-            if (user) {
-                var new_chat = new Chats({
-                    chat_type: "private",
-                    messages_list: message,
-                    sides: {
-                        user_1: ws.user.username,
-                        user_2: target_username,
-                    },
+                // we must create a new private_chat
+                const user = await User.findOne({
+                    username: target_username,
                 });
-                await new_chat.save();
-                // Add this chat into user_1 and user_2 chats_list
-                async function pushChatToUserChatsList(username: String) {
-                    await User.updateOne(
-                        {
-                            username: username,
-                        },
-                        {
-                            $push: {
-                                chats: {
-                                    chat_id: new_chat._id, // the id of chat [chats collection]
-                                },
-                            },
-                        }
-                    );
-                }
-
-                pushChatToUserChatsList(ws.user.username);
-                pushChatToUserChatsList(target_username);
-
-                // to the sender
-                pushMessage({
-                    chat_created: {
-                        chat_id: new_chat._id,
+                if (user) {
+                    var new_chat = new Chats({
+                        chat_type: "private",
+                        messages_list: message,
                         sides: {
                             user_1: ws.user.username,
                             user_2: target_username,
                         },
-                    },
-                    event: "send_text_message",
-                    chat_id: chat_id,
-                    message: "message sended",
-                    message_callback: message,
-                    chat_type: "private",
-                    target_username: target_username,
-                });
+                    });
+                    await new_chat.save();
+                    // Add this chat into user_1 and user_2 chats_list
+                    async function pushChatToUserChatsList(username: String) {
+                        await User.updateOne(
+                            {
+                                username: username,
+                            },
+                            {
+                                $push: {
+                                    chats: {
+                                        chat_id: new_chat._id, // the id of chat [chats collection]
+                                    },
+                                },
+                            }
+                        );
+                    }
 
-                // to the receiver
-                createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {
-                    if (target_ws) {
-                        target_ws.ws.send(
-                            JSON.stringify({
-                                chat_created: {
+                    pushChatToUserChatsList(ws.user.username);
+                    pushChatToUserChatsList(target_username);
+
+                    // to the sender
+                    pushMessage({
+                        chat_created: {
+                            chat_id: new_chat._id,
+                            sides: {
+                                user_1: ws.user.username,
+                                user_2: target_username,
+                            },
+                        },
+                        event: "send_text_message",
+                        chat_id: chat_id,
+                        message: "message sended",
+                        message_callback: message,
+                        chat_type: "private",
+                        target_username: target_username,
+                    });
+
+                    // to the receiver
+                    createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {
+                        if (target_ws) {
+                            let data_to_send: any = {
+                                __chat_created: {
                                     chat_id: new_chat._id,
                                     sides: {
                                         user_1: ws.user.username,
                                         user_2: target_username,
                                     },
                                     messages: [message],
+                                    full_name: user.full_name,
+                                    username: user.username,
                                 },
                                 event: "chat_created_from_a_user",
                                 chat_id: chat_id,
                                 chat_type: "private",
                                 target_username: target_username,
-                            })
-                        );
-                    }
-                });
+                            };
+                            if (user.profile_photos.length > 0) {
+                                data_to_send["profile_photo"] = user.profile_photos[0];
+                            }
+                            target_ws.ws.send(JSON.stringify(data_to_send));
+                        }
+                    });
+                }
             }
         }
 

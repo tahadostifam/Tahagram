@@ -79,20 +79,20 @@ window.handleSocketMessages = (vm, parsedData) => {
 };
 
 function chat_created(vm, parsedData) {
-  console.log("chat_created", parsedData);
-  // {
-  //   chat_created: {
-  //       chat_id: new_chat._id,
-  //       sides: {
-  //           user_1: ws.user.username,
-  //           user_2: target_username,
-  //       },
-  //   },
-  //   event: "chat_created",
-  //   chat_id: chat_id,
-  //   chat_type: "private",
-  //   target_username: target_username,
-  // }
+  vm.$store.commit("auth/addChat", {
+    chat_id: parsedData.__chat_created.chat_id,
+    chat_type: parsedData.chat_type,
+    full_name: parsedData.__chat_created.full_name,
+    username: parsedData.__chat_created.username,
+    profile_photo: parsedData.__chat_created.profile_photo,
+  });
+
+  vm.$store.commit("auth/createNewChat", {
+    _id: parsedData.__chat_created.chat_id,
+    chat_type: parsedData.chat_type,
+    messages_list: parsedData.__chat_created.messages,
+    target_username: parsedData.target_username,
+  });
 }
 
 function message_deleted(vm, parsedData) {
