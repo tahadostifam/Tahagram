@@ -31,7 +31,7 @@ import ProfilePhotosRoutes from "./routes/profile_photos.routes";
 app.use("/api/users", UsersRoutes);
 app.use("/api/profile_photos", ProfilePhotosRoutes);
 
-app.listen(configs.api.port, () => {
+app.listen(configs.api.port, "0.0.0.0", () => {
     console.clear();
 
     console.log(`Api-Server has listening on port ${configs.api.port}!`);

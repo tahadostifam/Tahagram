@@ -780,6 +780,7 @@ export default {
     },
     async show_chat(chat_id, chat_location) {
       this.$set(this.$data, 'chat_is_loading', true);
+
       const vm = this;
       let chat = null;
 
@@ -798,7 +799,9 @@ export default {
 
                 chat_type: chat.chat_type,
               }
+
               vm.set_the_active_chat(chat)
+              
               vm.$set(vm.$data.active_chat, 'messages', find_result.messages_list);
             }else{
               vm.$set(vm.$data.active_chat, 'messages', null);
@@ -807,14 +810,14 @@ export default {
           else{
             vm.$set(vm.$data.active_chat, 'messages', null);
           }
-        }else{
-          chat["non_created_chat"] = true
         }
+
         vm.set_the_active_chat(chat)
       }
+
       switch (chat_location) {
         case 'chats_list':
-          chat = this.$data.chats_list.find( ({chat_id}) => chat_id === chat_id )
+          chat = this.$data.chats_list.find( ({chat_id: _chat_id_}) => _chat_id_ == chat_id )
           if (chat) {        
             this.set_the_active_chat(chat)
             const msgs_list = await this.fetch_chat_messages_list(chat_id);
@@ -826,7 +829,6 @@ export default {
           doGetChatMessages();
           break;
         case 'search_chat_in_local':
-          // this.$data.search_chat_in_local_result
           chat = this.$data.search_chat_in_local_result.find(({ _id }) => _id == chat_id)
           doGetChatMessages();
           break;
@@ -847,9 +849,6 @@ export default {
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
       this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
       this.$set(this.$data.active_chat, 'chat_type', chat.chat_type);
-      if (chat.non_created_chat) {
-        this.$set(this.$data.active_chat, 'non_created_chat', true);
-      }
     }, 
     fetch_chat_messages_list(chat_id){
       // NOTE

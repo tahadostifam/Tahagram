@@ -130,6 +130,8 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 console.error("chat is not private :)");
             }
         } else {
+            await setTargetWs();
+
             // we must create a new private_chat
             const user = await User.findOne({
                 username: target_username,
@@ -178,6 +180,24 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     chat_type: "private",
                     target_username: target_username,
                 });
+
+                if (target_ws) {
+                    target_ws.ws.send(
+                        JSON.stringify({
+                            chat_created: {
+                                chat_id: new_chat._id,
+                                sides: {
+                                    user_1: ws.user.username,
+                                    user_2: target_username,
+                                },
+                            },
+                            event: "chat_created",
+                            chat_id: chat_id,
+                            chat_type: "private",
+                            target_username: target_username,
+                        })
+                    );
+                }
 
                 if (target_ws) {
                     createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {

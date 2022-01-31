@@ -64,6 +64,8 @@ window.handleSocketMessages = (vm, parsedData) => {
     vm.$store.commit("auth/setBio", parsedData.bio);
   } else if (parsedData.event == "you_have_new_message") {
     we_have_new_message(vm, parsedData);
+  } else if (parsedData.event == "chat_created") {
+    chat_created(vm, parsedData);
   } else if (
     parsedData.message == "message sended" &&
     parsedData.message_callback
@@ -75,6 +77,23 @@ window.handleSocketMessages = (vm, parsedData) => {
     console.log(parsedData);
   }
 };
+
+function chat_created(vm, parsedData) {
+  console.log("chat_created", parsedData);
+  // {
+  //   chat_created: {
+  //       chat_id: new_chat._id,
+  //       sides: {
+  //           user_1: ws.user.username,
+  //           user_2: target_username,
+  //       },
+  //   },
+  //   event: "chat_created",
+  //   chat_id: chat_id,
+  //   chat_type: "private",
+  //   target_username: target_username,
+  // }
+}
 
 function message_deleted(vm, parsedData) {
   const chats_messages = vm.$store.state.auth.user_info.chats_messages;
@@ -190,8 +209,11 @@ function we_have_new_message(vm, parsedData) {
         }
       }
     } else {
+      let chat_id;
+      if (parsedData.new_chat._id) chat_type == parsedData.new_chat._id;
+      else parsedData.new_chat.chat_id;
       vm.$store.commit("auth/createNewChat", {
-        _id: parsedData.new_chat._id,
+        _id: chat_id,
         chat_type: parsedData.chat_type,
         messages_list: [parsedData.message],
         target_username: parsedData.target_username,
