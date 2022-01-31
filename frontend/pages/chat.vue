@@ -764,11 +764,12 @@ export default {
             let data_to_send = {
                 event: "send_text_message",
                 send_text_message_input: this.$data.send_text_message_input.trim(),
-                chat_id: this.$data.active_chat.chat_id
+                chat_id: this.$data.active_chat.chat_id,
+                target_username: this.$data.active_chat.username
             }
-            if (this.$data.active_chat.non_created_chat) {
-              data_to_send["target_username"] = this.$data.active_chat.username
-            }
+            // if (this.$data.active_chat.non_created_chat) {
+            //   data_to_send["target_username"] = this.$data.active_chat.username
+            // }
 
             ws.send(JSON.stringify(data_to_send))
           }

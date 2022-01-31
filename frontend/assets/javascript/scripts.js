@@ -187,7 +187,6 @@ function we_have_new_message(vm, parsedData) {
         vm.$set(vm.$data.active_chat, "messages", [parsedData.message]);
       }
     } else {
-      console.log("hoha hoha");
       vm.$store.commit("auth/createNewChat", {
         _id: parsedData.new_chat._id,
         chat_type: parsedData.chat_type,
