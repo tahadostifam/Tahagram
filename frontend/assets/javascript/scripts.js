@@ -64,7 +64,7 @@ window.handleSocketMessages = (vm, parsedData) => {
     vm.$store.commit("auth/setBio", parsedData.bio);
   } else if (parsedData.event == "you_have_new_message") {
     we_have_new_message(vm, parsedData);
-  } else if (parsedData.event == "chat_created") {
+  } else if (parsedData.event == "chat_created_from_a_user") {
     chat_created(vm, parsedData);
   } else if (
     parsedData.message == "message sended" &&
@@ -209,15 +209,16 @@ function we_have_new_message(vm, parsedData) {
         }
       }
     } else {
-      let chat_id;
-      if (parsedData.new_chat._id) chat_type == parsedData.new_chat._id;
-      else parsedData.new_chat.chat_id;
-      vm.$store.commit("auth/createNewChat", {
-        _id: chat_id,
-        chat_type: parsedData.chat_type,
-        messages_list: [parsedData.message],
-        target_username: parsedData.target_username,
-      });
+      // NOTE
+      // let chat_id;
+      // if (parsedData.new_chat._id) chat_type == parsedData.new_chat._id;
+      // else parsedData.new_chat.chat_id;
+      // vm.$store.commit("auth/createNewChat", {
+      //   _id: chat_id,
+      //   chat_type: parsedData.chat_type,
+      //   messages_list: [parsedData.message],
+      //   target_username: parsedData.target_username,
+      // });
     }
   }
 }

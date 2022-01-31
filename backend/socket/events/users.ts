@@ -165,6 +165,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 pushChatToUserChatsList(ws.user.username);
                 pushChatToUserChatsList(target_username);
 
+                // to the sender
                 pushMessage({
                     chat_created: {
                         chat_id: new_chat._id,
@@ -181,29 +182,27 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     target_username: target_username,
                 });
 
-                if (target_ws) {
-                    target_ws.ws.send(
-                        JSON.stringify({
-                            chat_created: {
-                                chat_id: new_chat._id,
-                                sides: {
-                                    user_1: ws.user.username,
-                                    user_2: target_username,
+                // to the receiver
+                createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {
+                    if (target_ws) {
+                        target_ws.ws.send(
+                            JSON.stringify({
+                                chat_created: {
+                                    chat_id: new_chat._id,
+                                    sides: {
+                                        user_1: ws.user.username,
+                                        user_2: target_username,
+                                    },
+                                    messages: [message],
                                 },
-                            },
-                            event: "chat_created",
-                            chat_id: chat_id,
-                            chat_type: "private",
-                            target_username: target_username,
-                        })
-                    );
-                }
-
-                if (target_ws) {
-                    createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {
-                        broadCastToOtherSide(target_ws, new_chat.chat_type, true);
-                    });
-                }
+                                event: "chat_created_from_a_user",
+                                chat_id: chat_id,
+                                chat_type: "private",
+                                target_username: target_username,
+                            })
+                        );
+                    }
+                });
             }
         }
 
