@@ -167,7 +167,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     pushChatToUserChatsList(ws.user.username);
                     pushChatToUserChatsList(target_username);
 
-                    const a = {
+                    pushMessage({
                         chat_created: {
                             chat_id: new_chat._id,
                             sides: {
@@ -181,8 +181,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         message_callback: message,
                         chat_type: "private",
                         target_username: target_username,
-                    };
-                    pushMessage(a);
+                    });
 
                     if (target_ws) {
                         createPrivateRoom(new_chat._id, ws.user.username, target_username).then(() => {
@@ -215,6 +214,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 if (chat_created) {
                     data_to_send["chat_type"] = chat_type;
                     data_to_send["new_chat"] = new_chat;
+                    console.log("chat created", data_to_send);
                 }
                 target_ws.ws.send(JSON.stringify(data_to_send));
             }

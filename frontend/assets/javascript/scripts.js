@@ -49,6 +49,8 @@ window.initSocket = () => {
 };
 
 window.handleSocketMessages = (vm, parsedData) => {
+  console.log(parsedData);
+
   if (parsedData.event == "search_in_chats") {
     vm.$set(vm.$data, "search_chat_result", parsedData.data);
   } else if (
@@ -142,6 +144,8 @@ function message_sended(vm, parsedData) {
 }
 
 function we_have_new_message(vm, parsedData) {
+  console.log("chat_created", parsedData.chat_created);
+
   if (vm.$store.state.auth.chats_list) {
     const chat_id = parsedData.chat_id;
     const chats_messages = vm.$store.state.auth.user_info.chats_messages;

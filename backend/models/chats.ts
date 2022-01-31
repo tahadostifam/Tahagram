@@ -11,6 +11,8 @@ var schema = new mongoose.Schema({
     // SECTION - Private
     sides: {
         type: Object,
+        unique: false,
+        index: false,
     },
     // SECTION - Channel & Groups
     username: {
