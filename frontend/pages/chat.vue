@@ -789,7 +789,7 @@ export default {
           const chats_messages = vm.$store.state.auth.user_info.chats_messages
           if (chats_messages) {
             const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
-            if (find_result) {
+            if (find_result && find_result.sides) {
               chat = {
                 chat_id: find_result._id,
                 username: find_result.target_username,
