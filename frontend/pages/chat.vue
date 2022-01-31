@@ -767,9 +767,6 @@ export default {
                 chat_id: this.$data.active_chat.chat_id,
                 target_username: this.$data.active_chat.username
             }
-            // if (this.$data.active_chat.non_created_chat) {
-            //   data_to_send["target_username"] = this.$data.active_chat.username
-            // }
 
             ws.send(JSON.stringify(data_to_send))
           }
@@ -1063,7 +1060,7 @@ export default {
             vm.$set(vm.$data.active_chat, "username", null);
             vm.$set(vm.$data.active_chat, "full_name", null);
             vm.$set(vm.$data.active_chat, "messages", null);
-            vm.$set(vm.$data.active_chat, "profile_photos", null);
+            vm.$set(vm.$data.active_chat, "profile_photo", null);
             return vm.$set(vm.$data, "show_chat_view", false);
           }
         }

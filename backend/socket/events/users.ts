@@ -52,6 +52,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const message_text = parsedData.send_text_message_input;
     const target_username = parsedData.target_username;
+
     if (message_text && message_text.trim() != "" && chat_id && chat_id.trim() != "" && target_username && target_username.length > 0) {
         const message_id = new ObjectId().toString();
         const message = {
@@ -76,34 +77,22 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
             ws.send(JSON.stringify(response));
         }
 
-        // let target_username: string | null = null;
         var target_ws: ISocketClient | undefined;
-        // let chat: IChat = await Chats.findOne({
-        //     $or: [{ sides: { user_1: ws.user.username, user_2: parsedData.target_username } }, { sides: { user_2: ws.user.username, user_1: parsedData.target_username } }],
-        // });
         let chat: IChat = await Chats.findOne({
             $or: [{ sides: { user_1: ws.user.username, user_2: target_username } }, { sides: { user_1: target_username, user_2: ws.user.username } }],
         });
-
-        console.log(chat); // NOTE
 
         function setTargetWs() {
             target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
         }
 
         if (chat) {
-            // target_username = findOutTargetUsernameFromChat(chat, ws.user.username);
             await setTargetWs();
 
             if (!target_ws || String(target_ws).trim() == "") {
                 target_ws = undefined;
             }
         }
-        // else {
-        //     if (parsedData.target_username) {
-        //         target_username = parsedData.target_username;
-        //     }
-        // }
 
         if (chat && chat._id) {
             await setTargetWs();
@@ -259,14 +248,3 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
         }
     }
 }
-
-// function findOutTargetUsernameFromChat(chat: IChat, username: string): string | null {
-//     if (chat.sides) {
-//         if (chat.sides.user_1 != username) {
-//             return chat.sides.user_1;
-//         } else if (chat.sides.user_2 != username) {
-//             return chat.sides.user_2;
-//         }
-//     }
-//     return null;
-// }

@@ -119,7 +119,6 @@ function message_sended(vm, parsedData) {
       _id: new_chat_id,
       chat_type: parsedData.chat_type,
       messages_list: [parsedData.message_callback],
-      sides: parsedData.chat_created.sides,
       target_username: parsedData.target_username,
     });
   } else {
@@ -144,8 +143,6 @@ function message_sended(vm, parsedData) {
 }
 
 function we_have_new_message(vm, parsedData) {
-  console.log("chat_created", parsedData.chat_created);
-
   if (vm.$store.state.auth.chats_list) {
     const chat_id = parsedData.chat_id;
     const chats_messages = vm.$store.state.auth.user_info.chats_messages;
@@ -176,22 +173,27 @@ function we_have_new_message(vm, parsedData) {
             ({ _id }) => _id === parsedData.chat_id
           );
           if (find_result) {
-            vm.$set(
-              vm.$data.active_chat,
-              "messages",
-              find_result.messages_list
-            );
+            // TODO - Notifications
+            if (vm.$data.active_chat.chat_id == parsedData.chat_id) {
+              vm.$set(
+                vm.$data.active_chat,
+                "messages",
+                find_result.messages_list
+              );
+            }
           }
         }
       } else {
-        vm.$set(vm.$data.active_chat, "messages", [parsedData.message]);
+        // TODO - Notifications
+        if (vm.$data.active_chat.chat_id == parsedData.chat_id) {
+          vm.$set(vm.$data.active_chat, "messages", [parsedData.message]);
+        }
       }
     } else {
       vm.$store.commit("auth/createNewChat", {
         _id: parsedData.new_chat._id,
         chat_type: parsedData.chat_type,
         messages_list: [parsedData.message],
-        sides: parsedData.chat_created.sides,
         target_username: parsedData.target_username,
       });
     }
