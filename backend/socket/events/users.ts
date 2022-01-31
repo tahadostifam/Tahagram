@@ -218,11 +218,9 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     chat_id: chat_id,
                 };
                 if (chat_created) {
-                    // ANCHOR
                     // our method cannot know that when should will send the `new_chat`
                     data_to_send["chat_type"] = chat_type;
                     data_to_send["new_chat"] = new_chat;
-                    console.log("chat created", data_to_send);
                 }
                 target_ws.ws.send(JSON.stringify(data_to_send));
             }
