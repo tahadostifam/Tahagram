@@ -54,83 +54,83 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
     const target_username = parsedData.target_username;
 
     if (message_text && message_text.trim() != "" && chat_id && chat_id.trim() != "" && target_username && target_username.length > 0) {
-        const message_id = new ObjectId().toString();
-        const message = {
-            message_id: message_id,
-            sender_username: ws.user.username,
-            message_type: "text",
-            send_time: Date.now(),
-            content: message_text,
-            edited: false,
-        };
+        if (target_username != ws.user.username) {
+            const message_id = new ObjectId().toString();
+            const message = {
+                message_id: message_id,
+                sender_username: ws.user.username,
+                message_type: "text",
+                send_time: Date.now(),
+                content: message_text,
+                edited: false,
+            };
 
-        async function pushMessage(response: object) {
-            const result = await Chats.findOneAndUpdate(
-                { _id: chat_id },
-                {
-                    $push: {
-                        messages_list: message,
-                    },
-                }
-            );
+            async function pushMessage(response: object) {
+                const result = await Chats.findOneAndUpdate(
+                    { _id: chat_id },
+                    {
+                        $push: {
+                            messages_list: message,
+                        },
+                    }
+                );
 
-            ws.send(JSON.stringify(response));
-        }
-
-        var target_ws: ISocketClient | undefined;
-        let chat: IChat = await Chats.findOne({
-            $or: [{ sides: { user_1: ws.user.username, user_2: target_username } }, { sides: { user_1: target_username, user_2: ws.user.username } }],
-        });
-
-        function setTargetWs() {
-            target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
-        }
-
-        if (chat) {
-            await setTargetWs();
-
-            if (!target_ws || String(target_ws).trim() == "") {
-                target_ws = undefined;
+                ws.send(JSON.stringify(response));
             }
-        }
 
-        if (chat && chat._id) {
-            await setTargetWs();
-
-            pushMessage({
-                event: "send_text_message",
-                chat_id: chat_id,
-                message: "message sended",
-                message_callback: message,
+            var target_ws: ISocketClient | undefined;
+            let chat: IChat = await Chats.findOne({
+                $or: [{ sides: { user_1: ws.user.username, user_2: target_username } }, { sides: { user_1: target_username, user_2: ws.user.username } }],
             });
 
-            if (chat.chat_type == "private") {
-                const room = rooms[chat_id];
-                if (room) {
-                    if (target_ws) {
-                        broadCastToOtherSide(target_ws, chat.chat_type, false);
+            function setTargetWs() {
+                target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+            }
+
+            if (chat) {
+                await setTargetWs();
+
+                if (!target_ws || String(target_ws).trim() == "") {
+                    target_ws = undefined;
+                }
+            }
+
+            if (chat) {
+                await setTargetWs();
+
+                pushMessage({
+                    event: "send_text_message",
+                    chat_id: chat_id,
+                    message: "message sended",
+                    message_callback: message,
+                });
+
+                if (chat.chat_type == "private") {
+                    const room = rooms[chat_id];
+                    if (room) {
+                        if (target_ws) {
+                            broadCastToOtherSide(target_ws, chat.chat_type, false);
+                        } else {
+                            console.error("B :: cannot find target_ws");
+                        }
                     } else {
-                        console.error("B :: cannot find target_ws");
+                        if (chat._id && target_username) {
+                            createPrivateRoom(chat._id, ws.user.username, target_username).then((room) => {
+                                if (target_ws) {
+                                    broadCastToOtherSide(target_ws, chat.chat_type, true);
+                                } else {
+                                    console.error("C :: cannot find target_ws");
+                                }
+                            });
+                        } else {
+                            console.error("chat._id or target_username or target_ws is empty");
+                        }
                     }
                 } else {
-                    if (chat._id && target_username) {
-                        createPrivateRoom(chat._id, ws.user.username, target_username).then((room) => {
-                            if (target_ws) {
-                                broadCastToOtherSide(target_ws, chat.chat_type, true);
-                            } else {
-                                console.error("C :: cannot find target_ws");
-                            }
-                        });
-                    } else {
-                        console.error("chat._id or target_username or target_ws is empty");
-                    }
+                    // TODO
+                    console.error("chat is not private :)");
                 }
             } else {
-                // TODO
-                console.error("chat is not private :)");
-            }
-        } else {
-            if (target_username != ws.user.username) {
                 await setTargetWs();
 
                 // we must create a new private_chat
@@ -176,7 +176,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                             },
                         },
                         event: "send_text_message",
-                        chat_id: chat_id,
+                        chat_id: new_chat._id,
                         message: "message sended",
                         message_callback: message,
                         chat_type: "private",
@@ -194,13 +194,12 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                                         user_2: target_username,
                                     },
                                     messages: [message],
-                                    full_name: user.full_name,
-                                    username: user.username,
+                                    full_name: ws.user.full_name,
+                                    username: ws.user.username,
                                 },
                                 event: "chat_created_from_a_user",
-                                chat_id: chat_id,
+                                chat_id: new_chat._id,
                                 chat_type: "private",
-                                target_username: target_username,
                             };
                             if (user.profile_photos.length > 0) {
                                 data_to_send["profile_photo"] = user.profile_photos[0];
@@ -210,33 +209,33 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     });
                 }
             }
-        }
 
-        async function broadCastToOtherSide(target_ws: ISocketClient | undefined, chat_type: string, chat_created: boolean) {
-            if (target_ws) {
-                const new_chat: any = {
-                    username: target_ws.ws.user.username,
-                    full_name: target_ws.ws.user.full_name,
-                    sides: {
-                        user_1: ws.user.username,
-                        user_2: target_ws.ws.user.username,
-                    },
-                    target_username: target_username,
-                };
-                if (ws.user.profile_photos.length > 0) {
-                    new_chat["profile_photo"] = ws.user.profile_photos[0];
+            async function broadCastToOtherSide(target_ws: ISocketClient | undefined, chat_type: string, chat_created: boolean) {
+                if (target_ws) {
+                    const new_chat: any = {
+                        username: target_ws.ws.user.username,
+                        full_name: target_ws.ws.user.full_name,
+                        sides: {
+                            user_1: ws.user.username,
+                            user_2: target_ws.ws.user.username,
+                        },
+                        target_username: target_username,
+                    };
+                    if (ws.user.profile_photos.length > 0) {
+                        new_chat["profile_photo"] = ws.user.profile_photos[0];
+                    }
+                    let data_to_send: any = {
+                        event: "you_have_new_message",
+                        message: message,
+                        chat_id: chat_id,
+                    };
+                    if (chat_created) {
+                        // our method cannot know that when should will send the `new_chat`
+                        data_to_send["chat_type"] = chat_type;
+                        data_to_send["new_chat"] = new_chat;
+                    }
+                    target_ws.ws.send(JSON.stringify(data_to_send));
                 }
-                let data_to_send: any = {
-                    event: "you_have_new_message",
-                    message: message,
-                    chat_id: chat_id,
-                };
-                if (chat_created) {
-                    // our method cannot know that when should will send the `new_chat`
-                    data_to_send["chat_type"] = chat_type;
-                    data_to_send["new_chat"] = new_chat;
-                }
-                target_ws.ws.send(JSON.stringify(data_to_send));
             }
         }
     }

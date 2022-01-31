@@ -49,8 +49,6 @@ window.initSocket = () => {
 };
 
 window.handleSocketMessages = (vm, parsedData) => {
-  console.log(parsedData);
-
   if (parsedData.event == "search_in_chats") {
     vm.$set(vm.$data, "search_chat_result", parsedData.data);
   } else if (
@@ -91,7 +89,7 @@ function chat_created(vm, parsedData) {
     _id: parsedData.__chat_created.chat_id,
     chat_type: parsedData.chat_type,
     messages_list: parsedData.__chat_created.messages,
-    target_username: parsedData.target_username,
+    target_username: parsedData.__chat_created.username,
   });
 }
 
