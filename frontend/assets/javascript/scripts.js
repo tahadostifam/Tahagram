@@ -9,6 +9,10 @@ window.initSocket = () => {
   if (refresh_token && auth_token && username) {
     const socket = new WebSocket(configs.socket_address, null, { headers: {} });
 
+    socket.onopen = () => {
+      vm.$set(vm.$data, "show_internet_bar", false);
+    };
+
     socket.onmessage = (event) => {
       let parsedData;
       try {
@@ -32,6 +36,7 @@ window.initSocket = () => {
 
     socket.onclose = function (e) {
       console.log("Socket is closed. Reconnect will be attempted in 1 second.");
+      vm.$set(vm.$data, "show_internet_bar", true);
       setTimeout(function () {
         initSocket();
       }, 1000);

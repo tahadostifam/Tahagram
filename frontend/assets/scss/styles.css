@@ -876,4 +876,19 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
     font-size: 10vw;
   }
 }
+
+.internet_bar {
+  width: 100%;
+  height: 60px;
+  padding: 0 20px;
+  background-color: #f7b80c;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
 /*# sourceMappingURL=styles.css.map */

@@ -390,6 +390,14 @@
         </div>
 
         <div class="chats">
+          <div class="internet_bar" v-if="$nuxt.isOffline || show_internet_bar">
+            <v-progress-circular
+                class="d-inline-block mr-4"
+                indeterminate
+              ></v-progress-circular>
+            Connecting...
+          </div>
+
           <template v-if="search_chat_input.trim().length == 0">
             <template v-if="chats_list && chats_list.length > 0">
               <ChatRow
@@ -400,7 +408,6 @@
                 :active_chat="item.chat_id == active_chat.chat_id"
                 :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
               ></ChatRow>
-              <!-- :image_url="item.profile_photo.filename" -->
             </template>
             <ThereIsNothing v-else />
           </template>
@@ -724,6 +731,7 @@ export default {
       },
       chats_list: null,
       message_context_menu_message_id: null,
+      show_internet_bar: false
     };
   },
   mounted() {  
@@ -740,7 +748,7 @@ export default {
     this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
-
+    
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.vm = this;
   },
@@ -1161,7 +1169,7 @@ export default {
             message_id: message_id
         }))
       }
-    }
+    },
   },
 };
 </script>
