@@ -883,7 +883,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   padding: 0 20px;
   background-color: #f7b80c;
   margin-bottom: 15px;
-  border-radius: 10px;
+  border-radius: 5px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

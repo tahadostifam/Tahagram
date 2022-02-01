@@ -268,7 +268,29 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                         message_id: _message_id,
                     })
                 );
+
+                const target_username = findOutTUofChat(chat, ws.user.username);
+                const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+                if (target_ws) {
+                    target_ws.ws.send(
+                        JSON.stringify({
+                            message: "message deleted",
+                            chat_id: chat_id,
+                            message_id: _message_id,
+                        })
+                    );
+                }
             }
         }
+    }
+}
+
+export function findOutTUofChat(chat: IChat, username: string) {
+    if (chat.sides?.user_1 != username) {
+        return chat.sides?.user_1;
+    } else if (chat.sides?.user_2 != username) {
+        return chat.sides?.user_2;
+    } else {
+        return null;
     }
 }
