@@ -522,7 +522,7 @@
               </div>
             </div>
 
-            <div class="messages-scroll" >
+            <div class="messages-scroll" @scroll="on_chat_scroll_event(this)">
               <div class="messages_list" v-if="active_chat.messages && active_chat.messages.length > 0 && active_chat.username && active_chat.full_name">
                 <!-- Context Menu For Messages -->
 
@@ -772,6 +772,10 @@ export default {
     }
   },
   methods: {
+    on_chat_scroll_event(e){
+      console.log("scrolled");
+      console.log(e);
+    },
     submit_send_text_messages(){
       if (this.$data.send_text_message_input.trim() != "") {
         const ws = window.ws;
@@ -1103,7 +1107,7 @@ export default {
     upload_croped_profile_photo() {
       this.$set(this.$data.crop_profile_photo, 'button_loading_state', true);
       this.$set(this.$data.crop_profile_photo, "show", false);
-      
+
       const canvas = this.$data.crop_profile_photo.canvas;
       if (canvas) {
         const croppedImage = canvas.toDataURL("image/png");
