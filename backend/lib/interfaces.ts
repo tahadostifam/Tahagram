@@ -42,6 +42,7 @@ export interface IChat {
     bio?: string;
     chat_type: string;
     messages_list: [ITextMessage | IImageMessage];
+    target_username?: string;
 }
 
 export interface ITextMessage {
@@ -51,6 +52,7 @@ export interface ITextMessage {
     send_time: number;
     content: string;
     edited: boolean;
+    seen_state: string;
 }
 
 export interface IImageMessage {

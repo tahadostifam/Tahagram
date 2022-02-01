@@ -561,6 +561,7 @@
                     :my_message="item.sender_username == user_info.username"
                     :seen_state="item.seen_state"
                   ></TextMessage>
+                  <!-- ANCHOR -->
 
                   <!-- <ImageMessage
                     v-if="item.type == 'image'"
@@ -766,16 +767,12 @@ export default {
         const ws = window.ws;
         if (ws) {
           if (this.$data.active_chat.chat_id) {
-            // TODO
-            // NOTE - we must make a ThreadsList 
-            // it means if a message not send we should know that and after few seconds try again
             let data_to_send = {
                 event: "send_text_message",
                 send_text_message_input: this.$data.send_text_message_input.trim(),
                 chat_id: this.$data.active_chat.chat_id,
                 target_username: this.$data.active_chat.username
             }
-
             ws.send(JSON.stringify(data_to_send))
           }
           this.$set(this.$data, 'send_text_message_input', '');

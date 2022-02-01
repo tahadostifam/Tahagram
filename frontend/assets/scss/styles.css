@@ -882,8 +882,8 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   height: 60px;
   padding: 0 20px;
   background-color: #f7b80c;
-  margin-bottom: 15px;
-  border-radius: 5px;
+  margin-bottom: 8px;
+  border-radius: 10px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

@@ -122,12 +122,15 @@ function message_deleted(vm, parsedData) {
 }
 
 function message_sended(vm, parsedData) {
+  const message = Object.assign(parsedData.message_callback, {
+    seen_state: "sended",
+  });
   if (parsedData.chat_created && parsedData.chat_created.chat_id) {
     const new_chat_id = parsedData.chat_created.chat_id;
     vm.$set(vm.$data.active_chat, "chat_id", new_chat_id);
     vm.$set(vm.$data.active_chat, "chat_type", parsedData.chat_type);
     vm.$set(vm.$data.active_chat, "non_created_chat", false);
-    vm.$set(vm.$data.active_chat, "messages", [parsedData.message_callback]);
+    vm.$set(vm.$data.active_chat, "messages", [message]);
 
     vm.$store.commit("auth/addChat", {
       chat_id: vm.$data.active_chat.chat_id,
@@ -140,12 +143,12 @@ function message_sended(vm, parsedData) {
     vm.$store.commit("auth/createNewChat", {
       _id: new_chat_id,
       chat_type: parsedData.chat_type,
-      messages_list: [parsedData.message_callback],
+      messages_list: [message],
       target_username: parsedData.target_username,
     });
   } else {
     vm.$store.commit("auth/addNewMessage", {
-      message: parsedData.message_callback,
+      message: message,
       chat_id: parsedData.chat_id,
     });
     if (vm.$data.active_chat && vm.$data.active_chat.messages) {
@@ -159,7 +162,7 @@ function message_sended(vm, parsedData) {
         }
       }
     } else {
-      vm.$set(vm.$data.active_chat, "messages", [parsedData.message_callback]);
+      vm.$set(vm.$data.active_chat, "messages", [message]);
     }
   }
 }

@@ -3,7 +3,7 @@ import Chats from "../../models/chats";
 import { ObjectId } from "mongodb";
 import { createPrivateRoom, rooms } from "../room_manager";
 
-import { IChat, ISocketClient, IWebSocket } from "../../lib/interfaces";
+import { IChat, ISocketClient, IWebSocket, IWebSocket } from "../../lib/interfaces";
 import { users } from "../socket";
 
 export async function update_full_name(ws: IWebSocket, parsedData: any) {
@@ -63,6 +63,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 send_time: Date.now(),
                 content: message_text,
                 edited: false,
+                seen_state: "sended",
             };
 
             async function pushMessage(response: object) {
@@ -240,6 +241,8 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
         }
     }
 }
+
+export async function user_seened_message(ws: IWebSocket, parsedData: any) {}
 
 export async function delete_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;

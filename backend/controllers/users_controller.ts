@@ -10,7 +10,8 @@ const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
 import Chats from "../models/chats";
-import { IChat, IUser, IUserChatLink } from "../lib/interfaces";
+import { IChat, IImageMessage, ITextMessage, IUser, IUserChatLink } from "../lib/interfaces";
+import { findOutTUofChat } from "../socket/events/users";
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -264,21 +265,17 @@ export function getUserChatsMessages(username: string, user_chats_list: IUserCha
         let final_list: Array<IChat> = [];
         if (user_chats_list.length > 0) {
             return await user_chats_list.forEach(async (item: IUserChatLink, index: number) => {
-                let chat = await Chats.findOne({
+                let chat: IChat = await Chats.findOne({
                     _id: item.chat_id,
                 });
                 chat = JSON.parse(JSON.stringify(chat));
                 if (chat) {
                     switch (chat.chat_type) {
                         case "private":
-                            let target_username = null;
-                            if (String(chat.sides.user_1).trim() != username.trim()) {
-                                target_username = chat.sides.user_1;
-                            } else if (String(chat.sides.user_2).trim() != username.trim()) {
-                                target_username = chat.sides.user_2;
+                            const target_username = findOutTUofChat(chat, username);
+                            if (target_username) {
+                                chat.target_username = target_username;
                             }
-                            chat["target_username"] = target_username;
-                            delete chat["__v"];
                             break;
                     }
                     final_list.push(chat);
