@@ -3,7 +3,7 @@ import Chats from "../../models/chats";
 import { ObjectId } from "mongodb";
 import { createPrivateRoom, rooms } from "../room_manager";
 
-import { IChat, ISocketClient, IWebSocket, IWebSocket } from "../../lib/interfaces";
+import { IChat, ISocketClient, IWebSocket } from "../../lib/interfaces";
 import { users } from "../socket";
 
 export async function update_full_name(ws: IWebSocket, parsedData: any) {

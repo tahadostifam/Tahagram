@@ -101,6 +101,9 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
             case "delete_message":
                 events.delete_message(ws, parsedData);
                 break;
+            case "seen_message":
+                events.user_seened_message(ws, parsedData);
+                break;
             default:
                 ws.send("command not found");
                 break;

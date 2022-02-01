@@ -646,12 +646,16 @@ body .v-application .v-navigation-drawer {
     transform: translate(-50%, -50%);
     width: calc(100% - 120px - 50px);
     height: calc(100% - 120px);
-    display: block;
+    align-items: center;
+    display: flex;
     img {
       position: relative;
       left: 50%;
       transform: translate(-50%, 0%);
-      height: 100%;
+
+      // really important
+      height: max-content;
+      max-height: 100%;
       max-width: 100%;
     }
   }

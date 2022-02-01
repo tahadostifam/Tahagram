@@ -727,7 +727,12 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
           transform: translate(-50%, -50%);
   width: calc(100% - 120px - 50px);
   height: calc(100% - 120px);
-  display: block;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 #view_image .image_content img {
@@ -735,7 +740,10 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   left: 50%;
   -webkit-transform: translate(-50%, 0%);
           transform: translate(-50%, 0%);
-  height: 100%;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  max-height: 100%;
   max-width: 100%;
 }
 

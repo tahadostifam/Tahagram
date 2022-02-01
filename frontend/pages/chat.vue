@@ -28,8 +28,8 @@
         >
       </div>
 
-      <div class="image_content">
-        <img :src="view_image.active_item.src" />
+      <div class="image_content" >
+        <img :src="view_image.active_item.src" ref="view_image_content"/>
       </div>
     </div>
 
@@ -955,8 +955,7 @@ export default {
       }
     },
     preview_self_profile() {
-      this.$set(this.$data.view_image, "show", true);
-      this.$set(this.$data.view_image.active_item, "index", 0);
+      
       let list = [];
       this.$store.state.auth.user_info.profile_photos.forEach((item) => {
         list.push({
@@ -966,17 +965,8 @@ export default {
             item.filename,
         });
       });
-      const index = this.$data.view_image.active_item;
-      this.$set(this.$data.view_image, "list", list);
-      this.$set(index, "src", this.$data.view_image.list[0].src);
-      const length = this.$data.view_image.list.length;
-      if (length == 1) {
-        this.$set(this.$data.view_image.controls, "right", false);
-      }
-      if (length > 1) {
-        this.$set(this.$data.view_image.controls, "right", true);
-      }
-      this.$set(this.$data.view_image.controls, "left", false);
+      
+      this.show_view_image_modal(list);
     },
     view_image_move_right() {
       const active_index = this.$data.view_image.active_item.index;
@@ -1018,6 +1008,21 @@ export default {
           this.$data.view_image.list[to_index].src
         );
       }
+    },
+    show_view_image_modal(list){
+      this.$set(this.$data.view_image, "show", true);
+      this.$set(this.$data.view_image.active_item, "index", 0);
+      const index = this.$data.view_image.active_item;
+      this.$set(this.$data.view_image, "list", list);
+      this.$set(index, "src", this.$data.view_image.list[0].src);
+      const length = this.$data.view_image.list.length;
+      if (length == 1) {
+        this.$set(this.$data.view_image.controls, "right", false);
+      }
+      if (length > 1) {
+        this.$set(this.$data.view_image.controls, "right", true);
+      }
+      this.$set(this.$data.view_image.controls, "left", false);
     },
     logout() {
       this.$router.push({ path: "/logout" });
