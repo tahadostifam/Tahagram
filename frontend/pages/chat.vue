@@ -124,13 +124,17 @@
         </div>
 
         <div class="d-flex align-center px-4 pb-5">
-          <!-- ANCHOR -->
           <div
             class="avatar"
             v-if="user_default_avatar"
             @click="preview_self_profile"
           >
             <img :src="user_default_avatar" />
+            <div class="photo_uploading" v-if="photo_uploading_state">
+              <v-progress-circular
+                indeterminate
+              ></v-progress-circular>
+            </div>
           </div>
 
           <template v-else>
@@ -247,13 +251,17 @@
         </div>
 
         <div class="d-flex align-center justify-center px-4 pb-5 flex-column">
-          <!-- ANCHOR -->
           <div
             class="avatar avatar_xlarge"
             v-if="user_default_avatar"
             @click="preview_self_profile"
           >
             <img :src="user_default_avatar" />
+            <div class="photo_uploading" v-if="photo_uploading_state">
+              <v-progress-circular
+                indeterminate
+              ></v-progress-circular>
+            </div>
           </div>
           <template v-else>
             <ColoredAvatar
@@ -355,7 +363,7 @@
           >
             CANCEL
           </v-btn>
-          <v-btn :color="theme_color" text @click="upload_croped_profile_photo">
+          <v-btn :color="theme_color" text @click="upload_croped_profile_photo" :loading="crop_profile_photo.button_loading_state">
             SAVE
           </v-btn>
         </v-card-actions>
@@ -706,7 +714,9 @@ export default {
         show: false,
         src: null,
         canvas: null,
+        button_loading_state: false
       },
+      photo_uploading_state: false,
       view_image: {
         show: false,
         list: [],
@@ -955,7 +965,6 @@ export default {
       }
     },
     preview_self_profile() {
-      
       let list = [];
       this.$store.state.auth.user_info.profile_photos.forEach((item) => {
         list.push({
@@ -1092,6 +1101,9 @@ export default {
       this.$set(this.$data.crop_profile_photo, "show", true);
     },
     upload_croped_profile_photo() {
+      this.$set(this.$data.crop_profile_photo, 'button_loading_state', true);
+      this.$set(this.$data.crop_profile_photo, "show", false);
+      
       const canvas = this.$data.crop_profile_photo.canvas;
       if (canvas) {
         const croppedImage = canvas.toDataURL("image/png");
@@ -1099,6 +1111,9 @@ export default {
         if (imageFile) {
           const requestBody = new FormData();
           requestBody.append("photo", imageFile);
+          
+          this.$set(this.$data, 'photo_uploading_state', true);
+
           this.$axios
             .$post("/api/profile_photos/upload_photo", requestBody, {
               headers: {
@@ -1108,7 +1123,6 @@ export default {
             })
             .then((response) => {
               if (response.message == "profile photo uploaded") {
-                this.$set(this.$data.crop_profile_photo, "show", false);
                 this.$store.commit(
                   "auth/addProfilePhotos",
                   response.profile_photo_filename
@@ -1117,6 +1131,9 @@ export default {
             })
             .catch((error) => {
               this.$router.push({ path: "/500" });
+            }).finally(() => {
+              this.$set(this.$data.crop_profile_photo, 'button_loading_state', false);
+              this.$set(this.$data, 'photo_uploading_state', false);
             });
         } else {
           console.log("no profile photo to upload");
