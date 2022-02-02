@@ -107,242 +107,16 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-dialog max-width="450" v-model="show_settings_dialog" scrollable>
-      <v-card v-if="settings_dialog_active_section == 'home'">
-        <div class="d-flex justify-space-between align-center">
-          <v-card-title class="text-h6"> Settings </v-card-title>
-          <div class="mr-2">
-            <v-btn
-              large
-              icon
-              style="padding-top: 3px"
-              @click="show_settings_dialog = false"
-            >
-              <v-icon class="icon"> mdi-close </v-icon>
-            </v-btn>
-          </div>
-        </div>
-
-        <div class="d-flex align-center px-4 pb-5">
-          <div
-            class="avatar"
-            v-if="user_default_avatar"
-            @click="preview_self_profile"
-          >
-            <img :src="user_default_avatar" />
-            <div class="photo_uploading" v-if="photo_uploading_state">
-              <v-progress-circular
-                indeterminate
-              ></v-progress-circular>
-            </div>
-          </div>
-
-          <template v-else>
-            <ColoredAvatar v-if="user_info.full_name" :value="user_info.full_name[0]" />
-            <ColoredAvatar v-else :value="''" />
-          </template>
-
-          <div class="ml-4">
-            <span class="text-white font-weight-medium d-block w-100">
-              <template v-if="user_info.full_name">
-                {{ user_info.full_name }}
-              </template>
-            </span>
-            <span class="text-grey d-block w-100"
-              >last seen today at 5:15 PM</span
-            >
-          </div>
-        </div>
-
-        <v-divider></v-divider>
-
-        <v-list nav tile dense>
-          <v-list-item-group>
-            <v-list-item
-              @click="settings_dialog_active_section = 'edit_profile'"
-            >
-              <v-list-item-icon>
-                <v-icon class="icon">mdi-information-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Edit Profile</v-list-item-title>
-            </v-list-item>
-
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon class="icon">mdi-bell-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Notification</v-list-item-title>
-            </v-list-item>
-
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon class="icon">mdi-keyboard-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>
-                <div class="d-flex justify-space-between">
-                  <div>Language</div>
-                  <div class="mr-2">
-                    <span class="text-theme_color">English</span>
-                  </div>
-                </div>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-
-        <v-divider></v-divider>
-
-        <v-list nav tile dense>
-          <v-list-item-group>
-            <v-list-item href="https://github.com/tahadostifam/ChatApp">
-              <v-list-item-icon>
-                <v-icon class="icon">mdi-help-circle-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>About ChatApp</v-list-item-title>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-card>
-      <v-card v-if="settings_dialog_active_section == 'edit_profile'">
-        <v-dialog max-width="400" v-model="settings_dialog_edit_full_name">
-          <v-card>
-            <v-card-title style="font-size: 17px" class="mb-0 pb-0 pl-4 pt-2">
-              Edit your name
-            </v-card-title>
-            <div class="px-5 pt-0">
-              <v-text-field v-model="update_full_name_input" label="Full name"></v-text-field>
-            </div>
-            <v-card-actions class="pr-2">
-              <v-spacer></v-spacer>
-              <v-btn
-                :color="theme_color"
-                text
-                @click="settings_dialog_edit_full_name = false"
-              >
-                CANCEL
-              </v-btn>
-              <v-btn @click="submit_edit_full_name" :color="theme_color" text> SAVE </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <div class="d-flex justify-space-between align-center">
-          <div class="d-flex align-center">
-            <v-btn
-              icon
-              depressed
-              large
-              class="ml-4"
-              @click="settings_dialog_active_section = 'home'"
-            >
-              <v-icon class="icon"> mdi-arrow-left </v-icon>
-            </v-btn>
-            <v-card-title class="text-h6"> Edit Profile </v-card-title>
-          </div>
-          <div class="mr-2">
-            <v-btn
-              large
-              icon
-              style="padding-top: 1px"
-              @click="show_settings_dialog = false"
-            >
-              <v-icon class="icon"> mdi-close </v-icon>
-            </v-btn>
-          </div>
-        </div>
-
-        <div class="d-flex align-center justify-center px-4 pb-5 flex-column">
-          <div
-            class="avatar avatar_xlarge"
-            v-if="user_default_avatar"
-            @click="preview_self_profile"
-          >
-            <img :src="user_default_avatar" />
-            <div class="photo_uploading" v-if="photo_uploading_state">
-              <v-progress-circular
-                indeterminate
-              ></v-progress-circular>
-            </div>
-          </div>
-          <template v-else>
-            <ColoredAvatar
-              v-if="user_info.full_name"
-              :value="user_info.full_name[0]"
-              :avatar_xlarge="true"
-            />
-            <ColoredAvatar v-else :value="''" style="xlarge" />
-          </template>
-
-          <v-btn
-            class="rounded-pill mt-4"
-            depressed
-            :color="theme_color"
-            style="overflow: hidden"
-          >
-            <input
-              type="file"
-              id="upload_profile_photo_input"
-              style="opacity: 0; position: absolute; width: 200px; height: 40px"
-              onchange="window.upload_profile_photo(this)"
-            />
-            SET PROFILE PHOTO
-          </v-btn>
-        </div>
-
-        <v-divider></v-divider>
-
-        <!-- RULES -->
-        <v-list nav>
-          <v-list-item-group>
-            <v-list-item @click="settings_dialog_edit_full_name = true">
-              <v-list-item-icon class="pl-3">
-                <v-icon class="icon">mdi-account-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>
-                <div class="d-flex flex-column text-left">
-                  <span class="text-white d-block w-100">{{user_info.full_name}}</span>
-                  <span
-                    class="text-grey d-block w-100 mt-1"
-                    style="font-size: 14px"
-                    >Name</span
-                  >
-                </div>
-              </v-list-item-title>
-            </v-list-item>
-            <v-list-item disabled>
-              <v-list-item-icon class="pl-3">
-                <v-icon class="icon">mdi-at</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>
-                <div class="d-flex flex-column text-left">
-                  <span class="text-white d-block w-100">{{username}}</span>
-                  <span
-                    class="text-grey d-block w-100 mt-1"
-                    style="font-size: 14px"
-                    >Username</span
-                  >
-                </div>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-        <!-- RULES -->
-
-        <div class="px-5 py-3">
-          <v-text-field
-            placeholder="Bio"
-            counter="70"
-            maxlength="70"
-            v-model="bio_input"
-            @input="submit_bio_change"
-          ></v-text-field>
-          <p class="text-grey">
-            Any details such as age, occupation or city.
-            <br />
-            Example: 15y.o. full-stack developer from Iran.
-          </p>
-        </div>
-      </v-card>
-    </v-dialog>
+    <SettingsDialog
+      :show="show_settings_dialog"
+      :user_default_avatar="user_default_avatar"
+      :user_info="user_info"
+      :active_section="settings_dialog_active_section"
+      :photo_uploading_state="photo_uploading_state"
+      v-on:initilizing_socket_again="initilizing_socket_again"
+      v-on:submit_edit_full_name="submit_edit_full_name"
+      v-on:preview_self_profile="preview_self_profile"
+      ></SettingsDialog>
 
     <v-dialog max-width="350" v-model="crop_profile_photo.show">
       <v-card class="pa-5 pb-0">
@@ -711,7 +485,6 @@ import { EmojiPicker } from "vue-emoji-picker";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import configs from "@/assets/javascript/configs";
-import Cookies from "js-cookie";
 import ViewUserProfile from '../components/view_user_profile.vue';
 
 export default {
@@ -790,8 +563,6 @@ export default {
     this.handle_escape_button();
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
-    this.$set(this.$data, 'update_full_name_input', this.$store.state.auth.user_info.full_name)
-    this.$set(this.$data, 'bio_input', this.$store.state.auth.user_info.bio)
     // SECTION - setting user chats
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     
@@ -969,19 +740,6 @@ export default {
           "/uploads/profile_photos/" +
           first_photo_filename
       );
-      }
-    },
-    submit_bio_change(){
-      const ws = window.ws;
-        if (ws) {
-            ws.send(JSON.stringify({
-                event: "update_bio",
-                bio: this.$data.bio_input
-            }))
-        } else {
-          this.initilizing_socket_again().then(() => {
-            this.submit_bio_change()
-          })
       }
     },
     search_chat_submit() {

@@ -37,7 +37,7 @@ export default {
         let final_filename;
         async function generateRandomFileName() {
             final_filename = await crypto.randomBytes(10).toString("hex");
-            if (fs.existsSync(profile_photos_directory + final_filename)) {
+            if (fs.existsSync(photo_messages_directory + final_filename)) {
                 console.log("bad filename :)");
 
                 await generateRandomFileName();

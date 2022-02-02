@@ -242,6 +242,16 @@ function we_have_new_message(vm, parsedData) {
   }
 }
 
+window.initilizing_socket_again = () => {
+  return new Promise((resolve) => {
+    setTimeout(async () => {
+      console.error("socket is empty!");
+      await window.initSocket();
+      resolve();
+    }, 1000);
+  });
+};
+
 window.onload = () => {
   window.handleSplashScreen();
 };
