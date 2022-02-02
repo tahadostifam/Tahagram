@@ -104,6 +104,9 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
             case "seen_message":
                 events.user_seened_message(ws, parsedData);
                 break;
+            case "get_user_full_info":
+                events.get_user_full_info(ws, parsedData);
+                break;
             default:
                 ws.send("command not found");
                 break;

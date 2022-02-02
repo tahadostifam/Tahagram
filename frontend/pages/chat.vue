@@ -781,6 +781,13 @@ export default {
   },
   methods: {
     show_user_profile(){
+      if (this.$data.active_chat.username) {
+        window.ws.send(JSON.stringify({
+          "event": "get_user_full_info",
+          "target_username": this.$data.active_chat.username
+        }))
+      }
+      
       this.$set(this.$data.view_user_profile_photo, 'show', true)
     },
     submit_send_text_messages(){

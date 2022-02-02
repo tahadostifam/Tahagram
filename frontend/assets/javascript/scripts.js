@@ -76,10 +76,23 @@ window.handleSocketMessages = (vm, parsedData) => {
     message_sended(vm, parsedData);
   } else if (parsedData.message == "message deleted") {
     message_deleted(vm, parsedData);
+  } else if (parsedData.event == "get_user_full_info") {
+    get_user_full_info(vm, parsedData);
   } else {
     console.log(parsedData);
   }
 };
+
+function get_user_full_info(vm, parsedData) {
+  vm.$set(vm.$data.active_chat, "username", parsedData.user_info.username);
+  vm.$set(vm.$data.active_chat, "full_name", parsedData.user_info.full_name);
+  vm.$set(
+    vm.$data.active_chat,
+    "profile_photos",
+    parsedData.user_info.profile_photos
+  );
+  vm.$set(vm.$data.active_chat, "bio", parsedData.user_info.bio);
+}
 
 function chat_created(vm, parsedData) {
   vm.$store.commit("auth/addChat", {

@@ -297,3 +297,24 @@ export function findOutTUofChat(chat: IChat, username: string) {
         return null;
     }
 }
+
+export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
+    const target_username = parsedData.target_username;
+    if (target_username && target_username.length > 0 && target_username != ws.user.username) {
+        const user = await User.findOne({
+            username: target_username,
+        });
+        if (user) {
+            let user_info_to_send: any = {
+                event: "get_user_full_info",
+                user_info: {
+                    full_name: user.full_name,
+                    username: user.username,
+                    bio: user.bio,
+                    profile_photos: user.profile_photos,
+                },
+            };
+            ws.send(JSON.stringify(user_info_to_send));
+        }
+    }
+}
