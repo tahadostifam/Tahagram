@@ -522,7 +522,8 @@ body,
       display: none;
     }
     #send_message_button,
-    #emojies_button {
+    #emojies_button,
+    #send_media_button {
       position: absolute;
       top: 19px;
       z-index: 4;
@@ -535,10 +536,14 @@ body,
       right: 3px;
     }
     #emojies_button {
-      left: 3px;
+      right: 49px;
     }
     #send_message_textbox {
       padding: 0 38px;
+      padding-right: 89px;
+    }
+    #send_media_button {
+      left: 4px;
     }
     .emoji_picker {
       #emoji_picker_card {
@@ -548,6 +553,7 @@ body,
         width: 300px;
         height: 350px;
         overflow-y: scroll;
+        right: 0;
       }
       .set_title {
         color: $color_6;

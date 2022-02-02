@@ -603,7 +603,38 @@
 
             <div class="send_message_section">
               <div class="send_box">
-                <!-- TODO -->
+                <v-btn
+                  id="send_media_button"
+                  @click="select_photo_to_send"
+                  :color="theme_color"
+                  dark
+                  icon
+                  x-large
+                  style="overflow:hidden"
+                >
+                  <input
+                    type="file"
+                    id="send_media_input"
+                    style="opacity: 0; position: absolute; width: 200px; height: 40px"
+                    onchange="window.select_photo_to_send(this)"
+                  />
+                  <v-icon small :color="theme_color">
+                    mdi-image
+                  </v-icon>
+                </v-btn>
+
+
+                <v-text-field
+                  id="send_message_textbox"
+                  v-model="send_text_message_input"
+                  aria-multiline="true"
+                  class="rounded-pill"
+                  solo
+                  placeholder="پیام شما..."
+                  v-on:keypress.enter="submit_send_text_messages()"
+                  dir="rtl"
+                ></v-text-field>
+
                 <emoji-picker class="emoji_picker" @emoji="insert">
                   <div
                     slot="emoji-invoker"
@@ -649,16 +680,7 @@
                     </v-card>
                   </div>
                 </emoji-picker>
-                <v-text-field
-                  id="send_message_textbox"
-                  v-model="send_text_message_input"
-                  aria-multiline="true"
-                  class="rounded-pill"
-                  solo
-                  placeholder="پیام شما..."
-                  v-on:keypress.enter="submit_send_text_messages()"
-                  dir="rtl"
-                ></v-text-field>
+
                 <v-btn
                   id="send_message_button"
                   @click="submit_send_text_messages"
@@ -774,6 +796,7 @@ export default {
     this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     
     window.upload_profile_photo = this.handle_upload_profile_photo;
+    window.select_photo_to_send = this.select_photo_to_send;
     window.vm = this;
   },
   computed: {
@@ -785,6 +808,9 @@ export default {
     }
   },
   methods: {
+    select_photo_to_send(e){
+      console.log(e);
+    },
     show_user_profile(){
       if (this.$data.active_chat.username) {
         window.ws.send(JSON.stringify({

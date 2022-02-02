@@ -1,21 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import { clientIp, cleanIpDots } from "../lib/client_ip";
-import * as database from "../lib/database";
 import status_codes from "../lib/status_codes";
-import store, { makeUserStoreId, setUserTokens } from "../lib/store";
 import crypto from "crypto";
 import fs from "fs";
 
 import User from "../models/user";
 
-const profile_photos_directory = "/uploads/profile_photos/";
+const photo_messages_directory = "/uploads/photo_messages/";
 
 export interface IRequest extends Request {
     files: any;
 }
 
 export default {
-    UploadPhotoAction: async (req: IRequest, res: Response, next: NextFunction) => {
+    NewPhotoMessageAction: async (req: IRequest, res: Response, next: NextFunction) => {
         if (!req.files || !req.files["photo"]) {
             res.statusCode = 400;
             return res.send({
@@ -50,31 +47,9 @@ export default {
         await generateRandomFileName();
 
         try {
-            await photo.mv(process.cwd() + profile_photos_directory + final_filename);
+            await photo.mv(process.cwd() + photo_messages_directory + final_filename);
         } catch {
             status_codes.error(req, res, next);
         }
-
-        await User.updateOne(
-            {
-                username: req.headers.username,
-            },
-            {
-                $push: {
-                    profile_photos: {
-                        filename: final_filename,
-                    },
-                },
-            }
-        );
-
-        status_codes.profile_photo_uploaded(
-            {
-                profile_photo_filename: final_filename,
-            },
-            req,
-            res,
-            next
-        );
     },
 };

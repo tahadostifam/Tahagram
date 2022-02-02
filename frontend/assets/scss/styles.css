@@ -594,14 +594,16 @@ body,
 }
 
 .send_message_section .send_box #send_message_button,
-.send_message_section .send_box #emojies_button {
+.send_message_section .send_box #emojies_button,
+.send_message_section .send_box #send_media_button {
   position: absolute;
   top: 19px;
   z-index: 4;
 }
 
 .send_message_section .send_box #send_message_button.v-btn--icon.v-size--x-large,
-.send_message_section .send_box #emojies_button.v-btn--icon.v-size--x-large {
+.send_message_section .send_box #emojies_button.v-btn--icon.v-size--x-large,
+.send_message_section .send_box #send_media_button.v-btn--icon.v-size--x-large {
   width: 42px;
   height: 42px;
 }
@@ -611,11 +613,16 @@ body,
 }
 
 .send_message_section .send_box #emojies_button {
-  left: 3px;
+  right: 49px;
 }
 
 .send_message_section .send_box #send_message_textbox {
   padding: 0 38px;
+  padding-right: 89px;
+}
+
+.send_message_section .send_box #send_media_button {
+  left: 4px;
 }
 
 .send_message_section .send_box .emoji_picker #emoji_picker_card {
@@ -625,6 +632,7 @@ body,
   width: 300px;
   height: 350px;
   overflow-y: scroll;
+  right: 0;
 }
 
 .send_message_section .send_box .emoji_picker .set_title {
