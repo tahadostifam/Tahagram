@@ -370,7 +370,12 @@
       </v-card>
     </v-dialog>
 
-    <ViewUserProfile :show.sync="view_user_profile_photo.show" :user_default_avatar="gimme_profile_photo_link_addr(active_chat.profile_photo)" :active_chat="active_chat" v-on:update:show="view_user_profile_photo.show = false"></ViewUserProfile>
+    <ViewUserProfile
+      :show.sync="view_user_profile_photo.show"
+      :user_default_avatar="gimme_profile_photo_link_addr(active_chat.profile_photo)"
+      :active_chat="active_chat" v-on:update:show="view_user_profile_photo.show = false"
+      v-on:preview_self_profile="preview_user_profile"
+    ></ViewUserProfile>
 
     <div class="pa-0" id="main_container">
       <div class="chats_list">
@@ -982,15 +987,42 @@ export default {
         }
       }
     },
+    preview_user_profile(){
+      let list = [];
+      if (this.$data.active_chat.profile_photos) {
+        this.$data.active_chat.profile_photos.forEach((item) => {
+          const photo_addr = this.gimme_profile_photo_link_addr(item)
+          if (photo_addr) {
+            list.push({
+              src: photo_addr
+            });
+          }
+        });
+        if (list.length > 0) {
+          this.show_view_image_modal(list);
+        }
+      }
+      else if (this.$data.active_chat.profile_photo){
+        const photo_addr = this.gimme_profile_photo_link_addr(this.$data.active_chat.profile_photo)
+        if (photo_addr) {
+          this.show_view_image_modal([{
+            src: photo_addr
+          }])
+        }
+      }
+    },
     preview_self_profile() {
       let list = [];
       this.$store.state.auth.user_info.profile_photos.forEach((item) => {
-        list.push({
-          src:
-            this.$axios.defaults.baseURL +
-            "/uploads/profile_photos/" +
-            item.filename,
-        });
+        const photo_addr = this.gimme_profile_photo_link_addr(item)
+        if (photo_addr) {
+          list.push({
+            src: photo_addr
+          });
+        }
+        if (list.length > 0) {
+          this.show_view_image_modal(list)
+        }
       });
       
       this.show_view_image_modal(list);

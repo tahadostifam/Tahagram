@@ -305,13 +305,14 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
             username: target_username,
         });
         if (user) {
+            const profile_photos = user.profile_photos.reverse();
             let user_info_to_send: any = {
                 event: "get_user_full_info",
                 user_info: {
                     full_name: user.full_name,
                     username: user.username,
                     bio: user.bio,
-                    profile_photos: user.profile_photos,
+                    profile_photos: profile_photos,
                 },
             };
             ws.send(JSON.stringify(user_info_to_send));

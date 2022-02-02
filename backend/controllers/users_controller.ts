@@ -237,7 +237,8 @@ export function getUserChats(username: string) {
                                         chat_type: chat_info.chat_type,
                                     };
                                     if (target_user_info.profile_photos.length > 0) {
-                                        user_data["profile_photo"] = target_user_info.profile_photos[0];
+                                        const profile_photos = target_user_info.profile_photos.reverse();
+                                        user_data["profile_photo"] = profile_photos[0];
                                     }
                                     chats.push(user_data);
                                 }
