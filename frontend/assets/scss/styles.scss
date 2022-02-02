@@ -424,8 +424,8 @@ body,
         .checkmark_state.v-icon {
           position: relative;
           margin-right: -5px;
-          font-size: 19px !important;
-          color: #ddd;
+          font-size: 17px !important;
+          color: $color_6;
         }
       }
       @media screen and (max-width: $bk_desktop_mini) {
