@@ -370,6 +370,8 @@
       </v-card>
     </v-dialog>
 
+    <ViewUserProfile :show.sync="view_user_profile_photo.show" :user_full_name="active_chat.full_name" v-on:update:show="view_user_profile_photo.show = false"></ViewUserProfile>
+
     <div class="pa-0" id="main_container">
       <div class="chats_list">
         <div class="section_header border">
@@ -458,9 +460,9 @@
                 >
                   <v-icon> mdi-arrow-left </v-icon>
                 </v-btn>
-                <!-- TODO - show profile modal -->
-                <a
-                  href="#open_chat_profile"
+                <!-- ANCHOR -->
+                <div
+                  @click="show_user_profile"
                   class="d-flex align-center text-decoration-none mr-5"
                   style="width: 100%"
                 >
@@ -481,8 +483,8 @@
                       >online</span
                     >
                   </div>
-                </a>
-                <!-- TODO - show profile modal -->
+                </div>
+
                 <div>
                   <v-menu offset-y transition="slide-y-transition">
                     <template v-slot:activator="{ on, attrs }">
@@ -683,6 +685,7 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import configs from "@/assets/javascript/configs";
 import Cookies from "js-cookie";
+import ViewUserProfile from '../components/view_user_profile.vue';
 
 export default {
   components: {
@@ -692,6 +695,7 @@ export default {
   middleware: ["need_auth"],
   components: {
     EmojiPicker,
+    ViewUserProfile,
   },
   data() {
     return {
@@ -743,7 +747,10 @@ export default {
       },
       chats_list: null,
       message_context_menu_message_id: null,
-      show_internet_bar: false
+      show_internet_bar: false,
+      view_user_profile_photo: {
+        show: false
+      }
     };
   },
   mounted() {  
@@ -773,11 +780,9 @@ export default {
     }
   },
   methods: {
-    // FIXME
-    // on_chat_scroll_event(e){
-    //   console.log("scrolled");
-    //   console.log(e);
-    // },
+    show_user_profile(){
+      this.$set(this.$data.view_user_profile_photo, 'show', true)
+    },
     submit_send_text_messages(){
       if (this.$data.send_text_message_input.trim() != "") {
         const ws = window.ws;
