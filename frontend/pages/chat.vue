@@ -491,7 +491,7 @@ export default {
       window.initSocket();
     });
 
-    // this.check_if_user_had_profile_photo();
+    this.check_if_user_had_profile_photo();
     this.handle_escape_button();
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
@@ -656,15 +656,18 @@ export default {
     },
     check_if_user_had_profile_photo(){
       if (this.$store.state.auth.user_info.profile_photos && this.$store.state.auth.user_info.profile_photos.length > 0) {
-      const first_photo_filename =
-        this.$store.state.auth.user_info.profile_photos[0].filename;
-        this.$set(
-          this.$data,
-          "user_default_avatar",
-          this.$axios.defaults.baseURL +
-            "/uploads/profile_photos/" +
-            first_photo_filename
-        );
+        const profile_photo = this.$store.state.auth.user_info.profile_photos[0];
+        if (profile_photo && profile_photo.filename) {
+          const first_photo_filename =
+            profile_photo.filename;
+            this.$set(
+              this.$data,
+              "user_default_avatar",
+              this.$axios.defaults.baseURL +
+                "/uploads/profile_photos/" +
+                first_photo_filename
+            );
+        }
       }
     },
     search_chat_submit() {
