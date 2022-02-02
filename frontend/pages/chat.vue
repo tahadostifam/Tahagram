@@ -370,7 +370,7 @@
       </v-card>
     </v-dialog>
 
-    <ViewUserProfile :show.sync="view_user_profile_photo.show" :user_full_name="active_chat.full_name" v-on:update:show="view_user_profile_photo.show = false"></ViewUserProfile>
+    <ViewUserProfile :show.sync="view_user_profile_photo.show" :user_default_avatar="gimme_profile_photo_link_addr(active_chat.profile_photo)" :active_chat="active_chat" v-on:update:show="view_user_profile_photo.show = false"></ViewUserProfile>
 
     <div class="pa-0" id="main_container">
       <div class="chats_list">

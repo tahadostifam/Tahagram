@@ -796,3 +796,33 @@ body .v-application .v-navigation-drawer {
   display: flex;
   align-items: center;
 }
+
+.icon_and_value_grid {
+  ._row {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    padding: 14px 0;
+    .v-icon {
+      width: 60px;
+      display: inline-block;
+      text-align: center;
+      color: $color_6;
+    }
+    .content {
+      width: auto;
+      display: inline-block;
+      .value {
+        display: block;
+        width: 100%;
+        font-size: 15px;
+      }
+      ._title {
+        display: block;
+        width: 100%;
+        font-size: 13px;
+        color: $color_6;
+      }
+    }
+  }
+}

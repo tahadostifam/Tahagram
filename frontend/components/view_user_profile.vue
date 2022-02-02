@@ -12,22 +12,25 @@
 
       <div class="d-flex align-center px-4 pb-5">
         <div
-          class="avatar"
+          class="avatar avatar_large"
           v-if="user_default_avatar"
-          @click="preview_self_profile"
+          @click="$emit('preview_self_profile')"
         >
           <img :src="user_default_avatar" />
         </div>
 
         <template v-else>
-          <ColoredAvatar v-if="user_full_name" :value="user_full_name[0]" />
+          <ColoredAvatar
+            v-if="active_chat.full_name"
+            :value="active_chat.full_name[0]"
+          />
           <ColoredAvatar v-else :value="''" />
         </template>
 
         <div class="ml-4">
           <span class="text-white font-weight-medium d-block w-100">
-            <template v-if="user_full_name">
-              {{ user_full_name }}
+            <template v-if="active_chat.full_name">
+              {{ active_chat.full_name }}
             </template>
           </span>
           <span class="text-grey d-block w-100"
@@ -37,6 +40,22 @@
       </div>
 
       <v-divider></v-divider>
+
+      <div class="icon_and_value_grid">
+        <div class="_row">
+          <v-icon>mdi-information-outline</v-icon>
+          <div class="content">
+            <div v-if="active_chat.bio" class="mb-3">
+              <span class="value">{{ active_chat.bio }}</span>
+              <span class="_title">Bio</span>
+            </div>
+            <div>
+              <span class="value">{{ active_chat.username }}</span>
+              <span class="_title">Username</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </v-card>
   </v-dialog>
 </template>
@@ -61,9 +80,7 @@ export default {
     user_default_avatar: {
       type: String,
     },
-    user_full_name: {
-      type: String,
-    },
+    active_chat: {},
     show: {
       type: Boolean,
     },

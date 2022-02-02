@@ -924,4 +924,40 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
       -ms-flex-align: center;
           align-items: center;
 }
+
+.icon_and_value_grid ._row {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  padding: 14px 0;
+}
+
+.icon_and_value_grid ._row .v-icon {
+  width: 60px;
+  display: inline-block;
+  text-align: center;
+  color: #707579;
+}
+
+.icon_and_value_grid ._row .content {
+  width: auto;
+  display: inline-block;
+}
+
+.icon_and_value_grid ._row .content .value {
+  display: block;
+  width: 100%;
+  font-size: 15px;
+}
+
+.icon_and_value_grid ._row .content ._title {
+  display: block;
+  width: 100%;
+  font-size: 13px;
+  color: #707579;
+}
 /*# sourceMappingURL=styles.css.map */
