@@ -114,7 +114,6 @@
       :active_section="settings_dialog_active_section"
       :photo_uploading_state="photo_uploading_state"
       v-on:initilizing_socket_again="initilizing_socket_again"
-      v-on:submit_edit_full_name="submit_edit_full_name"
       v-on:preview_self_profile="preview_self_profile"
       ></SettingsDialog>
 
@@ -721,13 +720,6 @@ export default {
         return this.$axios.defaults.baseURL +
             "/uploads/profile_photos/" + profile_photo.filename;
       }
-    },
-    submit_edit_full_name(){
-      window.ws.send(JSON.stringify({
-          event: "update_full_name",
-          full_name: this.$data.update_full_name_input
-      }))
-      this.$set(this.$data, 'settings_dialog_edit_full_name', false)
     },
     check_if_user_had_profile_photo(){
       if (this.$store.state.auth.user_info.profile_photos.length > 0) {

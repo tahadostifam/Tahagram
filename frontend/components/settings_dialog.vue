@@ -115,11 +115,7 @@
             >
               CANCEL
             </v-btn>
-            <v-btn
-              @click="$emit('submit_edit_full_name')"
-              :color="theme_color"
-              text
-            >
+            <v-btn @click="submit_edit_full_name" :color="theme_color" text>
               SAVE
             </v-btn>
           </v-card-actions>
@@ -332,6 +328,15 @@ export default {
           this.submit_bio_change();
         });
       }
+    },
+    submit_edit_full_name() {
+      window.ws.send(
+        JSON.stringify({
+          event: "update_full_name",
+          full_name: this.$data.update_full_name_input,
+        })
+      );
+      this.$set(this.$data, "settings_dialog_edit_full_name", false);
     },
   },
 };
