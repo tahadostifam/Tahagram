@@ -33,79 +33,13 @@
       </div>
     </div>
 
-    <v-navigation-drawer
-      v-model="show_nav_drawer"
-      absolute
-      temporary
-      :width="nav_drawer_width"
-    >
-      <v-list nav>
-        <v-list-item
-          class="py-5 px-4 bg-theme rounded-0"
-          id="user_info_at_nav_drawer"
-        >
-          <div
-            class="image ml-2"
-            style="position: relative; top: 3px"
-            v-if="user_default_avatar"
-          >
-            <img
-              :src="user_default_avatar"
-              class="avatar"
-              onload="window.lazyImage(this)"
-              style="--size: 40px"
-            />
-          </div>
-
-          <v-list-item-title class="ml-3">{{ user_info.full_name }}</v-list-item-title>
-        </v-list-item>
-        <v-list-item-group>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-cloud</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Saved Messages</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account-multiple</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>New Group</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account-group</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>New Channel</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item
-            @click="
-              show_nav_drawer = false;
-              show_settings_dialog = true;
-            "
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-cog</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Settings</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item @click="logout" color="red">
-            <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Logout</v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-        <div class="nav_drawer_footer">
-          <span class="text-grey">ChatApp</span><br />
-          <span class="text-grey" style="font-size: 12px">Version 1.0</span>
-        </div>
-      </v-list>
-    </v-navigation-drawer>
+    <NavDrawer
+      :show="show_nav_drawer"
+      :user_info="user_info"
+      :user_default_avatar="user_default_avatar"
+      v-on:logout="logout"
+      v-on:show_settings_dialog="show_nav_drawer = false; show_settings_dialog = !show_settings_dialog"
+    ></NavDrawer>
 
     <SettingsDialog
       :show="show_settings_dialog"
@@ -506,11 +440,11 @@ export default {
         y: 0,
       },
       show_chat_view: false,
-      chat_is_loading: false,      
+      chat_is_loading: false,
       show_nav_drawer: false,
-      nav_drawer_width: 350,
       show_settings_dialog: false,
       settings_dialog_active_section: "home",
+      
       settings_dialog_edit_full_name: false,
       update_full_name_input: '',
       user_default_avatar: undefined,
@@ -557,8 +491,7 @@ export default {
       window.initSocket();
     });
 
-    this.check_if_user_had_profile_photo();
-    this.handle_resize();
+    // this.check_if_user_had_profile_photo();
     this.handle_escape_button();
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
@@ -722,16 +655,16 @@ export default {
       }
     },
     check_if_user_had_profile_photo(){
-      if (this.$store.state.auth.user_info.profile_photos.length > 0) {
+      if (this.$store.state.auth.user_info.profile_photos && this.$store.state.auth.user_info.profile_photos.length > 0) {
       const first_photo_filename =
         this.$store.state.auth.user_info.profile_photos[0].filename;
-      this.$set(
-        this.$data,
-        "user_default_avatar",
-        this.$axios.defaults.baseURL +
-          "/uploads/profile_photos/" +
-          first_photo_filename
-      );
+        this.$set(
+          this.$data,
+          "user_default_avatar",
+          this.$axios.defaults.baseURL +
+            "/uploads/profile_photos/" +
+            first_photo_filename
+        );
       }
     },
     search_chat_submit() {
@@ -859,9 +792,6 @@ export default {
       }
       this.$set(this.$data.view_image.controls, "left", false);
     },
-    logout() {
-      this.$router.push({ path: "/logout" });
-    },
     initilizing_socket_again(){
       return new Promise((resolve) => {
         setTimeout(async() => {
@@ -909,16 +839,6 @@ export default {
           }
         }
       });
-    },
-    handle_resize() {
-      let vm = this;
-      function __resize() {
-        if (window.innerWidth <= 1100)
-          vm.$set(vm.$data, "nav_drawer_width", 300);
-        else vm.$set(vm.$data, "nav_drawer_width", 350);
-      }
-      window.onresize = () => __resize();
-      __resize();
     },
     handle_upload_profile_photo(e) {
       const file = e.files[0];
@@ -972,13 +892,13 @@ export default {
     watch_profile_photos_change() {
       if (this.$store.state.auth.user_info) {
         this.$store.watch(
-          (state) => state.auth.user_info.profile_photos,
+          (state) => state.auth.user_info,
           (value) => {
-            if (value && value[0].filename) {
+            if (value && value.profile_photos && value.profile_photos.length > 0) {
               this.$set(
                 this.$data,
                 "user_default_avatar",
-                this.gimme_profile_photo_link_addr(value[0])
+                this.gimme_profile_photo_link_addr(value.profile_photos[0])
               );
             }
           }
@@ -1014,6 +934,9 @@ export default {
             message_id: message_id
         }))
       }
+    },
+    logout() {
+      this.$router.push({ path: "/logout" });
     },
   },
 };

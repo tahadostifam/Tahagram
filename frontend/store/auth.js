@@ -56,7 +56,7 @@ export const mutations = {
     }
   },
   addProfilePhotos(state, filename) {
-    if (filename.trim() != "") {
+    if (filename.trim() != "" && state.user_info.profile_photos) {
       state.user_info.profile_photos.splice(0, 0, {
         filename: filename,
       });
