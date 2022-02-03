@@ -13,6 +13,7 @@
       v-on:logout="logout"
       v-on:show_settings_dialog="show_nav_drawer = false; show_settings_dialog = true"
       v-on:show_create_channel_dialog="show_nav_drawer = false; show_create_channel_dialog = true"
+      v-on:show_create_group_dialog="show_nav_drawer = false; show_create_group_dialog = true"
       v-on:update:show="(new_value) => show_nav_drawer = new_value"
     ></NavDrawer>
 
@@ -58,6 +59,12 @@
       v-on:close_button="show_create_channel_dialog = false"
       v-on:update:show="(new_value) => show_create_channel_dialog = new_value"
     ></CreateChannelDialog>
+
+    <CreateGroupDialog
+      :show="show_create_group_dialog"
+      v-on:close_button="show_create_group_dialog = false"
+      v-on:update:show="(new_value) => show_create_group_dialog = new_value"
+    ></CreateGroupDialog>
 
     <ViewUserProfile
       :show.sync="view_user_profile_photo.show"
@@ -450,6 +457,7 @@ export default {
         show: false
       },
       show_create_channel_dialog: false,
+      show_create_group_dialog: false,
     };
   },
   mounted() {  

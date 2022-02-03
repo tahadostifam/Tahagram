@@ -35,7 +35,7 @@
           <v-list-item-title>Saved Messages</v-list-item-title>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item @click="$emit('show_create_group_dialog')">
           <v-list-item-icon>
             <v-icon>mdi-account-multiple</v-icon>
           </v-list-item-icon>
