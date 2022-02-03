@@ -34,6 +34,10 @@ var schema = new mongoose.Schema({
         type: Array,
         default: [],
     },
+    admins: {
+        type: Array,
+        default: [],
+    },
     // SECTION - Common
     chat_type: {
         type: String,

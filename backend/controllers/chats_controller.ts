@@ -22,13 +22,13 @@ export default {
         checkUsernameUniqueness(req.body.channel_username).then(
             async () => {
                 // username is unique | ok
-                if (req.files && !req.files["photo"]) {
+                var final_profile_photo_filename;
+                if (req.files && req.files["profile_photo"]) {
                     // user wanna create a channel with profile_photo
-                    const photo = req.files["photo"];
-                    var final_filename;
+                    const photo = req.files["profile_photo"];
                     async function generateRandomFileName() {
-                        final_filename = await crypto.randomBytes(10).toString("hex");
-                        if (fs.existsSync(profile_photos_directory + final_filename)) {
+                        final_profile_photo_filename = await crypto.randomBytes(15).toString("hex");
+                        if (fs.existsSync(profile_photos_directory + final_profile_photo_filename)) {
                             console.log("bad filename :)");
 
                             await generateRandomFileName();
@@ -38,9 +38,10 @@ export default {
                     await generateRandomFileName();
 
                     try {
-                        await photo.mv(process.cwd() + profile_photos_directory + final_filename);
+                        await photo.mv(process.cwd() + "/uploads/profile_photos/" + final_profile_photo_filename);
                     } catch {
-                        status_codes.error(req, res, next);
+                        final_profile_photo_filename = undefined;
+                        return status_codes.error(req, res, next);
                     }
                 }
 
@@ -50,8 +51,8 @@ export default {
                     full_name: req.body.channel_name,
                     creator_username: req.headers.username,
                 };
-                if (final_filename) {
-                    channel_data["profile_photo"] = final_filename;
+                if (final_profile_photo_filename) {
+                    channel_data["profile_photo"] = final_profile_photo_filename;
                 }
                 if (req.body.bio && req.body.bio.length > 0) {
                     channel_data["bio"] = req.body.bio;
@@ -73,14 +74,50 @@ export default {
                     }
                 );
 
-                status_codes.channel_created(
+                let data_to_send: any = {};
+                if (final_profile_photo_filename) {
+                    data_to_send["profile_photo"] = final_profile_photo_filename;
+                }
+                status_codes.channel_created(data_to_send, req, res, next);
+            },
+            () => {
+                status_codes.username_is_not_unique(req, res, next);
+            }
+        );
+    },
+    CreateGroupAction: async (req: IRequest, res: Response, next: NextFunction) => {
+        const user = await User.findOne({
+            username: req.headers.username,
+        });
+
+        if (!user) return status_codes.invalid_token(req, res, next);
+
+        checkUsernameUniqueness(req.body.group_username).then(
+            async () => {
+                // username is unique | ok
+                const group = new Chats({
+                    chat_type: "group",
+                    username: req.body.group_username,
+                    full_name: req.body.group_name,
+                    creator_username: req.headers.username,
+                });
+
+                await group.save();
+
+                await User.updateOne(
                     {
-                        profile_photo: final_filename,
+                        username: req.headers.username,
                     },
-                    req,
-                    res,
-                    next
+                    {
+                        $push: {
+                            chats: {
+                                chat_id: group._id,
+                            },
+                        },
+                    }
                 );
+
+                status_codes.group_created({}, req, res, next);
             },
             () => {
                 status_codes.username_is_not_unique(req, res, next);

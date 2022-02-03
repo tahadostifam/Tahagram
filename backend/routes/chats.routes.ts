@@ -17,4 +17,15 @@ router.post(
     }
 );
 
+router.post(
+    "/create_group",
+    auth_middleware,
+    body("group_name").notEmpty().withMessage("GroupName can't be empty"),
+    body("group_username").notEmpty().withMessage("GroupUsername can't be empty"),
+    validate_body,
+    (req: any, res: Response, next: NextFunction) => {
+        ChatsController.CreateGroupAction(req, res, next);
+    }
+);
+
 export default router;
