@@ -37,6 +37,18 @@ body,
   font-family: "Roboto", "Vazir" !important;
 }
 
+body .v-input.v-text-field .v-input__control .v-input__slot:before,
+.v-application .v-input.v-text-field .v-input__control .v-input__slot:before {
+  border-color: #ffffff63;
+}
+
+body .v-input.v-text-field:not(.v-input--has-state):hover > .v-input__control
+> .v-input__slot:before,
+.v-application .v-input.v-text-field:not(.v-input--has-state):hover > .v-input__control
+> .v-input__slot:before {
+  border-color: #ffffff63;
+}
+
 .form_top_overlay {
   position: absolute;
   overflow: hidden;

@@ -47,7 +47,6 @@
           </div>
         </div>
 
-        <!-- ANCHOR -->
         <div class="d-flex align-center px-4 pb-5">
           <input
             type="file"
@@ -69,9 +68,24 @@
             </label>
           </template>
 
-          <div class="ml-4">TODO</div>
+          <div class="ml-5 d-block" style="width: calc(100% - 155px)">
+            <v-text-field
+              label="Channel name"
+              :full-with="true"
+              maxlength="30"
+              v-model="channel_name"
+            ></v-text-field>
+          </div>
         </div>
-        <!-- ANCHOR -->
+        <div class="px-6 pb-5">
+          <v-text-field
+            label="Description"
+            :full-with="true"
+            counter="200"
+            maxlength="200"
+            v-model="channel_desc"
+          ></v-text-field>
+        </div>
       </v-card>
     </v-dialog>
   </div>
@@ -87,6 +101,8 @@ export default {
       theme_color: configs.theme_color,
       show_dialog: false,
       avatar_src: null,
+      channel_name: "",
+      channel_desc: "",
       crop_profile_photo: {
         show: false,
         src: null,
