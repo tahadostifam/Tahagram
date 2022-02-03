@@ -551,19 +551,25 @@ export default {
       switch (chat_location) {
         case 'chats_list':
           chat = this.$data.chats_list.find( ({chat_id: _chat_id_}) => _chat_id_ == chat_id )
-          if (chat) {        
-            this.set_the_active_chat(chat)
+          if (chat && chat.chat_type == 'private') {
             const msgs_list = await this.fetch_chat_messages_list(chat_id);
             this.$set(this.$data.active_chat, 'messages', msgs_list);
           }
+          this.set_the_active_chat(chat)
           break;
         case 'search_chat_result':
           chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
-          doGetChatMessages();
+          if (chat.chat_type == 'private') {
+            doGetChatMessages();
+          }
+          this.set_the_active_chat(chat)
           break;
         case 'search_chat_in_local':
           chat = this.$data.search_chat_in_local_result.find(({ _id }) => _id == chat_id)
-          doGetChatMessages();
+          if (chat.chat_type == 'private') {
+            doGetChatMessages();
+          }
+          this.set_the_active_chat(chat)
           break;
       }
       // this.$set(this.$data, 'search_chat_input', '')
