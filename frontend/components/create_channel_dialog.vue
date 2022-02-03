@@ -46,46 +46,81 @@
             </v-btn>
           </div>
         </div>
-
-        <div class="d-flex align-center px-4 pb-5">
-          <input
-            type="file"
-            hidden
-            id="channel_profile_photo"
-            onchange="window.choosing_channel_photo(this)"
-          />
-          <label class="avatar" v-if="avatar_src" for="channel_profile_photo">
-            <img :src="avatar_src" />
-          </label>
-
-          <template v-else>
+        <template v-if="dialog_step == 1">
+          <div class="d-flex align-center px-4">
+            <input
+              type="file"
+              hidden
+              id="channel_profile_photo"
+              onchange="window.choosing_channel_photo(this)"
+            />
             <label
+              class="avatar avatar_xlarge"
+              v-if="avatar_src"
               for="channel_profile_photo"
-              class="solid_color_avatar avatar_xlarge"
-              style="cursor: pointer"
             >
-              <v-icon x-large>mdi-camera</v-icon>
+              <img :src="avatar_src" />
             </label>
-          </template>
 
-          <div class="ml-5 d-block" style="width: calc(100% - 155px)">
+            <template v-else>
+              <label
+                for="channel_profile_photo"
+                class="solid_color_avatar avatar_xlarge"
+                style="cursor: pointer"
+              >
+                <v-icon x-large>mdi-camera</v-icon>
+              </label>
+            </template>
+
+            <div class="ml-5 d-block" style="width: calc(100% - 155px)">
+              <v-text-field
+                label="Channel name"
+                :full-with="true"
+                maxlength="30"
+                v-model="channel_name"
+              ></v-text-field>
+            </div>
+          </div>
+          <div class="px-6 pb-2 pt-2">
             <v-text-field
-              label="Channel name"
+              label="Description"
               :full-with="true"
-              maxlength="30"
-              v-model="channel_name"
+              counter="200"
+              maxlength="200"
+              v-model="channel_desc"
             ></v-text-field>
           </div>
-        </div>
-        <div class="px-6 pb-5">
-          <v-text-field
-            label="Description"
-            :full-with="true"
-            counter="200"
-            maxlength="200"
-            v-model="channel_desc"
-          ></v-text-field>
-        </div>
+
+          <v-card-actions class="pr-2">
+            <v-spacer></v-spacer>
+            <v-btn :color="theme_color" text @click="show_dialog = false">
+              CANCEL
+            </v-btn>
+            <v-btn @click="dialog_step = 2" :color="theme_color" text>
+              NEXT
+            </v-btn>
+          </v-card-actions>
+        </template>
+        <template v-if="dialog_step == 2">
+          <div class="px-6">
+            <v-text-field
+              label="Channel username"
+              :full-with="true"
+              maxlength="60"
+              v-model="channel_username"
+            ></v-text-field>
+          </div>
+
+          <v-card-actions class="pr-2">
+            <v-spacer></v-spacer>
+            <v-btn :color="theme_color" text @click="dialog_step = 1">
+              BACK
+            </v-btn>
+            <v-btn @click="sumit_create_channel" :color="theme_color" text>
+              CREATE
+            </v-btn>
+          </v-card-actions>
+        </template>
       </v-card>
     </v-dialog>
   </div>
@@ -98,11 +133,13 @@ export default {
   name: "CreateChannelDialog",
   data() {
     return {
+      dialog_step: 1,
       theme_color: configs.theme_color,
       show_dialog: false,
       avatar_src: null,
       channel_name: "",
       channel_desc: "",
+      channel_username: "",
       crop_profile_photo: {
         show: false,
         src: null,
@@ -138,6 +175,9 @@ export default {
           "uploading profile photo failed! :: cropped image canvas is empty"
         );
       this.$set(this.$data.crop_profile_photo, "button_loading_state", false);
+    },
+    sumit_create_channel() {
+      console.log("submit");
     },
   },
   mounted() {
