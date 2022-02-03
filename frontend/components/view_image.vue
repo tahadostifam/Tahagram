@@ -22,7 +22,8 @@
 
     <div class="info_of_image">
       <span
-        >Photo {{ view_image.active_item.index + 1 }} of {{ list.length }}</span
+        >Photo {{ view_image.active_item.index + 1 }} of
+        {{ view_image.list.length }}</span
       >
     </div>
 
@@ -56,7 +57,7 @@ export default {
       immediate: true,
       handler(new_value) {
         if (new_value) {
-          this.list = new_value;
+          this.view_image.list = new_value;
         }
       },
     },
@@ -118,15 +119,12 @@ export default {
         const index = this.$data.view_image.active_item;
         this.$set(index, "src", list[0].src);
         if (list.length == 1) {
-          console.log("right false");
           this.$set(this.$data.view_image.controls, "right", false);
         }
         if (list.length > 1) {
-          console.log("right trye");
           this.$set(this.$data.view_image.controls, "right", true);
         }
         this.$set(this.$data.view_image.controls, "left", false);
-        console.log("left false");
       } else {
         console.error("List of show_view_image_modal cannot be empty!");
       }
