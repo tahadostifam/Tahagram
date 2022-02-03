@@ -225,7 +225,8 @@ export function getUserChats(username: string) {
                     switch (chat_info.chat_type) {
                         case "private":
                             // now, we should get UserInfo from UserModel
-                            async function doNext(target_username: String) {
+                            const target_username = findOutTUofChat(chat_info, username);
+                            if (target_username) {
                                 const target_user_info = await User.findOne({
                                     username: target_username,
                                 });
@@ -243,12 +244,21 @@ export function getUserChats(username: string) {
                                     chats.push(user_data);
                                 }
                             }
-
-                            if (String(chat_info.sides.user_1).trim() != username.trim()) {
-                                await doNext(chat_info.sides.user_1);
-                            } else if (String(chat_info.sides.user_2).trim() != username.trim()) {
-                                await doNext(chat_info.sides.user_2);
+                            break;
+                        case "channel":
+                        case "group":
+                            let user_data: any = {
+                                chat_id: chat_info._id,
+                                full_name: chat_info.full_name,
+                                username: chat_info.username,
+                                chat_type: chat_info.chat_type,
+                            };
+                            if (chat_info.profile_photo) {
+                                user_data["profile_photo"] = {
+                                    filename: chat_info.profile_photo,
+                                };
                             }
+                            chats.push(user_data);
                             break;
                     }
                 }
@@ -271,15 +281,24 @@ export function getUserChatsMessages(username: string, user_chats_list: IUserCha
                 });
                 chat = JSON.parse(JSON.stringify(chat));
                 if (chat) {
-                    switch (chat.chat_type) {
-                        case "private":
-                            const target_username = findOutTUofChat(chat, username);
-                            if (target_username) {
-                                chat.target_username = target_username;
-                            }
-                            break;
+                    const data: any = {
+                        _id: chat._id,
+                        full_name: chat.full_name,
+                        username: chat.username,
+                        creator_username: chat.creator_username,
+                        chat_type: chat.chat_type,
+                        messages_list: chat.messages_list,
+                    };
+                    if (chat.chat_type == "private") {
+                        const target_username = findOutTUofChat(chat, username);
+                        if (target_username) {
+                            chat.target_username = target_username;
+                        }
+                        data["sides"] = chat.sides;
+                    } else if (chat.chat_type == "channel" || chat.chat_type == "group") {
+                        // do not nothing
                     }
-                    final_list.push(chat);
+                    final_list.push(data);
                 }
                 // if forEach finished
                 if (index == user_chats_list.length - 1) {

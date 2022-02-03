@@ -50,6 +50,7 @@ export default {
                     username: req.body.channel_username,
                     full_name: req.body.channel_name,
                     creator_username: req.headers.username,
+                    members: [],
                 };
                 if (final_profile_photo_filename) {
                     channel_data["profile_photo"] = final_profile_photo_filename;
@@ -100,6 +101,7 @@ export default {
                     username: req.body.group_username,
                     full_name: req.body.group_name,
                     creator_username: req.headers.username,
+                    members: [],
                 });
 
                 await group.save();

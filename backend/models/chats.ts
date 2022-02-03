@@ -32,7 +32,6 @@ var schema = new mongoose.Schema({
     },
     members: {
         type: Array,
-        default: [],
     },
     admins: {
         type: Array,

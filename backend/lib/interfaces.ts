@@ -39,10 +39,14 @@ export interface IChat {
         user_2: string;
     };
     username?: string;
+    full_name?: string;
     bio?: string;
+    target_username?: string;
+    creator_username?: string;
+    members?: Array<any>;
+    admins?: Array<any>;
     chat_type: string;
     messages_list: [ITextMessage | IImageMessage];
-    target_username?: string;
 }
 
 export interface ITextMessage {
