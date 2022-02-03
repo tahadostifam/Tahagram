@@ -42,7 +42,7 @@
           <v-list-item-title>New Group</v-list-item-title>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item @click="$emit('show_create_channel_dialog')">
           <v-list-item-icon>
             <v-icon>mdi-account-group</v-icon>
           </v-list-item-icon>
@@ -93,6 +93,12 @@ export default {
       immediate: true,
       handler(new_value) {
         this.show_nav_drawer = new_value;
+      },
+    },
+    show_nav_drawer: {
+      immediate: true,
+      handler(new_value) {
+        this.$emit("update:show", new_value);
       },
     },
   },

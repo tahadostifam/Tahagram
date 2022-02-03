@@ -11,7 +11,9 @@
       :user_info="user_info"
       :user_default_avatar="user_default_avatar"
       v-on:logout="logout"
-      v-on:show_settings_dialog="show_nav_drawer = false; show_settings_dialog = !show_settings_dialog"
+      v-on:show_settings_dialog="show_nav_drawer = false; show_settings_dialog = true"
+      v-on:show_create_channel_dialog="show_nav_drawer = false; show_create_channel_dialog = true"
+      v-on:update:show="(new_value) => show_nav_drawer = new_value"
     ></NavDrawer>
 
     <SettingsDialog
@@ -22,6 +24,7 @@
       :photo_uploading_state="photo_uploading_state"
       v-on:initilizing_socket_again="initilizing_socket_again"
       v-on:preview_self_profile="preview_self_profile"
+      v-on:update:show="(new_value) => show_settings_dialog = new_value"
       ></SettingsDialog>
 
     <v-dialog max-width="350" v-model="crop_profile_photo.show">
@@ -50,11 +53,18 @@
       </v-card>
     </v-dialog>
 
+    <CreateChannelDialog
+      :show="show_create_channel_dialog"
+      v-on:close_button="show_create_channel_dialog = false"
+      v-on:update:show="(new_value) => show_create_channel_dialog = new_value"
+    ></CreateChannelDialog>
+
     <ViewUserProfile
       :show.sync="view_user_profile_photo.show"
       :user_default_avatar="gimme_profile_photo_link_addr(active_chat.profile_photo)"
-      :active_chat="active_chat" v-on:update:show="view_user_profile_photo.show = false"
+      :active_chat="active_chat"
       v-on:preview_self_profile="preview_user_profile"
+      v-on:update:show="(new_value) => view_user_profile_photo.show = new_value"
     ></ViewUserProfile>
 
     <div class="pa-0" id="main_container">
@@ -394,15 +404,6 @@ import configs from "@/assets/javascript/configs";
 import ViewUserProfile from '../components/view_user_profile.vue';
 
 export default {
-  components: {
-    Cropper,
-  },
-  name: "chat",
-  middleware: ["need_auth"],
-  components: {
-    EmojiPicker,
-    ViewUserProfile,
-  },
   data() {
     return {
       theme_color: configs.theme_color,
@@ -417,7 +418,6 @@ export default {
       show_nav_drawer: false,
       show_settings_dialog: false,
       settings_dialog_active_section: "home",
-      
       settings_dialog_edit_full_name: false,
       update_full_name_input: '',
       user_default_avatar: undefined,
@@ -448,7 +448,8 @@ export default {
       show_internet_bar: false,
       view_user_profile_photo: {
         show: false
-      }
+      },
+      show_create_channel_dialog: false,
     };
   },
   mounted() {  
@@ -466,14 +467,6 @@ export default {
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.select_photo_to_send = this.select_photo_to_send;
     window.vm = this;
-  },
-  computed: {
-    username() {
-      return this.$store.state.auth.auth.username
-    },
-    user_info() {
-      return this.$store.state.auth.user_info
-    }
   },
   methods: {
     select_photo_to_send(e){
@@ -854,6 +847,21 @@ export default {
     logout() {
       this.$router.push({ path: "/logout" });
     },
+  },
+  computed: {
+    username() {
+      return this.$store.state.auth.auth.username
+    },
+    user_info() {
+      return this.$store.state.auth.user_info
+    }
+  },
+  name: "chat",
+  middleware: ["need_auth"],
+  components: {
+    EmojiPicker,
+    Cropper,
+    ViewUserProfile,
   },
 };
 </script>

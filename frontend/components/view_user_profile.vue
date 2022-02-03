@@ -75,6 +75,12 @@ export default {
         this.dialog = new_value;
       },
     },
+    dialog: {
+      immediate: true,
+      handler(new_value) {
+        this.$emit("update:show", new_value);
+      },
+    },
   },
   props: {
     user_default_avatar: {

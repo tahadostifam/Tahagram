@@ -275,6 +275,12 @@ export default {
         this.show_settings_dialog = new_value;
       },
     },
+    show_settings_dialog: {
+      immediate: true,
+      handler(new_value) {
+        this.$emit("update:show", new_value);
+      },
+    },
     active_section: {
       immediate: true,
       handler(new_value) {
