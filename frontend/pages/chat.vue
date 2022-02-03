@@ -1,37 +1,10 @@
 <template>
   <div>
-    <div id="view_image" v-if="view_image.show">
-      <div class="controls">
-        <div
-          class="right"
-          @click="view_image_move_right"
-          v-if="view_image.controls.right"
-        >
-          <v-icon>mdi-chevron-right</v-icon>
-        </div>
-        <div
-          class="left"
-          @click="view_image_move_left"
-          v-if="view_image.controls.left"
-        >
-          <v-icon>mdi-chevron-left</v-icon>
-        </div>
-      </div>
-      <div class="close_btn" @click="view_image.show = false">
-        <v-icon>mdi-close</v-icon>
-      </div>
-
-      <div class="info_of_image">
-        <span
-          >Photo {{ view_image.active_item.index + 1 }} of
-          {{ view_image.list.length }}</span
-        >
-      </div>
-
-      <div class="image_content" >
-        <img :src="view_image.active_item.src" ref="view_image_content"/>
-      </div>
-    </div>
+    <ViewImage
+      :images_list="view_image.list"
+      :show="view_image.show"
+      v-on:close_button="view_image.show = false"
+    ></ViewImage>
 
     <NavDrawer
       :show="show_nav_drawer"
@@ -458,14 +431,6 @@ export default {
       view_image: {
         show: false,
         list: [],
-        active_item: {
-          src: null,
-          index: 0,
-        },
-        controls: {
-          right: true,
-          right: false,
-        },
       },
       search_chat_input: "",
       search_chat_result: null,
@@ -739,61 +704,9 @@ export default {
       
       this.show_view_image_modal(list);
     },
-    view_image_move_right() {
-      const active_index = this.$data.view_image.active_item.index;
-      const length = this.$data.view_image.list.length;
-
-      const to_index = active_index + 1;
-      if (active_index + 2 > length - 1) {
-        this.$set(this.$data.view_image.controls, "right", false);
-      }
-
-      if (to_index > 0) {
-        this.$set(this.$data.view_image.controls, "left", true);
-      }
-
-      if (to_index < length) {
-        this.$set(this.$data.view_image.active_item, "index", to_index);
-        this.$set(
-          this.$data.view_image.active_item,
-          "src",
-          this.$data.view_image.list[to_index].src
-        );
-      }
-    },
-    view_image_move_left() {
-      const active_index = this.$data.view_image.active_item.index;
-      const length = this.$data.view_image.list.length;
-
-      if (active_index == 1) {
-        this.$set(this.$data.view_image.controls, "left", false);
-        this.$set(this.$data.view_image.controls, "right", true);
-      }
-
-      if (active_index >= 1) {
-        const to_index = active_index - 1;
-        this.$set(this.$data.view_image.active_item, "index", to_index);
-        this.$set(
-          this.$data.view_image.active_item,
-          "src",
-          this.$data.view_image.list[to_index].src
-        );
-      }
-    },
     show_view_image_modal(list){
-      this.$set(this.$data.view_image, "show", true);
-      this.$set(this.$data.view_image.active_item, "index", 0);
-      const index = this.$data.view_image.active_item;
       this.$set(this.$data.view_image, "list", list);
-      this.$set(index, "src", this.$data.view_image.list[0].src);
-      const length = this.$data.view_image.list.length;
-      if (length == 1) {
-        this.$set(this.$data.view_image.controls, "right", false);
-      }
-      if (length > 1) {
-        this.$set(this.$data.view_image.controls, "right", true);
-      }
-      this.$set(this.$data.view_image.controls, "left", false);
+      this.$set(this.$data.view_image, "show", true);
     },
     initilizing_socket_again(){
       return new Promise((resolve) => {
