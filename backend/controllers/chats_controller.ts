@@ -53,7 +53,9 @@ export default {
                     members: [],
                 };
                 if (final_profile_photo_filename) {
-                    channel_data["profile_photo"] = final_profile_photo_filename;
+                    channel_data["profile_photos"] = {
+                        filename: final_profile_photo_filename,
+                    };
                 }
                 if (req.body.bio && req.body.bio.length > 0) {
                     channel_data["bio"] = req.body.bio;

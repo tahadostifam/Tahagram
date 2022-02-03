@@ -54,6 +54,8 @@ window.initSocket = () => {
 };
 
 window.handleSocketMessages = (vm, parsedData) => {
+  console.log("parsedData", parsedData); // NOTE
+
   if (parsedData.event == "search_in_chats") {
     vm.$set(vm.$data, "search_chat_result", parsedData.data);
   } else if (

@@ -242,9 +242,6 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
     }
 }
 
-// TODO
-export async function user_seened_message(ws: IWebSocket, parsedData: any) {}
-
 export async function delete_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const _message_id = parsedData.message_id;
@@ -320,3 +317,6 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
         }
     }
 }
+
+// TODO
+export async function user_seened_message(ws: IWebSocket, parsedData: any) {}
