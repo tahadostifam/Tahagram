@@ -5,7 +5,7 @@ import fs from "fs";
 
 import User from "../models/user";
 
-const photo_messages_directory = "/uploads/photo_messages/";
+export const photo_messages_directory = "/uploads/photo_messages/";
 
 export interface IRequest extends Request {
     files: any;

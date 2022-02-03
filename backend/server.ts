@@ -28,10 +28,12 @@ app.use("/uploads/profile_photos/:filename", (req, res) => {
 import UsersRoutes from "./routes/users.routes";
 import ProfilePhotosRoutes from "./routes/profile_photos.routes";
 import MessagesRoutes from "./routes/messages.routes";
+import ChatsRoutes from "./routes/chats.routes";
 
 app.use("/api/users", UsersRoutes);
 app.use("/api/profile_photos", ProfilePhotosRoutes);
 app.use("/api/messages", MessagesRoutes);
+app.use("/api/chats", ChatsRoutes);
 
 app.listen(configs.api.port, "0.0.0.0", () => {
     console.clear();

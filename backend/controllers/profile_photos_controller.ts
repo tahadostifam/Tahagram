@@ -8,7 +8,7 @@ import fs from "fs";
 
 import User from "../models/user";
 
-const profile_photos_directory = "/uploads/profile_photos/";
+export const profile_photos_directory = "/uploads/profile_photos/";
 
 export interface IRequest extends Request {
     files: any;

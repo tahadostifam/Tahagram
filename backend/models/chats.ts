@@ -15,11 +15,24 @@ var schema = new mongoose.Schema({
         index: false,
     },
     // SECTION - Channel & Groups
+    full_name: {
+        type: String,
+    },
     username: {
         type: String,
     },
     bio: {
         type: String,
+    },
+    profile_photo: {
+        type: String,
+    },
+    creator_username: {
+        type: String,
+    },
+    members: {
+        type: Array,
+        default: [],
     },
     // SECTION - Common
     chat_type: {

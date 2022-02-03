@@ -54,4 +54,18 @@ export default {
             profile_photo_filename: data.profile_photo_filename,
         });
     },
+    channel_created(data: any, req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 201;
+        res.send(
+            Object.assign(data, {
+                message: "channel created",
+            })
+        );
+    },
+    username_is_not_unique(req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 409;
+        res.send({
+            message: "another chat exists with this username",
+        });
+    },
 };
