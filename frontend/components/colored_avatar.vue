@@ -1,11 +1,9 @@
 <template>
   <div
     class="solid_color_avatar"
-    ref="colored_avatar"
     :class="{ avatar_xlarge: avatar_xlarge }"
-  >
-    {{ value }}
-  </div>
+    v-html="value"
+  ></div>
 </template>
 
 <script>

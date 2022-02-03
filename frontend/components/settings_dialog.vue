@@ -273,6 +273,7 @@ export default {
       immediate: true,
       handler(new_value) {
         this.show_settings_dialog = new_value;
+        this.$set(this.$data, "settings_dialog_active_section", "home");
       },
     },
     show_settings_dialog: {
