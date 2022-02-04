@@ -21,6 +21,7 @@
         filled
         dense
         :color="theme_color"
+        @keyup="keydown_username_event"
         v-model="username"
       ></v-text-field>
 
@@ -67,6 +68,7 @@
 
 <script>
 import configs from "@/assets/javascript/configs";
+import slugify from "slugify";
 
 export default {
   name: "signup",
@@ -83,6 +85,15 @@ export default {
     };
   },
   methods: {
+    keydown_username_event() {
+      const username = this.$data.username;
+      let limited_username = slugify(username, {
+        lower: true,
+        strict: false,
+        locale: "vi",
+      });
+      this.$set(this.$data, "username", limited_username);
+    },
     inputs_are_valid() {
       let errors_list = [];
       if (

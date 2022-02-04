@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { comparePassword, makeHashPassword } from "../lib/bcrypt";
 import { clientIp, cleanIpDots } from "../lib/client_ip";
-import * as database from "../lib/database";
+import slugify from "slugify";
 import status_codes from "../lib/status_codes";
 import store, { makeUserStoreId, setUserTokens } from "../lib/store";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
 const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
@@ -16,6 +15,12 @@ import { findOutTUofChat } from "../socket/events/users";
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
         const client_ip = clientIp(req, res)?.toString();
+
+        req.body.username = slugify(req.body.username, {
+            lower: true,
+            strict: false,
+            locale: "vi",
+        });
 
         if (client_ip) {
             signinUserWithUserPassword(req.body.username, req.body.password).then(
