@@ -77,7 +77,9 @@ export default {
                     }
                 );
 
-                let data_to_send: any = {};
+                let data_to_send: any = {
+                    chat_id: channel._id,
+                };
                 if (final_profile_photo_filename) {
                     data_to_send["profile_photo"] = final_profile_photo_filename;
                 }

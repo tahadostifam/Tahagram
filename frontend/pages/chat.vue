@@ -58,6 +58,7 @@
       :show="show_create_channel_dialog"
       v-on:close_button="show_create_channel_dialog = false"
       v-on:update:show="(new_value) => show_create_channel_dialog = new_value"
+      v-on:chat_created="a_channel_or_group_chat_created"
     ></CreateChannelDialog>
 
     <CreateGroupDialog
@@ -477,6 +478,9 @@ export default {
     window.vm = this;
   },
   methods: {
+    a_channel_or_group_chat_created(chat){
+      console.log("kkkkkhhhhh :]]", chat);
+    },
     select_photo_to_send(e){
       console.log(e);
     },
@@ -778,13 +782,13 @@ export default {
         const croppedImage = canvas.toDataURL("image/png");
         const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
         if (imageFile) {
-          const requestBody = new FormData();
-          requestBody.append("photo", imageFile);
+          const request_body = new FormData();
+          request_body.append("photo", imageFile);
           
           this.$set(this.$data, 'photo_uploading_state', true);
 
           this.$axios
-            .$post("/api/profile_photos/upload_photo", requestBody, {
+            .$post("/api/profile_photos/upload_photo", request_body, {
               headers: {
                 username: this.$store.state.auth.auth.username,
                 auth_token: this.$store.state.auth.auth.auth_token,

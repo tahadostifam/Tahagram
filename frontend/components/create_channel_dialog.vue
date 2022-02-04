@@ -52,7 +52,7 @@
               type="file"
               hidden
               id="channel_profile_photo"
-              onchange="window.choosing_channel_photo(this)"
+              @change="choosing_channel_photo($event)"
             />
             <label
               class="avatar avatar_xlarge"
@@ -96,7 +96,12 @@
             <v-btn :color="theme_color" text @click="show_dialog = false">
               CANCEL
             </v-btn>
-            <v-btn @click="dialog_step = 2" :color="theme_color" text>
+            <v-btn
+              :disabled="channel_name.trim().length == 0"
+              @click="dialog_step = 2"
+              :color="theme_color"
+              text
+            >
               NEXT
             </v-btn>
           </v-card-actions>
@@ -116,7 +121,12 @@
             <v-btn :color="theme_color" text @click="dialog_step = 1">
               BACK
             </v-btn>
-            <v-btn @click="sumit_create_channel" :color="theme_color" text>
+            <v-btn
+              :disabled="channel_username.trim().length == 0"
+              @click="sumit_create_channel"
+              :color="theme_color"
+              text
+            >
               CREATE
             </v-btn>
           </v-card-actions>
@@ -150,10 +160,18 @@ export default {
   },
   methods: {
     choosing_channel_photo(e) {
-      const file = e.files[0];
-      const local_path = URL.createObjectURL(file);
-      this.$set(this.$data.crop_profile_photo, "src", local_path);
-      this.$set(this.$data.crop_profile_photo, "show", true);
+      const file = e.target.files[0];
+      if (file) {
+        const local_path = URL.createObjectURL(file);
+        if (local_path) {
+          this.$set(this.$data.crop_profile_photo, "src", local_path);
+          this.$set(this.$data.crop_profile_photo, "show", true);
+        } else {
+          console.error("local_path not found");
+        }
+      } else {
+        console.error("profile_photo file not found");
+      }
     },
     crop_profile_photo_onchange({ coordinates, canvas }) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
@@ -177,7 +195,69 @@ export default {
       this.$set(this.$data.crop_profile_photo, "button_loading_state", false);
     },
     sumit_create_channel() {
-      console.log("submit");
+      const username = this.$data.channel_username;
+      const name = this.$data.channel_username;
+      const desc = this.$data.channel_desc;
+      const canvas = this.$data.crop_profile_photo.canvas;
+
+      const request_body = new FormData();
+
+      if (name.trim().length > 0 && username.trim().length > 0) {
+        request_body.append("channel_username", username);
+        request_body.append("channel_name", name);
+        if (canvas) {
+          const croppedImage = canvas.toDataURL("image/png");
+          const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
+          request_body.append("profile_photo", imageFile);
+        }
+        if (desc) {
+          request_body.append("bio", desc);
+        }
+
+        this.$axios
+          .$post("/api/chats/create_channel", request_body, {
+            headers: {
+              username: this.$store.state.auth.auth.username,
+              auth_token: this.$store.state.auth.auth.auth_token,
+            },
+          })
+          .then((response) => {
+            console.log(response);
+
+            if (response.message == "channel created") {
+              let data_to_callback = {
+                chat_id: response.chat_id,
+                name: name,
+                username: username,
+              };
+              if (desc) {
+                data_to_callback["bio"] = desc;
+              }
+
+              if (response.profile_photo) {
+                data_to_callback["profile_photo"] = {
+                  filename: response.profile_photo,
+                };
+              }
+              this.$emit("chat_created", data_to_callback);
+            } else {
+              throw new Error("An error occurred on the server side");
+            }
+          });
+      }
+    },
+    clear_all_items() {
+      this.$set(this.$data, "channel_username", "");
+      this.$set(this.$data, "channel_name", "");
+      this.$set(this.$data, "channel_desc", "");
+      this.$set(this.$data, "avatar_src", "");
+      this.$set(this.$data, "dialog_step", 1);
+      this.$set(this.$data, "crop_profile_photo", {
+        show: false,
+        src: null,
+        canvas: null,
+        button_loading_state: false,
+      });
     },
   },
   mounted() {
@@ -189,12 +269,14 @@ export default {
       immediate: true,
       handler(new_value) {
         this.show_dialog = new_value;
+        this.clear_all_items();
       },
     },
     show_dialog: {
       immediate: true,
       handler(new_value) {
         this.$emit("update:show", new_value);
+        this.clear_all_items();
       },
     },
   },

@@ -12,7 +12,7 @@ var schema = new mongoose.Schema({
     sides: {
         type: Object,
         unique: false,
-        index: false,
+        index: true,
     },
     // SECTION - Channel & Groups
     full_name: {
@@ -20,6 +20,7 @@ var schema = new mongoose.Schema({
     },
     username: {
         type: String,
+        index: true,
     },
     bio: {
         type: String,
