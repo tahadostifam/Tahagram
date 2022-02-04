@@ -123,6 +123,7 @@
             </v-btn>
             <v-btn
               :disabled="channel_username.trim().length == 0"
+              :loading="submit_button_loading_state"
               @click="sumit_create_channel"
               :color="theme_color"
               text
@@ -156,6 +157,7 @@ export default {
         canvas: null,
         button_loading_state: false,
       },
+      submit_button_loading_state: false,
     };
   },
   methods: {
@@ -214,6 +216,7 @@ export default {
           request_body.append("bio", desc);
         }
 
+        this.$set(this.$data, "submit_button_loading_state", true);
         this.$axios
           .$post("/api/chats/create_channel", request_body, {
             headers: {
@@ -222,13 +225,12 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response);
-
             if (response.message == "channel created") {
               let data_to_callback = {
                 chat_id: response.chat_id,
                 name: name,
                 username: username,
+                chat_type: "channel",
               };
               if (desc) {
                 data_to_callback["bio"] = desc;
@@ -243,6 +245,9 @@ export default {
             } else {
               throw new Error("An error occurred on the server side");
             }
+          })
+          .finally(() => {
+            this.$set(this.$data, "submit_button_loading_state", false);
           });
       }
     },

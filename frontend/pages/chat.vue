@@ -479,7 +479,29 @@ export default {
   },
   methods: {
     a_channel_or_group_chat_created(chat){
-      console.log("kkkkkhhhhh :]]", chat);
+      this.set_the_active_chat({
+        chat_id: chat.chat_id,
+        full_name: chat.name,
+        username: chat.username,
+        profile_photo: chat.profile_photo
+      })
+
+      this.$store.commit("auth/addChat", {
+        chat_id: chat.chat_id,
+        chat_type: chat.chat_type,
+        full_name: chat.name,
+        username: chat.username,
+        profile_photo: chat.profile_photo,
+      });
+
+      this.$store.commit("auth/createNewChat", {
+        _id: chat.chat_id,
+        chat_type: chat.chat_type,
+        messages_list: null,
+      });
+      
+      this.$set(this.$data, 'show_chat_view', true);
+      this.$set(this.$data, 'show_create_channel_dialog', false);
     },
     select_photo_to_send(e){
       console.log(e);
