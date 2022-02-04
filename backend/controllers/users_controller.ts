@@ -16,12 +16,6 @@ export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
         const client_ip = clientIp(req, res)?.toString();
 
-        req.body.username = slugify(req.body.username, {
-            lower: true,
-            strict: false,
-            locale: "vi",
-        });
-
         if (client_ip) {
             signinUserWithUserPassword(req.body.username, req.body.password).then(
                 async (user: IUser) => {
@@ -76,6 +70,12 @@ export default {
     SignupAction: (req: Request, res: Response, next: NextFunction) => {
         const client_ip = clientIp(req, res)?.toString();
         if (client_ip) {
+            req.body.username = slugify(req.body.username, {
+                lower: true,
+                strict: false,
+                locale: "vi",
+            });
+
             checkUsernameUniqueness(req.body.username).then(
                 () => {
                     makeHashPassword(req.body.password).then(

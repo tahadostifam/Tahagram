@@ -110,6 +110,9 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
             case "create_channel":
                 events.create_channel(ws, parsedData);
                 break;
+            case "check_username_existly":
+                events.check_username_existly(ws, parsedData);
+                break;
             default:
                 ws.send("command not found");
                 break;

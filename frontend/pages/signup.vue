@@ -21,7 +21,7 @@
         filled
         dense
         :color="theme_color"
-        @keyup="keydown_username_event"
+        @keyup="keyup_username_event"
         v-model="username"
       ></v-text-field>
 
@@ -85,7 +85,7 @@ export default {
     };
   },
   methods: {
-    keydown_username_event() {
+    keyup_username_event() {
       const username = this.$data.username;
       let limited_username = slugify(username, {
         lower: true,
@@ -93,6 +93,8 @@ export default {
         locale: "vi",
       });
       this.$set(this.$data, "username", limited_username);
+
+      check_username_existly;
     },
     inputs_are_valid() {
       let errors_list = [];

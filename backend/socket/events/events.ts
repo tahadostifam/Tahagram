@@ -1,7 +1,7 @@
 // SECTION - events
 import search_in_chats from "./search_in_chats";
 import { update_full_name, update_bio, send_text_message, delete_message, user_seened_message, getUserFullInfo } from "./users";
-import { create_channel } from "./chats";
+import { check_username_existly, create_channel } from "./chats";
 
 export default {
     search_in_chats: search_in_chats,
@@ -12,4 +12,5 @@ export default {
     user_seened_message: user_seened_message,
     get_user_full_info: getUserFullInfo,
     create_channel: create_channel,
+    check_username_existly: check_username_existly,
 };

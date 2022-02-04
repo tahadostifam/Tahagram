@@ -6,6 +6,7 @@ import fs from "fs";
 
 import User from "../models/user";
 import Chats from "../models/chats";
+import slugify from "slugify";
 
 export interface IRequest extends Request {
     files: any;
@@ -18,6 +19,12 @@ export default {
         });
 
         if (!user) return status_codes.invalid_token(req, res, next);
+
+        req.body.channel_username = slugify(req.body.channel_username, {
+            lower: true,
+            strict: false,
+            locale: "vi",
+        });
 
         checkUsernameUniqueness(req.body.channel_username).then(
             async () => {

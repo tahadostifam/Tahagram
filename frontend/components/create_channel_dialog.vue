@@ -112,8 +112,19 @@
               label="Channel username"
               :full-with="true"
               maxlength="60"
+              @keyup="keyup_username_event"
               v-model="channel_username"
             ></v-text-field>
+            <p
+              v-if="chat_is_available_state != null"
+              :class="{
+                'text-theme_color': chat_is_available_state == true,
+                'text-red': chat_is_available_state == false,
+              }"
+            >
+              <template v-if="chat_is_available_state">Available</template>
+              <template v-if="!chat_is_available_state">Not Available</template>
+            </p>
           </div>
 
           <v-card-actions class="pr-2">
@@ -122,9 +133,12 @@
               BACK
             </v-btn>
             <v-btn
-              :disabled="channel_username.trim().length == 0"
+              :disabled="
+                channel_username.trim().length == 0 ||
+                chat_is_available_state == false
+              "
               :loading="submit_button_loading_state"
-              @click="sumit_create_channel"
+              @click="submit_create_channel"
               :color="theme_color"
               text
             >
@@ -139,6 +153,7 @@
 
 <script>
 import configs from "@/assets/javascript/configs";
+import slugify from "slugify";
 
 export default {
   name: "CreateChannelDialog",
@@ -158,6 +173,7 @@ export default {
         button_loading_state: false,
       },
       submit_button_loading_state: false,
+      chat_is_available_state: null,
     };
   },
   methods: {
@@ -196,9 +212,9 @@ export default {
         );
       this.$set(this.$data.crop_profile_photo, "button_loading_state", false);
     },
-    sumit_create_channel() {
+    submit_create_channel() {
       const username = this.$data.channel_username;
-      const name = this.$data.channel_username;
+      const name = this.$data.channel_name;
       const desc = this.$data.channel_desc;
       const canvas = this.$data.crop_profile_photo.canvas;
 
@@ -246,6 +262,17 @@ export default {
               throw new Error("An error occurred on the server side");
             }
           })
+          .catch((error) => {
+            if (error.response.status == 401) {
+              alert("unauthorized");
+            } else if (
+              error.response.message == "another chat exists with this username"
+            ) {
+              this.$set(this.$data, "chat_is_available_state", false);
+            } else {
+              throw new Error("An error occurred on the server side");
+            }
+          })
           .finally(() => {
             this.$set(this.$data, "submit_button_loading_state", false);
           });
@@ -263,6 +290,48 @@ export default {
         canvas: null,
         button_loading_state: false,
       });
+    },
+    keyup_username_event() {
+      const username = this.$data.channel_username;
+      if (username.trim().length > 0) {
+        let limited_username = slugify(username, {
+          lower: true,
+          strict: false,
+          locale: "vi",
+        });
+        this.$set(this.$data, "channel_username", limited_username);
+
+        // SECTION - checking username existly
+
+        window.ws.send(
+          JSON.stringify({
+            event: "check_username_existly",
+            username: username,
+          })
+        );
+
+        window.ws.onmessage = (event) => {
+          let parsedData;
+          try {
+            parsedData = JSON.parse(event.data);
+          } catch {}
+          if (parsedData) {
+            if (
+              parsedData.message == "chat exists" &&
+              parsedData.username == username
+            ) {
+              this.$set(this.$data, "chat_is_available_state", false);
+            } else if (
+              parsedData.message == "chat not exists" &&
+              parsedData.username == username
+            ) {
+              this.$set(this.$data, "chat_is_available_state", true);
+            } else {
+              this.$set(this.$data, "chat_is_available_state", null);
+            }
+          }
+        };
+      }
     },
   },
   mounted() {
