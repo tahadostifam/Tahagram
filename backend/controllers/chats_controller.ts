@@ -60,6 +60,7 @@ export default {
                 if (req.body.bio && req.body.bio.length > 0) {
                     channel_data["bio"] = req.body.bio;
                 }
+
                 const channel = new Chats(channel_data);
 
                 await channel.save();

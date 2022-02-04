@@ -258,9 +258,9 @@ export function getUserChats(username: string) {
                                 username: chat_info.username,
                                 chat_type: chat_info.chat_type,
                             };
-                            if (chat_info.profile_photo) {
+                            if (chat_info.profile_photos && chat_info.profile_photos.length > 0 && chat_info.profile_photos[0].filename) {
                                 user_data["profile_photo"] = {
-                                    filename: chat_info.profile_photo,
+                                    filename: chat_info.profile_photos[0].filename,
                                 };
                             }
                             chats.push(user_data);

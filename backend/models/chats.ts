@@ -25,8 +25,8 @@ var schema = new mongoose.Schema({
     bio: {
         type: String,
     },
-    profile_photo: {
-        type: String,
+    profile_photos: {
+        type: Array,
     },
     creator_username: {
         type: String,
