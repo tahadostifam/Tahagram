@@ -62,7 +62,7 @@
             <v-list-item-icon>
               <v-icon class="icon">mdi-bell-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Notification</v-list-item-title>
+            <v-list-item-title>Notifications</v-list-item-title>
           </v-list-item>
 
           <v-list-item>

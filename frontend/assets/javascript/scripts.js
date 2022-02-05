@@ -9,8 +9,9 @@ window.initSocket = () => {
   if (refresh_token && auth_token && username) {
     const socket = new WebSocket(configs.socket_address, null, { headers: {} });
 
-    socket.onopen = () => {
+    socket.onopen = async () => {
       vm.$set(vm.$data, "show_internet_bar", false);
+      window.update_user_info();
     };
 
     socket.onmessage = (event) => {

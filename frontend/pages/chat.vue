@@ -103,7 +103,14 @@
         </div>
 
         <div class="chats">
-          <div class="internet_bar" v-if="$nuxt.isOffline || show_internet_bar">
+          <div class="internet_bar" v-if="updating_user_info_state">
+            <v-progress-circular
+                class="d-inline-block mr-4"
+                indeterminate
+              ></v-progress-circular>
+            Updating...
+          </div>
+          <div class="internet_bar" v-else-if="$nuxt.isOffline || show_internet_bar">
             <v-progress-circular
                 class="d-inline-block mr-4"
                 indeterminate
@@ -112,9 +119,9 @@
           </div>
 
           <template v-if="search_chat_input.trim().length == 0">
-            <template v-if="chats_list && chats_list.length > 0">
+            <template v-if="user_info.chats && user_info.chats.length > 0">
               <ChatRow
-                v-for="(item, index) in chats_list"
+                v-for="(item, index) in user_info.chats"
                 :key="index"
                 @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
@@ -454,6 +461,7 @@ export default {
       chats_list: null,
       message_context_menu_message_id: null,
       show_internet_bar: false,
+      updating_user_info_state: false,
       view_user_profile_photo: {
         show: false
       },
@@ -462,22 +470,60 @@ export default {
     };
   },
   mounted() {  
-    this.$nextTick(function () {
-      window.initSocket();
+    this.$nextTick(async function () {
+      await window.initSocket();
     });
 
     this.check_if_user_had_profile_photo();
     this.handle_escape_button();
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
-    // SECTION - setting user chats
-    this.$set(this.$data, 'chats_list', this.$store.state.auth.user_info.chats)
     
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.select_photo_to_send = this.select_photo_to_send;
     window.vm = this;
+
+    window.update_user_info = this.update_user_info
+
+    this.watch_internet_state_changes();
   },
   methods: {
+    watch_internet_state_changes(){
+      this.$store.watch(
+        () => this.$nuxt.isOffline,
+        (value) => {
+          if (value == false) {
+            this.update_user_info()
+          }
+        }
+      );
+    },
+    async update_user_info() {
+        this.$set(this.$data, 'updating_user_info_state', true)
+        await window.vm.$store
+        .dispatch("auth/Authenticate")
+        .then(
+          (user_data) => {
+            console.log("Updating user info...");
+
+            console.log("logging in with saved tokens");
+
+            window.vm.$store.commit("auth/setUserData", user_data);
+            window.vm.$store.commit("auth/setChatsList", user_data.chats);
+
+            return window.vm.$router.push({ path: "/chat" });
+          },
+          () => {
+            console.log("login with saved tokens failed!");
+          }
+        )
+        .catch((err) => {
+          console.log(err);
+          return window.vm.$router.push({ path: "/500" });
+        }).finally(() => {
+          this.$set(this.$data, 'updating_user_info_state', false)
+        })
+    },
     a_channel_or_group_chat_created(chat){
       this.set_the_active_chat({
         chat_id: chat.chat_id,
@@ -576,10 +622,13 @@ export default {
 
       switch (chat_location) {
         case 'chats_list':
-          chat = this.$data.chats_list.find( ({chat_id: _chat_id_}) => _chat_id_ == chat_id )
+          chat = this.user_info.chats.find( ({chat_id: _chat_id_}) => _chat_id_ == chat_id )
           if (chat && chat.chat_type == 'private') {
             const msgs_list = await this.fetch_chat_messages_list(chat_id);
             this.$set(this.$data.active_chat, 'messages', msgs_list);
+          }
+          else{
+            // TODO
           }
           this.set_the_active_chat(chat)
           break;
@@ -588,12 +637,18 @@ export default {
           if (chat.chat_type == 'private') {
             doGetChatMessages();
           }
+          else{
+            // TODO
+          }
           this.set_the_active_chat(chat)
           break;
         case 'search_chat_in_local':
           chat = this.$data.search_chat_in_local_result.find(({ _id }) => _id == chat_id)
           if (chat.chat_type == 'private') {
             doGetChatMessages();
+          }
+          else{
+            // TODO
           }
           this.set_the_active_chat(chat)
           break;
@@ -859,12 +914,16 @@ export default {
         this.$store.watch(
           (state) => state.auth.user_info,
           (value) => {
-            if (value && value[0].filename) {
-              this.$set(
-                this.$data,
-                "user_info",
-                value
-              );
+            try {
+              if (value && value[0].filename) {
+                this.$set(
+                  this.$data,
+                  "user_info",
+                  value
+                );
+              }
+              
+            } catch  {
             }
           }
         );
