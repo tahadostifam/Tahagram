@@ -47,7 +47,6 @@ export default async function search_in_chats(ws: any, parsedData: any) {
             {
                 __v: 0,
                 bio: 0,
-                members: 0,
                 admins: 0,
                 messages_list: 0,
             }
@@ -60,16 +59,10 @@ export default async function search_in_chats(ws: any, parsedData: any) {
         }
 
         await channels_and_groups.forEach(async (item: IChat, index) => {
-            let user_is_member = false;
             if (item.members) {
-                await item.members.forEach((mu) => {
-                    if (mu == ws.user.username) {
-                        user_is_member = true;
-                        return;
-                    }
-                });
-                channels_and_groups[index]["joined"] = user_is_member;
+                channels_and_groups[index]["ura_member"] = item.members.includes(ws.user.username);
             }
+            delete channels_and_groups[index]["members"];
         });
 
         const data_to_send = finded_users.concat(channels_and_groups);

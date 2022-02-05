@@ -254,7 +254,33 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
     }
 }
 
-export async function join_to_chat(ws: IWebSocket, parsedData: any) {}
+export async function join_to_chat(ws: IWebSocket, parsedData: any) {
+    const chat_id = parsedData.chat_id;
+    const chat: IChat = await Chats.findById(chat_id);
+    if (chat) {
+        if (chat.chat_type != "private" && chat.members) {
+            const st = chat.members.includes(ws.user.username);
+            if (!st) {
+                await Chats.findOneAndUpdate(
+                    { _id: chat_id },
+                    {
+                        $push: {
+                            members: [ws.user.username],
+                        },
+                    }
+                );
+                ws.send(
+                    JSON.stringify({
+                        event: "you_joined_into_a_chat",
+                        chat_id: chat_id,
+                    })
+                );
+            } else {
+                console.log("the user is currently a member of this channel");
+            }
+        }
+    }
+}
 
 export async function get_chat_messages(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;

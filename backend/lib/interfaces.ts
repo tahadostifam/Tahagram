@@ -43,7 +43,7 @@ export interface IChat {
     bio?: string;
     target_username?: string;
     creator_username?: string;
-    members?: Array<any>;
+    members?: Array<string>;
     admins?: Array<any>;
     chat_type: string;
     messages_list: [ITextMessage | IImageMessage];

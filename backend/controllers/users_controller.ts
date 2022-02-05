@@ -213,7 +213,7 @@ export function verifyRefreshToken(token: string, client_ip: string) {
 
 export function getUserChats(username: string) {
     return new Promise(async (success) => {
-        const user = await User.findOne({
+        const user: IUser = await User.findOne({
             username: username,
         });
 
@@ -221,9 +221,11 @@ export function getUserChats(username: string) {
             return success([]);
         } else {
             let chats: Array<object> = [];
-
-            await user.chats.forEach(async (item: IChat, index: number) => {
-                const chat_info = await Chats.findById(item.chat_id);
+            interface IGetUserChatsChatI extends IChat {
+                profile_photos: any;
+            }
+            await user.chats.forEach(async (item: any, index: number) => {
+                const chat_info: IGetUserChatsChatI = await Chats.findById(item.chat_id);
 
                 if (chat_info) {
                     // going to detect that user target _id is in the user_1 or user_2
@@ -258,6 +260,11 @@ export function getUserChats(username: string) {
                                 username: chat_info.username,
                                 chat_type: chat_info.chat_type,
                             };
+                            if (chat_info.admins) {
+                                const iam_admin_of_chat = chat_info.admins.includes(user.username);
+                                const iam_creator_of_chat = chat_info.creator_username == user.username;
+                                user_data["iam_admin_of_chat"] = iam_admin_of_chat || iam_creator_of_chat;
+                            }
                             if (chat_info.profile_photos && chat_info.profile_photos.length > 0 && chat_info.profile_photos[0].filename) {
                                 user_data["profile_photo"] = {
                                     filename: chat_info.profile_photos[0].filename,
