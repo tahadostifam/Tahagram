@@ -106,7 +106,7 @@ export default {
           set_profile_photo: "Set Profile Photo",
           name: "Name",
           any_detail_such_as: "Any details such as age, occupation or city",
-          detail_example: "Example: 15y.o. full-stack developer from Iran.",
+          detail_example: "Example: Full-Stack Web Developer Based Iran",
           write_message: "Write a message...",
         },
         fa: {
@@ -151,7 +151,7 @@ export default {
           set_profile_photo: "انتخاب عکس پروفایل",
           name: "نام",
           any_detail_such_as: "هرگونه اطلاعاتی مانند سن یا شغل یا شهر",
-          detail_example: "براث مثال: 15y.o. full-stack developer from Iran.",
+          detail_example: "مثال : برنامه نویس فول استک در حیطه وب",
           write_message: "چیزی بنویسید...",
         },
       },

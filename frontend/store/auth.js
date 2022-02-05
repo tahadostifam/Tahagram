@@ -56,11 +56,9 @@ export const mutations = {
     }
   },
   addProfilePhotos(state, filename) {
-    if (filename.trim() != "" && state.user_info.profile_photos) {
-      state.user_info.profile_photos.splice(0, 0, {
-        filename: filename,
-      });
-    }
+    state.user_info.profile_photos.splice(0, 0, {
+      filename: filename,
+    });
   },
   setFullName(state, full_name) {
     state.user_info.full_name = full_name;

@@ -250,7 +250,10 @@
           v-model="bio_input"
           @input="submit_bio_change"
         ></v-text-field>
-        <p class="text-grey">
+        <p
+          class="text-grey mt-2"
+          :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+        >
           {{ $t("any_detail_such_as") }}
           <br />
           {{ $t("detail_example") }}

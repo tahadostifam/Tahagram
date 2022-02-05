@@ -875,6 +875,13 @@ export default {
                   "auth/addProfilePhotos",
                   response.profile_photo_filename
                 );
+                this.$set(
+                  this.$data,
+                  "user_default_avatar",
+                  this.gimme_profile_photo_link_addr({
+                    filename: response.profile_photo_filename
+                  })
+                );
               }
             })
             .catch((error) => {
