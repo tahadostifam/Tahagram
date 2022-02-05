@@ -107,6 +107,7 @@ export default {
           name: "Name",
           any_detail_such_as: "Any details such as age, occupation or city",
           detail_example: "Example: 15y.o. full-stack developer from Iran.",
+          write_message: "Write a message...",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -151,6 +152,7 @@ export default {
           name: "نام",
           any_detail_such_as: "هرگونه اطلاعاتی مانند سن یا شغل یا شهر",
           detail_example: "براث مثال: 15y.o. full-stack developer from Iran.",
+          write_message: "چیزی بنویسید...",
         },
       },
     },

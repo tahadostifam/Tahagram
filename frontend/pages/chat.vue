@@ -335,9 +335,9 @@
                   aria-multiline="true"
                   class="rounded-pill"
                   solo
-                  placeholder="پیام شما..."
+                  :placeholder="$t('write_message')"
                   v-on:keypress.enter="submit_send_text_messages()"
-                  dir="rtl"
+                  :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
                 ></v-text-field>
 
                 <emoji-picker class="emoji_picker" @emoji="insert">

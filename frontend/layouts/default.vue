@@ -49,7 +49,7 @@ export default {
             this.$store.commit("auth/setUserData", user_data);
             this.$store.commit("auth/setChatsList", user_data.chats);
 
-            this.$router.push({ path: "/" + this.$i18n.locale + "/signin" });
+            this.$router.push({ path: "/" + this.$i18n.locale + "/chat" });
           },
           () => {
             console.log("login with saved tokens failed!");
