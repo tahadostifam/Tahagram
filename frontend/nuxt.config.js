@@ -108,6 +108,8 @@ export default {
           any_detail_such_as: "Any details such as age, occupation or city",
           detail_example: "Example: Full-Stack Web Developer Based Iran",
           write_message: "Write a message...",
+          group_name: "Group name",
+          group_username: "Group username",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -153,6 +155,8 @@ export default {
           any_detail_such_as: "هرگونه اطلاعاتی مانند سن یا شغل یا شهر",
           detail_example: "مثال : برنامه نویس فول استک در حیطه وب",
           write_message: "چیزی بنویسید...",
+          group_name: "نام گروه",
+          group_username: "نام کاربری گروه",
         },
       },
     },

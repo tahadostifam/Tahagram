@@ -2,7 +2,17 @@
   <v-dialog max-width="450" v-model="dialog" @input="close" scrollable>
     <v-card>
       <div class="d-flex justify-space-between align-center">
-        <v-card-title class="text-h6"> User Info </v-card-title>
+        <v-card-title class="text-h6">
+          <template v-if="active_chat.chat_type == 'private'"
+            >User Info</template
+          >
+          <template v-if="active_chat.chat_type == 'channel'"
+            >Channel Info</template
+          >
+          <template v-if="active_chat.chat_type == 'group'"
+            >Group Info</template
+          >
+        </v-card-title>
         <div class="mr-2">
           <v-btn large icon style="padding-top: 3px" @click="close">
             <v-icon class="icon"> mdi-close </v-icon>

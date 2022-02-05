@@ -65,6 +65,7 @@
       :show="show_create_group_dialog"
       v-on:close_button="show_create_group_dialog = false"
       v-on:update:show="(new_value) => show_create_group_dialog = new_value"
+      v-on:chat_created="a_channel_or_group_chat_created"
     ></CreateGroupDialog>
 
     <ViewUserProfile
@@ -545,7 +546,12 @@ export default {
       });
       
       this.$set(this.$data, 'show_chat_view', true);
-      this.$set(this.$data, 'show_create_channel_dialog', false);
+      if (chat.chat_type == 'channel') {
+        this.$set(this.$data, 'show_create_channel_dialog', false);
+      }
+      else if (chat.chat_type == 'group') {
+        this.$set(this.$data, 'show_create_group_dialog', false);
+      }
     },
     select_photo_to_send(e){
       console.log(e);
