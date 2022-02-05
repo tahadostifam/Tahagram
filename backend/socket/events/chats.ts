@@ -254,6 +254,8 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
     }
 }
 
+export async function join_to_chat(ws: IWebSocket, parsedData: any) {}
+
 export async function get_chat_messages(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     if (chat_id && chat_id.length > 0) {
