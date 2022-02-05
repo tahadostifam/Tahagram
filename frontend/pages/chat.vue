@@ -511,6 +511,9 @@ export default {
 
             window.vm.$store.commit("auth/setUserData", user_data);
             window.vm.$store.commit("auth/setChatsList", user_data.chats);
+
+            // TODO
+            // update the messages of active_chat
           },
           () => {
             console.log("login with saved tokens failed!");
@@ -524,11 +527,18 @@ export default {
         })
     },
     a_channel_or_group_chat_created(chat){
+      window.ws.close() // FIXME - i cannot find a really important bug in this section
+      // problem deatail : users cannot send message after creating a new_channel
+      // for fix this we have to update our info in frontend side
+      // i think 
+
       this.set_the_active_chat({
         chat_id: chat.chat_id,
+        chat_type: chat.chat_type,
         full_name: chat.name,
         username: chat.username,
-        profile_photo: chat.profile_photo
+        profile_photo: chat.profile_photo,
+        messages: null
       })
 
       this.$store.commit("auth/addChat", {
@@ -542,9 +552,9 @@ export default {
       this.$store.commit("auth/createNewChat", {
         _id: chat.chat_id,
         chat_type: chat.chat_type,
-        messages_list: null,
+        messages_list: [],
       });
-      
+
       this.$set(this.$data, 'show_chat_view', true);
       if (chat.chat_type == 'channel') {
         this.$set(this.$data, 'show_create_channel_dialog', false);
@@ -571,13 +581,27 @@ export default {
         const ws = window.ws;
         if (ws) {
           if (this.$data.active_chat.chat_id) {
-            let data_to_send = {
+            switch (this.$data.active_chat.chat_type) {
+              case 'private':
+                ws.send(JSON.stringify({
                 event: "send_text_message",
                 send_text_message_input: this.$data.send_text_message_input.trim(),
                 chat_id: this.$data.active_chat.chat_id,
-                target_username: this.$data.active_chat.username
+                target_username: this.$data.active_chat.username,
+                chat_type: "private"
+                }))
+                break;
+              case 'channel':
+              case 'group':
+                ws.send(JSON.stringify({
+                  event: "send_text_message",
+                  send_text_message_input: this.$data.send_text_message_input.trim(),
+                  chat_id: this.$data.active_chat.chat_id,
+                  chat_type: this.$data.active_chat.chat_type
+                }))
+                break;
             }
-            ws.send(JSON.stringify(data_to_send))
+            
           }
           this.$set(this.$data, 'send_text_message_input', '');
         } else {
@@ -587,15 +611,9 @@ export default {
         }
       }
     },
-    async show_chat(chat_id, chat_location) {
-      this.$set(this.$data, 'chat_is_loading', true);
-
-      const vm = this;
-      let chat = null;
-
-      function doGetChatMessages() {
-         if (vm.$store.state.auth.user_info.chats_messages && vm.$store.state.auth.user_info.chats_messages.length > 0) {
-          const chats_messages = vm.$store.state.auth.user_info.chats_messages
+    doGetChatMessages() {
+         if (this.$store.state.auth.user_info.chats_messages && this.$store.state.auth.user_info.chats_messages.length > 0) {
+          const chats_messages = this.$store.state.auth.user_info.chats_messages
           if (chats_messages) {
             const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
             if (find_result && find_result.sides) {
@@ -609,11 +627,11 @@ export default {
                 chat_type: chat.chat_type,
               }
 
-              vm.set_the_active_chat(chat)
+              this.set_the_active_chat(chat)
               
-              vm.$set(vm.$data.active_chat, 'messages', find_result.messages_list);
+              this.$set(this.$data.active_chat, 'messages', find_result.messages_list);
             }else{
-              vm.$set(vm.$data.active_chat, 'messages', null);
+              this.$set(this.$data.active_chat, 'messages', null);
             }
           }
           else{
@@ -622,7 +640,12 @@ export default {
         }
 
         vm.set_the_active_chat(chat)
-      }
+    },
+    async show_chat(chat_id, chat_location) {
+      this.$set(this.$data, 'chat_is_loading', true);
+
+      const vm = this;
+      let chat = null;
 
       switch (chat_location) {
         case 'chats_list':
@@ -632,14 +655,15 @@ export default {
             this.$set(this.$data.active_chat, 'messages', msgs_list);
           }
           else{
-            // TODO
+            const msgs_list = await this.fetch_chat_messages_list(chat_id);
+            this.$set(this.$data.active_chat, 'messages', msgs_list);
           }
           this.set_the_active_chat(chat)
           break;
         case 'search_chat_result':
           chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
           if (chat.chat_type == 'private') {
-            doGetChatMessages();
+            this.doGetChatMessages();
           }
           else{
             // TODO
@@ -649,7 +673,7 @@ export default {
         case 'search_chat_in_local':
           chat = this.$data.search_chat_in_local_result.find(({ _id }) => _id == chat_id)
           if (chat.chat_type == 'private') {
-            doGetChatMessages();
+            this.doGetChatMessages();
           }
           else{
             // TODO

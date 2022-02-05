@@ -51,12 +51,12 @@ export interface IChat {
 
 export interface ITextMessage {
     message_id: string;
-    sender_username: string;
-    messages_type: string;
+    sender_username?: string;
+    message_type: string;
     send_time: number;
     content: string;
     edited: boolean;
-    seen_state: string;
+    seen_state?: string;
 }
 
 export interface IImageMessage {

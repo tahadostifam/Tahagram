@@ -113,8 +113,11 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
             case "check_username_existly":
                 events.check_username_existly(ws, parsedData);
                 break;
+            case "get_chat_messages":
+                events.get_chat_messages(ws, parsedData);
+                break;
             default:
-                ws.send("command not found");
+                ws.send(JSON.stringify({ message: "command not found" }));
                 break;
         }
     } catch {
