@@ -1,5 +1,6 @@
 import User from "../../models/user";
 import Chats from "../../models/chats";
+import { IChat } from "../../lib/interfaces";
 
 export default async function search_in_chats(ws: any, parsedData: any) {
     if (parsedData.input && parsedData.input.trim() != "") {
@@ -57,6 +58,19 @@ export default async function search_in_chats(ws: any, parsedData: any) {
         if (!channels_and_groups) {
             channels_and_groups = [];
         }
+
+        await channels_and_groups.forEach(async (item: IChat, index) => {
+            let user_is_member = false;
+            if (item.members) {
+                await item.members.forEach((mu) => {
+                    if (mu == ws.user.username) {
+                        user_is_member = true;
+                        return;
+                    }
+                });
+                channels_and_groups[index]["joined"] = user_is_member;
+            }
+        });
 
         const data_to_send = finded_users.concat(channels_and_groups);
         ws.send(

@@ -171,7 +171,6 @@
                 >
                   <v-icon> mdi-arrow-left </v-icon>
                 </v-btn>
-                <!-- ANCHOR -->
                 <div
                   @click="show_user_profile"
                   class="d-flex align-center text-decoration-none mr-5"
@@ -236,10 +235,8 @@
             </div>
 
             <div class="messages-scroll">
-              <!-- FIXME @scroll="on_chat_scroll_event(this)" -->
               <div class="messages_list" v-if="active_chat.messages && active_chat.messages.length > 0 && active_chat.username && active_chat.full_name">
                 <!-- Context Menu For Messages -->
-
                 <v-menu
                   v-model="context_menu_for_messages.show"
                   :position-x="context_menu_for_messages.x"
@@ -283,7 +280,6 @@
                     :my_message="item.sender_username == user_info.username"
                     :seen_state="item.seen_state"
                   ></TextMessage>
-                  <!-- ANCHOR -->
 
                   <!-- <ImageMessage
                     v-if="item.type == 'image'"

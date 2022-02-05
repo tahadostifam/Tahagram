@@ -235,6 +235,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     send_time: Date.now(),
                     content: message_text,
                     edited: false,
+                    sender_username: ws.user.username,
                 };
                 if (channel.creator_username == ws.user.username) {
                     pushMessage(message, {
