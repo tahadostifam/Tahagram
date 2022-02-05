@@ -3,10 +3,10 @@
     <FormTopOverlay />
 
     <div class="form rounded-sm grey darken-4 pa-5 elevation-3">
-      <h2 h2 class="mb-3">Signin</h2>
+      <h2 h2 class="mb-3">{{ $t("username") }}</h2>
       <v-text-field
         type="text"
-        label="Username"
+        :label="$t('username')"
         outlined
         filled
         dense
@@ -16,7 +16,7 @@
 
       <v-text-field
         type="password"
-        label="Password"
+        :label="$t('password')"
         outlined
         filled
         dense
@@ -26,7 +26,7 @@
 
       <v-checkbox
         class="ma-0 pa-0"
-        label="Remember me"
+        :label="$t('remember_me')"
         :color="theme_color"
         v-model="remember_me"
       ></v-checkbox>
@@ -42,10 +42,12 @@
         :loading="submit_button_loading_state"
         :color="theme_color"
         depressed
-        >Submit</v-btn
+        >{{ $t("submit") }}</v-btn
       >
       <div class="sepa mt-4"></div>
-      <NuxtLink to="/signup" class="w-100 d-block mt-3">Signup</NuxtLink>
+      <NuxtLink to="/signup" class="w-100 d-block mt-3">{{
+        $t("signup")
+      }}</NuxtLink>
     </div>
   </div>
 </template>
@@ -117,7 +119,7 @@ export default {
               this.$router.push({ path: "/chat" });
             } else {
               this.$set(this.$data, "form_errors", [
-                "An error occurred on the client side. please try again",
+                this.$t("server_side_error"),
               ]);
             }
           })
@@ -128,20 +130,20 @@ export default {
                 "username or password is incorrect"
               ) {
                 this.$set(this.$data, "form_errors", [
-                  "Username or password is incorrect",
+                  this.$t("username_or_password_is_incorrect"),
                 ]);
               } else if (error.response.status == 400) {
                 this.$set(this.$data, "form_errors", [
-                  "Required parameters can't be are empty",
+                  this.$t("required_parameters_cannot_be_empty"),
                 ]);
               } else if (error.response.status == 500) {
                 this.$set(this.$data, "form_errors", [
-                  "An error occurred on the client side. please try again",
+                  this.$t("server_side_error"),
                 ]);
               }
             } else {
               this.$set(this.$data, "form_errors", [
-                "An error occurred on the client side. please try again",
+                this.$t("server_side_error"),
               ]);
             }
           })

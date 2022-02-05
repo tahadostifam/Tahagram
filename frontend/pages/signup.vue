@@ -3,10 +3,10 @@
     <UserCreatedDialog v-if="user_created_dialog"></UserCreatedDialog>
     <FormTopOverlay />
     <div class="form rounded-sm grey darken-4 pa-5 elevation-3">
-      <h2 class="mb-3">Signup</h2>
+      <h2 class="mb-3">{{ $t("signup") }}</h2>
       <v-text-field
         type="text"
-        label="Full Name"
+        :label="$t('full_name')"
         outlined
         filled
         dense
@@ -16,7 +16,7 @@
 
       <v-text-field
         type="text"
-        label="Username"
+        :label="$t('username')"
         outlined
         filled
         dense
@@ -27,7 +27,7 @@
 
       <v-text-field
         type="password"
-        label="Password"
+        :label="$t('password')"
         outlined
         filled
         dense
@@ -37,7 +37,7 @@
 
       <v-text-field
         type="password"
-        label="Password Confirmation"
+        :label="$t('password_confirmation')"
         outlined
         filled
         dense
@@ -56,11 +56,13 @@
         :color="theme_color"
         depressed
         @click="submit"
-        >Submit</v-btn
+        >{{ $t("submit") }}</v-btn
       >
 
       <div class="sepa mt-4">
-        <NuxtLink to="/signin" class="w-100 d-block mt-3">Signin</NuxtLink>
+        <NuxtLink to="/signin" class="w-100 d-block mt-3">{{
+          $t("signin")
+        }}</NuxtLink>
       </div>
     </div>
   </div>
@@ -93,8 +95,6 @@ export default {
         locale: "vi",
       });
       this.$set(this.$data, "username", limited_username);
-
-      check_username_existly;
     },
     inputs_are_valid() {
       let errors_list = [];
@@ -104,18 +104,18 @@ export default {
         this.$data.password == "" ||
         this.$data.password_confirmation == ""
       ) {
-        errors_list.push("Required params can't be empty");
+        errors_list.push(this.$t("required_parameters_cannot_be_empty"));
       }
       if (this.$data.username.length < 5 || this.$data.username.length > 15) {
-        errors_list.push(
-          "Username must be at least 5 and at most 15 characters"
-        );
+        errors_list.push(this.$t("minimum_and_maximum_for_username"));
       }
 
       if (
         this.$data.password.trim() != this.$data.password_confirmation.trim()
       ) {
-        errors_list.push("Password and PasswordConfirmation are not equal");
+        errors_list.push(
+          this.$t("password_and_passwordconfirmation_are_not_equal")
+        );
       }
 
       if (errors_list.length > 0) {
@@ -145,26 +145,26 @@ export default {
               if (error.response.status == 400) {
                 console.log(error.response);
                 this.$set(this.$data, "form_errors", [
-                  "Required parameters can't be are empty",
+                  this.$t("required_parameters_cannot_be_empty"),
                 ]);
               } else if (error.response.status == 409) {
                 this.$set(this.$data, "form_errors", [
-                  "Username already registered",
+                  this.$t("username_already_registered"),
                 ]);
               } else if (error.response.status == 500) {
                 this.$set(this.$data, "form_errors", [
-                  "An error occurred on the client side. please try again",
+                  this.$t("server_side_error"),
                 ]);
               } else if (
                 error.response.message == "username already registered"
               ) {
                 this.$set(this.$data, "form_errors", [
-                  "Username already registered",
+                  this.$t("username_already_registered"),
                 ]);
               }
             } else {
               this.$set(this.$data, "form_errors", [
-                "An error occurred on the client side. please try again",
+                this.$t("server_side_error"),
               ]);
             }
           })
