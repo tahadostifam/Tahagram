@@ -510,8 +510,6 @@ export default {
 
             window.vm.$store.commit("auth/setUserData", user_data);
             window.vm.$store.commit("auth/setChatsList", user_data.chats);
-
-            return window.vm.$router.push({ path: "/chat" });
           },
           () => {
             console.log("login with saved tokens failed!");

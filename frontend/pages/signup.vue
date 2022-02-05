@@ -124,7 +124,7 @@ export default {
       } else return true;
     },
     goto_signin_page() {
-      this.$router.push({ path: "/signin" });
+      this.$router.push({ path: "/" + this.$i18n.locale + "/signin" });
     },
     submit() {
       if (this.inputs_are_valid()) {

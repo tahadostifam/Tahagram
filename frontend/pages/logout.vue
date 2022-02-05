@@ -15,7 +15,7 @@ export default {
     Cookies.remove("auth_token");
     Cookies.remove("username");
 
-    this.$router.push({ path: "/signin" });
+    this.$router.push({ path: "/" + this.$i18n.locale + "/signin" });
   },
 };
 </script>

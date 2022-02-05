@@ -3,7 +3,9 @@
     <FormTopOverlay />
 
     <div class="form rounded-sm grey darken-4 pa-5 elevation-3">
-      <h2 h2 class="mb-3">{{ $t("username") }}</h2>
+      <h2 :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'" class="mb-3">
+        {{ $t("signin") }}
+      </h2>
       <v-text-field
         type="text"
         :label="$t('username')"
@@ -37,17 +39,19 @@
         </p>
       </div>
 
-      <v-btn
-        @click="submit"
-        :loading="submit_button_loading_state"
-        :color="theme_color"
-        depressed
-        >{{ $t("submit") }}</v-btn
-      >
-      <div class="sepa mt-4"></div>
-      <NuxtLink to="/signup" class="w-100 d-block mt-3">{{
-        $t("signup")
-      }}</NuxtLink>
+      <div :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'">
+        <v-btn
+          @click="submit"
+          :loading="submit_button_loading_state"
+          :color="theme_color"
+          depressed
+          >{{ $t("submit") }}</v-btn
+        >
+        <div class="sepa mt-4"></div>
+        <NuxtLink to="/signup" class="w-100 d-block mt-3">{{
+          $t("signup")
+        }}</NuxtLink>
+      </div>
     </div>
   </div>
 </template>
@@ -116,7 +120,7 @@ export default {
                 Cookies.set("username", this.$data.username);
               }
 
-              this.$router.push({ path: "/chat" });
+              this.$router.push({ path: "/" + this.$i18n.locale + "/chat" });
             } else {
               this.$set(this.$data, "form_errors", [
                 this.$t("server_side_error"),

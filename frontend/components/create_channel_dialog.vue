@@ -17,7 +17,7 @@
             text
             @click="crop_profile_photo.show = false"
           >
-            CANCEL
+            {{ $t("cancel") }}
           </v-btn>
           <v-btn
             :color="theme_color"
@@ -25,7 +25,7 @@
             @click="set_croped_photo"
             :loading="crop_profile_photo.button_loading_state"
           >
-            SAVE
+            {{ $t("save") }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -34,7 +34,7 @@
     <v-dialog max-width="450" v-model="show_dialog" scrollable>
       <v-card>
         <div class="d-flex justify-space-between align-center">
-          <v-card-title class="text-h6"> New Channel </v-card-title>
+          <v-card-title class="text-h6"> {{ $t("new_channel") }} </v-card-title>
           <div class="mr-2">
             <v-btn
               large
@@ -74,7 +74,7 @@
 
             <div class="ml-5 d-block" style="width: calc(100% - 155px)">
               <v-text-field
-                label="Channel name"
+                :label="$t('channel_name')"
                 :full-with="true"
                 maxlength="30"
                 v-model="channel_name"
@@ -83,7 +83,7 @@
           </div>
           <div class="px-6 pb-2 pt-2">
             <v-text-field
-              label="Description"
+              :label="$t('desc')"
               :full-with="true"
               counter="200"
               maxlength="200"
@@ -94,7 +94,7 @@
           <v-card-actions class="pr-2">
             <v-spacer></v-spacer>
             <v-btn :color="theme_color" text @click="show_dialog = false">
-              CANCEL
+              {{ $t("cancel") }}
             </v-btn>
             <v-btn
               :disabled="channel_name.trim().length == 0"
@@ -102,14 +102,14 @@
               :color="theme_color"
               text
             >
-              NEXT
+              {{ $t("next") }}
             </v-btn>
           </v-card-actions>
         </template>
         <template v-if="dialog_step == 2">
           <div class="px-6">
             <v-text-field
-              label="Channel username"
+              :label="$t('channel_username')"
               :full-with="true"
               maxlength="60"
               @keyup="keyup_username_event"
@@ -130,7 +130,7 @@
           <v-card-actions class="pr-2">
             <v-spacer></v-spacer>
             <v-btn :color="theme_color" text @click="dialog_step = 1">
-              BACK
+              {{ $t("back") }}
             </v-btn>
             <v-btn
               :disabled="
@@ -142,7 +142,7 @@
               :color="theme_color"
               text
             >
-              CREATE
+              {{ $t("create") }}
             </v-btn>
           </v-card-actions>
         </template>

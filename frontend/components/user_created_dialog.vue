@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     goto_signin_page() {
-      this.$router.push({ path: "/signin" });
+      this.$router.push({ path: "/" + this.$i18n.locale + "/signin" });
     },
   },
 };

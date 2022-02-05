@@ -32,40 +32,42 @@
           <v-list-item-icon>
             <v-icon>mdi-cloud</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Saved Messages</v-list-item-title>
+          <v-list-item-title>{{ $t("saved_messages") }}</v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="$emit('show_create_group_dialog')">
           <v-list-item-icon>
             <v-icon>mdi-account-multiple</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>New Group</v-list-item-title>
+          <v-list-item-title>{{ $t("new_group") }}</v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="$emit('show_create_channel_dialog')">
           <v-list-item-icon>
             <v-icon>mdi-account-group</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>New Channel</v-list-item-title>
+          <v-list-item-title>{{ $t("new_channel") }}</v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="$emit('show_settings_dialog')">
           <v-list-item-icon>
             <v-icon>mdi-cog</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Settings</v-list-item-title>
+          <v-list-item-title>{{ $t("settings") }}</v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="$emit('logout')" color="red">
           <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Logout</v-list-item-title>
+          <v-list-item-title>{{ $t("logout") }}</v-list-item-title>
         </v-list-item>
       </v-list-item-group>
       <div class="nav_drawer_footer">
         <span class="text-grey">ChatApp</span><br />
-        <span class="text-grey" style="font-size: 12px">Version 1.0</span>
+        <span class="text-grey" style="font-size: 12px"
+          >{{ $t("version") }} 1.0</span
+        >
       </div>
     </v-list>
   </v-navigation-drawer>

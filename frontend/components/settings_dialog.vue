@@ -2,7 +2,7 @@
   <v-dialog max-width="450" v-model="show_settings_dialog" scrollable>
     <v-card v-if="settings_dialog_active_section == 'home'">
       <div class="d-flex justify-space-between align-center">
-        <v-card-title class="text-h6"> Settings </v-card-title>
+        <v-card-title class="text-h6"> {{ $t("settings") }} </v-card-title>
         <div class="mr-2">
           <v-btn
             large
@@ -44,6 +44,7 @@
           <span class="text-grey d-block w-100"
             >last seen today at 5:15 PM</span
           >
+          <!-- TODO -->
         </div>
       </div>
 
@@ -55,25 +56,39 @@
             <v-list-item-icon>
               <v-icon class="icon">mdi-information-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Edit Profile</v-list-item-title>
+            <v-list-item-title>{{ $t("edit_profile") }}</v-list-item-title>
           </v-list-item>
 
           <v-list-item>
             <v-list-item-icon>
               <v-icon class="icon">mdi-bell-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Notifications</v-list-item-title>
+            <v-list-item-title>{{ $t("notifications") }}</v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
+          <v-list-item :to="switchLocalePath('en')" v-if="$i18n.locale == 'fa'">
             <v-list-item-icon>
               <v-icon class="icon">mdi-keyboard-outline</v-icon>
             </v-list-item-icon>
             <v-list-item-title>
               <div class="d-flex justify-space-between">
-                <div>Language</div>
+                <div>{{ $t("language") }}</div>
                 <div class="mr-2">
                   <span class="text-theme_color">English</span>
+                </div>
+              </div>
+            </v-list-item-title>
+          </v-list-item>
+
+          <v-list-item :to="switchLocalePath('fa')" v-if="$i18n.locale == 'en'">
+            <v-list-item-icon>
+              <v-icon class="icon">mdi-keyboard-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>
+              <div class="d-flex justify-space-between">
+                <div>{{ $t("language") }}</div>
+                <div class="mr-2">
+                  <span class="text-theme_color">فارسی</span>
                 </div>
               </div>
             </v-list-item-title>
@@ -89,7 +104,7 @@
             <v-list-item-icon>
               <v-icon class="icon">mdi-help-circle-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>About ChatApp</v-list-item-title>
+            <v-list-item-title>{{ $t("about_chatapp") }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -98,12 +113,12 @@
       <v-dialog max-width="400" v-model="settings_dialog_edit_full_name">
         <v-card>
           <v-card-title style="font-size: 17px" class="mb-0 pb-0 pl-4 pt-2">
-            Edit your name
+            {{ $t("edit_your_name") }}
           </v-card-title>
           <div class="px-5 pt-0">
             <v-text-field
               v-model="update_full_name_input"
-              label="Full name"
+              :label="$t('full_name')"
             ></v-text-field>
           </div>
           <v-card-actions class="pr-2">
@@ -113,10 +128,10 @@
               text
               @click="settings_dialog_edit_full_name = false"
             >
-              CANCEL
+              {{ $t("cancel") }}
             </v-btn>
             <v-btn @click="submit_edit_full_name" :color="theme_color" text>
-              SAVE
+              {{ $t("save") }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -132,7 +147,9 @@
           >
             <v-icon class="icon"> mdi-arrow-left </v-icon>
           </v-btn>
-          <v-card-title class="text-h6"> Edit Profile </v-card-title>
+          <v-card-title class="text-h6">
+            {{ $t("edit_profile") }}
+          </v-card-title>
         </div>
         <div class="mr-2">
           <v-btn
@@ -178,7 +195,7 @@
             style="opacity: 0; position: absolute; width: 200px; height: 40px"
             onchange="window.upload_profile_photo(this)"
           />
-          SET PROFILE PHOTO
+          {{ $t("set_profile_photo") }}
         </v-btn>
       </div>
 
@@ -199,7 +216,7 @@
                 <span
                   class="text-grey d-block w-100 mt-1"
                   style="font-size: 14px"
-                  >Name</span
+                  >{{ $t("name") }}</span
                 >
               </div>
             </v-list-item-title>
@@ -216,7 +233,7 @@
                 <span
                   class="text-grey d-block w-100 mt-1"
                   style="font-size: 14px"
-                  >Username</span
+                  >{{ $t("username") }}</span
                 >
               </div>
             </v-list-item-title>
@@ -234,9 +251,9 @@
           @input="submit_bio_change"
         ></v-text-field>
         <p class="text-grey">
-          Any details such as age, occupation or city.
+          {{ $t("any_detail_such_as") }}
           <br />
-          Example: 15y.o. full-stack developer from Iran.
+          {{ $t("detail_example") }}
         </p>
       </div>
     </v-card>

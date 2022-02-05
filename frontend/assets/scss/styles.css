@@ -33,7 +33,9 @@ html {
 }
 
 body,
-.v-application {
+body .v-card .v-card__title,
+.v-application,
+.v-application .v-card .v-card__title {
   font-family: "Roboto", "Vazir" !important;
 }
 
