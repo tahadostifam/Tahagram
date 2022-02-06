@@ -6,7 +6,7 @@ export default async function search_in_chats(ws: any, parsedData: any) {
     if (parsedData.input && parsedData.input.trim() != "") {
         // SECTION - in this section we gonna search in users_collection
         // we do it because probably user wants to dm to a user
-        let finded_users = await User.find(
+        let finded_users: any = await User.find(
             {
                 $or: [{ username: { $regex: ".*" + parsedData.input + ".*" } }, { full_name: { $regex: ".*" + parsedData.input + ".*" } }],
             },
@@ -21,13 +21,19 @@ export default async function search_in_chats(ws: any, parsedData: any) {
         finded_users = JSON.parse(JSON.stringify(finded_users));
 
         if (finded_users) {
-            await finded_users.forEach((item, index) => {
+            finded_users.forEach((item: any, index: number) => {
                 if (item.profile_photos && item.profile_photos.length > 0) {
                     finded_users[index]["profile_photo"] = item.profile_photos.reverse()[0];
+                    delete finded_users[index]["profile_photos"];
                 }
 
                 if (item && item.username == ws.user.username) {
                     finded_users.splice(index);
+                }
+
+                if (finded_users[index]) {
+                    finded_users[index]["chat_type"] = "private";
+                    finded_users[index]["username"] = item.username;
                 }
             });
         } else {
@@ -56,7 +62,7 @@ export default async function search_in_chats(ws: any, parsedData: any) {
             channels_and_groups = [];
         }
 
-        await channels_and_groups.forEach(async (item: IChat, index: number) => {
+        channels_and_groups.forEach(async (item: IChat, index: number) => {
             if (item.admins) {
                 const iam_admin_of_chat = item.admins.includes(ws.user.username);
                 const iam_creator_of_chat = item.creator_username == ws.user.username;
@@ -71,6 +77,7 @@ export default async function search_in_chats(ws: any, parsedData: any) {
             }
             delete channels_and_groups[index]["members"];
             delete channels_and_groups[index]["admins"];
+            delete channels_and_groups[index]["profile_photos"];
         });
 
         const data_to_send = finded_users.concat(channels_and_groups);

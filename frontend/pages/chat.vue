@@ -614,36 +614,6 @@ export default {
         }
       }
     },
-    doGetChatMessages() {
-         if (this.$store.state.auth.user_info.chats_messages && this.$store.state.auth.user_info.chats_messages.length > 0) {
-          const chats_messages = this.$store.state.auth.user_info.chats_messages
-          if (chats_messages) {
-            const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
-            if (find_result && find_result.sides) {
-              chat = {
-                chat_id: find_result._id,
-                username: find_result.target_username,
-
-                profile_photo: chat.profile_photo,
-                full_name: chat.full_name,
-
-                chat_type: chat.chat_type,
-              }
-
-              this.set_the_active_chat(chat)
-              
-              this.$set(this.$data.active_chat, 'messages', find_result.messages_list);
-            }else{
-              this.$set(this.$data.active_chat, 'messages', null);
-            }
-          }
-          else{
-            vm.$set(vm.$data.active_chat, 'messages', null);
-          }
-        }
-
-        vm.set_the_active_chat(chat)
-    },
     join_into_chat(){
       if (this.$data.active_chat.chat_type != 'private') {
         window.ws.send(JSON.stringify({
@@ -680,6 +650,36 @@ export default {
       const vm = this;
       let chat = null;
 
+      function doGetChatMessages() {
+         if (vm.$store.state.auth.user_info.chats_messages && vm.$store.state.auth.user_info.chats_messages.length > 0) {
+          const chats_messages = vm.$store.state.auth.user_info.chats_messages
+          if (chats_messages && chat.sides) {
+            const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
+            if (find_result && find_result.sides) {
+              vm.$set(vm.$data.active_chat, 'messages', find_result.messages_list);
+            }else{
+              vm.$set(vm.$data.active_chat, 'messages', null);
+            }
+          }
+          else{
+            vm.$set(vm.$data.active_chat, 'messages', null);
+          }
+          chat = {
+            chat_id: chat._id,
+            // username: find_result.username,
+
+            profile_photo: chat.profile_photo,
+            full_name: chat.full_name,
+
+            chat_type: chat.chat_type,
+          }
+
+          vm.set_the_active_chat(chat)
+        }
+
+        vm.set_the_active_chat(chat)
+      }
+
       switch (chat_location) {
         case 'chats_list':
           chat = this.user_info.chats.find( ({chat_id: _chat_id_}) => _chat_id_ == chat_id )
@@ -696,7 +696,7 @@ export default {
         case 'search_chat_result':
           chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
           if (chat.chat_type == 'private') {
-            this.doGetChatMessages();
+            doGetChatMessages();
           }
           else{
             getNonJoinedChatsMessage()
@@ -706,7 +706,7 @@ export default {
         case 'search_chat_in_local':
           chat = this.$data.search_chat_in_local_result.find(({ _id }) => _id == chat_id)
           if (chat.chat_type == 'private') {
-            this.doGetChatMessages();
+            doGetChatMessages();
           }
           else{
             getNonJoinedChatsMessage()
@@ -716,6 +716,8 @@ export default {
       }
 
       this.$set(this.$data, 'search_chat_input', '')
+
+      console.log(chat);
       
       this.$set(this.$data, 'show_chat_view', true);
       this.$set(this.$data, 'chat_is_loading', false);

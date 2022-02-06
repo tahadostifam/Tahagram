@@ -53,6 +53,8 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
     const message_text = parsedData.send_text_message_input;
     const target_username = parsedData.target_username;
 
+    console.log(parsedData);
+
     if (message_text && message_text.trim() != "" && chat_id && chat_id.trim() != "" && chat_type && chat_type.length > 0) {
         const message_id = new ObjectId().toString();
 
