@@ -24,7 +24,6 @@ export default async function search_in_chats(ws: any, parsedData: any) {
             await finded_users.forEach((item, index) => {
                 if (item.profile_photos && item.profile_photos.length > 0) {
                     finded_users[index]["profile_photo"] = item.profile_photos.reverse()[0];
-                    delete finded_users[index].profile_photos;
                 }
 
                 if (item && item.username == ws.user.username) {
@@ -66,6 +65,9 @@ export default async function search_in_chats(ws: any, parsedData: any) {
             if (item["iam_admin_of_chat"] != true && item.members) {
                 const iam_amember_of_chat = item.members.includes(ws.user.username);
                 channels_and_groups[index]["iam_amember_of_chat"] = iam_amember_of_chat;
+            }
+            if (item.profile_photos && item.profile_photos.length > 0) {
+                channels_and_groups[index]["profile_photo"] = item.profile_photos.reverse()[0];
             }
             delete channels_and_groups[index]["members"];
             delete channels_and_groups[index]["admins"];

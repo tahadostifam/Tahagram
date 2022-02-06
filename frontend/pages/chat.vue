@@ -127,7 +127,7 @@
                 @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
                 :active_chat="item.chat_id == active_chat.chat_id"
-                :image_url="gimme_profile_photo_link_addr(item.profile_photos)"
+                :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
               ></ChatRow>
             </template>
             <ThereIsNothing v-else />

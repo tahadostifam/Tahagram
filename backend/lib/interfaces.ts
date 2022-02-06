@@ -49,6 +49,7 @@ export interface IChat {
     messages_list: [ITextMessage | IImageMessage];
     iam_admin_of_chat?: boolean;
     iam_amember_of_chat?: boolean;
+    profile_photos: Array<any>;
 }
 
 export interface ITextMessage {
