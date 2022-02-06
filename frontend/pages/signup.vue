@@ -60,9 +60,11 @@
       >
 
       <div class="sepa mt-4">
-        <NuxtLink to="/signin" class="w-100 d-block mt-3">{{
-          $t("signin")
-        }}</NuxtLink>
+        <NuxtLink
+          :to="'/' + $i18n.locale + '/signin'"
+          class="w-100 d-block mt-3"
+          >{{ $t("signin") }}</NuxtLink
+        >
       </div>
     </div>
   </div>

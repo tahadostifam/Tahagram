@@ -48,9 +48,11 @@
           >{{ $t("submit") }}</v-btn
         >
         <div class="sepa mt-4"></div>
-        <NuxtLink to="/signup" class="w-100 d-block mt-3">{{
-          $t("signup")
-        }}</NuxtLink>
+        <NuxtLink
+          :to="'/' + $i18n.locale + '/signup'"
+          class="w-100 d-block mt-3"
+          >{{ $t("signup") }}</NuxtLink
+        >
       </div>
     </div>
   </div>

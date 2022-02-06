@@ -1,5 +1,14 @@
 version: "3.3"
 services:
+    frontend:
+        image: "node:14"
+        container_name: "chat_app_frontend"
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        network_mode: "host"
     backend:
         image: "node:14"
         container_name: "chat_app_backend"
@@ -9,15 +18,6 @@ services:
         ports:
             - "8000:8000"
             - "2345:2345"
-        network_mode: "host"
-    frontend:
-        image: "node:14"
-        container_name: "chat_app_frontend"
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
-        ports:
-            - "3000:3000"
         network_mode: "host"
     nginx:
         container_name: "chat_app_nginx"

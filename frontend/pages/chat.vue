@@ -1080,33 +1080,3 @@ export default {
   }
 }
 </style>
-
-// {
-//   message_id: "a",
-//   type: "image",
-//   sender: "$ maximilian",
-//   send_time: "00:00",
-//   text_content: "MEOW |:",
-//   edited: false,
-//   my_message: false,
-//   image_address: "https://picsum.photos/900/500",
-// },
-// {
-//   message_id: "b",
-//   type: "text",
-//   sender: "$ maximilian",
-//   send_time: "00:00",
-//   text_content: "😂😂😂",
-//   edited: false,
-//   my_message: false,
-// },
-// {
-//   message_id: "c",
-//   type: "image",
-//   send_time: "00:00",
-//   text_content: "look at this, Max. <br> its very similar to you",
-//   edited: false,
-//   my_message: true,
-//   seen_state: "sended",
-//   image_address: "https://picsum.photos/900/500",
-// },
