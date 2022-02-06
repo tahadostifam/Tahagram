@@ -81,6 +81,11 @@ window.handleSocketMessages = (vm, parsedData) => {
     message_deleted(vm, parsedData);
   } else if (parsedData.event == "get_user_full_info") {
     get_user_full_info(vm, parsedData);
+  } else if (parsedData.event == "get_chat_messages") {
+    if (parsedData.messages_list) {
+      vm.$set(vm.$data.active_chat, "messages", parsedData.messages_list);
+    }
+    vm.$set(vm.$data, "chat_is_loading", false);
   } else if (parsedData.event == "you_joined_into_a_chat") {
     const active_chat_chat_id = vm.$data.active_chat.chat_id;
     if (active_chat_chat_id == parsedData.chat_id) {

@@ -5,10 +5,6 @@ import { IChat, ISocketClient, ITextMessage, IWebSocket } from "../../lib/interf
 import { users } from "../socket";
 import { ObjectId } from "mongodb";
 
-export async function create_channel(ws: IWebSocket, parsedData: any) {
-    const channel_username = parsedData.channel_username;
-}
-
 export async function check_username_existly(ws: IWebSocket, parsedData: any) {
     const username = parsedData.username;
     if (username && username.length > 0) {
@@ -34,6 +30,21 @@ export async function check_username_existly(ws: IWebSocket, parsedData: any) {
             );
         }
     }
+}
+
+async function pushChatToUserChatsList(username: String, chat_id: string) {
+    await User.updateOne(
+        {
+            username: username,
+        },
+        {
+            $push: {
+                chats: {
+                    chat_id: chat_id, // the id of chat [chats collection]
+                },
+            },
+        }
+    );
 }
 
 export async function send_text_message(ws: IWebSocket, parsedData: any) {
@@ -132,23 +143,9 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         });
                         await new_chat.save();
                         // Add this chat into user_1 and user_2 chats_list
-                        async function pushChatToUserChatsList(username: String) {
-                            await User.updateOne(
-                                {
-                                    username: username,
-                                },
-                                {
-                                    $push: {
-                                        chats: {
-                                            chat_id: new_chat._id, // the id of chat [chats collection]
-                                        },
-                                    },
-                                }
-                            );
-                        }
 
-                        pushChatToUserChatsList(ws.user.username);
-                        pushChatToUserChatsList(target_username);
+                        pushChatToUserChatsList(ws.user.username, new_chat._id);
+                        pushChatToUserChatsList(target_username, new_chat._id);
 
                         // to the sender
                         pushMessage(message, {
@@ -261,6 +258,10 @@ export async function join_to_chat(ws: IWebSocket, parsedData: any) {
         if (chat.chat_type != "private" && chat.members) {
             const st = chat.members.includes(ws.user.username);
             if (!st && chat.creator_username != ws.user.username) {
+                const user_have_chat = ws.user.chats.find(({ chat_id: _chat_id_ }) => _chat_id_ === chat_id);
+                if (!user_have_chat) {
+                    pushChatToUserChatsList(ws.user.username, chat_id);
+                }
                 await Chats.findOneAndUpdate(
                     { _id: chat_id },
                     {

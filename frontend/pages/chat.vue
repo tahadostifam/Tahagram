@@ -127,7 +127,7 @@
                 @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
                 :active_chat="item.chat_id == active_chat.chat_id"
-                :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
+                :image_url="gimme_profile_photo_link_addr(item.profile_photos)"
               ></ChatRow>
             </template>
             <ThereIsNothing v-else />
@@ -532,7 +532,6 @@ export default {
       window.ws.close() // FIXME - i cannot find a really important bug in this section
       // problem deatail : users cannot send message after creating a new_channel
       // for fix this we have to update our info in frontend side
-      // i think 
 
       this.set_the_active_chat({
         chat_id: chat.chat_id,
@@ -540,8 +539,10 @@ export default {
         full_name: chat.name,
         username: chat.username,
         profile_photo: chat.profile_photo,
-        messages: null
+        iam_admin_of_chat: true
       })
+
+      this.$set(this.$data.active_chat, 'messages', null)
 
       this.$store.commit("auth/addChat", {
         chat_id: chat.chat_id,
@@ -649,6 +650,28 @@ export default {
             "event": "join_to_chat",
             "chat_id": this.$data.active_chat.chat_id
         }))
+
+        const chat_row_exists = this.$store.state.auth.user_info.chats.find( ({chat_id}) => chat_id === this.$data.active_chat.chat_id)
+        if (!chat_row_exists) {
+          this.$store.commit("auth/addChat", {
+            chat_id: this.$data.active_chat.chat_id,
+            chat_type: this.$data.active_chat.chat_type,
+            full_name: this.$data.active_chat.full_name,
+            username: this.$data.active_chat.username,
+            profile_photo: this.$data.active_chat.profile_photo,
+            iam_amember_of_chat: true
+          });
+        }
+
+        const chat_exists = this.$store.state.auth.user_info.chats_messages.find( ({_id}) => _id === this.$data.active_chat.chat_id)
+        if (!chat_exists) {
+          this.$store.commit("auth/createNewChat", {
+            _id: this.$data.active_chat.chat_id,
+            chat_type: this.$data.active_chat.chat_type,
+            messages_list: this.$data.active_chat.messages,
+            target_username: this.$data.active_chat.username,
+          });
+        }
       }
     },
     async show_chat(chat_id, chat_location) {
@@ -676,7 +699,7 @@ export default {
             this.doGetChatMessages();
           }
           else{
-            // TODO
+            getNonJoinedChatsMessage()
           }
           this.set_the_active_chat(chat)
           break;
@@ -686,7 +709,7 @@ export default {
             this.doGetChatMessages();
           }
           else{
-            // TODO
+            getNonJoinedChatsMessage()
           }
           this.set_the_active_chat(chat)
           break;
@@ -696,6 +719,14 @@ export default {
       
       this.$set(this.$data, 'show_chat_view', true);
       this.$set(this.$data, 'chat_is_loading', false);
+      function getNonJoinedChatsMessage() {
+        ws.send(JSON.stringify({
+          "event": "get_chat_messages",
+          "chat_id": chat_id
+        }))
+
+        vm.$set(vm.$data, 'chat_is_loading', true)
+      }
     },
     set_the_active_chat(chat){
       if (chat._id) {
