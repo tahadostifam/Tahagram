@@ -260,7 +260,7 @@ export async function join_to_chat(ws: IWebSocket, parsedData: any) {
     if (chat) {
         if (chat.chat_type != "private" && chat.members) {
             const st = chat.members.includes(ws.user.username);
-            if (!st) {
+            if (!st && chat.creator_username != ws.user.username) {
                 await Chats.findOneAndUpdate(
                     { _id: chat_id },
                     {

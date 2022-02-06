@@ -132,7 +132,7 @@
             </template>
             <ThereIsNothing v-else />
           </template>
-          <template v-else-if="search_chat_result">
+          <template v-else-if="!show_internet_bar && search_chat_result">
             <span class="chat_row_badge">Global search</span>
             <ChatRow
                 v-for="(item, index) in search_chat_result"
@@ -398,7 +398,10 @@
                 </v-btn>
               </div>
             </div>
-            <v-btn height="65" depressed v-else class="bottom_full_bar rounded-0">
+            <v-btn height="65" depressed v-else-if="active_chat.iam_amember_of_chat" class="bottom_full_bar rounded-0">
+              MUTE
+            </v-btn>
+            <v-btn @click="join_into_chat" height="65" depressed v-else class="bottom_full_bar rounded-0">
               JOIN
             </v-btn>
           </template>
@@ -640,6 +643,14 @@ export default {
 
         vm.set_the_active_chat(chat)
     },
+    join_into_chat(){
+      if (this.$data.active_chat.chat_type != 'private') {
+        window.ws.send(JSON.stringify({
+            "event": "join_to_chat",
+            "chat_id": this.$data.active_chat.chat_id
+        }))
+      }
+    },
     async show_chat(chat_id, chat_location) {
       this.$set(this.$data, 'chat_is_loading', true);
 
@@ -656,7 +667,6 @@ export default {
           else{
             const msgs_list = await this.fetch_chat_messages_list(chat_id);
             this.$set(this.$data.active_chat, 'messages', msgs_list);
-            this.$set(this.$data.active_chat, 'iam_admin_of_chat', chat.iam_admin_of_chat);
           }
           this.set_the_active_chat(chat)
           break;
@@ -681,7 +691,8 @@ export default {
           this.set_the_active_chat(chat)
           break;
       }
-      // this.$set(this.$data, 'search_chat_input', '')
+
+      this.$set(this.$data, 'search_chat_input', '')
       
       this.$set(this.$data, 'show_chat_view', true);
       this.$set(this.$data, 'chat_is_loading', false);
@@ -697,6 +708,21 @@ export default {
       this.$set(this.$data.active_chat, 'full_name', chat.full_name);
       this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
       this.$set(this.$data.active_chat, 'chat_type', chat.chat_type);
+
+      if (chat.chat_type != 'private') {
+        if (chat.iam_admin_of_chat) {
+          this.$set(this.$data.active_chat, 'iam_admin_of_chat', chat.iam_admin_of_chat);
+        }
+        else{
+          this.$set(this.$data.active_chat, 'iam_admin_of_chat', false);
+        }
+        if (chat.iam_amember_of_chat) {
+          this.$set(this.$data.active_chat, 'iam_amember_of_chat', chat.iam_amember_of_chat);
+        }        
+        else{
+          this.$set(this.$data.active_chat, 'iam_amember_of_chat', false);
+        }
+      }
     }, 
     fetch_chat_messages_list(chat_id){
       // NOTE

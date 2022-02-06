@@ -265,7 +265,7 @@ export function getUserChats(username: string) {
                                 const iam_creator_of_chat = chat_info.creator_username == user.username;
                                 user_data["iam_admin_of_chat"] = iam_admin_of_chat || iam_creator_of_chat;
                             }
-                            if (chat_info.members) {
+                            if (user_data["iam_admin_of_chat"] != true && chat_info.members) {
                                 const iam_amember_of_chat = chat_info.members.includes(user.username);
                                 user_data["iam_amember_of_chat"] = iam_amember_of_chat;
                             }
