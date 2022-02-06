@@ -265,6 +265,10 @@ export function getUserChats(username: string) {
                                 const iam_creator_of_chat = chat_info.creator_username == user.username;
                                 user_data["iam_admin_of_chat"] = iam_admin_of_chat || iam_creator_of_chat;
                             }
+                            if (chat_info.members) {
+                                const iam_amember_of_chat = chat_info.members.includes(user.username);
+                                user_data["iam_amember_of_chat"] = iam_amember_of_chat;
+                            }
                             if (chat_info.profile_photos && chat_info.profile_photos.length > 0 && chat_info.profile_photos[0].filename) {
                                 user_data["profile_photo"] = {
                                     filename: chat_info.profile_photos[0].filename,

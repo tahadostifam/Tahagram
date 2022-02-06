@@ -303,7 +303,7 @@
               </div>
             </div>
 
-            <div class="send_message_section">
+            <div class="send_message_section" v-if="active_chat.chat_type == 'private' || active_chat.iam_admin_of_chat">
               <div class="send_box">
                 <v-btn
                   id="send_media_button"
@@ -398,6 +398,9 @@
                 </v-btn>
               </div>
             </div>
+            <v-btn height="65" depressed v-else class="bottom_full_bar rounded-0">
+              JOIN
+            </v-btn>
           </template>
           <div id="no_chat_selected">
             <span>Select a chat to start messaging</span>
@@ -653,6 +656,7 @@ export default {
           else{
             const msgs_list = await this.fetch_chat_messages_list(chat_id);
             this.$set(this.$data.active_chat, 'messages', msgs_list);
+            this.$set(this.$data.active_chat, 'iam_admin_of_chat', chat.iam_admin_of_chat);
           }
           this.set_the_active_chat(chat)
           break;

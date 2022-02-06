@@ -668,6 +668,19 @@ body .v-input.v-text-field:not(.v-input--has-state):hover > .v-input__control
   background-color: #aaaaaa14;
 }
 
+.bottom_full_bar {
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-left: 1px solid #0f0f0f;
+}
+
+.bottom_full_bar.theme--dark.v-btn.v-btn--has-bg {
+  background-color: #212121;
+}
+
 .v-application #main_container .theme--dark.v-navigation-drawer {
   background: #212121;
 }

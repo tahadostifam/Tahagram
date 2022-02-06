@@ -588,6 +588,18 @@ body,
   }
 }
 
+.bottom_full_bar {
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-left: 1px solid #0f0f0f;
+  &.theme--dark.v-btn.v-btn--has-bg {
+    background-color: $color_1;
+  }
+}
+
 .v-application #main_container .theme--dark.v-navigation-drawer {
   background: $color_1;
 }
