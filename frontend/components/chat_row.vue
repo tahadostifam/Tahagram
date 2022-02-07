@@ -13,7 +13,7 @@
       </div>
       <div>
         <span class="d-block">{{ chat_name }}</span>
-        <span class="d-block text--secondary">{{ last_message }}</span>
+        <span class="d-block text--secondary truncate">{{ last_message }}</span>
       </div>
     </div>
   </div>

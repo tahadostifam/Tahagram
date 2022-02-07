@@ -858,3 +858,10 @@ body .v-application .v-navigation-drawer {
     }
   }
 }
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 10px);
+}

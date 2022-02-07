@@ -11,10 +11,19 @@
       :user_info="user_info"
       :user_default_avatar="user_default_avatar"
       v-on:logout="logout"
-      v-on:show_settings_dialog="show_nav_drawer = false; show_settings_dialog = true"
-      v-on:show_create_channel_dialog="show_nav_drawer = false; show_create_channel_dialog = true"
-      v-on:show_create_group_dialog="show_nav_drawer = false; show_create_group_dialog = true"
-      v-on:update:show="(new_value) => show_nav_drawer = new_value"
+      v-on:show_settings_dialog="
+        show_nav_drawer = false;
+        show_settings_dialog = true;
+      "
+      v-on:show_create_channel_dialog="
+        show_nav_drawer = false;
+        show_create_channel_dialog = true;
+      "
+      v-on:show_create_group_dialog="
+        show_nav_drawer = false;
+        show_create_group_dialog = true;
+      "
+      v-on:update:show="(new_value) => (show_nav_drawer = new_value)"
     ></NavDrawer>
 
     <SettingsDialog
@@ -25,8 +34,8 @@
       :photo_uploading_state="photo_uploading_state"
       v-on:initilizing_socket_again="initilizing_socket_again"
       v-on:preview_self_profile="preview_self_profile"
-      v-on:update:show="(new_value) => show_settings_dialog = new_value"
-      ></SettingsDialog>
+      v-on:update:show="(new_value) => (show_settings_dialog = new_value)"
+    ></SettingsDialog>
 
     <v-dialog max-width="350" v-model="crop_profile_photo.show">
       <v-card class="pa-5 pb-0">
@@ -47,7 +56,12 @@
           >
             CANCEL
           </v-btn>
-          <v-btn :color="theme_color" text @click="upload_croped_profile_photo" :loading="crop_profile_photo.button_loading_state">
+          <v-btn
+            :color="theme_color"
+            text
+            @click="upload_croped_profile_photo"
+            :loading="crop_profile_photo.button_loading_state"
+          >
             SAVE
           </v-btn>
         </v-card-actions>
@@ -57,23 +71,27 @@
     <CreateChannelDialog
       :show="show_create_channel_dialog"
       v-on:close_button="show_create_channel_dialog = false"
-      v-on:update:show="(new_value) => show_create_channel_dialog = new_value"
+      v-on:update:show="(new_value) => (show_create_channel_dialog = new_value)"
       v-on:chat_created="a_channel_or_group_chat_created"
     ></CreateChannelDialog>
 
     <CreateGroupDialog
       :show="show_create_group_dialog"
       v-on:close_button="show_create_group_dialog = false"
-      v-on:update:show="(new_value) => show_create_group_dialog = new_value"
+      v-on:update:show="(new_value) => (show_create_group_dialog = new_value)"
       v-on:chat_created="a_channel_or_group_chat_created"
     ></CreateGroupDialog>
 
     <ViewUserProfile
       :show.sync="view_user_profile_photo.show"
-      :user_default_avatar="gimme_profile_photo_link_addr(active_chat.profile_photo)"
+      :user_default_avatar="
+        gimme_profile_photo_link_addr(active_chat.profile_photo)
+      "
       :active_chat="active_chat"
       v-on:preview_self_profile="preview_user_profile"
-      v-on:update:show="(new_value) => view_user_profile_photo.show = new_value"
+      v-on:update:show="
+        (new_value) => (view_user_profile_photo.show = new_value)
+      "
     ></ViewUserProfile>
 
     <div class="pa-0" id="main_container">
@@ -106,16 +124,19 @@
         <div class="chats">
           <div class="internet_bar" v-if="updating_user_info_state">
             <v-progress-circular
-                class="d-inline-block mr-4"
-                indeterminate
-              ></v-progress-circular>
+              class="d-inline-block mr-4"
+              indeterminate
+            ></v-progress-circular>
             Updating...
           </div>
-          <div class="internet_bar" v-else-if="$nuxt.isOffline || show_internet_bar">
+          <div
+            class="internet_bar"
+            v-else-if="$nuxt.isOffline || show_internet_bar"
+          >
             <v-progress-circular
-                class="d-inline-block mr-4"
-                indeterminate
-              ></v-progress-circular>
+              class="d-inline-block mr-4"
+              indeterminate
+            ></v-progress-circular>
             Connecting...
           </div>
 
@@ -128,6 +149,7 @@
                 :chat_name="item.full_name"
                 :active_chat="item.chat_id == active_chat.chat_id"
                 :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
+                :last_message="gimme_last_message(item.chat_id)"
               ></ChatRow>
             </template>
             <ThereIsNothing v-else />
@@ -135,20 +157,22 @@
           <template v-else-if="!show_internet_bar && search_chat_result">
             <span class="chat_row_badge">Global search</span>
             <ChatRow
-                v-for="(item, index) in search_chat_result"
-                :key="index"
-                @click_event="show_chat(item._id, 'search_chat_result')"
-                :chat_name="item.full_name"
-                :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
+              v-for="(item, index) in search_chat_result"
+              :key="index"
+              @click_event="show_chat(item._id, 'search_chat_result')"
+              :chat_name="item.full_name"
+              :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
+              :last_message="gimme_last_message(item.chat_id)"
             ></ChatRow>
             <template v-if="search_chat_in_local_result">
               <span class="chat_row_badge mt-5">Local search</span>
               <ChatRow
-                  v-for="(item, index) in search_chat_in_local_result"
-                  :key="index + item.username"
-                  @click_event="show_chat(item._id, 'search_chat_in_local')"
-                  :chat_name="item.full_name"
-                  :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
+                v-for="(item, index) in search_chat_in_local_result"
+                :key="index + item.username"
+                @click_event="show_chat(item._id, 'search_chat_in_local')"
+                :chat_name="item.full_name"
+                :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
+                :last_message="gimme_last_message(item.chat_id)"
               ></ChatRow>
             </template>
           </template>
@@ -176,18 +200,26 @@
                   class="d-flex align-center text-decoration-none mr-5"
                   style="width: 100%"
                 >
-                  <div class="image" v-if="active_chat.profile_photo && active_chat.profile_photo.filename">
+                  <div
+                    class="image"
+                    v-if="
+                      active_chat.profile_photo &&
+                      active_chat.profile_photo.filename
+                    "
+                  >
                     <img
-                      :src="gimme_profile_photo_link_addr(active_chat.profile_photo)"
+                      :src="
+                        gimme_profile_photo_link_addr(active_chat.profile_photo)
+                      "
                       class="avatar"
                       onload="window.lazyImage(this)"
                     />
                   </div>
 
                   <div>
-                    <span class="d-block font-weight-bold ml-3 text-white"
-                      >{{active_chat.full_name}}</span
-                    >
+                    <span class="d-block font-weight-bold ml-3 text-white">{{
+                      active_chat.full_name
+                    }}</span>
                     <span
                       class="d-block text-sm-caption font-weight-bold ml-3 text--secondary"
                       >online</span
@@ -235,7 +267,15 @@
             </div>
 
             <div class="messages-scroll">
-              <div class="messages_list" v-if="active_chat.messages && active_chat.messages.length > 0 && active_chat.username && active_chat.full_name">
+              <div
+                class="messages_list"
+                v-if="
+                  active_chat.messages &&
+                  active_chat.messages.length > 0 &&
+                  active_chat.username &&
+                  active_chat.full_name
+                "
+              >
                 <!-- Context Menu For Messages -->
                 <v-menu
                   v-model="context_menu_for_messages.show"
@@ -257,7 +297,7 @@
                     <v-list-item v-ripple>
                       <v-list-item-title>Select</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-ripple @click="delete_message"> 
+                    <v-list-item v-ripple @click="delete_message">
                       <v-list-item-title class="text-red"
                         >Delete</v-list-item-title
                       >
@@ -303,7 +343,13 @@
               </div>
             </div>
 
-            <div class="send_message_section" v-if="active_chat.chat_type == 'private' || active_chat.iam_admin_of_chat">
+            <div
+              class="send_message_section"
+              v-if="
+                active_chat.chat_type == 'private' ||
+                active_chat.iam_admin_of_chat
+              "
+            >
               <div class="send_box">
                 <v-btn
                   id="send_media_button"
@@ -312,19 +358,21 @@
                   dark
                   icon
                   x-large
-                  style="overflow:hidden"
+                  style="overflow: hidden"
                 >
                   <input
                     type="file"
                     id="send_media_input"
-                    style="opacity: 0; position: absolute; width: 200px; height: 40px"
+                    style="
+                      opacity: 0;
+                      position: absolute;
+                      width: 200px;
+                      height: 40px;
+                    "
                     onchange="window.select_photo_to_send(this)"
                   />
-                  <v-icon small :color="theme_color">
-                    mdi-image
-                  </v-icon>
+                  <v-icon small :color="theme_color"> mdi-image </v-icon>
                 </v-btn>
-
 
                 <v-text-field
                   id="send_message_textbox"
@@ -398,10 +446,21 @@
                 </v-btn>
               </div>
             </div>
-            <v-btn height="65" depressed v-else-if="active_chat.iam_amember_of_chat" class="bottom_full_bar rounded-0">
+            <v-btn
+              height="65"
+              depressed
+              v-else-if="active_chat.iam_amember_of_chat"
+              class="bottom_full_bar rounded-0"
+            >
               MUTE
             </v-btn>
-            <v-btn @click="join_into_chat" height="65" depressed v-else class="bottom_full_bar rounded-0">
+            <v-btn
+              @click="join_into_chat"
+              height="65"
+              depressed
+              v-else
+              class="bottom_full_bar rounded-0"
+            >
               JOIN
             </v-btn>
           </template>
@@ -419,7 +478,7 @@ import { EmojiPicker } from "vue-emoji-picker";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import configs from "@/assets/javascript/configs";
-import ViewUserProfile from '../components/view_user_profile.vue';
+import ViewUserProfile from "../components/view_user_profile.vue";
 
 export default {
   data() {
@@ -437,13 +496,13 @@ export default {
       show_settings_dialog: false,
       settings_dialog_active_section: "home",
       settings_dialog_edit_full_name: false,
-      update_full_name_input: '',
+      update_full_name_input: "",
       user_default_avatar: undefined,
       crop_profile_photo: {
         show: false,
         src: null,
         canvas: null,
-        button_loading_state: false
+        button_loading_state: false,
       },
       photo_uploading_state: false,
       view_image: {
@@ -459,20 +518,20 @@ export default {
         messages: null,
         username: null,
         full_name: null,
-        profile_photo: null
+        profile_photo: null,
       },
       chats_list: null,
       message_context_menu_message_id: null,
       show_internet_bar: false,
       updating_user_info_state: false,
       view_user_profile_photo: {
-        show: false
+        show: false,
       },
       show_create_channel_dialog: false,
       show_create_group_dialog: false,
     };
   },
-  mounted() {  
+  mounted() {
     this.$nextTick(async function () {
       await window.initSocket();
     });
@@ -481,29 +540,43 @@ export default {
     this.handle_escape_button();
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
-    
+
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.select_photo_to_send = this.select_photo_to_send;
     window.vm = this;
 
-    window.update_user_info = this.update_user_info
+    window.update_user_info = this.update_user_info;
 
     this.watch_internet_state_changes();
   },
   methods: {
-    watch_internet_state_changes(){
+    gimme_last_message(chat_id) {
+      const chats_messages = this.$store.state.auth.user_info.chats_messages;
+      if (chats_messages) {
+        const chat = chats_messages.find(({ _id: _id }) => _id === chat_id);
+        const message = chat.messages_list[chat.messages_list.length - 1];
+        if (message) {
+          const message_type = message.message_type;
+          if (message_type == "text") {
+            return message.content.substr(0, 30);
+          }
+        }
+      }
+      return "Hello World";
+    },
+    watch_internet_state_changes() {
       this.$store.watch(
         () => this.$nuxt.isOffline,
         (value) => {
           if (value == false) {
-            this.update_user_info()
+            this.update_user_info();
           }
         }
       );
     },
     async update_user_info() {
-        this.$set(this.$data, 'updating_user_info_state', true)
-        await window.vm.$store
+      this.$set(this.$data, "updating_user_info_state", true);
+      await window.vm.$store
         .dispatch("auth/Authenticate")
         .then(
           (user_data) => {
@@ -524,12 +597,13 @@ export default {
         .catch((err) => {
           console.log(err);
           return window.vm.$router.push({ path: "/500" });
-        }).finally(() => {
-          this.$set(this.$data, 'updating_user_info_state', false)
         })
+        .finally(() => {
+          this.$set(this.$data, "updating_user_info_state", false);
+        });
     },
-    a_channel_or_group_chat_created(chat){
-      window.ws.close() // FIXME - i cannot find a really important bug in this section
+    a_channel_or_group_chat_created(chat) {
+      window.ws.close(); // FIXME - i cannot find a really important bug in this section
       // problem deatail : users cannot send message after creating a new_channel
       // for fix this we have to update our info in frontend side
 
@@ -539,10 +613,10 @@ export default {
         full_name: chat.name,
         username: chat.username,
         profile_photo: chat.profile_photo,
-        iam_admin_of_chat: true
-      })
+        iam_admin_of_chat: true,
+      });
 
-      this.$set(this.$data.active_chat, 'messages', null)
+      this.$set(this.$data.active_chat, "messages", null);
 
       this.$store.commit("auth/addChat", {
         chat_id: chat.chat_id,
@@ -558,70 +632,80 @@ export default {
         messages_list: [],
       });
 
-      this.$set(this.$data, 'show_chat_view', true);
-      if (chat.chat_type == 'channel') {
-        this.$set(this.$data, 'show_create_channel_dialog', false);
-      }
-      else if (chat.chat_type == 'group') {
-        this.$set(this.$data, 'show_create_group_dialog', false);
+      this.$set(this.$data, "show_chat_view", true);
+      if (chat.chat_type == "channel") {
+        this.$set(this.$data, "show_create_channel_dialog", false);
+      } else if (chat.chat_type == "group") {
+        this.$set(this.$data, "show_create_group_dialog", false);
       }
     },
-    select_photo_to_send(e){
+    select_photo_to_send(e) {
       console.log(e);
     },
-    show_user_profile(){
+    show_user_profile() {
       if (this.$data.active_chat.username) {
-        window.ws.send(JSON.stringify({
-          "event": "get_user_full_info",
-          "target_username": this.$data.active_chat.username
-        }))
+        window.ws.send(
+          JSON.stringify({
+            event: "get_user_full_info",
+            target_username: this.$data.active_chat.username,
+          })
+        );
       }
-      
-      this.$set(this.$data.view_user_profile_photo, 'show', true)
+
+      this.$set(this.$data.view_user_profile_photo, "show", true);
     },
-    submit_send_text_messages(){
+    submit_send_text_messages() {
       if (this.$data.send_text_message_input.trim() != "") {
         const ws = window.ws;
         if (ws) {
           if (this.$data.active_chat.chat_id) {
             switch (this.$data.active_chat.chat_type) {
-              case 'private':
-                ws.send(JSON.stringify({
-                event: "send_text_message",
-                send_text_message_input: this.$data.send_text_message_input.trim(),
-                chat_id: this.$data.active_chat.chat_id,
-                target_username: this.$data.active_chat.username,
-                chat_type: "private"
-                }))
+              case "private":
+                ws.send(
+                  JSON.stringify({
+                    event: "send_text_message",
+                    send_text_message_input:
+                      this.$data.send_text_message_input.trim(),
+                    chat_id: this.$data.active_chat.chat_id,
+                    target_username: this.$data.active_chat.username,
+                    chat_type: "private",
+                  })
+                );
                 break;
-              case 'channel':
-              case 'group':
-                ws.send(JSON.stringify({
-                  event: "send_text_message",
-                  send_text_message_input: this.$data.send_text_message_input.trim(),
-                  chat_id: this.$data.active_chat.chat_id,
-                  chat_type: this.$data.active_chat.chat_type
-                }))
+              case "channel":
+              case "group":
+                ws.send(
+                  JSON.stringify({
+                    event: "send_text_message",
+                    send_text_message_input:
+                      this.$data.send_text_message_input.trim(),
+                    chat_id: this.$data.active_chat.chat_id,
+                    chat_type: this.$data.active_chat.chat_type,
+                  })
+                );
                 break;
             }
-            
           }
-          this.$set(this.$data, 'send_text_message_input', '');
+          this.$set(this.$data, "send_text_message_input", "");
         } else {
           this.initilizing_socket_again().then(() => {
-            this.submit_send_text_messages()
-          })
+            this.submit_send_text_messages();
+          });
         }
       }
     },
-    join_into_chat(){
-      if (this.$data.active_chat.chat_type != 'private') {
-        window.ws.send(JSON.stringify({
-            "event": "join_to_chat",
-            "chat_id": this.$data.active_chat.chat_id
-        }))
+    join_into_chat() {
+      if (this.$data.active_chat.chat_type != "private") {
+        window.ws.send(
+          JSON.stringify({
+            event: "join_to_chat",
+            chat_id: this.$data.active_chat.chat_id,
+          })
+        );
 
-        const chat_row_exists = this.$store.state.auth.user_info.chats.find( ({chat_id}) => chat_id === this.$data.active_chat.chat_id)
+        const chat_row_exists = this.$store.state.auth.user_info.chats.find(
+          ({ chat_id }) => chat_id === this.$data.active_chat.chat_id
+        );
         if (!chat_row_exists) {
           this.$store.commit("auth/addChat", {
             chat_id: this.$data.active_chat.chat_id,
@@ -629,11 +713,14 @@ export default {
             full_name: this.$data.active_chat.full_name,
             username: this.$data.active_chat.username,
             profile_photo: this.$data.active_chat.profile_photo,
-            iam_amember_of_chat: true
+            iam_amember_of_chat: true,
           });
         }
 
-        const chat_exists = this.$store.state.auth.user_info.chats_messages.find( ({_id}) => _id === this.$data.active_chat.chat_id)
+        const chat_exists =
+          this.$store.state.auth.user_info.chats_messages.find(
+            ({ _id }) => _id === this.$data.active_chat.chat_id
+          );
         if (!chat_exists) {
           this.$store.commit("auth/createNewChat", {
             _id: this.$data.active_chat.chat_id,
@@ -645,24 +732,33 @@ export default {
       }
     },
     async show_chat(chat_id, chat_location) {
-      this.$set(this.$data, 'chat_is_loading', true);
+      this.$set(this.$data, "chat_is_loading", true);
 
       const vm = this;
       let chat = null;
 
       function doGetChatMessages() {
-         if (vm.$store.state.auth.user_info.chats_messages && vm.$store.state.auth.user_info.chats_messages.length > 0) {
-          const chats_messages = vm.$store.state.auth.user_info.chats_messages
+        if (
+          vm.$store.state.auth.user_info.chats_messages &&
+          vm.$store.state.auth.user_info.chats_messages.length > 0
+        ) {
+          const chats_messages = vm.$store.state.auth.user_info.chats_messages;
           if (chats_messages && chat.sides) {
-            const find_result = chats_messages.find( ({ sides }) => sides.user_1 === chat.username || sides.user_2 === chat.username);
+            const find_result = chats_messages.find(
+              ({ sides }) =>
+                sides.user_1 === chat.username || sides.user_2 === chat.username
+            );
             if (find_result && find_result.sides) {
-              vm.$set(vm.$data.active_chat, 'messages', find_result.messages_list);
-            }else{
-              vm.$set(vm.$data.active_chat, 'messages', null);
+              vm.$set(
+                vm.$data.active_chat,
+                "messages",
+                find_result.messages_list
+              );
+            } else {
+              vm.$set(vm.$data.active_chat, "messages", null);
             }
-          }
-          else{
-            vm.$set(vm.$data.active_chat, 'messages', null);
+          } else {
+            vm.$set(vm.$data.active_chat, "messages", null);
           }
           chat = {
             chat_id: chat._id,
@@ -672,139 +768,157 @@ export default {
             full_name: chat.full_name,
 
             chat_type: chat.chat_type,
-          }
+          };
 
-          vm.set_the_active_chat(chat)
+          vm.set_the_active_chat(chat);
         }
 
-        vm.set_the_active_chat(chat)
+        vm.set_the_active_chat(chat);
       }
 
       switch (chat_location) {
-        case 'chats_list':
-          chat = this.user_info.chats.find( ({chat_id: _chat_id_}) => _chat_id_ == chat_id )
-          if (chat && chat.chat_type == 'private') {
+        case "chats_list":
+          chat = this.user_info.chats.find(
+            ({ chat_id: _chat_id_ }) => _chat_id_ == chat_id
+          );
+          if (chat && chat.chat_type == "private") {
             const msgs_list = await this.fetch_chat_messages_list(chat_id);
-            this.$set(this.$data.active_chat, 'messages', msgs_list);
-          }
-          else{
+            this.$set(this.$data.active_chat, "messages", msgs_list);
+          } else {
             const msgs_list = await this.fetch_chat_messages_list(chat_id);
-            this.$set(this.$data.active_chat, 'messages', msgs_list);
+            this.$set(this.$data.active_chat, "messages", msgs_list);
           }
-          this.set_the_active_chat(chat)
+          this.set_the_active_chat(chat);
           break;
-        case 'search_chat_result':
-          chat = this.$data.search_chat_result.find(({ _id }) => _id == chat_id)
-          if (chat.chat_type == 'private') {
+        case "search_chat_result":
+          chat = this.$data.search_chat_result.find(
+            ({ _id }) => _id == chat_id
+          );
+          if (chat.chat_type == "private") {
             doGetChatMessages();
+          } else {
+            getNonJoinedChatsMessage();
           }
-          else{
-            getNonJoinedChatsMessage()
-          }
-          this.set_the_active_chat(chat)
+          this.set_the_active_chat(chat);
           break;
-        case 'search_chat_in_local':
-          chat = this.$data.search_chat_in_local_result.find(({ _id }) => _id == chat_id)
-          if (chat.chat_type == 'private') {
+        case "search_chat_in_local":
+          chat = this.$data.search_chat_in_local_result.find(
+            ({ _id }) => _id == chat_id
+          );
+          if (chat.chat_type == "private") {
             doGetChatMessages();
+          } else {
+            getNonJoinedChatsMessage();
           }
-          else{
-            getNonJoinedChatsMessage()
-          }
-          this.set_the_active_chat(chat)
+          this.set_the_active_chat(chat);
           break;
       }
 
-      this.$set(this.$data, 'search_chat_input', '')
+      this.$set(this.$data, "search_chat_input", "");
 
-      this.$set(this.$data, 'show_chat_view', true);
-      this.$set(this.$data, 'chat_is_loading', false);
+      this.$set(this.$data, "show_chat_view", true);
+      this.$set(this.$data, "chat_is_loading", false);
       function getNonJoinedChatsMessage() {
-        ws.send(JSON.stringify({
-          "event": "get_chat_messages",
-          "chat_id": chat_id
-        }))
+        ws.send(
+          JSON.stringify({
+            event: "get_chat_messages",
+            chat_id: chat_id,
+          })
+        );
 
-        vm.$set(vm.$data, 'chat_is_loading', true)
+        vm.$set(vm.$data, "chat_is_loading", true);
       }
     },
-    set_the_active_chat(chat){
+    set_the_active_chat(chat) {
       if (chat._id) {
-        this.$set(this.$data.active_chat, 'chat_id', chat._id);
+        this.$set(this.$data.active_chat, "chat_id", chat._id);
       }
       if (chat.chat_id) {
-        this.$set(this.$data.active_chat, 'chat_id', chat.chat_id);
+        this.$set(this.$data.active_chat, "chat_id", chat.chat_id);
       }
-      this.$set(this.$data.active_chat, 'username', chat.username);
-      this.$set(this.$data.active_chat, 'full_name', chat.full_name);
-      this.$set(this.$data.active_chat, 'profile_photo', chat.profile_photo);
-      this.$set(this.$data.active_chat, 'chat_type', chat.chat_type);
+      this.$set(this.$data.active_chat, "username", chat.username);
+      this.$set(this.$data.active_chat, "full_name", chat.full_name);
+      this.$set(this.$data.active_chat, "profile_photo", chat.profile_photo);
+      this.$set(this.$data.active_chat, "chat_type", chat.chat_type);
 
-      if (chat.chat_type != 'private') {
+      if (chat.chat_type != "private") {
         if (chat.iam_admin_of_chat) {
-          this.$set(this.$data.active_chat, 'iam_admin_of_chat', chat.iam_admin_of_chat);
-        }
-        else{
-          this.$set(this.$data.active_chat, 'iam_admin_of_chat', false);
+          this.$set(
+            this.$data.active_chat,
+            "iam_admin_of_chat",
+            chat.iam_admin_of_chat
+          );
+        } else {
+          this.$set(this.$data.active_chat, "iam_admin_of_chat", false);
         }
         if (chat.iam_amember_of_chat) {
-          this.$set(this.$data.active_chat, 'iam_amember_of_chat', chat.iam_amember_of_chat);
-        }        
-        else{
-          this.$set(this.$data.active_chat, 'iam_amember_of_chat', false);
+          this.$set(
+            this.$data.active_chat,
+            "iam_amember_of_chat",
+            chat.iam_amember_of_chat
+          );
+        } else {
+          this.$set(this.$data.active_chat, "iam_amember_of_chat", false);
         }
       }
-    }, 
-    fetch_chat_messages_list(chat_id){
+    },
+    fetch_chat_messages_list(chat_id) {
       // NOTE
       // this method will be work when user clicked on the a chat
       // when it happend... we should going to user_chats_messages and finding the messages for that chat
-      const chats_messages = this.$store.state.auth.user_info.chats_messages
+      const chats_messages = this.$store.state.auth.user_info.chats_messages;
       if (chats_messages) {
-        const find_result = chats_messages.find( ({_id}) => _id === chat_id);
+        const find_result = chats_messages.find(({ _id }) => _id === chat_id);
         if (find_result) {
-          return find_result.messages_list // messages of chat
+          return find_result.messages_list; // messages of chat
         }
       }
-      return null
+      return null;
     },
-    parse_message_date(send_time){
-      const date = new Date(send_time)
+    parse_message_date(send_time) {
+      const date = new Date(send_time);
 
       let hours = date.getHours();
       let minutes = date.getMinutes();
-      let ampm = hours >= 12 ? 'pm' : 'am';
+      let ampm = hours >= 12 ? "pm" : "am";
       hours = hours % 12;
       hours = hours ? hours : 12;
-      minutes = minutes < 10 ? '0' + minutes : minutes;
-      let time_string = hours + ':' + minutes + ' ' + String(ampm).toUpperCase();
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      let time_string =
+        hours + ":" + minutes + " " + String(ampm).toUpperCase();
 
-      return time_string
+      return time_string;
     },
-    select_message_sender_fullname(){
-      if (this.$data.active_chat.chat_type == 'private') {
-        return null
+    select_message_sender_fullname() {
+      if (this.$data.active_chat.chat_type == "private") {
+        return null;
       }
     },
-    gimme_profile_photo_link_addr(profile_photo){
+    gimme_profile_photo_link_addr(profile_photo) {
       if (profile_photo && profile_photo.filename) {
-        return this.$axios.defaults.baseURL +
-            "/uploads/profile_photos/" + profile_photo.filename;
+        return (
+          this.$axios.defaults.baseURL +
+          "/uploads/profile_photos/" +
+          profile_photo.filename
+        );
       }
     },
-    check_if_user_had_profile_photo(){
-      if (this.$store.state.auth.user_info.profile_photos && this.$store.state.auth.user_info.profile_photos.length > 0) {
-        const profile_photo = this.$store.state.auth.user_info.profile_photos[0];
+    check_if_user_had_profile_photo() {
+      if (
+        this.$store.state.auth.user_info.profile_photos &&
+        this.$store.state.auth.user_info.profile_photos.length > 0
+      ) {
+        const profile_photo =
+          this.$store.state.auth.user_info.profile_photos[0];
         if (profile_photo && profile_photo.filename) {
-          const first_photo_filename =
-            profile_photo.filename;
-            this.$set(
-              this.$data,
-              "user_default_avatar",
-              this.$axios.defaults.baseURL +
-                "/uploads/profile_photos/" +
-                first_photo_filename
-            );
+          const first_photo_filename = profile_photo.filename;
+          this.$set(
+            this.$data,
+            "user_default_avatar",
+            this.$axios.defaults.baseURL +
+              "/uploads/profile_photos/" +
+              first_photo_filename
+          );
         }
       }
     },
@@ -817,74 +931,86 @@ export default {
       if (input.trim()) {
         if (chats_list) {
           const local_search_result = chats_list.filter((item) => {
-            if (String(item.username).includes(input) || String(item.full_name).includes(input)) {
-              return true
+            if (
+              String(item.username).includes(input) ||
+              String(item.full_name).includes(input)
+            ) {
+              return true;
             }
-            return false
-          })
-          this.$set(this.$data, 'search_chat_in_local_result', local_search_result)
+            return false;
+          });
+          this.$set(
+            this.$data,
+            "search_chat_in_local_result",
+            local_search_result
+          );
         }
         const ws = window.ws;
         if (ws) {
-            ws.send(JSON.stringify({
-                event: "search_in_chats",
-                input: input
-            }))
+          ws.send(
+            JSON.stringify({
+              event: "search_in_chats",
+              input: input,
+            })
+          );
         } else {
           this.initilizing_socket_again().then(() => {
-            this.search_chat_submit()
-          })
+            this.search_chat_submit();
+          });
         }
       }
     },
-    preview_user_profile(){
+    preview_user_profile() {
       let list = [];
       if (this.$data.active_chat.profile_photos) {
         this.$data.active_chat.profile_photos.forEach((item) => {
-          const photo_addr = this.gimme_profile_photo_link_addr(item)
+          const photo_addr = this.gimme_profile_photo_link_addr(item);
           if (photo_addr) {
             list.push({
-              src: photo_addr
+              src: photo_addr,
             });
           }
         });
         if (list.length > 0) {
           this.show_view_image_modal(list);
         }
-      }
-      else if (this.$data.active_chat.profile_photo){
-        const photo_addr = this.gimme_profile_photo_link_addr(this.$data.active_chat.profile_photo)
+      } else if (this.$data.active_chat.profile_photo) {
+        const photo_addr = this.gimme_profile_photo_link_addr(
+          this.$data.active_chat.profile_photo
+        );
         if (photo_addr) {
-          this.show_view_image_modal([{
-            src: photo_addr
-          }])
+          this.show_view_image_modal([
+            {
+              src: photo_addr,
+            },
+          ]);
         }
       }
     },
     preview_self_profile() {
       let list = [];
       this.$store.state.auth.user_info.profile_photos.forEach((item) => {
-        const photo_addr = this.gimme_profile_photo_link_addr(item)
+        const photo_addr = this.gimme_profile_photo_link_addr(item);
         if (photo_addr) {
           list.push({
-            src: photo_addr
+            src: photo_addr,
           });
         }
         if (list.length > 0) {
-          this.show_view_image_modal(list)
+          this.show_view_image_modal(list);
         }
       });
-      
+
       this.show_view_image_modal(list);
     },
-    show_view_image_modal(list){
+    show_view_image_modal(list) {
       this.$set(this.$data.view_image, "list", list);
       this.$set(this.$data.view_image, "show", true);
     },
-    initilizing_socket_again(){
+    initilizing_socket_again() {
       return new Promise((resolve) => {
-        setTimeout(async() => {
-          console.error('socket is empty!');
+        setTimeout(async () => {
+          console.error("socket is empty!");
           await window.initSocket();
           resolve();
         }, 1000);
@@ -936,7 +1062,7 @@ export default {
       this.$set(this.$data.crop_profile_photo, "show", true);
     },
     upload_croped_profile_photo() {
-      this.$set(this.$data.crop_profile_photo, 'button_loading_state', true);
+      this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
       this.$set(this.$data.crop_profile_photo, "show", false);
 
       const canvas = this.$data.crop_profile_photo.canvas;
@@ -946,8 +1072,8 @@ export default {
         if (imageFile) {
           const request_body = new FormData();
           request_body.append("photo", imageFile);
-          
-          this.$set(this.$data, 'photo_uploading_state', true);
+
+          this.$set(this.$data, "photo_uploading_state", true);
 
           this.$axios
             .$post("/api/profile_photos/upload_photo", request_body, {
@@ -966,16 +1092,21 @@ export default {
                   this.$data,
                   "user_default_avatar",
                   this.gimme_profile_photo_link_addr({
-                    filename: response.profile_photo_filename
+                    filename: response.profile_photo_filename,
                   })
                 );
               }
             })
             .catch((error) => {
               this.$router.push({ path: "/500" });
-            }).finally(() => {
-              this.$set(this.$data.crop_profile_photo, 'button_loading_state', false);
-              this.$set(this.$data, 'photo_uploading_state', false);
+            })
+            .finally(() => {
+              this.$set(
+                this.$data.crop_profile_photo,
+                "button_loading_state",
+                false
+              );
+              this.$set(this.$data, "photo_uploading_state", false);
             });
         } else {
           console.log("no profile photo to upload");
@@ -990,7 +1121,11 @@ export default {
         this.$store.watch(
           (state) => state.auth.user_info,
           (value) => {
-            if (value && value.profile_photos && value.profile_photos.length > 0) {
+            if (
+              value &&
+              value.profile_photos &&
+              value.profile_photos.length > 0
+            ) {
               this.$set(
                 this.$data,
                 "user_default_avatar",
@@ -1008,15 +1143,9 @@ export default {
           (value) => {
             try {
               if (value && value[0].filename) {
-                this.$set(
-                  this.$data,
-                  "user_info",
-                  value
-                );
+                this.$set(this.$data, "user_info", value);
               }
-              
-            } catch  {
-            }
+            } catch {}
           }
         );
       }
@@ -1025,14 +1154,16 @@ export default {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
     delete_message() {
-      const message_id = this.$data.message_context_menu_message_id
-      const chat_id = this.$data.active_chat.chat_id
+      const message_id = this.$data.message_context_menu_message_id;
+      const chat_id = this.$data.active_chat.chat_id;
       if (message_id && chat_id) {
-        ws.send(JSON.stringify({
+        ws.send(
+          JSON.stringify({
             event: "delete_message",
             chat_id: chat_id,
-            message_id: message_id
-        }))
+            message_id: message_id,
+          })
+        );
       }
     },
     logout() {
@@ -1041,11 +1172,11 @@ export default {
   },
   computed: {
     username() {
-      return this.$store.state.auth.auth.username
+      return this.$store.state.auth.auth.username;
     },
     user_info() {
-      return this.$store.state.auth.user_info
-    }
+      return this.$store.state.auth.user_info;
+    },
   },
   name: "chat",
   middleware: ["need_auth"],

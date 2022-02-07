@@ -996,4 +996,11 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   font-size: 13px;
   color: #707579;
 }
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 10px);
+}
 /*# sourceMappingURL=styles.css.map */
