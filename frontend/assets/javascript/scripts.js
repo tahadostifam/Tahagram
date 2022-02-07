@@ -2,6 +2,19 @@ import configs from "@/assets/javascript/configs";
 import Cookies from "js-cookie";
 
 let notf_perm_state = null;
+(async function () {
+  await navigator.permissions
+    .query({
+      name: "notifications",
+    })
+    .then((r) => {
+      notf_perm_state = r.state;
+      r.onchange = (e) => {
+        notf_perm_state = e.currentTarget.state;
+      };
+    });
+})();
+window.notf_perm_state = notf_perm_state;
 
 window.initSocket = () => {
   const refresh_token = Cookies.get("refresh_token");
@@ -102,11 +115,11 @@ window.sendNotf = (full_name, content) => {
   const notificationsProperties = {
     title: full_name,
     body: content,
-    icon: "https://picsum.photos/200",
     dir: "rtl",
     vibrate: [200, 100, 200],
+    delay: 5000,
   };
-  const notification = new Notification("New Message", notificationsProperties);
+  const notification = new Notification(full_name, notificationsProperties);
 };
 
 function get_user_full_info(vm, parsedData) {
@@ -121,6 +134,11 @@ function get_user_full_info(vm, parsedData) {
 }
 
 function chat_created(vm, parsedData) {
+  window.sendNotf(
+    parsedData.__chat_created.full_name,
+    parsedData.__chat_created.messages[0].content
+  );
+
   vm.$store.commit("auth/addChat", {
     chat_id: parsedData.__chat_created.chat_id,
     chat_type: parsedData.chat_type,
@@ -215,10 +233,7 @@ function we_have_new_message(vm, parsedData) {
     );
 
     // Making a Notification to User
-    console.log(notf_perm_state);
-    // if (notf_perm_state == true) {
-    //   window.sendNotf(chat_exists.full_name, parsedData.message.content);
-    // }
+    window.sendNotf(chat_exists.full_name, parsedData.message.content);
 
     if (!chat_exists) {
       vm.$store.commit("auth/addChat", {
@@ -292,7 +307,6 @@ window.onload = () => {
     });
 
     if (notificationsAllowed.state !== "granted") {
-      // Requesting permission
       const permission = await Notification.requestPermission();
 
       if (permission == "granted") {

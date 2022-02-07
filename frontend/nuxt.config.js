@@ -49,6 +49,19 @@ export default {
     manifest: {
       lang: "en",
     },
+    meta: {
+      name: "Chat-App",
+      description: "A Chat-Application built in Nodejs & Nuxtjs",
+      theme_color: "#00c853",
+      start_url: "/",
+    },
+    manifest: {
+      name: "Chat-Application",
+      short_name: "ChatApp",
+      description: "A Chat-Application built in Nodejs & Nuxtjs",
+      theme_color: "#00c853",
+      start_url: "/",
+    },
   },
 
   router: {

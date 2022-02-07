@@ -554,15 +554,17 @@ export default {
       const chats_messages = this.$store.state.auth.user_info.chats_messages;
       if (chats_messages) {
         const chat = chats_messages.find(({ _id: _id }) => _id === chat_id);
-        const message = chat.messages_list[chat.messages_list.length - 1];
-        if (message) {
-          const message_type = message.message_type;
-          if (message_type == "text") {
-            return message.content.substr(0, 30);
+        if (chat && chat.messages_list && chat.messages_list.length > 0) {
+          const message = chat.messages_list[chat.messages_list.length - 1];
+          if (message) {
+            const message_type = message.message_type;
+            if (message_type == "text") {
+              return message.content.substr(0, 30);
+            }
           }
         }
       }
-      return "Hello World";
+      return "";
     },
     watch_internet_state_changes() {
       this.$store.watch(
