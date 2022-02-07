@@ -48,12 +48,14 @@ async function pushChatToUserChatsList(username: String, chat_id: string) {
     );
 }
 
-export async function broadCastToAllMembers(chat_id: string, members: Array<any>, data_to_send: object) {
+export async function broadCastToAllMembers(chat_id: string, members: Array<any>, data_to_send: object, username: string) {
     await members.forEach(async (member_username, member_index) => {
-        const member_ws = await users.find(({ username }) => username === member_username);
-        if (member_ws) {
-            // if user was online
-            member_ws.ws.send(JSON.stringify(data_to_send));
+        if (member_username != username) {
+            const member_ws = await users.find(({ username }) => username === member_username);
+            if (member_ws) {
+                // if user was online
+                member_ws.ws.send(JSON.stringify(data_to_send));
+            }
         }
     });
 }
@@ -268,10 +270,50 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         chat_id: chat_id,
                     };
 
-                    broadCastToAllMembers(chat_id, channel.members, data_to_send);
+                    broadCastToAllMembers(chat_id, channel.members, data_to_send, ws.user.username);
                 } else {
                     console.log(`${chat_id} channel not found`);
                 }
+            }
+        } else if (chat_type == "group") {
+            const group: IChat = await Chats.findOne({
+                _id: chat_id,
+            });
+            if (group) {
+                const message: ITextMessage = {
+                    message_id: message_id,
+                    message_type: "text",
+                    send_time: Date.now(),
+                    content: message_text,
+                    edited: false,
+                    sender_username: ws.user.username,
+                };
+
+                pushMessage(message, {
+                    event: "send_text_message",
+                    chat_id: chat_id,
+                    message: "message sended",
+                    message_callback: message,
+                });
+
+                let data_to_send: any = {
+                    event: "you_have_new_message",
+                    message: message,
+                    chat_id: chat_id,
+                };
+
+                if (group.members && group.members.length > 0) {
+                    broadCastToAllMembers(chat_id, group.members, data_to_send, ws.user.username);
+                }
+                if (ws.user.username != group.creator_username) {
+                    // broadcast message to creator -> because name of creator is not in the members list
+                    const creator_ws = await users.find(({ username: _username_ }) => _username_ === group.creator_username);
+                    if (creator_ws) {
+                        creator_ws.ws.send(JSON.stringify(data_to_send));
+                    }
+                }
+            } else {
+                console.log(`${chat_id} group not found`);
             }
         }
     }
@@ -388,11 +430,16 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                         );
 
                         if (chat.members && chat.members.length > 0) {
-                            broadCastToAllMembers(chat_id, chat.members, {
-                                message: "message deleted",
-                                chat_id: chat_id,
-                                message_id: _message_id,
-                            });
+                            broadCastToAllMembers(
+                                chat_id,
+                                chat.members,
+                                {
+                                    message: "message deleted",
+                                    chat_id: chat_id,
+                                    message_id: _message_id,
+                                },
+                                ws.user.username
+                            );
                         }
                     }
                 }

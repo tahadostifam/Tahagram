@@ -357,6 +357,7 @@
               class="send_message_section"
               v-if="
                 active_chat.chat_type == 'private' ||
+                active_chat.chat_type == 'group' ||
                 active_chat.iam_admin_of_chat
               "
             >
