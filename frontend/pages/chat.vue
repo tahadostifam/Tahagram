@@ -717,8 +717,6 @@ export default {
 
       this.$set(this.$data, 'search_chat_input', '')
 
-      console.log(chat);
-      
       this.$set(this.$data, 'show_chat_view', true);
       this.$set(this.$data, 'chat_is_loading', false);
       function getNonJoinedChatsMessage() {
