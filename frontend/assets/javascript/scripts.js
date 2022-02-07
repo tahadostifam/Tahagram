@@ -1,6 +1,8 @@
 import configs from "@/assets/javascript/configs";
 import Cookies from "js-cookie";
 
+let notf_perm_state = null;
+
 window.initSocket = () => {
   const refresh_token = Cookies.get("refresh_token");
   const auth_token = Cookies.get("auth_token");
@@ -94,6 +96,17 @@ window.handleSocketMessages = (vm, parsedData) => {
   } else {
     console.log(parsedData);
   }
+};
+
+window.sendNotf = (full_name, content) => {
+  const notificationsProperties = {
+    title: full_name,
+    body: content,
+    icon: "https://picsum.photos/200",
+    dir: "rtl",
+    vibrate: [200, 100, 200],
+  };
+  const notification = new Notification("New Message", notificationsProperties);
 };
 
 function get_user_full_info(vm, parsedData) {
@@ -201,6 +214,12 @@ function we_have_new_message(vm, parsedData) {
       ({ chat_id }) => chat_id === chat_id
     );
 
+    // Making a Notification to User
+    console.log(notf_perm_state);
+    // if (notf_perm_state == true) {
+    //   window.sendNotf(chat_exists.full_name, parsedData.message.content);
+    // }
+
     if (!chat_exists) {
       vm.$store.commit("auth/addChat", {
         chat_id: chat_id,
@@ -267,6 +286,20 @@ window.initilizing_socket_again = () => {
 
 window.onload = () => {
   window.handleSplashScreen();
+  (async function () {
+    const notificationsAllowed = await navigator.permissions.query({
+      name: "notifications",
+    });
+
+    if (notificationsAllowed.state !== "granted") {
+      // Requesting permission
+      const permission = await Notification.requestPermission();
+
+      if (permission == "granted") {
+        notf_perm_state = true;
+      }
+    }
+  })();
 };
 
 window.lazyImage = (e) => {
