@@ -229,10 +229,11 @@ function we_have_new_message(vm, parsedData) {
     const chat_id = parsedData.chat_id;
     const chats_messages = vm.$store.state.auth.user_info.chats_messages;
     const chat_exists = vm.$store.state.auth.chats_list.find(
-      ({ chat_id }) => chat_id === chat_id
+      ({ chat_id: _chat_id_ }) => _chat_id_ === chat_id
     );
 
     // Making a Notification to User
+    console.log(chat_exists);
     window.sendNotf(chat_exists.full_name, parsedData.message.content);
 
     if (!chat_exists) {

@@ -294,7 +294,7 @@
                     >
                       <v-list-item-title>Reply</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-ripple>
+                    <v-list-item v-ripple @click="copy_message_to_clipboard">
                       <v-list-item-title>Copy</v-list-item-title>
                     </v-list-item>
                     <v-list-item v-ripple>
@@ -560,6 +560,21 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    copy_message_to_clipboard() {
+      const message_id = this.$data.message_context_menu_message_id;
+      if (
+        this.$data.active_chat.messages &&
+        this.$data.active_chat.messages.length > 0 &&
+        message_id
+      ) {
+        const message = this.$data.active_chat.messages.find(
+          ({ message_id: _message_id }) => _message_id === message_id
+        );
+        if (message) {
+          navigator.clipboard.writeText(message.content);
+        }
+      }
+    },
     gimme_last_message(chat_id) {
       const chats_messages = this.$store.state.auth.user_info.chats_messages;
       if (chats_messages) {

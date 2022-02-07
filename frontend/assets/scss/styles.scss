@@ -421,8 +421,8 @@ body,
         user-select: text;
         margin: 0;
         padding: 0;
-        direction: ltr;
-        text-align: left;
+        direction: rtl;
+        text-align: right;
       }
       .message_footer {
         display: block;
