@@ -285,7 +285,13 @@
                   offset-y
                 >
                   <v-list style="width: 200px">
-                    <v-list-item v-ripple>
+                    <v-list-item
+                      v-ripple
+                      v-if="
+                        active_chat.chat_type == 'private' ||
+                        active_chat.iam_admin_of_chat == true
+                      "
+                    >
                       <v-list-item-title>Reply</v-list-item-title>
                     </v-list-item>
                     <v-list-item v-ripple>
@@ -294,10 +300,14 @@
                     <v-list-item v-ripple>
                       <v-list-item-title>Forward</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-ripple>
-                      <v-list-item-title>Select</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item v-ripple @click="delete_message">
+                    <v-list-item
+                      v-ripple
+                      @click="delete_message"
+                      v-if="
+                        active_chat.chat_type == 'private' ||
+                        active_chat.iam_admin_of_chat == true
+                      "
+                    >
                       <v-list-item-title class="text-red"
                         >Delete</v-list-item-title
                       >

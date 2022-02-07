@@ -48,6 +48,16 @@ async function pushChatToUserChatsList(username: String, chat_id: string) {
     );
 }
 
+export async function broadCastToAllMembers(chat_id: string, members: Array<any>, data_to_send: object) {
+    await members.forEach(async (member_username, member_index) => {
+        const member_ws = await users.find(({ username }) => username === member_username);
+        if (member_ws) {
+            // if user was online
+            member_ws.ws.send(JSON.stringify(data_to_send));
+        }
+    });
+}
+
 export async function send_text_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const chat_type = parsedData.chat_type;
@@ -252,26 +262,17 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         message_callback: message,
                     });
 
-                    broadCastToAllMembers(channel.members, message);
+                    let data_to_send: any = {
+                        event: "you_have_new_message",
+                        message: message,
+                        chat_id: chat_id,
+                    };
+
+                    broadCastToAllMembers(chat_id, channel.members, data_to_send);
                 } else {
                     console.log(`${chat_id} channel not found`);
                 }
             }
-        }
-
-        async function broadCastToAllMembers(members: Array<any>, message: ITextMessage | IImageMessage) {
-            let data_to_send: any = {
-                event: "you_have_new_message",
-                message: message,
-                chat_id: chat_id,
-            };
-            await members.forEach(async (member_username, member_index) => {
-                const member_ws = await users.find(({ username }) => username === member_username);
-                if (member_ws) {
-                    // if user was online
-                    member_ws.ws.send(JSON.stringify(data_to_send));
-                }
-            });
         }
     }
 }
@@ -385,13 +386,14 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                                 },
                             }
                         );
-                        ws.send(
-                            JSON.stringify({
+
+                        if (chat.members && chat.members.length > 0) {
+                            broadCastToAllMembers(chat_id, chat.members, {
                                 message: "message deleted",
                                 chat_id: chat_id,
                                 message_id: _message_id,
-                            })
-                        );
+                            });
+                        }
                     }
                 }
             }
