@@ -1,7 +1,7 @@
 // SECTION - events
 import search_in_chats from "./search_in_chats";
-import { update_full_name, update_bio, delete_message, getUserFullInfo } from "./users";
-import { check_username_existly, get_chat_messages, join_to_chat, send_text_message, user_seened_message } from "./chats";
+import { update_full_name, update_bio, getUserFullInfo } from "./users";
+import { check_username_existly, get_chat_messages, delete_message, join_to_chat, send_text_message, user_seened_message } from "./chats";
 
 export default {
     search_in_chats: search_in_chats,

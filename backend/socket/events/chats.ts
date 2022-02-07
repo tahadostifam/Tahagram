@@ -1,9 +1,10 @@
 import User from "../../models/user";
 import Chats from "../../models/chats";
 import { createPrivateRoom, rooms } from "../room_manager";
-import { IChat, ISocketClient, ITextMessage, IWebSocket } from "../../lib/interfaces";
+import { IChat, IImageMessage, ISocketClient, ITextMessage, IWebSocket } from "../../lib/interfaces";
 import { users } from "../socket";
 import { ObjectId } from "mongodb";
+import { findOutTUofChat } from "./users";
 
 export async function check_username_existly(ws: IWebSocket, parsedData: any) {
     const username = parsedData.username;
@@ -100,8 +101,6 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 }
 
                 if (chat) {
-                    // await setTargetWs(); FIXME
-
                     pushMessage(message, {
                         event: "send_text_message",
                         chat_id: chat_id,
@@ -242,7 +241,10 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     edited: false,
                     sender_username: ws.user.username,
                 };
-                if (channel.creator_username == ws.user.username) {
+                if (channel.members && channel.members.length > 0) {
+                    var user_is_aadmin = channel.members.includes(ws.user.username);
+                }
+                if (channel.creator_username == ws.user.username || user_is_aadmin) {
                     pushMessage(message, {
                         event: "send_text_message",
                         message: "message sended",
@@ -250,11 +252,26 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                         message_callback: message,
                     });
 
-                    // TODO - broadcast message to all members
+                    broadCastToAllMembers(channel.members, message);
                 } else {
                     console.log(`${chat_id} channel not found`);
                 }
             }
+        }
+
+        async function broadCastToAllMembers(members: Array<any>, message: ITextMessage | IImageMessage) {
+            let data_to_send: any = {
+                event: "you_have_new_message",
+                message: message,
+                chat_id: chat_id,
+            };
+            await members.forEach(async (member_username, member_index) => {
+                const member_ws = await users.find(({ username }) => username === member_username);
+                if (member_ws) {
+                    // if user was online
+                    member_ws.ws.send(JSON.stringify(data_to_send));
+                }
+            });
         }
     }
 }
@@ -303,6 +320,81 @@ export async function get_chat_messages(ws: IWebSocket, parsedData: any) {
                     messages_list: chat.messages_list,
                 })
             );
+        }
+    }
+}
+
+export async function delete_message(ws: IWebSocket, parsedData: any) {
+    const chat_id = parsedData.chat_id;
+    const _message_id = parsedData.message_id;
+    if (chat_id && chat_id.length > 0 && _message_id && _message_id.length > 0) {
+        const chat: IChat = await Chats.findById(chat_id);
+        if (chat) {
+            const messages: Array<any> = chat.messages_list;
+            const message_id_exists = messages.find(({ message_id }) => message_id === _message_id);
+
+            if (message_id_exists) {
+                async function do_delete_message() {
+                    await Chats.updateOne(
+                        { _id: chat_id },
+                        {
+                            $pull: {
+                                messages_list: {
+                                    message_id: _message_id,
+                                },
+                            },
+                        }
+                    );
+                    ws.send(
+                        JSON.stringify({
+                            message: "message deleted",
+                            chat_id: chat_id,
+                            message_id: _message_id,
+                        })
+                    );
+                }
+                // Checking user permissions to this chat
+                if (chat.chat_type == "private") {
+                    // both users can delete any message of their chat
+                    do_delete_message();
+                    const target_username = findOutTUofChat(chat, ws.user.username);
+                    const target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
+                    if (target_ws) {
+                        target_ws.ws.send(
+                            JSON.stringify({
+                                message: "message deleted",
+                                chat_id: chat_id,
+                                message_id: _message_id,
+                            })
+                        );
+                    }
+                } else {
+                    let user_is_aadmin;
+                    if (chat.admins && chat.admins.length > 0) {
+                        user_is_aadmin = chat.admins.includes(ws.user.username);
+                    }
+                    if (chat.creator_username == ws.user.username || user_is_aadmin) {
+                        do_delete_message();
+                        await Chats.updateOne(
+                            { _id: chat_id },
+                            {
+                                $pull: {
+                                    messages_list: {
+                                        message_id: _message_id,
+                                    },
+                                },
+                            }
+                        );
+                        ws.send(
+                            JSON.stringify({
+                                message: "message deleted",
+                                chat_id: chat_id,
+                                message_id: _message_id,
+                            })
+                        );
+                    }
+                }
+            }
         }
     }
 }
