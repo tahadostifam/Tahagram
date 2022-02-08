@@ -1,8 +1,8 @@
 <template>
   <v-dialog max-width="450" v-model="dialog" @input="close" scrollable>
-    <v-card>
-      <div class="d-flex justify-space-between align-center">
-        <v-card-title class="text-h6">
+    <div>
+      <div class="d-flex justify-space-between align-center pl-4">
+        <h3 class="text-h6">
           <template v-if="active_chat.chat_type == 'private'"
             >User Info</template
           >
@@ -12,7 +12,7 @@
           <template v-if="active_chat.chat_type == 'group'"
             >Group Info</template
           >
-        </v-card-title>
+        </h3>
         <div class="mr-2">
           <v-btn large icon style="padding-top: 3px" @click="close">
             <v-icon class="icon"> mdi-close </v-icon>
@@ -66,7 +66,32 @@
           </div>
         </div>
       </div>
-    </v-card>
+
+      <div class="pb-1">
+        <div class="members_list">
+          <div class="members_list_title">
+            <div>
+              <v-icon>mdi-account-multiple-outline</v-icon>
+            </div>
+            <div>10 Members</div>
+          </div>
+          <div class="member_item" v-ripple>
+            <div>
+              <div
+                class="avatar"
+                v-if="user_default_avatar"
+                @click="$emit('preview_self_profile')"
+              >
+                <img :src="'https://picsum.photos/500/500'" />
+              </div>
+            </div>
+            <div>
+              <span>{{ username }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </v-dialog>
 </template>
 

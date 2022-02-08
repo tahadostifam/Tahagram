@@ -51,6 +51,11 @@ body .v-input.v-text-field:not(.v-input--has-state):hover > .v-input__control
   border-color: #ffffff63;
 }
 
+body .v-dialog,
+.v-application .v-dialog {
+  background-color: #212121;
+}
+
 .form_top_overlay {
   position: absolute;
   overflow: hidden;
@@ -1002,5 +1007,36 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 10px);
+}
+
+.members_list {
+  padding: 0px 17px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.members_list .members_list_title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.members_list .members_list_title .v-icon {
+  color: #707579 !important;
+}
+
+.members_list .members_list_title div:nth-child(2) {
+  margin-left: 14px;
+  font-size: 14px;
+}
+
+.members_list .member_item {
+  display: block;
+  width: 100%;
 }
 /*# sourceMappingURL=styles.css.map */

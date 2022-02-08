@@ -59,6 +59,9 @@ body,
       border-color: #ffffff63;
     }
   }
+  .v-dialog {
+    background-color: $color_1;
+  }
 }
 
 .form_top_overlay {
@@ -864,4 +867,27 @@ body .v-application .v-navigation-drawer {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 10px);
+}
+
+.members_list {
+  padding: 0px 17px;
+  height: 30px;
+  margin-bottom: 10px;
+  .members_list_title {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    .v-icon {
+      color: $color_6 !important;
+    }
+    div:nth-child(2) {
+      margin-left: 14px;
+      font-size: 14px;
+    }
+    margin-bottom: 20px;
+  }
+  .member_item {
+    display: block;
+    width: 100%;
+  }
 }
