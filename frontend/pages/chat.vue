@@ -323,7 +323,7 @@
                     @contextmenu.native="
                       show_contextmenu_of_message($event, item.message_id)
                     "
-                    :sender="select_message_sender_fullname()"
+                    :sender="select_message_sender_fullname(item.message_id)"
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.content"
                     :edited="item.edited"
@@ -917,9 +917,31 @@ export default {
 
       return time_string;
     },
-    select_message_sender_fullname() {
+    select_message_sender_fullname(message_id) {
       if (this.$data.active_chat.chat_type == "private") {
         return null;
+      } else {
+        const chats_messages = this.$store.state.auth.user_info.chats_messages;
+        if (
+          chats_messages &&
+          chats_messages.length > 0 &&
+          this.$data.active_chat.chat_id
+        ) {
+          // ANCHOR
+          const chat = chats_messages.find(
+            ({ _id }) => _id === this.$data.active_chat.chat_id
+          );
+          const message = chat.messages_list.find(
+            ({ message_id: _message_id }) => _message_id === message_id
+          );
+          if (message) {
+            return message.sender_username;
+          } else {
+            console.log(
+              "cannot find message in select_message_sender_fullname function -> chat.vue"
+            );
+          }
+        }
       }
     },
     gimme_profile_photo_link_addr(profile_photo) {

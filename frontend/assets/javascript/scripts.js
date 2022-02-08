@@ -1,6 +1,16 @@
 import configs from "@/assets/javascript/configs";
 import Cookies from "js-cookie";
 
+var isTabActive;
+
+window.onfocus = function () {
+  isTabActive = true;
+};
+
+window.onblur = function () {
+  isTabActive = false;
+};
+
 let notf_perm_state = null;
 (async function () {
   await navigator.permissions
@@ -112,14 +122,16 @@ window.handleSocketMessages = (vm, parsedData) => {
 };
 
 window.sendNotf = (full_name, content) => {
-  const notificationsProperties = {
-    title: full_name,
-    body: content,
-    dir: "rtl",
-    vibrate: [200, 100, 200],
-    delay: 5000,
-  };
-  const notification = new Notification(full_name, notificationsProperties);
+  if (!isTabActive) {
+    const notificationsProperties = {
+      title: full_name,
+      body: content,
+      dir: "rtl",
+      vibrate: [200, 100, 200],
+      delay: 5000,
+    };
+    const notification = new Notification(full_name, notificationsProperties);
+  }
 };
 
 function get_user_full_info(vm, parsedData) {
