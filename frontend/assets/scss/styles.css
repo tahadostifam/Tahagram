@@ -56,6 +56,11 @@ body .v-dialog,
   background-color: #212121;
 }
 
+body .v-btn,
+.v-application .v-btn {
+  letter-spacing: normal;
+}
+
 .form_top_overlay {
   position: absolute;
   overflow: hidden;
