@@ -1009,13 +1009,8 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   max-width: calc(100% - 10px);
 }
 
-.members_list {
-  padding: 0px 17px;
-  height: 30px;
-  margin-bottom: 10px;
-}
-
 .members_list .members_list_title {
+  padding: 0 17px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1023,7 +1018,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
       -ms-flex-align: center;
           align-items: center;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .members_list .members_list_title .v-icon {
@@ -1038,5 +1033,31 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 .members_list .member_item {
   display: block;
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  padding: 8px 20px;
+}
+
+.members_list .member_item span {
+  display: block;
+  padding-left: 12px;
+}
+
+.members_list .member_item span:nth-child(1) {
+  margin-top: 3px;
+}
+
+.members_list .member_item span:nth-child(2) {
+  color: #707579;
+  font-size: 14px;
+}
+
+.members_list .member_item .avatar {
+  --size: 50px;
 }
 /*# sourceMappingURL=styles.css.map */

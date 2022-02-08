@@ -1,8 +1,8 @@
 <template>
   <v-dialog max-width="450" v-model="show_settings_dialog" scrollable>
-    <v-card v-if="settings_dialog_active_section == 'home'">
+    <div v-if="settings_dialog_active_section == 'home'">
       <div class="d-flex justify-space-between align-center">
-        <v-card-title class="text-h6"> {{ $t("settings") }} </v-card-title>
+        <h3 class="text-h6">{{ $t("settings") }}</h3>
         <div class="mr-2">
           <v-btn
             large
@@ -108,13 +108,13 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-    </v-card>
-    <v-card v-if="settings_dialog_active_section == 'edit_profile'">
+    </div>
+    <div v-if="settings_dialog_active_section == 'edit_profile'">
       <v-dialog max-width="400" v-model="settings_dialog_edit_full_name">
-        <v-card>
-          <v-card-title style="font-size: 17px" class="mb-0 pb-0 pl-4 pt-2">
+        <div>
+          <h3 style="font-size: 17px" class="mb-0 pb-0 pl-4 pt-2">
             {{ $t("edit_your_name") }}
-          </v-card-title>
+          </h3>
           <div class="px-5 pt-0">
             <v-text-field
               v-model="update_full_name_input"
@@ -134,7 +134,7 @@
               {{ $t("save") }}
             </v-btn>
           </v-card-actions>
-        </v-card>
+        </div>
       </v-dialog>
       <div class="d-flex justify-space-between align-center">
         <div class="d-flex align-center">
@@ -147,9 +147,9 @@
           >
             <v-icon class="icon"> mdi-arrow-left </v-icon>
           </v-btn>
-          <v-card-title class="text-h6">
+          <h3 class="text-h6">
             {{ $t("edit_profile") }}
-          </v-card-title>
+          </h3>
         </div>
         <div class="mr-2">
           <v-btn
@@ -259,7 +259,7 @@
           {{ $t("detail_example") }}
         </p>
       </div>
-    </v-card>
+    </div>
   </v-dialog>
 </template>
 

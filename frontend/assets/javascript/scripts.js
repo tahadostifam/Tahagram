@@ -104,8 +104,8 @@ window.handleSocketMessages = (vm, parsedData) => {
     message_sended(vm, parsedData);
   } else if (parsedData.message == "message deleted") {
     message_deleted(vm, parsedData);
-  } else if (parsedData.event == "get_user_full_info") {
-    get_user_full_info(vm, parsedData);
+  } else if (parsedData.event == "get_chat_full_info") {
+    get_chat_full_info(vm, parsedData);
   } else if (parsedData.event == "get_chat_messages") {
     if (parsedData.messages_list) {
       vm.$set(vm.$data.active_chat, "messages", parsedData.messages_list);
@@ -134,7 +134,7 @@ window.sendNotf = (full_name, content) => {
   }
 };
 
-function get_user_full_info(vm, parsedData) {
+function get_chat_full_info(vm, parsedData) {
   vm.$set(vm.$data.active_chat, "username", parsedData.user_info.username);
   vm.$set(vm.$data.active_chat, "full_name", parsedData.user_info.full_name);
   vm.$set(

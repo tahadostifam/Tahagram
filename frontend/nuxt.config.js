@@ -123,6 +123,7 @@ export default {
           write_message: "Write a message...",
           group_name: "Group name",
           group_username: "Group username",
+          members: "Members",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -170,6 +171,7 @@ export default {
           write_message: "چیزی بنویسید...",
           group_name: "نام گروه",
           group_username: "نام کاربری گروه",
+          members: "کاربر ها",
         },
       },
     },

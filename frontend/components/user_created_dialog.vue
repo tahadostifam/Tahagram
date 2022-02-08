@@ -1,7 +1,7 @@
 <template>
   <v-dialog max-width="350" v-model="user_created_dialog" persistent>
-    <v-card>
-      <v-card-title class="text-h5"> Account Created </v-card-title>
+    <div>
+      <h3 class="text-h5">Account Created</h3>
 
       <v-card-text>
         Your account created successfully with this information that you entered
@@ -21,7 +21,7 @@
           Go To Signin
         </v-btn>
       </v-card-actions>
-    </v-card>
+    </div>
   </v-dialog>
 </template>
 

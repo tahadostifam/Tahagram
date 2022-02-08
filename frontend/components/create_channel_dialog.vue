@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog max-width="350" v-model="crop_profile_photo.show">
-      <v-card class="pa-5 pb-0">
+      <div class="pa-5 pb-0">
         <cropper
           :src="crop_profile_photo.src"
           @change="crop_profile_photo_onchange"
@@ -28,11 +28,11 @@
             {{ $t("save") }}
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </div>
     </v-dialog>
 
     <v-dialog max-width="450" v-model="show_dialog" scrollable>
-      <v-card>
+      <div>
         <div class="d-flex justify-space-between align-center">
           <v-card-title class="text-h6"> {{ $t("new_channel") }} </v-card-title>
           <div class="mr-2">
@@ -146,7 +146,7 @@
             </v-btn>
           </v-card-actions>
         </template>
-      </v-card>
+      </div>
     </v-dialog>
   </div>
 </template>

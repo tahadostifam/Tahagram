@@ -1,6 +1,6 @@
 <template>
   <v-dialog max-width="450" v-model="dialog" @input="close" scrollable>
-    <div>
+    <div class="pt-2">
       <div class="d-flex justify-space-between align-center pl-4">
         <h3 class="text-h6">
           <template v-if="active_chat.chat_type == 'private'"
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="d-flex align-center px-4 pb-5">
+      <div class="d-flex align-center px-4 pb-5 pt-2">
         <div
           class="avatar avatar_large"
           v-if="user_default_avatar"
@@ -77,16 +77,13 @@
           </div>
           <div class="member_item" v-ripple>
             <div>
-              <div
-                class="avatar"
-                v-if="user_default_avatar"
-                @click="$emit('preview_self_profile')"
-              >
+              <div class="avatar">
                 <img :src="'https://picsum.photos/500/500'" />
               </div>
             </div>
             <div>
-              <span>{{ username }}</span>
+              <span>Username</span>
+              <span>last seen recently</span>
             </div>
           </div>
         </div>

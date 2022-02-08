@@ -870,10 +870,8 @@ body .v-application .v-navigation-drawer {
 }
 
 .members_list {
-  padding: 0px 17px;
-  height: 30px;
-  margin-bottom: 10px;
   .members_list_title {
+    padding: 0 17px;
     display: flex;
     align-items: center;
     width: 100%;
@@ -884,10 +882,28 @@ body .v-application .v-navigation-drawer {
       margin-left: 14px;
       font-size: 14px;
     }
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   .member_item {
     display: block;
     width: 100%;
+    // border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+    padding: 8px 20px;
+    span {
+      display: block;
+      &:nth-child(1) {
+        margin-top: 3px;
+      }
+      &:nth-child(2) {
+        color: $color_6;
+        font-size: 14px;
+      }
+      padding-left: 12px;
+    }
+    .avatar {
+      --size: 50px;
+    }
   }
 }

@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-dialog max-width="450" v-model="show_dialog" scrollable>
-      <v-card>
+      <div>
         <div class="d-flex justify-space-between align-center">
-          <v-card-title class="text-h6"> {{ $t("new_group") }} </v-card-title>
+          <h3 class="text-h6">{{ $t("new_group") }}</h3>
           <div class="mr-2">
             <v-btn
               large
@@ -61,7 +61,7 @@
             {{ $t("create") }}
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </div>
     </v-dialog>
   </div>
 </template>

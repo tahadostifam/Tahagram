@@ -1,7 +1,7 @@
 import User from "../../models/user";
 import Chats from "../../models/chats";
 import { createPrivateRoom, rooms } from "../room_manager";
-import { IChat, IImageMessage, ISocketClient, ITextMessage, IWebSocket } from "../../lib/interfaces";
+import { IChat, ISocketClient, ITextMessage, IUser, IWebSocket } from "../../lib/interfaces";
 import { users } from "../socket";
 import { ObjectId } from "mongodb";
 import { findOutTUofChat } from "./users";
@@ -448,6 +448,61 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                     }
                 }
             }
+        }
+    }
+}
+
+export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
+    const chat_id = parsedData.chat_id;
+    if (chat_id && chat_id.length > 0) {
+        const chat: IChat = await Chats.findOne({
+            _id: chat_id,
+        });
+        if (chat) {
+            const profile_photos = chat.profile_photos.reverse();
+            let user_info_to_send: any = {
+                event: "get_chat_full_info",
+                user_info: {
+                    full_name: chat.full_name,
+                    username: chat.username,
+                    bio: chat.bio,
+                    profile_photos: profile_photos,
+                },
+            };
+            async () => {
+                if (
+                    (chat.chat_type == "group" || (chat.chat_type == "channel" && (chat.creator_username == ws.user.username || chat.admins?.includes(ws.user.username)))) &&
+                    chat.members &&
+                    chat.members.length > 0
+                ) {
+                    let members_list: any = [];
+                    await chat.members.forEach(async (member_username) => {
+                        const user: IUser = await User.findOne({
+                            username: member_username,
+                        });
+                        if (user) {
+                            members_list.push({
+                                full_name: user.full_name,
+                                username: user.username,
+                                profile_photos: user.profile_photos.reverse(),
+                                bio: user.bio,
+                            });
+                            console.log("User", {
+                                full_name: user.full_name,
+                                username: user.username,
+                                profile_photos: user.profile_photos.reverse(),
+                                bio: user.bio,
+                            });
+                        }
+                    });
+                    console.log("members_list", members_list);
+
+                    if (members_list.length > 0) {
+                        user_info_to_send.user_info.members = members_list;
+                    }
+                }
+            };
+            ws.send(JSON.stringify(user_info_to_send));
         }
     }
 }

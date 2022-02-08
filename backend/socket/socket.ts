@@ -104,8 +104,8 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
             case "seen_message":
                 events.user_seened_message(ws, parsedData);
                 break;
-            case "get_user_full_info":
-                events.get_user_full_info(ws, parsedData);
+            case "get_chat_full_info":
+                events.get_chat_full_info(ws, parsedData);
                 break;
             case "check_username_existly":
                 events.check_username_existly(ws, parsedData);

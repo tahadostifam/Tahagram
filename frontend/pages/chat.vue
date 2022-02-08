@@ -38,7 +38,7 @@
     ></SettingsDialog>
 
     <v-dialog max-width="350" v-model="crop_profile_photo.show">
-      <v-card class="pa-5 pb-0">
+      <div class="pa-5 pb-0">
         <cropper
           :src="crop_profile_photo.src"
           @change="crop_profile_photo_onchange"
@@ -65,7 +65,7 @@
             SAVE
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </div>
     </v-dialog>
 
     <CreateChannelDialog
@@ -675,8 +675,8 @@ export default {
       if (this.$data.active_chat.username) {
         window.ws.send(
           JSON.stringify({
-            event: "get_user_full_info",
-            target_username: this.$data.active_chat.username,
+            event: "get_chat_full_info",
+            chat_id: this.$data.active_chat.chat_id,
           })
         );
       }
