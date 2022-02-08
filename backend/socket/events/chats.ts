@@ -113,13 +113,6 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 }
 
                 if (chat) {
-                    pushMessage(message, {
-                        event: "send_text_message",
-                        chat_id: chat_id,
-                        message: "message sended",
-                        message_callback: message,
-                    });
-
                     const room = rooms[chat_id];
                     if (room) {
                         if (target_ws) {
@@ -140,6 +133,12 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                             console.error("chat._id or target_username or target_ws is empty");
                         }
                     }
+                    pushMessage(message, {
+                        event: "send_text_message",
+                        chat_id: chat_id,
+                        message: "message sended",
+                        message_callback: message,
+                    });
                 } else {
                     await setTargetWs();
 
@@ -257,13 +256,6 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                     var user_is_aadmin = channel.members.includes(ws.user.username);
                 }
                 if (channel.creator_username == ws.user.username || user_is_aadmin) {
-                    pushMessage(message, {
-                        event: "send_text_message",
-                        message: "message sended",
-                        chat_id: chat_id,
-                        message_callback: message,
-                    });
-
                     let data_to_send: any = {
                         event: "you_have_new_message",
                         message: message,
@@ -274,6 +266,12 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 } else {
                     console.log(`${chat_id} channel not found`);
                 }
+                pushMessage(message, {
+                    event: "send_text_message",
+                    message: "message sended",
+                    chat_id: chat_id,
+                    message_callback: message,
+                });
             }
         } else if (chat_type == "group") {
             const group: IChat = await Chats.findOne({
