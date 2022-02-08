@@ -357,7 +357,8 @@
               class="send_message_section"
               v-if="
                 active_chat.chat_type == 'private' ||
-                active_chat.chat_type == 'group' ||
+                (active_chat.chat_type == 'group' &&
+                  active_chat.iam_amember_of_chat) ||
                 active_chat.iam_admin_of_chat
               "
             >
@@ -927,7 +928,6 @@ export default {
           chats_messages.length > 0 &&
           this.$data.active_chat.chat_id
         ) {
-          // ANCHOR
           const chat = chats_messages.find(
             ({ _id }) => _id === this.$data.active_chat.chat_id
           );

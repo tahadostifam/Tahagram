@@ -280,37 +280,43 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
                 _id: chat_id,
             });
             if (group) {
-                const message: ITextMessage = {
-                    message_id: message_id,
-                    message_type: "text",
-                    send_time: Date.now(),
-                    content: message_text,
-                    edited: false,
-                    sender_username: ws.user.username,
-                };
-
-                pushMessage(message, {
-                    event: "send_text_message",
-                    chat_id: chat_id,
-                    message: "message sended",
-                    message_callback: message,
-                });
-
-                let data_to_send: any = {
-                    event: "you_have_new_message",
-                    message: message,
-                    chat_id: chat_id,
-                };
-
+                // we check that the user is a member of the group
+                let userIsMember;
                 if (group.members && group.members.length > 0) {
-                    broadCastToAllMembers(chat_id, group.members, data_to_send, ws.user.username);
+                    userIsMember = group.members.includes(ws.user.username);
                 }
-                if (ws.user.username != group.creator_username) {
-                    // broadcast message to creator -> because name of creator is not in the members list
-                    const creator_ws = await users.find(({ username: _username_ }) => _username_ === group.creator_username);
-                    if (creator_ws) {
-                        creator_ws.ws.send(JSON.stringify(data_to_send));
+                if (userIsMember || group.creator_username == ws.user.username) {
+                    const message: ITextMessage = {
+                        message_id: message_id,
+                        message_type: "text",
+                        send_time: Date.now(),
+                        content: message_text,
+                        edited: false,
+                        sender_username: ws.user.username,
+                    };
+                    let data_to_send: any = {
+                        event: "you_have_new_message",
+                        message: message,
+                        chat_id: chat_id,
+                    };
+
+                    if (group.members && group.members.length > 0) {
+                        broadCastToAllMembers(chat_id, group.members, data_to_send, ws.user.username);
                     }
+                    if (ws.user.username != group.creator_username) {
+                        // broadcast message to creator -> because name of creator is not in the members list
+                        const creator_ws = await users.find(({ username: _username_ }) => _username_ === group.creator_username);
+                        if (creator_ws) {
+                            creator_ws.ws.send(JSON.stringify(data_to_send));
+                        }
+                    }
+
+                    pushMessage(message, {
+                        event: "send_text_message",
+                        chat_id: chat_id,
+                        message: "message sended",
+                        message_callback: message,
+                    });
                 }
             } else {
                 console.log(`${chat_id} group not found`);
