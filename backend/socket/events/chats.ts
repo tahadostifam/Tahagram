@@ -518,13 +518,19 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                                         });
                                     }
                                     if (index == chat.members.length - 1) {
-                                        members_list.push(creator_info);
+                                        if (chat.chat_type != "private") {
+                                            members_list.push(creator_info);
+                                        }
                                         resolve(members_list);
                                     }
                                 }
                             });
                         } else {
-                            resolve([creator_info]);
+                            if (chat.chat_type != "private") {
+                                resolve([creator_info]);
+                            } else {
+                                resolve([]);
+                            }
                         }
                     });
                 }

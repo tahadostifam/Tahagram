@@ -564,8 +564,12 @@ export default {
   },
   methods: {
     view_member_profile(username) {
-      this.$set(this.$data, "search_chat_input", username);
-      this.$set(this.$data.view_user_profile, "show", false);
+      if (username == this.username) {
+        this.$set(this.$data, "show_settings_dialog", true);
+      } else {
+        this.$set(this.$data, "search_chat_input", username);
+        this.$set(this.$data.view_user_profile, "show", false);
+      }
     },
     copy_message_to_clipboard() {
       const message_id = this.$data.message_context_menu_message_id;
