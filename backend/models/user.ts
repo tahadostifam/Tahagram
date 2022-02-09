@@ -26,7 +26,7 @@ var schema = new mongoose.Schema({
         default: null,
     },
     last_seen: {
-        type: Date,
+        type: String,
     },
     chats: {
         type: Array,

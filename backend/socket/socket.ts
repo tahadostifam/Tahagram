@@ -1,11 +1,12 @@
 const configs = require("../configs/configs.json");
 import { createServer } from "http";
-import { WebSocket, WebSocketServer } from "ws";
+import { WebSocketServer } from "ws";
 import { cleanIpDots } from "../lib/client_ip";
 import { clearParams, authenticate_socket_user, getCookie, clientIp } from "./auth_socket_user";
 import { setUserUUID } from "./room_manager";
 const server_port = configs["socket"]["port"];
 import { ISocketClient, IUser, IWebSocket } from "../lib/interfaces";
+import User from "../models/user";
 
 export let users: Array<ISocketClient> = [];
 
@@ -65,6 +66,8 @@ function handleSocketUserOnConnected(ws: IWebSocket) {
             username: ws.user.username,
             ws: ws,
         });
+
+        userIsOnline(ws.user.username);
     }
 
     ws.send(
@@ -79,7 +82,9 @@ function handleSocketUserOnDisConnected(ws: IWebSocket) {
         return value.username !== ws.user.username;
     });
 
-    console.log(`- ${ws.user.username} Disconnected`);
+    userIsOffline(ws.user.username);
+
+    console.log(`- ${ws.user.username} Disconnected From Socket`);
 }
 
 function handleSocketMessages(data: any, ws: IWebSocket) {
@@ -123,4 +128,27 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
     } catch {
         ws.send("error in parsing data");
     }
+}
+
+async function userIsOnline(username: string) {
+    await User.findOneAndUpdate(
+        {
+            username: username,
+        },
+        {
+            last_seen: "online",
+        }
+    );
+}
+
+async function userIsOffline(username: string) {
+    const last_online_time = Date.now();
+    await User.findOneAndUpdate(
+        {
+            username: username,
+        },
+        {
+            last_seen: last_online_time,
+        }
+    );
 }

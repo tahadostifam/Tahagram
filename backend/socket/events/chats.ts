@@ -474,7 +474,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
             } else {
                 const target_username = findOutTUofChat(chat, ws.user.username);
                 if (target_username) {
-                    const user = await User.findOne({ username: target_username });
+                    const user: IUser = await User.findOne({ username: target_username });
                     const profile_photos = user.profile_photos.reverse();
                     var user_info_to_send: any = {
                         event: "get_chat_full_info",
@@ -483,6 +483,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                             username: user.username,
                             bio: user.bio,
                             profile_photos: profile_photos,
+                            last_seen: user.last_seen,
                         },
                     };
                 }

@@ -9,7 +9,7 @@ const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
 import Chats from "../models/chats";
-import { IChat, IImageMessage, ITextMessage, IUser, IUserChatLink } from "../lib/interfaces";
+import { IChat, IUser, IUserChatLink } from "../lib/interfaces";
 import { findOutTUofChat } from "../socket/events/users";
 
 export default {
@@ -26,7 +26,7 @@ export default {
                             await setUserTokens(req.body.username, "auth", cleanIpDots(client_ip)).then(
                                 async (auth_token) => {
                                     const final_profile_photos = user.profile_photos.reverse();
-                                    await getUserChats(req.body.username).then((chats) => {
+                                    await getUserChats(user).then((chats) => {
                                         getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
                                             status_codes.success_signin(
                                                 {
@@ -139,7 +139,7 @@ export default {
                     });
                     if (!user) return status_codes.invalid_token(req, res, next);
                     const final_profile_photos = user.profile_photos.reverse();
-                    await getUserChats(req.body.username).then((chats) => {
+                    await getUserChats(user).then((chats) => {
                         getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
                             res.send({
                                 message: "success",
@@ -211,78 +211,80 @@ export function verifyRefreshToken(token: string, client_ip: string) {
     });
 }
 
-export function getUserChats(username: string) {
+export function getUserChats(user: IUser) {
     return new Promise(async (success) => {
-        const user: IUser = await User.findOne({
-            username: username,
-        });
+        if (user) {
+            if (user.chats.length == 0) {
+                return success([]);
+            } else {
+                let chats: Array<object> = [];
+                interface IGetUserChatsChatI extends IChat {
+                    profile_photos: any;
+                }
+                await user.chats.forEach(async (item: any, index: number) => {
+                    const chat_info: IGetUserChatsChatI = await Chats.findById(item.chat_id);
 
-        if (user.chats.length == 0) {
-            return success([]);
-        } else {
-            let chats: Array<object> = [];
-            interface IGetUserChatsChatI extends IChat {
-                profile_photos: any;
-            }
-            await user.chats.forEach(async (item: any, index: number) => {
-                const chat_info: IGetUserChatsChatI = await Chats.findById(item.chat_id);
+                    if (chat_info) {
+                        // going to detect that user target _id is in the user_1 or user_2
+                        switch (chat_info.chat_type) {
+                            case "private":
+                                console.log("private chat", chat_info);
 
-                if (chat_info) {
-                    // going to detect that user target _id is in the user_1 or user_2
-                    switch (chat_info.chat_type) {
-                        case "private":
-                            // now, we should get UserInfo from UserModel
-                            const target_username = findOutTUofChat(chat_info, username);
-                            if (target_username) {
-                                const target_user_info = await User.findOne({
-                                    username: target_username,
-                                });
-                                if (target_user_info) {
-                                    let user_data: any = {
-                                        chat_id: item.chat_id,
-                                        full_name: target_user_info.full_name,
-                                        username: target_user_info.username,
-                                        chat_type: chat_info.chat_type,
-                                    };
-                                    if (target_user_info.profile_photos.length > 0) {
-                                        const profile_photos = target_user_info.profile_photos.reverse();
-                                        user_data["profile_photo"] = profile_photos[0];
+                                // now, we should get UserInfo from UserModel
+                                const target_username = findOutTUofChat(chat_info, user.username);
+                                if (target_username) {
+                                    const target_user_info = await User.findOne({
+                                        username: target_username,
+                                    });
+                                    if (target_user_info) {
+                                        let user_data: any = {
+                                            chat_id: item.chat_id,
+                                            full_name: target_user_info.full_name,
+                                            username: target_user_info.username,
+                                            chat_type: chat_info.chat_type,
+                                        };
+                                        if (target_user_info.profile_photos.length > 0) {
+                                            const profile_photos = target_user_info.profile_photos.reverse();
+                                            user_data["profile_photo"] = profile_photos[0];
+                                        }
+                                        chats.push(user_data);
                                     }
-                                    chats.push(user_data);
                                 }
-                            }
-                            break;
-                        case "channel":
-                        case "group":
-                            let user_data: any = {
-                                chat_id: chat_info._id,
-                                full_name: chat_info.full_name,
-                                username: chat_info.username,
-                                chat_type: chat_info.chat_type,
-                            };
-                            if (chat_info.admins) {
-                                const iam_admin_of_chat = chat_info.admins.includes(user.username);
-                                const iam_creator_of_chat = chat_info.creator_username == user.username;
-                                user_data["iam_admin_of_chat"] = iam_admin_of_chat || iam_creator_of_chat;
-                            }
-                            if (user_data["iam_admin_of_chat"] != true && chat_info.members) {
-                                const iam_amember_of_chat = chat_info.members.includes(user.username);
-                                user_data["iam_amember_of_chat"] = iam_amember_of_chat;
-                            }
-                            if (chat_info.profile_photos && chat_info.profile_photos.length > 0 && chat_info.profile_photos[0].filename) {
-                                user_data["profile_photo"] = {
-                                    filename: chat_info.profile_photos[0].filename,
+                                break;
+                            case "channel":
+                            case "group":
+                                let user_data: any = {
+                                    chat_id: chat_info._id,
+                                    full_name: chat_info.full_name,
+                                    username: chat_info.username,
+                                    chat_type: chat_info.chat_type,
                                 };
-                            }
-                            chats.push(user_data);
-                            break;
+                                if (chat_info.admins) {
+                                    const iam_admin_of_chat = chat_info.admins.includes(user.username);
+                                    const iam_creator_of_chat = chat_info.creator_username == user.username;
+                                    user_data["iam_admin_of_chat"] = iam_admin_of_chat || iam_creator_of_chat;
+                                }
+                                if (user_data["iam_admin_of_chat"] != true && chat_info.members) {
+                                    const iam_amember_of_chat = chat_info.members.includes(user.username);
+                                    user_data["iam_amember_of_chat"] = iam_amember_of_chat;
+                                }
+                                if (chat_info.profile_photos && chat_info.profile_photos.length > 0 && chat_info.profile_photos[0].filename) {
+                                    user_data["profile_photo"] = {
+                                        filename: chat_info.profile_photos[0].filename,
+                                    };
+                                }
+                                chats.push(user_data);
+                                break;
+                        }
                     }
-                }
 
-                if (index == user.chats.length - 1) {
-                    success(chats);
-                }
-            });
+                    if (index == user.chats.length - 1) {
+                        success(chats);
+                    }
+                });
+            }
+        } else {
+            console.log("user not found in getUserChats function");
         }
     });
 }

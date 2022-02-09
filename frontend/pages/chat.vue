@@ -1229,7 +1229,7 @@ export default {
       }
     },
     logout() {
-      this.$router.push({ path: "/logout" });
+      this.$router.push({ path: "/" + this.$i18n.locale + "/logout" });
     },
   },
   computed: {
