@@ -226,9 +226,13 @@
                       active_chat.full_name
                     }}</span>
                     <span
+                      :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
                       class="d-block text-sm-caption font-weight-bold ml-3 text--secondary"
-                      >online</span
                     >
+                      <template v-if="active_chat.last_seen">
+                        {{ get_last_seen(active_chat.last_seen) }}
+                      </template>
+                    </span>
                   </div>
                 </div>
 
@@ -497,9 +501,10 @@ import "vue-advanced-cropper/dist/style.css";
 import configs from "@/assets/javascript/configs";
 import ViewUserProfile from "../components/view_user_profile.vue";
 import profile_photos_link_addr from "~/mixins/profile_photos_link_addr.js";
+import parse_last_seen from "~/mixins/parse_last_seen.js";
 
 export default {
-  mixins: [profile_photos_link_addr],
+  mixins: [profile_photos_link_addr, parse_last_seen],
   data() {
     return {
       theme_color: configs.theme_color,
@@ -857,6 +862,15 @@ export default {
           break;
       }
 
+      if (chat && chat.username && chat.chat_type == "private") {
+        window.ws.send(
+          JSON.stringify({
+            event: "get_last_seen",
+            username: chat.username,
+          })
+        );
+      }
+
       this.$set(this.$data, "search_chat_input", "");
 
       this.$set(this.$data, "show_chat_view", true);
@@ -873,8 +887,6 @@ export default {
       }
     },
     set_the_active_chat(chat) {
-      console.log("set_the_active_chat", chat);
-
       if (chat._id) {
         this.$set(this.$data.active_chat, "chat_id", chat._id);
       }

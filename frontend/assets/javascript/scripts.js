@@ -95,6 +95,8 @@ window.handleSocketMessages = (vm, parsedData) => {
     vm.$store.commit("auth/setBio", parsedData.bio);
   } else if (parsedData.event == "you_have_new_message") {
     we_have_new_message(vm, parsedData);
+  } else if (parsedData.event == "get_last_seen") {
+    vm.$set(vm.$data.active_chat, "last_seen", parsedData.last_seen);
   } else if (parsedData.event == "chat_created_from_a_user") {
     chat_created(vm, parsedData);
   } else if (
@@ -144,6 +146,9 @@ function get_chat_full_info(vm, parsedData) {
   );
   vm.$set(vm.$data.active_chat, "bio", parsedData.user_info.bio);
   vm.$set(vm.$data.active_chat, "members", parsedData.user_info.members);
+  if (parsedData.user_info.last_seen) {
+    vm.$set(vm.$data.active_chat, "last_seen", parsedData.user_info.last_seen);
+  }
 }
 
 function chat_created(vm, parsedData) {

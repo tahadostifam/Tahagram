@@ -133,6 +133,7 @@ export default {
             Enjoy using ChatApp :)
           `.trim(),
           goto_signin: "Go To Signin",
+          last_seen_at: "last seen at {0}",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -187,6 +188,7 @@ export default {
             اکانت شما با اطلاعاتی که وارد کرده بودید با موفقیت ساخته شد. برای وارد شدن به اکانت خود به فرم ورود بروید. موفق باشید!
           `.trim(),
           goto_signin: "صفحه ورود",
+          last_seen_at: "آخرین بازدید در {0}",
         },
       },
     },

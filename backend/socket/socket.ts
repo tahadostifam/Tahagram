@@ -121,6 +121,9 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
             case "join_to_chat":
                 events.join_to_chat(ws, parsedData);
                 break;
+            case "get_last_seen":
+                events.get_last_seen(ws, parsedData);
+                break;
             default:
                 ws.send(JSON.stringify({ message: "command not found" }));
                 break;

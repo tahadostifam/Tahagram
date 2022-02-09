@@ -1,5 +1,5 @@
 import User from "../../models/user";
-import { IChat, IWebSocket } from "../../lib/interfaces";
+import { IChat, IUser, IWebSocket } from "../../lib/interfaces";
 
 export async function update_full_name(ws: IWebSocket, parsedData: any) {
     if (parsedData.full_name && parsedData.full_name.trim() != "") {
@@ -50,5 +50,23 @@ export function findOutTUofChat(chat: IChat, username: string) {
         return chat.sides?.user_2;
     } else {
         return null;
+    }
+}
+
+export async function get_last_seen(ws: IWebSocket, parsedData: any) {
+    const username = parsedData.username;
+    if (username && username.length > 0) {
+        const user: IUser = await User.findOne({
+            username: parsedData.username,
+        });
+        if (user) {
+            ws.send(
+                JSON.stringify({
+                    event: "get_last_seen",
+                    username: parsedData.username,
+                    last_seen: user.last_seen,
+                })
+            );
+        }
     }
 }
