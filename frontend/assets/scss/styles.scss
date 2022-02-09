@@ -919,3 +919,12 @@ body .v-application .v-navigation-drawer {
     }
   }
 }
+
+#search_input_clear_button {
+  position: absolute;
+  right: 18px;
+  top: 17px;
+  .v-icon {
+    color: $color_6;
+  }
+}

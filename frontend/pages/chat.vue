@@ -111,10 +111,17 @@
             <div>
               <input
                 type="text"
-                class="custom_input"
+                class="custom_input pr-9"
                 placeholder="Search"
                 v-model="search_chat_input"
               />
+              <button
+                v-if="search_chat_input.trim().length > 0"
+                id="search_input_clear_button"
+                @click="search_chat_input = ''"
+              >
+                <v-icon>mdi-close</v-icon>
+              </button>
             </div>
           </div>
         </div>

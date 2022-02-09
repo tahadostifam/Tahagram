@@ -1076,4 +1076,14 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 .members_list .member_item .avatar {
   --size: 50px;
 }
+
+#search_input_clear_button {
+  position: absolute;
+  right: 18px;
+  top: 17px;
+}
+
+#search_input_clear_button .v-icon {
+  color: #707579;
+}
 /*# sourceMappingURL=styles.css.map */
