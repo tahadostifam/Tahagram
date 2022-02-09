@@ -124,6 +124,15 @@ export default {
           group_name: "Group name",
           group_username: "Group username",
           members: "Members",
+          last_seen_recently: "last seen recently",
+          account_created: "Account Created",
+          account_created_text: `
+            Your account created successfully with this information that you entered
+            at form. Now you should just signin into your account using Signin
+            Form.
+            Enjoy using ChatApp :)
+          `.trim(),
+          goto_signin: "Go To Signin",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -172,6 +181,12 @@ export default {
           group_name: "نام گروه",
           group_username: "نام کاربری گروه",
           members: "کاربر ها",
+          last_seen_recently: "آخرین بازدید به تازگی",
+          account_created: "اکانت شما ساخت شد",
+          account_created_text: `
+            اکانت شما با اطلاعاتی که وارد کرده بودید با موفقیت ساخته شد. برای وارد شدن به اکانت خود به فرم ورود بروید. موفق باشید!
+          `.trim(),
+          goto_signin: "صفحه ورود",
         },
       },
     },

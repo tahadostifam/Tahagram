@@ -228,8 +228,6 @@ export function getUserChats(user: IUser) {
                         // going to detect that user target _id is in the user_1 or user_2
                         switch (chat_info.chat_type) {
                             case "private":
-                                console.log("private chat", chat_info);
-
                                 // now, we should get UserInfo from UserModel
                                 const target_username = findOutTUofChat(chat_info, user.username);
                                 if (target_username) {

@@ -1,24 +1,17 @@
 <template>
-  <v-dialog max-width="350" v-model="user_created_dialog" persistent>
-    <div>
-      <h3 class="text-h5">Account Created</h3>
+  <v-dialog max-width="370" v-model="user_created_dialog" persistent>
+    <div class="px-4 pt-3">
+      <h3 class="text-h6 mb-2">{{ $t("account_created") }}</h3>
 
-      <v-card-text>
-        Your account created successfully with this information that you entered
-        at form. Now you should just signin into your account using Signin
-        Form.<br />
-        Enjoy using ChatApp :)
-      </v-card-text>
+      <p class="text-grey" :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'">
+        {{ $t("account_created_text") }}
+      </p>
 
-      <v-card-actions class="pb-4">
-        <!-- <v-btn color="green darken-1" text @click="user_created_dialog = false">
-          Close
-        </v-btn> -->
-
+      <v-card-actions class="pb-4 pr-0">
         <v-spacer></v-spacer>
 
         <v-btn color="green darken-1" text @click="goto_signin_page">
-          Go To Signin
+          {{ $t("goto_signin") }}
         </v-btn>
       </v-card-actions>
     </div>

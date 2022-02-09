@@ -42,9 +42,14 @@
                 {{ user_info.full_name }}
               </template>
             </span>
-            <span class="text-grey d-block w-100"
-              >last seen today at 5:15 PM</span
+            <span
+              class="text-theme_color d-block w-100"
+              v-if="user_info.last_seen"
+              >{{ user_info.last_seen }}</span
             >
+            <span class="text-grey d-block w-100" v-else>{{
+              $t("last_seen_recently")
+            }}</span>
             <!-- TODO -->
           </div>
         </div>

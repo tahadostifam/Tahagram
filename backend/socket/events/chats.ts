@@ -497,6 +497,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                             username: ws.user.username,
                             profile_photos: ws.user.profile_photos,
                             position: "creator",
+                            last_seen: ws.user.last_seen,
                         };
                         if (
                             (chat.chat_type == "group" ||
@@ -516,6 +517,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                                             username: user.username,
                                             profile_photos: user.profile_photos.reverse(),
                                             bio: user.bio,
+                                            last_seen: user.last_seen,
                                         });
                                     }
                                     if (index == chat.members.length - 1) {

@@ -109,7 +109,7 @@
               </div>
               <div>
                 <span>{{ item.full_name }}</span>
-                <span>last seen recently</span>
+                <span>{{ item.last_seen }}</span>
               </div>
             </div>
           </div>
