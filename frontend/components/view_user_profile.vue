@@ -30,11 +30,12 @@
         </div>
 
         <template v-else>
-          <ColoredAvatar
-            v-if="active_chat.full_name"
-            :value="active_chat.full_name[0]"
-          />
-          <ColoredAvatar v-else :value="''" />
+          <div
+            class="solid_color_avatar avatar_large"
+            v-if="active_chat.username"
+          >
+            {{ active_chat.username[0] }}
+          </div>
         </template>
 
         <div class="ml-4">
@@ -43,9 +44,12 @@
               {{ active_chat.full_name }}
             </template>
           </span>
-          <span class="text-grey d-block w-100"
-            >last seen today at 5:15 PM</span
-          >
+          <span class="text-grey d-block w-100">
+            <template
+              v-if="active_chat.chat_type != 'private' && active_chat.members"
+              >{{ active_chat.members.length }} Members</template
+            >
+          </span>
         </div>
       </div>
 
@@ -67,7 +71,12 @@
         </div>
       </div>
 
-      <div class="pb-1" v-if="active_chat.members">
+      <div
+        class="pb-1"
+        v-if="
+          active_chat && active_chat.members && active_chat.members.length > 0
+        "
+      >
         <div class="members_list">
           <div class="members_list_title">
             <div>
@@ -86,7 +95,9 @@
                 class="avatar"
                 v-if="item.profile_photos && item.profile_photos[0]"
               >
-                <img :src="'item.profile_photos[0]'" />
+                <img
+                  :src="gimme_profile_photo_link_addr(item.profile_photos[0])"
+                />
               </div>
             </div>
             <div>
@@ -101,7 +112,10 @@
 </template>
 
 <script>
+import profile_photos_link_addr from "~/mixins/profile_photos_link_addr.js";
+
 export default {
+  mixins: [profile_photos_link_addr],
   name: "view_user_profile",
   data() {
     return {

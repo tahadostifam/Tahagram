@@ -314,6 +314,7 @@ body,
   overflow: hidden;
   padding-top: 2px;
   font-weight: 500;
+  font-size: 18px;
   background-color: $color_3;
 }
 
@@ -326,6 +327,13 @@ body,
     padding-top: 10px;
   }
   --size: 110px;
+}
+
+.avatar_large {
+  &.solid_color_avatar {
+    padding-top: 5px;
+  }
+  --size: 90px;
 }
 
 .photo_uploading {

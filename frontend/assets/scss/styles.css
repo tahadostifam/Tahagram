@@ -337,6 +337,7 @@ body .v-btn,
   overflow: hidden;
   padding-top: 2px;
   font-weight: 500;
+  font-size: 18px;
   background-color: #0f0f0f;
 }
 
@@ -350,6 +351,14 @@ body .v-btn,
 
 .avatar_xlarge.solid_color_avatar {
   padding-top: 10px;
+}
+
+.avatar_large {
+  --size: 90px;
+}
+
+.avatar_large.solid_color_avatar {
+  padding-top: 5px;
 }
 
 .photo_uploading {

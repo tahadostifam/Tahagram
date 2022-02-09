@@ -491,8 +491,10 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import configs from "@/assets/javascript/configs";
 import ViewUserProfile from "../components/view_user_profile.vue";
+import profile_photos_link_addr from "~/mixins/profile_photos_link_addr.js";
 
 export default {
+  mixins: [profile_photos_link_addr],
   data() {
     return {
       theme_color: configs.theme_color,
@@ -942,15 +944,6 @@ export default {
             );
           }
         }
-      }
-    },
-    gimme_profile_photo_link_addr(profile_photo) {
-      if (profile_photo && profile_photo.filename) {
-        return (
-          this.$axios.defaults.baseURL +
-          "/uploads/profile_photos/" +
-          profile_photo.filename
-        );
       }
     },
     check_if_user_had_profile_photo() {

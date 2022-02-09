@@ -460,56 +460,83 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
             _id: chat_id,
         });
         if (chat) {
-            const profile_photos = chat.profile_photos.reverse();
-            let user_info_to_send: any = {
-                event: "get_chat_full_info",
-                user_info: {
-                    full_name: chat.full_name,
-                    username: chat.username,
-                    bio: chat.bio,
-                    profile_photos: profile_photos,
-                },
-            };
-
-            function collect_members() {
-                return new Promise(async (resolve) => {
-                    if (
-                        (chat.chat_type == "group" || (chat.chat_type == "channel" && (chat.creator_username == ws.user.username || chat.admins?.includes(ws.user.username)))) &&
-                        chat.members &&
-                        chat.members.length > 0
-                    ) {
-                        let members_list: any = [];
-                        await chat.members.forEach(async (member_username, index) => {
-                            if (chat.members?.length) {
-                                const user: IUser = await User.findOne({
-                                    username: member_username,
-                                });
-                                if (user) {
-                                    members_list.push({
-                                        full_name: user.full_name,
-                                        username: user.username,
-                                        profile_photos: user.profile_photos.reverse(),
-                                        bio: user.bio,
-                                    });
-                                }
-                                if (index == chat.members.length - 1) {
-                                    resolve(members_list);
-                                }
-                            }
-                        });
-                    } else {
-                        resolve(null);
-                    }
-                });
+            if (chat.chat_type != "private") {
+                const profile_photos = chat.profile_photos.reverse();
+                var user_info_to_send: any = {
+                    event: "get_chat_full_info",
+                    user_info: {
+                        full_name: chat.full_name,
+                        username: chat.username,
+                        bio: chat.bio,
+                        profile_photos: profile_photos,
+                    },
+                };
+            } else {
+                const target_username = findOutTUofChat(chat, ws.user.username);
+                if (target_username) {
+                    const user = await User.findOne({ username: target_username });
+                    const profile_photos = user.profile_photos.reverse();
+                    var user_info_to_send: any = {
+                        event: "get_chat_full_info",
+                        user_info: {
+                            full_name: user.full_name,
+                            username: user.username,
+                            bio: user.bio,
+                            profile_photos: profile_photos,
+                        },
+                    };
+                }
             }
 
-            await collect_members().then((data) => {
-                if (data) {
-                    user_info_to_send.user_info.members = data;
+            if (user_info_to_send) {
+                function collect_members() {
+                    return new Promise(async (resolve) => {
+                        const creator_info = {
+                            full_name: ws.user.full_name,
+                            username: ws.user.username,
+                            profile_photos: ws.user.profile_photos,
+                            position: "creator",
+                        };
+                        if (
+                            (chat.chat_type == "group" ||
+                                (chat.chat_type == "channel" && (chat.creator_username == ws.user.username || chat.admins?.includes(ws.user.username)))) &&
+                            chat.members &&
+                            chat.members.length > 0
+                        ) {
+                            let members_list: any = [];
+                            await chat.members.forEach(async (member_username, index) => {
+                                if (chat.members?.length) {
+                                    const user: IUser = await User.findOne({
+                                        username: member_username,
+                                    });
+                                    if (user) {
+                                        members_list.push({
+                                            full_name: user.full_name,
+                                            username: user.username,
+                                            profile_photos: user.profile_photos.reverse(),
+                                            bio: user.bio,
+                                        });
+                                    }
+                                    if (index == chat.members.length - 1) {
+                                        members_list.push(creator_info);
+                                        resolve(members_list);
+                                    }
+                                }
+                            });
+                        } else {
+                            resolve([creator_info]);
+                        }
+                    });
                 }
-            });
 
-            ws.send(JSON.stringify(user_info_to_send));
+                await collect_members().then((data) => {
+                    if (data) {
+                        user_info_to_send.user_info.members = data;
+                    }
+                });
+
+                ws.send(JSON.stringify(user_info_to_send));
+            }
         }
     }
 }
