@@ -68,6 +68,38 @@
       </div>
     </v-dialog>
 
+    <v-dialog max-width="350" v-model="crop_media_to_send.show">
+      <div class="pa-5 pb-0">
+        <cropper
+          :src="crop_media_to_send.src"
+          @change="crop_media_to_send_onchange"
+          :stencil-size="{
+            width: 280,
+            height: 280,
+          }"
+        />
+        <v-text-field label="Caption" class="mt-2"></v-text-field>
+        <v-card-actions class="pr-0 pt-0">
+          <v-spacer></v-spacer>
+          <v-btn
+            :color="theme_color"
+            text
+            @click="crop_media_to_send.show = false"
+          >
+            CANCEL
+          </v-btn>
+          <v-btn
+            :color="theme_color"
+            text
+            @click="upload_croped_media_to_send"
+            :loading="crop_media_to_send.button_loading_state"
+          >
+            SAVE
+          </v-btn>
+        </v-card-actions>
+      </div>
+    </v-dialog>
+
     <CreateChannelDialog
       :show="show_create_channel_dialog"
       v-on:close_button="show_create_channel_dialog = false"
@@ -374,7 +406,6 @@
               <div class="send_box">
                 <v-btn
                   id="send_media_button"
-                  @click="select_photo_to_send"
                   :color="theme_color"
                   dark
                   icon
@@ -389,7 +420,9 @@
                       position: absolute;
                       width: 200px;
                       height: 40px;
+                      z-index: 40;
                     "
+                    accept="image/png,image/jpg,image/jpeg"
                     onchange="window.select_photo_to_send(this)"
                   />
                   <v-icon small :color="theme_color"> mdi-image </v-icon>
@@ -523,6 +556,12 @@ export default {
       update_full_name_input: "",
       user_default_avatar: undefined,
       crop_profile_photo: {
+        show: false,
+        src: null,
+        canvas: null,
+        button_loading_state: false,
+      },
+      crop_media_to_send: {
         show: false,
         src: null,
         canvas: null,
@@ -690,7 +729,64 @@ export default {
       }
     },
     select_photo_to_send(e) {
-      console.log(e);
+      const file = e.files[0];
+      const local_path = URL.createObjectURL(file);
+      this.$set(this.$data.crop_media_to_send, "src", local_path);
+      this.$set(this.$data.crop_media_to_send, "show", true);
+    },
+    upload_croped_media_to_send() {
+      // ANCHOR
+      this.$set(this.$data.crop_media_to_send, "button_loading_state", true);
+      this.$set(this.$data.crop_media_to_send, "show", false);
+
+      const canvas = this.$data.crop_media_to_send.canvas;
+      if (canvas) {
+        const croppedImage = canvas.toDataURL("image/png");
+        const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
+        if (imageFile) {
+          const request_body = new FormData();
+          request_body.append("photo", imageFile);
+
+          this.$axios
+            .$post("/api/profile_photos/upload_photo", request_body, {
+              headers: {
+                username: this.$store.state.auth.auth.username,
+                auth_token: this.$store.state.auth.auth.auth_token,
+              },
+            })
+            .then((response) => {
+              if (response.message == "profile photo uploaded") {
+                this.$store.commit(
+                  "auth/addProfilePhotos",
+                  response.profile_photo_filename
+                );
+                this.$set(
+                  this.$data,
+                  "user_default_avatar",
+                  this.gimme_profile_photo_link_addr({
+                    filename: response.profile_photo_filename,
+                  })
+                );
+              }
+            })
+            .catch((error) => {
+              this.$router.push({ path: "/500" });
+            })
+            .finally(() => {
+              this.$set(
+                this.$data.crop_profile_photo,
+                "button_loading_state",
+                false
+              );
+              this.$set(this.$data, "photo_uploading_state", false);
+            });
+        } else {
+          console.log("no profile photo to upload");
+        }
+      } else
+        console.log(
+          "uploading profile photo failed! :: cropped image canvas is empty"
+        );
     },
     show_user_profile() {
       if (this.$data.active_chat.username) {
@@ -1231,6 +1327,9 @@ export default {
     },
     crop_profile_photo_onchange({ coordinates, canvas }) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
+    },
+    crop_media_to_send_onchange({ coordinates, canvas }) {
+      this.$set(this.$data.crop_media_to_send, "canvas", canvas);
     },
     delete_message() {
       const message_id = this.$data.message_context_menu_message_id;

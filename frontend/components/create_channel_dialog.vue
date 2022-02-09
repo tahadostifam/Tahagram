@@ -50,6 +50,7 @@
           <div class="d-flex align-center px-4">
             <input
               type="file"
+              accept="image/png,image/jpg,image/jpeg"
               hidden
               id="channel_profile_photo"
               @change="choosing_channel_photo($event)"

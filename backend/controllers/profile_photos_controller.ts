@@ -14,6 +14,13 @@ export interface IRequest extends Request {
     files: any;
 }
 
+function justImageFile(file: any) {
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+        return true;
+    }
+    return false;
+}
+
 export default {
     UploadPhotoAction: async (req: IRequest, res: Response, next: NextFunction) => {
         if (!req.files || !req.files["photo"]) {
@@ -29,52 +36,56 @@ export default {
             });
         }
 
-        const user = await User.findOne({
-            username: req.headers.username,
-        });
-
-        if (!user) return status_codes.invalid_token(req, res, next);
-
         const photo = req.files["photo"];
 
-        let final_filename;
-        async function generateRandomFileName() {
-            final_filename = await crypto.randomBytes(15).toString("hex");
-            if (fs.existsSync(profile_photos_directory + final_filename)) {
-                console.log("bad filename :)");
-
-                await generateRandomFileName();
-            }
-        }
-
-        await generateRandomFileName();
-
-        try {
-            await photo.mv(process.cwd() + profile_photos_directory + final_filename);
-        } catch {
-            status_codes.error(req, res, next);
-        }
-
-        await User.updateOne(
-            {
+        if (justImageFile(photo)) {
+            const user = await User.findOne({
                 username: req.headers.username,
-            },
-            {
-                $push: {
-                    profile_photos: {
-                        filename: final_filename,
-                    },
-                },
-            }
-        );
+            });
 
-        status_codes.profile_photo_uploaded(
-            {
-                profile_photo_filename: final_filename,
-            },
-            req,
-            res,
-            next
-        );
+            if (!user) return status_codes.invalid_token(req, res, next);
+
+            let final_filename;
+            async function generateRandomFileName() {
+                final_filename = await crypto.randomBytes(15).toString("hex");
+                if (fs.existsSync(profile_photos_directory + final_filename)) {
+                    console.log("bad filename :)");
+
+                    await generateRandomFileName();
+                }
+            }
+
+            await generateRandomFileName();
+
+            try {
+                await photo.mv(process.cwd() + profile_photos_directory + final_filename);
+            } catch {
+                status_codes.error(req, res, next);
+            }
+
+            await User.updateOne(
+                {
+                    username: req.headers.username,
+                },
+                {
+                    $push: {
+                        profile_photos: {
+                            filename: final_filename,
+                        },
+                    },
+                }
+            );
+
+            status_codes.profile_photo_uploaded(
+                {
+                    profile_photo_filename: final_filename,
+                },
+                req,
+                res,
+                next
+            );
+        } else {
+            status_codes.file_not_valid(req, res, next);
+        }
     },
 };

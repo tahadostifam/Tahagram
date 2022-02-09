@@ -205,6 +205,7 @@
           >
             <input
               type="file"
+              accept="image/png,image/jpg,image/jpeg"
               id="upload_profile_photo_input"
               style="opacity: 0; position: absolute; width: 200px; height: 40px"
               onchange="window.upload_profile_photo(this)"

@@ -49,7 +49,9 @@
               v-if="active_chat.chat_type != 'private' && active_chat.members"
               >{{ active_chat.members.length }} Members</template
             >
-            <template v-else>{{ active_chat.last_seen }}</template>
+            <template v-else>{{
+              get_last_seen(active_chat.last_seen)
+            }}</template>
           </span>
         </div>
       </div>

@@ -76,4 +76,10 @@ export default {
             message: "another chat exists with this username",
         });
     },
+    file_not_valid(req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 400;
+        res.send({
+            message: "file type is not valid",
+        });
+    },
 };
