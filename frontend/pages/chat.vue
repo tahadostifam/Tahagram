@@ -83,15 +83,14 @@
     ></CreateGroupDialog>
 
     <ViewUserProfile
-      :show.sync="view_user_profile_photo.show"
+      :show.sync="view_user_profile.show"
       :user_default_avatar="
         gimme_profile_photo_link_addr(active_chat.profile_photo)
       "
       :active_chat="active_chat"
       v-on:preview_self_profile="preview_user_profile"
-      v-on:update:show="
-        (new_value) => (view_user_profile_photo.show = new_value)
-      "
+      v-on:update:show="(new_value) => (view_user_profile.show = new_value)"
+      v-on:view_member_profile="view_member_profile"
     ></ViewUserProfile>
 
     <div class="pa-0" id="main_container">
@@ -115,7 +114,6 @@
                 class="custom_input"
                 placeholder="Search"
                 v-model="search_chat_input"
-                @input="search_chat_submit"
               />
             </div>
           </div>
@@ -538,7 +536,7 @@ export default {
       message_context_menu_message_id: null,
       show_internet_bar: false,
       updating_user_info_state: false,
-      view_user_profile_photo: {
+      view_user_profile: {
         show: false,
       },
       show_create_channel_dialog: false,
@@ -554,6 +552,7 @@ export default {
     this.handle_escape_button();
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
+    this.watch_search_chat_submit();
 
     window.upload_profile_photo = this.handle_upload_profile_photo;
     window.select_photo_to_send = this.select_photo_to_send;
@@ -564,6 +563,10 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    view_member_profile(username) {
+      this.$set(this.$data, "search_chat_input", username);
+      this.$set(this.$data.view_user_profile, "show", false);
+    },
     copy_message_to_clipboard() {
       const message_id = this.$data.message_context_menu_message_id;
       if (
@@ -683,7 +686,7 @@ export default {
         );
       }
 
-      this.$set(this.$data.view_user_profile_photo, "show", true);
+      this.$set(this.$data.view_user_profile, "show", true);
     },
     submit_send_text_messages() {
       if (this.$data.send_text_message_input.trim() != "") {
@@ -793,11 +796,9 @@ export default {
           }
           chat = {
             chat_id: chat._id,
-            // username: find_result.username,
-
+            username: chat.username,
             profile_photo: chat.profile_photo,
             full_name: chat.full_name,
-
             chat_type: chat.chat_type,
           };
 
@@ -829,8 +830,8 @@ export default {
             doGetChatMessages();
           } else {
             getNonJoinedChatsMessage();
+            this.set_the_active_chat(chat);
           }
-          this.set_the_active_chat(chat);
           break;
         case "search_chat_in_local":
           chat = this.$data.search_chat_in_local_result.find(
@@ -840,8 +841,8 @@ export default {
             doGetChatMessages();
           } else {
             getNonJoinedChatsMessage();
+            this.set_the_active_chat(chat);
           }
-          this.set_the_active_chat(chat);
           break;
       }
 
@@ -861,6 +862,8 @@ export default {
       }
     },
     set_the_active_chat(chat) {
+      console.log("set_the_active_chat", chat);
+
       if (chat._id) {
         this.$set(this.$data.active_chat, "chat_id", chat._id);
       }
@@ -965,43 +968,48 @@ export default {
         }
       }
     },
-    search_chat_submit() {
-      let chats_list = this.$data.chats_list;
-      if (typeof chats_list == Object) {
-        chats_list = Array(this.$data.chats_list);
-      }
-      const input = this.$data.search_chat_input;
-      if (input.trim()) {
-        if (chats_list) {
-          const local_search_result = chats_list.filter((item) => {
-            if (
-              String(item.username).includes(input) ||
-              String(item.full_name).includes(input)
-            ) {
-              return true;
+    watch_search_chat_submit() {
+      this.$store.watch(
+        () => this.$data.search_chat_input,
+        (value) => {
+          let chats_list = this.$data.chats_list;
+          if (typeof chats_list == Object) {
+            chats_list = Array(this.$data.chats_list);
+          }
+          const input = this.$data.search_chat_input;
+          if (input.trim()) {
+            if (chats_list) {
+              const local_search_result = chats_list.filter((item) => {
+                if (
+                  String(item.username).includes(input) ||
+                  String(item.full_name).includes(input)
+                ) {
+                  return true;
+                }
+                return false;
+              });
+              this.$set(
+                this.$data,
+                "search_chat_in_local_result",
+                local_search_result
+              );
             }
-            return false;
-          });
-          this.$set(
-            this.$data,
-            "search_chat_in_local_result",
-            local_search_result
-          );
+            const ws = window.ws;
+            if (ws) {
+              ws.send(
+                JSON.stringify({
+                  event: "search_in_chats",
+                  input: input,
+                })
+              );
+            } else {
+              this.initilizing_socket_again().then(() => {
+                this.search_chat_submit();
+              });
+            }
+          }
         }
-        const ws = window.ws;
-        if (ws) {
-          ws.send(
-            JSON.stringify({
-              event: "search_in_chats",
-              input: input,
-            })
-          );
-        } else {
-          this.initilizing_socket_again().then(() => {
-            this.search_chat_submit();
-          });
-        }
-      }
+      );
     },
     preview_user_profile() {
       let list = [];

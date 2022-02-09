@@ -49,6 +49,7 @@
               v-if="active_chat.chat_type != 'private' && active_chat.members"
               >{{ active_chat.members.length }} Members</template
             >
+            <template v-else>last seen</template>
           </span>
         </div>
       </div>
@@ -91,6 +92,7 @@
               v-ripple
               v-for="(item, index) in active_chat.members"
               :key="index"
+              @click="$emit('view_member_profile', item.username)"
             >
               <div>
                 <div
