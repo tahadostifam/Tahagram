@@ -2,7 +2,7 @@
 
 ### Bio
 
-A Chat-Application using Nodejs & Nuxtjs
+A Chat-Application built in Nodejs & Nuxtjs  
 I almsot after 2 months i will send it to [Kharazmi competitions](https://khwarizmi.ir/). 💪🏿💀
 
 ### Demo
