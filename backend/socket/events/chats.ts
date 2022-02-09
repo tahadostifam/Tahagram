@@ -101,7 +101,6 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
 
                 function setTargetWs() {
                     target_ws = users.find(({ username: _username_ }) => _username_ === target_username);
-                    console.log("target_ws?.username", target_ws?.username);
                 }
 
                 if (chat) {

@@ -3,10 +3,16 @@
 ### Bio
 
 A Chat-Application using Nodejs & Nuxtjs
-I almsot after 2 months i will send it to [Kharazmi competitions](https://khwarizmi.ir/). 😋
+I almsot after 2 months i will send it to [Kharazmi competitions](https://khwarizmi.ir/). 💪🏿💀
 
-### Possibilities
+### Demo
 
-### Shortage
+### ToDoS For Feature
 
--   User cannot select multiple messages in a chat
+-   Selecting multiple messages in chat
+-   Broadcasting the state when user last_seen changed
+-   Saved Messages
+-   Reply & Forwarding Messages
+-   Voice Chat
+-   Video Chat
+-   Poll

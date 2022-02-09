@@ -948,6 +948,8 @@ export default {
     select_message_sender_fullname(message_id) {
       if (this.$data.active_chat.chat_type == "private") {
         return null;
+      } else if (this.$data.active_chat.chat_type == "channel") {
+        return null;
       } else {
         const chats_messages = this.$store.state.auth.user_info.chats_messages;
         if (
@@ -958,15 +960,19 @@ export default {
           const chat = chats_messages.find(
             ({ _id }) => _id === this.$data.active_chat.chat_id
           );
-          const message = chat.messages_list.find(
-            ({ message_id: _message_id }) => _message_id === message_id
-          );
-          if (message) {
-            return message.sender_username;
-          } else {
-            console.log(
-              "cannot find message in select_message_sender_fullname function -> chat.vue"
+          if (chat) {
+            const message = chat.messages_list.find(
+              ({ message_id: _message_id }) => _message_id === message_id
             );
+            if (message) {
+              return message.sender_username;
+            } else {
+              console.log(
+                "cannot find message in select_message_sender_fullname function -> chat.vue"
+              );
+            }
+          } else {
+            console.log("chat not found on select_message_sender_fullname");
           }
         }
       }
