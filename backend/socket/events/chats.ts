@@ -5,6 +5,7 @@ import { IChat, ISocketClient, ITextMessage, IUser, IWebSocket } from "../../lib
 import { users } from "../socket";
 import { ObjectId } from "mongodb";
 import { findOutTUofChat } from "./users";
+import e from "express";
 
 export async function check_username_existly(ws: IWebSocket, parsedData: any) {
     const username = parsedData.username;
@@ -478,36 +479,34 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                         chat.members.length > 0
                     ) {
                         let members_list: any = [];
-                        await chat.members.forEach(async (member_username) => {
-                            const user: IUser = await User.findOne({
-                                username: member_username,
-                            });
-                            if (user) {
-                                members_list.push({
-                                    full_name: user.full_name,
-                                    username: user.username,
-                                    profile_photos: user.profile_photos.reverse(),
-                                    bio: user.bio,
+                        await chat.members.forEach(async (member_username, index) => {
+                            if (chat.members?.length) {
+                                const user: IUser = await User.findOne({
+                                    username: member_username,
                                 });
-                                console.log("User", {
-                                    // NOTE
-                                    full_name: user.full_name,
-                                    username: user.username,
-                                    profile_photos: user.profile_photos.reverse(),
-                                    bio: user.bio,
-                                });
+                                if (user) {
+                                    members_list.push({
+                                        full_name: user.full_name,
+                                        username: user.username,
+                                        profile_photos: user.profile_photos.reverse(),
+                                        bio: user.bio,
+                                    });
+                                }
+                                if (index == chat.members.length - 1) {
+                                    resolve(members_list);
+                                }
                             }
                         });
-
-                        resolve(members_list);
+                    } else {
+                        resolve(null);
                     }
                 });
             }
 
-            collect_members().then((data) => {
-                console.log("data", data);
-
-                user_info_to_send.user_info.members = data;
+            await collect_members().then((data) => {
+                if (data) {
+                    user_info_to_send.user_info.members = data;
+                }
             });
 
             ws.send(JSON.stringify(user_info_to_send));

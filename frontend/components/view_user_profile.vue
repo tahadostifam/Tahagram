@@ -67,22 +67,30 @@
         </div>
       </div>
 
-      <div class="pb-1">
+      <div class="pb-1" v-if="active_chat.members">
         <div class="members_list">
           <div class="members_list_title">
             <div>
               <v-icon>mdi-account-multiple-outline</v-icon>
             </div>
-            <div>10 Members</div>
+            <div>{{ active_chat.members.length }} Members</div>
           </div>
-          <div class="member_item" v-ripple>
+          <div
+            class="member_item"
+            v-ripple
+            v-for="(item, index) in active_chat.members"
+            :key="index"
+          >
             <div>
-              <div class="avatar">
-                <img :src="'https://picsum.photos/500/500'" />
+              <div
+                class="avatar"
+                v-if="item.profile_photos && item.profile_photos[0]"
+              >
+                <img :src="'item.profile_photos[0]'" />
               </div>
             </div>
             <div>
-              <span>Username</span>
+              <span>{{ item.full_name }}</span>
               <span>last seen recently</span>
             </div>
           </div>

@@ -143,6 +143,7 @@ function get_chat_full_info(vm, parsedData) {
     parsedData.user_info.profile_photos
   );
   vm.$set(vm.$data.active_chat, "bio", parsedData.user_info.bio);
+  vm.$set(vm.$data.active_chat, "members", parsedData.user_info.members);
 }
 
 function chat_created(vm, parsedData) {
@@ -287,17 +288,6 @@ function we_have_new_message(vm, parsedData) {
           vm.$set(vm.$data.active_chat, "messages", [parsedData.message]);
         }
       }
-    } else {
-      // NOTE
-      // let chat_id;
-      // if (parsedData.new_chat._id) chat_type == parsedData.new_chat._id;
-      // else parsedData.new_chat.chat_id;
-      // vm.$store.commit("auth/createNewChat", {
-      //   _id: chat_id,
-      //   chat_type: parsedData.chat_type,
-      //   messages_list: [parsedData.message],
-      //   target_username: parsedData.target_username,
-      // });
     }
   }
 }
