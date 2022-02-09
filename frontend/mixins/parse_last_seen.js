@@ -18,13 +18,13 @@ export default {
             let time_string =
               hours + ":" + minutes + " " + String(ampm).toUpperCase();
 
-            return this.$t("last_seen_at", [time_string]);
+            return this.$t("last_seen_at", [time_string.trim()]);
           }
         } catch {
           return this.$t("last_seen_recently");
         }
       } else {
-        return last_seen;
+        return this.$t("online");
       }
     },
   },

@@ -227,7 +227,7 @@
                     }}</span>
                     <span
                       :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
-                      class="d-block text-sm-caption font-weight-bold ml-3 text--secondary"
+                      class="d-block text-sm-caption font-weight-bold ml-3 text--secondary text-left"
                     >
                       <template v-if="active_chat.last_seen">
                         {{ get_last_seen(active_chat.last_seen) }}
@@ -705,7 +705,9 @@ export default {
       this.$set(this.$data.view_user_profile, "show", true);
     },
     submit_send_text_messages() {
-      if (this.$data.send_text_message_input.trim() != "") {
+      const input = this.$data.send_text_message_input.trim();
+      this.$set(this.$data, "send_text_message_input", "");
+      if (input != "") {
         const ws = window.ws;
         if (ws) {
           if (this.$data.active_chat.chat_id) {
@@ -714,8 +716,7 @@ export default {
                 ws.send(
                   JSON.stringify({
                     event: "send_text_message",
-                    send_text_message_input:
-                      this.$data.send_text_message_input.trim(),
+                    send_text_message_input: input,
                     chat_id: this.$data.active_chat.chat_id,
                     target_username: this.$data.active_chat.username,
                     chat_type: "private",
@@ -727,8 +728,7 @@ export default {
                 ws.send(
                   JSON.stringify({
                     event: "send_text_message",
-                    send_text_message_input:
-                      this.$data.send_text_message_input.trim(),
+                    send_text_message_input: input,
                     chat_id: this.$data.active_chat.chat_id,
                     chat_type: this.$data.active_chat.chat_type,
                   })
@@ -736,7 +736,6 @@ export default {
                 break;
             }
           }
-          this.$set(this.$data, "send_text_message_input", "");
         } else {
           this.initilizing_socket_again().then(() => {
             this.submit_send_text_messages();
