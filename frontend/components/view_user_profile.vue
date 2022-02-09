@@ -109,7 +109,13 @@
               </div>
               <div>
                 <span>{{ item.full_name }}</span>
-                <span>{{ item.last_seen }}</span>
+                <span
+                  v-if="item.last_seen"
+                  class="text-left"
+                  :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+                >
+                  {{ get_last_seen(item.last_seen) }}
+                </span>
               </div>
             </div>
           </div>
@@ -121,9 +127,10 @@
 
 <script>
 import profile_photos_link_addr from "~/mixins/profile_photos_link_addr.js";
+import parse_last_seen from "~/mixins/parse_last_seen.js";
 
 export default {
-  mixins: [profile_photos_link_addr],
+  mixins: [profile_photos_link_addr, parse_last_seen],
   name: "view_user_profile",
   data() {
     return {
