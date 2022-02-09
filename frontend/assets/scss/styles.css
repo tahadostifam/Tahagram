@@ -991,7 +991,8 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 .icon_and_value_grid ._row .v-icon {
-  width: 60px;
+  width: 70px;
+  padding-left: 20px;
   display: inline-block;
   text-align: center;
   color: #707579;
@@ -1001,6 +1002,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   width: auto;
   display: inline-block;
   padding-right: 13px;
+  padding-left: 15px;
 }
 
 .icon_and_value_grid ._row .content .value {
@@ -1024,7 +1026,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 .members_list .members_list_title {
-  padding: 0 17px;
+  padding: 0 33px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1040,7 +1042,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 .members_list .members_list_title div:nth-child(2) {
-  margin-left: 14px;
+  margin-left: 28px;
   font-size: 14px;
 }
 

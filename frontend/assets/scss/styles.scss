@@ -849,7 +849,8 @@ body .v-application .v-navigation-drawer {
     align-items: flex-start;
     padding: 14px 0;
     .v-icon {
-      width: 60px;
+      width: 70px;
+      padding-left: 20px;
       display: inline-block;
       text-align: center;
       color: $color_6;
@@ -858,6 +859,7 @@ body .v-application .v-navigation-drawer {
       width: auto;
       display: inline-block;
       padding-right: 13px;
+      padding-left: 15px;
       .value {
         display: block;
         width: 100%;
@@ -882,7 +884,7 @@ body .v-application .v-navigation-drawer {
 
 .members_list {
   .members_list_title {
-    padding: 0 17px;
+    padding: 0 33px;
     display: flex;
     align-items: center;
     width: 100%;
@@ -890,7 +892,7 @@ body .v-application .v-navigation-drawer {
       color: $color_6 !important;
     }
     div:nth-child(2) {
-      margin-left: 14px;
+      margin-left: 28px;
       font-size: 14px;
     }
     margin-bottom: 15px;
@@ -898,7 +900,6 @@ body .v-application .v-navigation-drawer {
   .member_item {
     display: block;
     width: 100%;
-    // border-radius: 6px;
     display: flex;
     flex-direction: row;
     padding: 8px 20px;

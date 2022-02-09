@@ -71,42 +71,48 @@
         </div>
       </div>
 
-      <div
-        class="pb-1"
+      <template
         v-if="
           active_chat && active_chat.members && active_chat.members.length > 0
         "
       >
-        <div class="members_list">
-          <div class="members_list_title">
-            <div>
-              <v-icon>mdi-account-multiple-outline</v-icon>
-            </div>
-            <div>{{ active_chat.members.length }} Members</div>
-          </div>
-          <div
-            class="member_item"
-            v-ripple
-            v-for="(item, index) in active_chat.members"
-            :key="index"
-          >
-            <div>
-              <div
-                class="avatar"
-                v-if="item.profile_photos && item.profile_photos[0]"
-              >
-                <img
-                  :src="gimme_profile_photo_link_addr(item.profile_photos[0])"
-                />
+        <v-divider></v-divider>
+
+        <div class="pb-1 pt-5">
+          <div class="members_list">
+            <div class="members_list_title">
+              <div>
+                <v-icon>mdi-account-multiple-outline</v-icon>
               </div>
+              <div>{{ active_chat.members.length }} Members</div>
             </div>
-            <div>
-              <span>{{ item.full_name }}</span>
-              <span>last seen recently</span>
+            <div
+              class="member_item"
+              v-ripple
+              v-for="(item, index) in active_chat.members"
+              :key="index"
+            >
+              <div>
+                <div
+                  class="avatar"
+                  v-if="item.profile_photos && item.profile_photos[0]"
+                >
+                  <img
+                    :src="gimme_profile_photo_link_addr(item.profile_photos[0])"
+                  />
+                </div>
+                <div v-else-if="item.username" class="solid_color_avatar">
+                  {{ item.username[0] }}
+                </div>
+              </div>
+              <div>
+                <span>{{ item.full_name }}</span>
+                <span>last seen recently</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </v-dialog>
 </template>
