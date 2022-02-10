@@ -20,6 +20,8 @@ export interface IRequest extends Request {
 
 export default {
     NewPhotoMessageAction: async (req: IRequest, res: Response, next: NextFunction) => {
+        console.log("a");
+
         const chat_id = req.body.chat_id;
         const chat_type = req.body.chat_type;
         const target_username = req.body.target_username;

@@ -650,6 +650,9 @@ export default {
             if (message_type == "text") {
               return message.content.substr(0, 30);
             }
+            if (message_type == "photo") {
+              return "📷";
+            }
           }
         }
       }
