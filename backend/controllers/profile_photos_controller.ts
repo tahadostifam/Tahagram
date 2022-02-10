@@ -14,7 +14,7 @@ export interface IRequest extends Request {
     files: any;
 }
 
-function justImageFile(file: any) {
+export function justImageFile(file: any) {
     if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
         return true;
     }

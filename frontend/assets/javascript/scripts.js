@@ -96,7 +96,9 @@ window.handleSocketMessages = (vm, parsedData) => {
   } else if (parsedData.event == "you_have_new_message") {
     we_have_new_message(vm, parsedData);
   } else if (parsedData.event == "get_last_seen") {
-    vm.$set(vm.$data.active_chat, "last_seen", parsedData.last_seen);
+    if (vm.$data.active_chat.username == parsedData.username) {
+      vm.$set(vm.$data.active_chat, "last_seen", parsedData.last_seen);
+    }
   } else if (parsedData.event == "chat_created_from_a_user") {
     chat_created(vm, parsedData);
   } else if (

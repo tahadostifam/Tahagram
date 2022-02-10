@@ -52,18 +52,21 @@ export interface IChat {
     profile_photos: Array<any>;
 }
 
-export interface ITextMessage {
+interface IMessage {
     message_id: string;
     sender_username?: string;
     message_type: string;
     send_time: number;
-    content: string;
     edited: boolean;
     seen_state?: string;
 }
+export interface ITextMessage extends IMessage {
+    content: string;
+}
 
-export interface IImageMessage {
-    // TODO
+export interface IImageMessage extends IMessage {
+    caption?: string;
+    filename: string;
 }
 
 export interface IMiddleWareRequest extends Request {

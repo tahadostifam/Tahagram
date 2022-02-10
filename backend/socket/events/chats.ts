@@ -71,7 +71,7 @@ export async function send_text_message(ws: IWebSocket, parsedData: any) {
         const message_id = new ObjectId().toString();
 
         async function pushMessage(message: ITextMessage, response: object) {
-            const result = await Chats.findOneAndUpdate(
+            await Chats.findOneAndUpdate(
                 { _id: chat_id },
                 {
                     $push: {

@@ -740,7 +740,6 @@ export default {
       this.$set(this.$data.crop_media_to_send, "show", true);
     },
     upload_croped_media_to_send() {
-      // ANCHOR
       this.$set(this.$data.crop_media_to_send, "button_loading_state", true);
       this.$set(this.$data.crop_media_to_send, "show", false);
 
