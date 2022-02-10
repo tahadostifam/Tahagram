@@ -366,6 +366,7 @@ export async function get_chat_messages(ws: IWebSocket, parsedData: any) {
 export async function delete_message(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
     const _message_id = parsedData.message_id;
+
     if (chat_id && chat_id.length > 0 && _message_id && _message_id.length > 0) {
         const chat: IChat = await Chats.findById(chat_id);
         if (chat) {
@@ -412,7 +413,8 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                     if (chat.admins && chat.admins.length > 0) {
                         user_is_aadmin = chat.admins.includes(ws.user.username);
                     }
-                    if (chat.creator_username == ws.user.username || user_is_aadmin) {
+                    const is_user_message: boolean = messages.find(({ sender_username }) => sender_username == ws.user.username);
+                    if (chat.creator_username == ws.user.username || user_is_aadmin || is_user_message) {
                         do_delete_message();
                         await Chats.updateOne(
                             { _id: chat_id },
@@ -437,9 +439,14 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                                 ws.user.username
                             );
                         }
+                    } else {
+                        console.log("deleting message -> user not have required permissions");
                     }
                 }
             }
+        }
+        else{
+            console.log("chat not found on deleting message");
         }
     }
 }
