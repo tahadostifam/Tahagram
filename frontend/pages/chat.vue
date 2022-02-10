@@ -261,8 +261,13 @@
                       :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
                       class="d-block text-sm-caption font-weight-bold ml-3 text--secondary text-left"
                     >
-                      <template v-if="active_chat.last_seen">
-                        {{ get_last_seen(active_chat.last_seen) }}
+                      <template v-if="active_chat.chat_type == 'private'">
+                        <template v-if="active_chat.last_seen">
+                          {{ get_last_seen(active_chat.last_seen) }}
+                        </template>
+                      </template>
+                      <template v-else>
+                        {{ active_chat.members_length }} Members
                       </template>
                     </span>
                   </div>
@@ -742,50 +747,39 @@ export default {
       const canvas = this.$data.crop_media_to_send.canvas;
       if (canvas) {
         const croppedImage = canvas.toDataURL("image/png");
-        const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
-        if (imageFile) {
+        const imageFile = window.dataURLtoFile(croppedImage, "photo_message");
+        if (imageFile && this.$data.active_chat.chat_id) {
           const request_body = new FormData();
           request_body.append("photo", imageFile);
+          request_body.append("chat_id", this.$data.active_chat.chat_id);
 
           this.$axios
-            .$post("/api/profile_photos/upload_photo", request_body, {
+            .$post("/api/messages/new_photo_message", request_body, {
               headers: {
                 username: this.$store.state.auth.auth.username,
                 auth_token: this.$store.state.auth.auth.auth_token,
               },
             })
             .then((response) => {
-              if (response.message == "profile photo uploaded") {
-                this.$store.commit(
-                  "auth/addProfilePhotos",
-                  response.profile_photo_filename
-                );
-                this.$set(
-                  this.$data,
-                  "user_default_avatar",
-                  this.gimme_profile_photo_link_addr({
-                    filename: response.profile_photo_filename,
-                  })
-                );
-              }
+              console.log(response);
             })
             .catch((error) => {
+              console.error(error.response);
               this.$router.push({ path: "/500" });
             })
             .finally(() => {
               this.$set(
-                this.$data.crop_profile_photo,
+                this.$data.crop_media_to_send,
                 "button_loading_state",
                 false
               );
-              this.$set(this.$data, "photo_uploading_state", false);
             });
         } else {
-          console.log("no profile photo to upload");
+          console.log("no photo to upload");
         }
       } else
         console.log(
-          "uploading profile photo failed! :: cropped image canvas is empty"
+          "uploading photo_message failed! :: cropped image canvas is empty"
         );
     },
     show_user_profile() {
@@ -964,6 +958,10 @@ export default {
             username: chat.username,
           })
         );
+      }
+
+      if (chat.chat_type != "private") {
+        this.$set(this.$data.active_chat, "members_length", chat.members);
       }
 
       this.$set(this.$data, "search_chat_input", "");
