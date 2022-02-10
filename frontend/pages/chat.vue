@@ -73,10 +73,6 @@
         <cropper
           :src="crop_media_to_send.src"
           @change="crop_media_to_send_onchange"
-          :stencil-size="{
-            width: 280,
-            height: 280,
-          }"
         />
         <v-text-field label="Caption" class="mt-2"></v-text-field>
         <v-card-actions class="pr-0 pt-0">
@@ -752,6 +748,13 @@ export default {
           const request_body = new FormData();
           request_body.append("photo", imageFile);
           request_body.append("chat_id", this.$data.active_chat.chat_id);
+          request_body.append("chat_type", this.$data.active_chat.chat_type);
+          if (this.$data.active_chat.chat_type == "private") {
+            request_body.append(
+              "target_username",
+              this.$data.active_chat.username
+            );
+          }
 
           this.$axios
             .$post("/api/messages/new_photo_message", request_body, {
@@ -760,12 +763,9 @@ export default {
                 auth_token: this.$store.state.auth.auth.auth_token,
               },
             })
-            .then((response) => {
-              console.log(response);
-            })
+            .then((response) => {})
             .catch((error) => {
               console.error(error.response);
-              this.$router.push({ path: "/500" });
             })
             .finally(() => {
               this.$set(

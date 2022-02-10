@@ -11,6 +11,7 @@ router.post(
     "/new_photo_message",
     auth_middleware,
     body("chat_id").notEmpty().withMessage("ChatId can't be empty"),
+    body("chat_type").notEmpty().withMessage("ChatType can't be empty"),
     validate_body,
     (req: any, res: Response, next: NextFunction) => {
         MessagesController.NewPhotoMessageAction(req, res, next);

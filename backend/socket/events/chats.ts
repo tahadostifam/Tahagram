@@ -34,7 +34,7 @@ export async function check_username_existly(ws: IWebSocket, parsedData: any) {
     }
 }
 
-async function pushChatToUserChatsList(username: String, chat_id: string) {
+export async function pushChatToUserChatsList(username: String, chat_id: string) {
     await User.updateOne(
         {
             username: username,
