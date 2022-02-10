@@ -452,7 +452,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
         });
         if (chat) {
             if (chat.chat_type != "private") {
-                const profile_photos = chat.profile_photos.reverse();
+                const profile_photos = [chat.profile_photos.reverse()[0]];
                 var user_info_to_send: any = {
                     event: "get_chat_full_info",
                     user_info: {
@@ -466,7 +466,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                 const target_username = findOutTUofChat(chat, ws.user.username);
                 if (target_username) {
                     const user: IUser = await User.findOne({ username: target_username });
-                    const profile_photos = user.profile_photos.reverse();
+                    const profile_photos = [user.profile_photos.reverse()[0]];
                     var user_info_to_send: any = {
                         event: "get_chat_full_info",
                         user_info: {
@@ -486,7 +486,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                         const creator_info = {
                             full_name: ws.user.full_name,
                             username: ws.user.username,
-                            profile_photos: ws.user.profile_photos,
+                            profile_photos: [ws.user.profile_photos.reverse()[0]],
                             position: "creator",
                             last_seen: ws.user.last_seen,
                         };
@@ -506,7 +506,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                                         members_list.push({
                                             full_name: user.full_name,
                                             username: user.username,
-                                            profile_photos: user.profile_photos.reverse(),
+                                            profile_photos: [user.profile_photos.reverse()[0]],
                                             bio: user.bio,
                                             last_seen: user.last_seen,
                                         });

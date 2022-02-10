@@ -388,7 +388,7 @@
                     :my_message="item.sender_username == user_info.username"
                     :edited="item.edited"
                     :seen_state="item.seen_state"
-                    @click.native="
+                    v-on:click="
                       view_photo_message_as_full_screen(item.filename)
                     "
                   ></ImageMessage>

@@ -10,7 +10,7 @@
         sender
       }}</span>
 
-      <div class="image">
+      <div class="image" @click="$emit('click')">
         <img :src="image_address" />
       </div>
 
