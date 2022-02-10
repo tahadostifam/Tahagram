@@ -6,7 +6,9 @@
     @contextmenu="$emit('contextmenu')"
   >
     <div class="message">
-      <span v-if="!my_message" style class="sender_name">{{ sender }}</span>
+      <span v-if="!my_message && sender" style class="sender_name">{{
+        sender
+      }}</span>
 
       <div class="image">
         <img :src="image_address" />

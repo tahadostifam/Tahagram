@@ -422,6 +422,7 @@ body,
       background-color: $color_1;
       padding: 0 10px;
       margin-top: 10px;
+      padding-top: 5px;
       .sender_name {
         display: block;
         width: 100%;
@@ -463,9 +464,6 @@ body,
     }
     &.my_message {
       justify-content: flex-end;
-      .message_content {
-        padding-top: 5px;
-      }
     }
     &.type_image {
       // TODO

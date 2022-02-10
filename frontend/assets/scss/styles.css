@@ -475,6 +475,7 @@ body .v-btn,
   background-color: #212121;
   padding: 0 10px;
   margin-top: 10px;
+  padding-top: 5px;
 }
 
 .messages_list .message_row .message .sender_name {
@@ -528,10 +529,6 @@ body .v-btn,
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
-}
-
-.messages_list .message_row.my_message .message_content {
-  padding-top: 5px;
 }
 
 .messages_list .message_row.type_image .message {

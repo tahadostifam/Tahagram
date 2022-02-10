@@ -6,7 +6,7 @@
     @contextmenu="$emit('contextmenu')"
   >
     <div class="message">
-      <span v-if="!my_message" class="sender_name">{{ sender }}</span>
+      <span v-if="!my_message && sender" class="sender_name">{{ sender }}</span>
       <p class="message_content" v-html="text_content"></p>
       <div class="message_footer">
         <span v-if="edited" class="edit_state mr-1 font-italic">edited</span>
