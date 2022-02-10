@@ -331,6 +331,7 @@
                       v-ripple
                       v-if="
                         active_chat.chat_type == 'private' ||
+                        active_chat.chat_type == 'group' ||
                         active_chat.iam_admin_of_chat == true
                       "
                     >
@@ -347,7 +348,8 @@
                       @click="delete_message"
                       v-if="
                         active_chat.chat_type == 'private' ||
-                        active_chat.iam_admin_of_chat == true
+                        active_chat.iam_admin_of_chat == true ||
+                        its_my_message()
                       "
                     >
                       <v-list-item-title class="text-red"
@@ -619,6 +621,30 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    its_my_message() {
+      const chats_messages = this.$store.state.auth.user_info.chats_messages;
+      const chat_id = this.$data.active_chat.chat_id;
+      if (
+        chat_id &&
+        chat_id.length > 0 &&
+        this.$data.message_context_menu_message_id
+      ) {
+        const chat = chats_messages.find(({ _id }) => _id == chat_id);
+        if (chat) {
+          const message = chat.messages_list.find(
+            ({ message_id }) =>
+              message_id == this.$data.message_context_menu_message_id
+          );
+          if (message) {
+            if (message.sender_username == this.username) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+        }
+      }
+    },
     view_photo_message_as_full_screen(filename) {
       const photo_addr = this.gimme_photo_message_link_addr(filename);
       this.show_view_image_modal([
