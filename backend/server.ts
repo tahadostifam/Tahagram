@@ -24,6 +24,11 @@ app.use("/uploads/profile_photos/:filename", (req, res) => {
     res.sendFile(`${process.cwd()}/uploads/profile_photos/${req.params.filename}`);
 });
 
+app.use("/uploads/photo_messages/:filename", (req, res) => {
+    res.type("png");
+    res.sendFile(`${process.cwd()}/uploads/photo_messages/${req.params.filename}`);
+});
+
 // Importing Routers
 import UsersRoutes from "./routes/users.routes";
 import ProfilePhotosRoutes from "./routes/profile_photos.routes";

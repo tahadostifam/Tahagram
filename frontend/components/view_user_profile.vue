@@ -128,11 +128,11 @@
 </template>
 
 <script>
-import profile_photos_link_addr from "~/mixins/profile_photos_link_addr.js";
+import link_addrs from "~/mixins/link_addrs.js";
 import parse_last_seen from "~/mixins/parse_last_seen.js";
 
 export default {
-  mixins: [profile_photos_link_addr, parse_last_seen],
+  mixins: [link_addrs, parse_last_seen],
   name: "view_user_profile",
   data() {
     return {

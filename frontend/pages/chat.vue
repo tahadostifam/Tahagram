@@ -376,22 +376,23 @@
                     :my_message="item.sender_username == user_info.username"
                     :seen_state="item.seen_state"
                   ></TextMessage>
-
-                  <!-- <ImageMessage
-                    v-if="item.type == 'image'"
+                  <ImageMessage
+                    v-else-if="item.message_type == 'photo'"
                     :key="index"
-                    message_id="item.message_id"
+                    :message_id="item.message_id"
                     @contextmenu.native="
                       show_contextmenu_of_message($event, item.message_id)
                     "
-                    :sender="item.sender"
-                    :send_time="item.send_time"
-                    :text_content="item.text_content"
-                    :image_address="item.image_address"
+                    :sender="select_message_sender_fullname(item.message_id)"
+                    :send_time="parse_message_date(item.send_time)"
+                    :text_content="item.caption"
+                    :image_address="
+                      gimme_photo_message_link_addr(item.filename)
+                    "
+                    :my_message="item.sender_username == user_info.username"
                     :edited="item.edited"
-                    :my_message="item.my_message"
                     :seen_state="item.seen_state"
-                  ></ImageMessage> -->
+                  ></ImageMessage>
                 </template>
               </div>
               <div id="no_chat_selected" v-else>
@@ -538,11 +539,11 @@ import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import configs from "@/assets/javascript/configs";
 import ViewUserProfile from "../components/view_user_profile.vue";
-import profile_photos_link_addr from "~/mixins/profile_photos_link_addr.js";
+import link_addrs from "~/mixins/link_addrs.js";
 import parse_last_seen from "~/mixins/parse_last_seen.js";
 
 export default {
-  mixins: [profile_photos_link_addr, parse_last_seen],
+  mixins: [link_addrs, parse_last_seen],
   data() {
     return {
       theme_color: configs.theme_color,

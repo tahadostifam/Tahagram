@@ -12,5 +12,12 @@ export default {
         );
       }
     },
+    gimme_photo_message_link_addr(filename) {
+      if (filename) {
+        return (
+          this.$axios.defaults.baseURL + "/uploads/photo_messages/" + filename
+        );
+      }
+    },
   },
 };
