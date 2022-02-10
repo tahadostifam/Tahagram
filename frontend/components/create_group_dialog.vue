@@ -3,8 +3,8 @@
     <v-dialog max-width="450" v-model="show_dialog" scrollable>
       <div>
         <div class="d-flex justify-space-between align-center">
-          <h3 class="text-h6">{{ $t("new_group") }}</h3>
-          <div class="mr-2">
+          <h3 class="text-h6 ml-4">{{ $t("new_group") }}</h3>
+          <div class="mr-2 mt-2">
             <v-btn
               large
               icon
