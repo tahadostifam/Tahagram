@@ -388,6 +388,9 @@
                     :my_message="item.sender_username == user_info.username"
                     :edited="item.edited"
                     :seen_state="item.seen_state"
+                    @click.native="
+                      view_photo_message_as_full_screen(item.filename)
+                    "
                   ></ImageMessage>
                 </template>
               </div>
@@ -616,6 +619,14 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    view_photo_message_as_full_screen(filename) {
+      const photo_addr = this.gimme_photo_message_link_addr(filename);
+      this.show_view_image_modal([
+        {
+          src: photo_addr,
+        },
+      ]);
+    },
     view_member_profile(username) {
       if (username == this.username) {
         this.$set(this.$data, "show_settings_dialog", true);
