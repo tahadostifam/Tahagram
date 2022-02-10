@@ -46,7 +46,7 @@ export interface IChat {
     members?: Array<string>;
     admins?: Array<any>;
     chat_type: string;
-    messages_list: [ITextMessage | IImageMessage];
+    messages_list: [ITextMessage | IPhotoMessage];
     iam_admin_of_chat?: boolean;
     iam_amember_of_chat?: boolean;
     profile_photos: Array<any>;
@@ -64,7 +64,7 @@ export interface ITextMessage extends IMessage {
     content: string;
 }
 
-export interface IImageMessage extends IMessage {
+export interface IPhotoMessage extends IMessage {
     caption?: string;
     filename: string;
 }

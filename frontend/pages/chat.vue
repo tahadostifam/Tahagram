@@ -769,14 +769,12 @@ export default {
             .then((response) => {})
             .catch((error) => {
               console.error(error.response);
-            })
-            .finally(() => {
-              this.$set(
-                this.$data.crop_media_to_send,
-                "button_loading_state",
-                false
-              );
             });
+          this.$set(
+            this.$data.crop_media_to_send,
+            "button_loading_state",
+            false
+          );
         } else {
           console.log("no photo to upload");
         }
