@@ -113,6 +113,10 @@ export default {
           this.$data.view_image.list[to_index].src
         );
       }
+
+      if (active_index <= length) {
+        this.$set(this.$data.view_image.controls, "right", true);
+      }
     },
     show_view_image_modal(list) {
       if (list && list.length > 0) {
