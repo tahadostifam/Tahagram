@@ -108,6 +108,15 @@ export default {
         checkUsernameUniqueness(req.body.group_username).then(
             async () => {
                 // username is unique | ok
+                const creator_info: any = {
+                    full_name: user.full_name,
+                    username: user.username,
+                    position: "creator",
+                    last_seen: user.last_seen,
+                };
+                if (user.profile_photos && user.profile_photos.length > 0) {
+                    creator_info.profile_photos = [user.profile_photos[user.profile_photos.length - 1]];
+                }
                 const group = new Chats({
                     chat_type: "group",
                     username: req.body.group_username,
@@ -131,7 +140,14 @@ export default {
                     }
                 );
 
-                status_codes.group_created({}, req, res, next);
+                status_codes.group_created(
+                    {
+                        members: [creator_info],
+                    },
+                    req,
+                    res,
+                    next
+                );
             },
             () => {
                 status_codes.username_is_not_unique(req, res, next);

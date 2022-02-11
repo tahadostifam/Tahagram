@@ -130,7 +130,7 @@ export default {
             }
           })
           .catch((error) => {
-            if (error.response.data) {
+            if (error && error.response && error.response.data) {
               if (
                 error.response.data.message ==
                 "username or password is incorrect"

@@ -115,6 +115,14 @@ window.handleSocketMessages = (vm, parsedData) => {
       vm.$set(vm.$data.active_chat, "messages", parsedData.messages_list);
     }
     vm.$set(vm.$data, "chat_is_loading", false);
+  } else if (parsedData.message == "new_member_joined") {
+    vm.$store.commit("auth/addNewMessage", {
+      message: {
+        message_type: "join",
+        username: parsedData.username,
+      },
+      chat_id: parsedData.chat_id,
+    });
   } else if (parsedData.event == "you_joined_into_a_chat") {
     const active_chat_chat_id = vm.$data.active_chat.chat_id;
     if (active_chat_chat_id == parsedData.chat_id) {

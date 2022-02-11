@@ -263,8 +263,16 @@
                         </template>
                       </template>
                       <template v-else>
-                        {{ active_chat.members_length }} Members
+                        {{ $t(active_chat.chat_type) }}
                       </template>
+                      <!-- <template v-else> FIXME
+                        {{
+                          active_chat.members_length
+                            ? active_chat.members_length
+                            : "1"
+                        }}
+                        {{ $t("members") }}
+                      </template> -->
                     </span>
                   </div>
                 </div>
@@ -394,10 +402,19 @@
                       view_photo_message_as_full_screen(item.filename)
                     "
                   ></ImageMessage>
+                  <div
+                    class="text-center"
+                    v-else-if="item.message_type == 'join'"
+                    :key="index"
+                  >
+                    <span class="badge_message"
+                      >{{ item.username }} joined in chat</span
+                    >
+                  </div>
                 </template>
               </div>
-              <div id="no_chat_selected" v-else>
-                <span>No messages yet</span>
+              <div v-else class="text-center">
+                <span class="badge_message">{{ $t("no_messages_yet") }}</span>
               </div>
             </div>
 
@@ -526,7 +543,7 @@
             </v-btn>
           </template>
           <div id="no_chat_selected">
-            <span>Select a chat to start messaging</span>
+            <span class="badge_message">{{ $t("no_chat_selected") }}</span>
           </div>
         </div>
       </div>
@@ -746,6 +763,14 @@ export default {
         profile_photo: chat.profile_photo,
         iam_admin_of_chat: true,
       });
+
+      if (chat.members) {
+        this.$set(
+          this.$data.active_chat,
+          "members_length",
+          chat.members.length
+        );
+      }
 
       this.$set(this.$data.active_chat, "messages", null);
 

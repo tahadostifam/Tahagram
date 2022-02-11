@@ -33,9 +33,11 @@ html {
 }
 
 body,
-body .v-card .text-h6,
+body .text-h6,
+body .v-dialog .text-h6,
 .v-application,
-.v-application .v-card .text-h6 {
+.v-application .text-h6,
+.v-application .v-dialog .text-h6 {
   font-family: "Roboto", "Vazir" !important;
 }
 
@@ -922,11 +924,11 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   text-align: center;
 }
 
-#no_chat_selected span {
+.badge_message {
   background-color: #2f2f2f;
-  padding: 1px 9px;
+  padding: 4px 9px;
   border-radius: 50px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .chat_row_badge {

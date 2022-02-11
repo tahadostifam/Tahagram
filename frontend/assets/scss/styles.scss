@@ -46,7 +46,8 @@ html {
 body,
 .v-application {
   &,
-  .v-card .text-h6 {
+  .text-h6,
+  .v-dialog .text-h6 {
     font-family: "Roboto", "Vazir" !important;
   }
   .v-input {
@@ -792,12 +793,13 @@ body .v-application .v-navigation-drawer {
   align-items: center;
   justify-content: center;
   text-align: center;
-  span {
-    background-color: $color_5;
-    padding: 1px 9px;
-    border-radius: 50px;
-    font-size: 14px;
-  }
+}
+
+.badge_message {
+  background-color: $color_5;
+  padding: 4px 9px;
+  border-radius: 50px;
+  font-size: 13px;
 }
 
 .chat_row_badge {

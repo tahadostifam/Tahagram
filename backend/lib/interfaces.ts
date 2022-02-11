@@ -69,6 +69,11 @@ export interface IPhotoMessage extends IMessage {
     filename: string;
 }
 
+export interface IJoinMessage {
+    username: string;
+    message_type: string;
+}
+
 export interface IMiddleWareRequest extends Request {
     username: string;
     user_info: IUser;

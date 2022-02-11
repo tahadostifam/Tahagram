@@ -1,11 +1,10 @@
 import User from "../../models/user";
 import Chats from "../../models/chats";
 import { createPrivateRoom, rooms } from "../room_manager";
-import { IChat, IPhotoMessage, ISocketClient, ITextMessage, IUser, IWebSocket } from "../../lib/interfaces";
+import { IChat, IJoinMessage, IPhotoMessage, ISocketClient, ITextMessage, IUser, IWebSocket } from "../../lib/interfaces";
 import { users } from "../socket";
 import { ObjectId } from "mongodb";
 import { findOutTUofChat } from "./users";
-import e from "express";
 
 export async function check_username_existly(ws: IWebSocket, parsedData: any) {
     const username = parsedData.username;
@@ -322,6 +321,18 @@ export async function join_to_chat(ws: IWebSocket, parsedData: any) {
         if (chat.chat_type != "private" && chat.members) {
             const st = chat.members.includes(ws.user.username);
             if (!st && chat.creator_username != ws.user.username) {
+                const message: IJoinMessage = {
+                    message_type: "join",
+                    username: ws.user.username,
+                };
+                await Chats.findOneAndUpdate(
+                    { _id: chat_id },
+                    {
+                        $push: {
+                            messages_list: message,
+                        },
+                    }
+                );
                 const user_have_chat = ws.user.chats.find(({ chat_id: _chat_id_ }) => _chat_id_ === chat_id);
                 if (!user_have_chat) {
                     pushChatToUserChatsList(ws.user.username, chat_id);
@@ -344,11 +355,14 @@ export async function join_to_chat(ws: IWebSocket, parsedData: any) {
                 const data_to_send: any = {
                     message: "new_member_joined",
                     username: ws.user.username,
+                    chat_id: chat._id,
                 };
+
                 broadCastToAllMembers(chat.members, data_to_send, ws.user.username);
                 const chat_creator_ws = users.find(({ username: _username_ }) => _username_ == chat.creator_username);
+
                 if (chat_creator_ws) {
-                    ws.send(JSON.stringify(data_to_send));
+                    chat_creator_ws.ws.send(JSON.stringify(data_to_send));
                 }
             } else {
                 console.log("the user is currently a member of this channel");

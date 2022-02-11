@@ -139,6 +139,7 @@ export default {
                 name: name,
                 username: username,
                 chat_type: "group",
+                members: response.members,
               };
 
               this.$emit("chat_created", data_to_callback);

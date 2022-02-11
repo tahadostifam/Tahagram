@@ -3,15 +3,15 @@
     <div class="pt-2">
       <div class="d-flex justify-space-between align-center pl-4">
         <h3 class="text-h6">
-          <template v-if="active_chat.chat_type == 'private'"
-            >User Info</template
-          >
-          <template v-if="active_chat.chat_type == 'channel'"
-            >Channel Info</template
-          >
-          <template v-if="active_chat.chat_type == 'group'"
-            >Group Info</template
-          >
+          <template v-if="active_chat.chat_type == 'private'">{{
+            $t("user_info")
+          }}</template>
+          <template v-if="active_chat.chat_type == 'channel'">{{
+            $t("channel_info")
+          }}</template>
+          <template v-if="active_chat.chat_type == 'group'">{{
+            $t("group_info")
+          }}</template>
         </h3>
         <div class="mr-2">
           <v-btn large icon style="padding-top: 3px" @click="close">
@@ -47,7 +47,7 @@
           <span class="text-grey d-block w-100">
             <template
               v-if="active_chat.chat_type != 'private' && active_chat.members"
-              >{{ active_chat.members.length }} Members</template
+              >{{ active_chat.members.length }} {{ $t("members") }}</template
             >
             <template v-else>{{
               get_last_seen(active_chat.last_seen)
@@ -68,7 +68,7 @@
             </div>
             <div>
               <span class="value">{{ active_chat.username }}</span>
-              <span class="_title">Username</span>
+              <span class="_title">{{ $t("username") }}</span>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@
               <div>
                 <v-icon>mdi-account-multiple-outline</v-icon>
               </div>
-              <div>{{ active_chat.members.length }} Members</div>
+              <div>{{ active_chat.members.length }} {{ $t("members") }}</div>
             </div>
             <div
               class="member_item"
