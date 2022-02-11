@@ -25,19 +25,22 @@ export const mutations = {
     const chat_index = state.user_info.chats_messages.findIndex(
       ({ _id }) => _id == chat_id
     );
-    if (chat_index) {
+    if (chat_index != null) {
       const message_index = state.user_info.chats_messages[
         chat_index
       ].messages_list.findIndex(
         ({ message_id: _message_id_ }) => _message_id_ == message_id
       );
-      console.log(
-        state.user_info.chats_messages[chat_index].messages_list[message_index]
-      );
-      state.user_info.chats_messages[chat_index].messages_list.splice(
-        message_index,
-        1
-      );
+      if (message_index != null && message_index > -1) {
+        state.user_info.chats_messages[chat_index].messages_list.splice(
+          message_index,
+          1
+        );
+      } else {
+        console.log("message_index not found on removeMessage");
+      }
+    } else {
+      console.log("chat_index not found on removeMessage");
     }
   },
   createNewChat(state, chat) {

@@ -49,7 +49,7 @@ export async function pushChatToUserChatsList(username: String, chat_id: string)
     );
 }
 
-export async function broadCastToAllMembers(chat_id: string, members: Array<any>, data_to_send: object, username: string) {
+export async function broadCastToAllMembers(members: Array<any>, data_to_send: object, username: string) {
     await members.forEach(async (member_username, member_index) => {
         if (member_username != username) {
             const member_ws = await users.find(({ username }) => username === member_username);
@@ -263,7 +263,7 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
                     chat_id: chat_id,
                 };
 
-                broadCastToAllMembers(chat_id, channel.members, data_to_send, ws.user.username);
+                broadCastToAllMembers(channel.members, data_to_send, ws.user.username);
             } else {
                 console.log(`${chat_id} channel not found`);
             }
@@ -292,7 +292,7 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
                 };
 
                 if (group.members && group.members.length > 0) {
-                    broadCastToAllMembers(chat_id, group.members, data_to_send, ws.user.username);
+                    broadCastToAllMembers(group.members, data_to_send, ws.user.username);
                 }
                 if (ws.user.username != group.creator_username) {
                     // broadcast message to creator -> because name of creator is not in the members list
@@ -340,6 +340,16 @@ export async function join_to_chat(ws: IWebSocket, parsedData: any) {
                         chat_id: chat_id,
                     })
                 );
+
+                const data_to_send: any = {
+                    message: "new_member_joined",
+                    username: ws.user.username,
+                };
+                broadCastToAllMembers(chat.members, data_to_send, ws.user.username);
+                const chat_creator_ws = users.find(({ username: _username_ }) => _username_ == chat.creator_username);
+                if (chat_creator_ws) {
+                    ws.send(JSON.stringify(data_to_send));
+                }
             } else {
                 console.log("the user is currently a member of this channel");
             }
@@ -428,16 +438,17 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                         );
 
                         if (chat.members && chat.members.length > 0) {
-                            broadCastToAllMembers(
-                                chat_id,
-                                chat.members,
-                                {
-                                    message: "message deleted",
-                                    chat_id: chat_id,
-                                    message_id: _message_id,
-                                },
-                                ws.user.username
-                            );
+                            const data_to_send: any = {
+                                message: "message deleted",
+                                chat_id: chat_id,
+                                message_id: _message_id,
+                            };
+                            broadCastToAllMembers(chat.members, data_to_send, ws.user.username);
+                            const creator_ws = users.find(({ username: _username_ }) => _username_ == chat.creator_username);
+
+                            if (creator_ws) {
+                                creator_ws.ws.send(JSON.stringify(data_to_send));
+                            }
                         }
                     } else {
                         console.log("deleting message -> user not have required permissions");
