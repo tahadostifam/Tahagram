@@ -444,8 +444,7 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                     }
                 }
             }
-        }
-        else{
+        } else {
             console.log("chat not found on deleting message");
         }
     }
@@ -490,13 +489,16 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
             if (user_info_to_send) {
                 function collect_members() {
                     return new Promise(async (resolve) => {
-                        const creator_info = {
+                        const creator_info: any = {
                             full_name: ws.user.full_name,
                             username: ws.user.username,
-                            profile_photos: [ws.user.profile_photos.reverse()[0]],
                             position: "creator",
                             last_seen: ws.user.last_seen,
                         };
+                        if (ws.user.profile_photos && ws.user.profile_photos.length > 0) {
+                            creator_info.profile_photos = [ws.user.profile_photos[ws.user.profile_photos.length - 1]];
+                        }
+
                         if (
                             (chat.chat_type == "group" ||
                                 (chat.chat_type == "channel" && (chat.creator_username == ws.user.username || chat.admins?.includes(ws.user.username)))) &&
@@ -509,6 +511,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                                     const user: IUser = await User.findOne({
                                         username: member_username,
                                     });
+
                                     if (user) {
                                         members_list.push({
                                             full_name: user.full_name,
