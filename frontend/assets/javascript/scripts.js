@@ -176,25 +176,11 @@ function chat_created(vm, parsedData) {
 }
 
 function message_deleted(vm, parsedData) {
-  const chats_messages = vm.$store.state.auth.user_info.chats_messages;
-  if (chats_messages) {
-    const finded_chat_index = chats_messages.findIndex(
-      ({ _id }) => _id === parsedData.chat_id
-    );
-    if (finded_chat_index != null) {
-      const message_index = chats_messages[
-        finded_chat_index
-      ].messages_list.findIndex(
-        ({ message_id }) =>
-          message_id === vm.$data.message_context_menu_message_id
-      );
-      if (message_index != null) {
-        vm.$store.commit("auth/removeMessage", {
-          message_index: message_index,
-          chat_index: finded_chat_index,
-        });
-      }
-    }
+  if (parsedData.chat_id && parsedData.message_id) {
+    vm.$store.commit("auth/removeMessage", {
+      chat_id: parsedData.chat_id,
+      message_id: parsedData.message_id,
+    });
   }
 }
 
@@ -253,7 +239,6 @@ function we_have_new_message(vm, parsedData) {
     );
 
     // Making a Notification to User
-    console.log(chat_exists);
     window.sendNotf(chat_exists.full_name, parsedData.message.content);
 
     if (!chat_exists) {
