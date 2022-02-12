@@ -669,6 +669,12 @@ export default {
               this.$store.state.auth.user_info.profile_photos
             );
             this.preview_self_profile();
+            const def_prof = this.$store.state.auth.user_info.profile_photos[0];
+            this.$set(
+              this.$data,
+              "user_default_avatar",
+              this.gimme_profile_photo_link_addr(def_prof)
+            );
           })
           .catch((error) => {
             console.log(error);

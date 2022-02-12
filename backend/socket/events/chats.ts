@@ -5,6 +5,8 @@ import { IChat, IJoinMessage, IPhotoMessage, ISocketClient, ITextMessage, IUser,
 import { users } from "../socket";
 import { ObjectId } from "mongodb";
 import { findOutTUofChat } from "./users";
+import { photo_messages_directory } from "../../controllers/messages_controller";
+import fs from "fs";
 
 export async function check_username_existly(ws: IWebSocket, parsedData: any) {
     const username = parsedData.username;
@@ -466,6 +468,13 @@ export async function delete_message(ws: IWebSocket, parsedData: any) {
                         }
                     } else {
                         console.log("deleting message -> user not have required permissions");
+                    }
+                }
+                if (message_id_exists && message_id_exists.filename) {
+                    if (await fs.existsSync(process.cwd() + photo_messages_directory + message_id_exists.filename)) {
+                        await fs.unlinkSync(process.cwd() + photo_messages_directory + message_id_exists.filename);
+                    } else {
+                        console.log("photo deos not exists in /photo_messages_directory/");
                     }
                 }
             }

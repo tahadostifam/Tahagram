@@ -109,8 +109,13 @@ export default {
                         },
                     }
                 );
+
                 status_codes.profile_photo_removed(req, res, next);
-                await fs.unlinkSync(profile_photos_directory + filename);
+                if (await fs.existsSync(process.cwd() + profile_photos_directory + filename)) {
+                    await fs.unlinkSync(process.cwd() + profile_photos_directory + filename);
+                } else {
+                    console.log("profile_photo deos not exists in /profile_photos_directory/");
+                }
             } else {
                 status_codes.cannot_remove_profile_photo(req, res, next);
             }

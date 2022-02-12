@@ -77,14 +77,12 @@ export const mutations = {
     });
   },
   removeProfilePhoto(state, filename) {
-    console.log("before", state.user_info.profile_photos);
     const pi = state.user_info.profile_photos.findIndex(
       ({ filename: _filename_ }) => _filename_ == filename
     );
     if (pi != null) {
       state.user_info.profile_photos.splice(pi, 1);
     }
-    console.log("after", state.user_info.profile_photos);
   },
   setFullName(state, full_name) {
     state.user_info.full_name = full_name;
