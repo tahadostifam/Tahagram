@@ -408,7 +408,10 @@
                     :key="index"
                   >
                     <span class="badge_message"
-                      >{{ item.username }} joined in chat</span
+                      ><a @click="search_chat_input = item.username">{{
+                        item.username
+                      }}</a>
+                      joined in chat</span
                     >
                   </div>
                 </template>
