@@ -31,7 +31,7 @@
     <div
       class="remove_btn"
       @click="$emit('remove_button', gimme_image_filename())"
-      v-if="false"
+      v-if="show_remove_button == true"
     >
       <v-icon>mdi-delete</v-icon>
     </div>

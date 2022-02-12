@@ -5,7 +5,7 @@
       :show="view_image.show"
       v-on:close_button="view_image.show = false"
       v-on:remove_button="remove_profile_photo"
-      show_remove_button="view_image.show_remove_button"
+      :show_remove_button="view_image.show_remove_button"
     ></ViewImage>
 
     <NavDrawer
