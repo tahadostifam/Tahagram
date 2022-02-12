@@ -11,4 +11,14 @@ router.post("/upload_photo", auth_middleware, (req: any, res: Response, next: Ne
     ProfilePhotosController.UploadPhotoAction(req, res, next);
 });
 
+router.post(
+    "/remove_profile_photo",
+    auth_middleware,
+    body("filename").notEmpty().withMessage("Filename can't be empty"),
+    validate_body,
+    (req: any, res: Response, next: NextFunction) => {
+        ProfilePhotosController.RemoveProfilePhotoAction(req, res, next);
+    }
+);
+
 export default router;

@@ -82,4 +82,16 @@ export default {
             message: "file type is not valid",
         });
     },
+    cannot_remove_profile_photo(req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 503;
+        res.send({
+            message: "this profile_photo isn't yours",
+        });
+    },
+    profile_photo_removed(req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 200;
+        res.send({
+            message: "profile_photo removed",
+        });
+    },
 };

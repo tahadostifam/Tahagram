@@ -700,7 +700,7 @@ body .v-application .v-navigation-drawer {
   bottom: 0;
   z-index: 220;
 
-  background-color: rgba(21, 21, 21, 0.9);
+  background-color: rgba(11, 11, 11, 0.9);
 
   .image_content {
     position: relative;
@@ -763,7 +763,8 @@ body .v-application .v-navigation-drawer {
     top: 0;
   }
   .remove_btn {
-    left: 60px;
+    // left: 60px;
+    left: 0;
     top: 0;
   }
 

@@ -793,7 +793,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   right: 0;
   bottom: 0;
   z-index: 220;
-  background-color: rgba(21, 21, 21, 0.9);
+  background-color: rgba(11, 11, 11, 0.9);
 }
 
 #view_image .image_content {
@@ -882,7 +882,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 #view_image .remove_btn {
-  left: 60px;
+  left: 0;
   top: 0;
 }
 

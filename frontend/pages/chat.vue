@@ -4,6 +4,8 @@
       :images_list="view_image.list"
       :show="view_image.show"
       v-on:close_button="view_image.show = false"
+      v-on:remove_button="remove_profile_photo"
+      show_remove_button="view_image.show_remove_button"
     ></ViewImage>
 
     <NavDrawer
@@ -119,6 +121,7 @@
       v-on:preview_self_profile="preview_user_profile"
       v-on:update:show="(new_value) => (view_user_profile.show = new_value)"
       v-on:view_member_profile="view_member_profile"
+      v-on:remove_button="remove_profile_photo"
     ></ViewUserProfile>
 
     <div class="pa-0" id="main_container">
@@ -641,6 +644,29 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    remove_profile_photo(filename) {
+      console.log(filename);
+      return;
+      this.$axios
+        .$post(
+          "/api/profile_photos/remove_profile_photo",
+          {
+            filename: "",
+          },
+          {
+            headers: {
+              "Content-Type": "application/json; charset=UTF-8",
+              username: this.$data.username,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     its_my_message() {
       const chats_messages = this.$store.state.auth.user_info.chats_messages;
       const chat_id = this.$data.active_chat.chat_id;
@@ -667,11 +693,14 @@ export default {
     },
     view_photo_message_as_full_screen(filename) {
       const photo_addr = this.gimme_photo_message_link_addr(filename);
-      this.show_view_image_modal([
-        {
-          src: photo_addr,
-        },
-      ]);
+      this.show_view_image_modal(
+        [
+          {
+            src: photo_addr,
+          },
+        ],
+        false
+      );
     },
     view_member_profile(username) {
       if (username == this.username) {
@@ -1211,18 +1240,21 @@ export default {
           }
         });
         if (list.length > 0) {
-          this.show_view_image_modal(list);
+          this.show_view_image_modal(list, false);
         }
       } else if (this.$data.active_chat.profile_photo) {
         const photo_addr = this.gimme_profile_photo_link_addr(
           this.$data.active_chat.profile_photo
         );
         if (photo_addr) {
-          this.show_view_image_modal([
-            {
-              src: photo_addr,
-            },
-          ]);
+          this.show_view_image_modal(
+            [
+              {
+                src: photo_addr,
+              },
+            ],
+            false
+          );
         }
       }
     },
@@ -1233,18 +1265,24 @@ export default {
         if (photo_addr) {
           list.push({
             src: photo_addr,
+            filename: item.filename,
           });
         }
         if (list.length > 0) {
-          this.show_view_image_modal(list);
+          this.show_view_image_modal(list, true);
         }
       });
 
-      this.show_view_image_modal(list);
+      this.show_view_image_modal(list, true);
     },
-    show_view_image_modal(list) {
+    show_view_image_modal(list, show_remove_button) {
       this.$set(this.$data.view_image, "list", list);
       this.$set(this.$data.view_image, "show", true);
+      this.$set(
+        this.$data.view_image,
+        "show_remove_button",
+        show_remove_button
+      );
     },
     initilizing_socket_again() {
       return new Promise((resolve) => {

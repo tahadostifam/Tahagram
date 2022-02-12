@@ -7,6 +7,7 @@ import crypto from "crypto";
 import fs from "fs";
 
 import User from "../models/user";
+import { IUser } from "../lib/interfaces";
 
 export const profile_photos_directory = "/uploads/profile_photos/";
 
@@ -86,6 +87,35 @@ export default {
             );
         } else {
             status_codes.file_not_valid(req, res, next);
+        }
+    },
+    RemoveProfilePhotoAction: async (req: IRequest, res: Response, next: NextFunction) => {
+        const filename = req.body.filename;
+        const user: IUser = await User.findOne({
+            username: req.headers.username,
+        });
+        if (user) {
+            const is_users_profile = user.profile_photos.find(({ filename: _filename_ }) => _filename_ == filename);
+            if (is_users_profile) {
+                await User.updateOne(
+                    {
+                        username: req.headers.username,
+                    },
+                    {
+                        $pull: {
+                            profile_photos: {
+                                filename: filename,
+                            },
+                        },
+                    }
+                );
+                status_codes.profile_photo_removed(req, res, next);
+                await fs.unlinkSync(profile_photos_directory + filename);
+            } else {
+                status_codes.cannot_remove_profile_photo(req, res, next);
+            }
+        } else {
+            return status_codes.invalid_token(req, res, next);
         }
     },
 };

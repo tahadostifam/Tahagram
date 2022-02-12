@@ -20,11 +20,19 @@
       <v-icon>mdi-close</v-icon>
     </div>
 
-    <div class="download_btn" @click="$emit('close_button')">
+    <!-- <a TODO
+      class="download_btn"
+      style="text-decoration: none"
+      :download="view_image.active_item.src"
+    >
       <v-icon>mdi-download</v-icon>
-    </div>
+    </a> -->
 
-    <div class="remove_btn" @click="$emit('close_button')">
+    <div
+      class="remove_btn"
+      @click="$emit('remove_button', gimme_image_filename())"
+      v-if="false"
+    >
       <v-icon>mdi-delete</v-icon>
     </div>
 
@@ -59,7 +67,7 @@ export default {
       },
     };
   },
-  props: ["images_list", "show"],
+  props: ["images_list", "show", "show_remove_button"],
   watch: {
     images_list: {
       immediate: true,
@@ -80,6 +88,10 @@ export default {
     },
   },
   methods: {
+    gimme_image_filename() {
+      return this.$data.view_image.list[this.$data.view_image.active_item.index]
+        .filename;
+    },
     view_image_move_right() {
       const active_index = this.$data.view_image.active_item.index;
       const length = this.$data.view_image.list.length;
