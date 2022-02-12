@@ -20,6 +20,14 @@
       <v-icon>mdi-close</v-icon>
     </div>
 
+    <div class="download_btn" @click="$emit('close_button')">
+      <v-icon>mdi-download</v-icon>
+    </div>
+
+    <div class="remove_btn" @click="$emit('close_button')">
+      <v-icon>mdi-delete</v-icon>
+    </div>
+
     <div class="info_of_image">
       <span
         >Photo {{ view_image.active_item.index + 1 }} of
@@ -71,7 +79,6 @@ export default {
       },
     },
   },
-  mounted() {},
   methods: {
     view_image_move_right() {
       const active_index = this.$data.view_image.active_item.index;
@@ -119,6 +126,9 @@ export default {
       }
     },
     show_view_image_modal(list) {
+      this.$set(this.$data.view_image.active_item, "index", 0);
+      this.$set(this.$data.view_image.active_item, "src", null);
+
       if (list && list.length > 0) {
         const index = this.$data.view_image.active_item;
         this.$set(index, "src", list[0].src);

@@ -852,10 +852,10 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   left: 0;
 }
 
-#view_image .close_btn {
+#view_image .close_btn,
+#view_image .download_btn,
+#view_image .remove_btn {
   position: absolute;
-  right: 0;
-  top: 0;
   --size: 60px;
   width: var(--size);
   height: var(--size);
@@ -871,8 +871,27 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   text-align: center;
 }
 
+#view_image .close_btn {
+  right: 0;
+  top: 0;
+}
+
+#view_image .download_btn {
+  left: 0;
+  top: 0;
+}
+
+#view_image .remove_btn {
+  left: 60px;
+  top: 0;
+}
+
 #view_image .close_btn,
 #view_image .close_btn .v-icon,
+#view_image .download_btn,
+#view_image .download_btn .v-icon,
+#view_image .remove_btn,
+#view_image .remove_btn .v-icon,
 #view_image .left,
 #view_image .left .v-icon,
 #view_image .right,
@@ -883,6 +902,8 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 #view_image .close_btn,
+#view_image .download_btn,
+#view_image .remove_btn,
 #view_image .left,
 #view_image .right {
   cursor: pointer;
@@ -891,12 +912,16 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 #view_image .close_btn:hover,
+#view_image .download_btn:hover,
+#view_image .remove_btn:hover,
 #view_image .left:hover,
 #view_image .right:hover {
   background-color: rgba(7, 7, 7, 0.741);
 }
 
 #view_image .close_btn:hover .v-icon,
+#view_image .download_btn:hover .v-icon,
+#view_image .remove_btn:hover .v-icon,
 #view_image .left:hover .v-icon,
 #view_image .right:hover .v-icon {
   color: #fff;

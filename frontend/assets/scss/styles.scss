@@ -742,10 +742,10 @@ body .v-application .v-navigation-drawer {
     left: 0;
   }
 
-  .close_btn {
+  .close_btn,
+  .download_btn,
+  .remove_btn {
     position: absolute;
-    right: 0;
-    top: 0;
     --size: 60px;
     width: var(--size);
     height: var(--size);
@@ -754,8 +754,22 @@ body .v-application .v-navigation-drawer {
     justify-content: center;
     text-align: center;
   }
+  .close_btn {
+    right: 0;
+    top: 0;
+  }
+  .download_btn {
+    left: 0;
+    top: 0;
+  }
+  .remove_btn {
+    left: 60px;
+    top: 0;
+  }
 
   .close_btn,
+  .download_btn,
+  .remove_btn,
   .left,
   .right,
   .info_of_image {
@@ -766,6 +780,8 @@ body .v-application .v-navigation-drawer {
   }
 
   .close_btn,
+  .download_btn,
+  .remove_btn,
   .left,
   .right {
     cursor: pointer;
