@@ -668,7 +668,6 @@ export default {
               "list",
               this.$store.state.auth.user_info.profile_photos
             );
-            this.preview_self_profile();
             const def_prof = this.$store.state.auth.user_info.profile_photos[0];
             this.$set(
               this.$data,

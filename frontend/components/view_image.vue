@@ -30,7 +30,10 @@
 
     <div
       class="remove_btn"
-      @click="$emit('remove_button', gimme_image_filename())"
+      @click="
+        $emit('remove_button', gimme_image_filename());
+        $emit('close_button');
+      "
       v-if="show_remove_button == true"
     >
       <v-icon>mdi-delete</v-icon>
@@ -74,6 +77,13 @@ export default {
       handler(new_value) {
         if (new_value) {
           this.view_image.list = new_value;
+          if (new_value && new_value.length > 0) {
+            const index = this.$data.view_image.active_item;
+            this.$set(index, "src", new_value[0].src);
+            this.modal_right_left_rules(new_value);
+          } else {
+            this.$emit("close_button");
+          }
         }
       },
     },
@@ -140,7 +150,9 @@ export default {
     show_view_image_modal(list) {
       this.$set(this.$data.view_image.active_item, "index", 0);
       this.$set(this.$data.view_image.active_item, "src", null);
-
+      this.modal_right_left_rules(list);
+    },
+    modal_right_left_rules(list) {
       if (list && list.length > 0) {
         const index = this.$data.view_image.active_item;
         this.$set(index, "src", list[0].src);
