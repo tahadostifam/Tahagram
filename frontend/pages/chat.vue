@@ -800,24 +800,24 @@ export default {
       // problem deatail : users cannot send message after creating a new_channel
       // for fix this we have to update our info in frontend side
 
-      this.set_the_active_chat({
-        chat_id: chat.chat_id,
-        chat_type: chat.chat_type,
-        full_name: chat.name,
-        username: chat.username,
-        profile_photo: chat.profile_photo,
-        iam_admin_of_chat: true,
-      });
+      // this.set_the_active_chat({
+      //   chat_id: chat.chat_id,
+      //   chat_type: chat.chat_type,
+      //   full_name: chat.name,
+      //   username: chat.username,
+      //   profile_photo: chat.profile_photo,
+      //   iam_admin_of_chat: true,
+      // });
 
-      if (chat.members) {
-        this.$set(
-          this.$data.active_chat,
-          "members_length",
-          chat.members.length
-        );
-      }
+      // if (chat.members) {
+      //   this.$set(
+      //     this.$data.active_chat,
+      //     "members_length",
+      //     chat.members.length
+      //   );
+      // } FIXME
 
-      this.$set(this.$data.active_chat, "messages", null);
+      // this.$set(this.$data.active_chat, "messages", null);
 
       this.$store.commit("auth/addChat", {
         chat_id: chat.chat_id,
@@ -833,7 +833,7 @@ export default {
         messages_list: [],
       });
 
-      this.$set(this.$data, "show_chat_view", true);
+      // this.$set(this.$data, "show_chat_view", true);
       if (chat.chat_type == "channel") {
         this.$set(this.$data, "show_create_channel_dialog", false);
       } else if (chat.chat_type == "group") {
