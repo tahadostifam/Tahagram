@@ -71,10 +71,20 @@ export const mutations = {
       state.chats_list.push(chat);
     }
   },
-  addProfilePhotos(state, filename) {
+  addProfilePhoto(state, filename) {
     state.user_info.profile_photos.splice(0, 0, {
       filename: filename,
     });
+  },
+  removeProfilePhoto(state, filename) {
+    console.log("before", state.user_info.profile_photos);
+    const pi = state.user_info.profile_photos.findIndex(
+      ({ filename: _filename_ }) => _filename_ == filename
+    );
+    if (pi != null) {
+      state.user_info.profile_photos.splice(pi, 1);
+    }
+    console.log("after", state.user_info.profile_photos);
   },
   setFullName(state, full_name) {
     state.user_info.full_name = full_name;
@@ -120,7 +130,6 @@ export const actions = {
             .then((response) => {
               if (response.message == "success") {
                 // NOTE - we have new token now :)
-                // ANCHOR
                 Cookies.set("auth_token", response.tokens.auth_token);
                 fetch_user_data(response.tokens.auth_token).then(
                   (new_user) => {
@@ -132,7 +141,6 @@ export const actions = {
                     return reject();
                   }
                 );
-                // ANCHOR
               } else {
                 console.log("2: refreshing auth_token failed");
                 return reject();

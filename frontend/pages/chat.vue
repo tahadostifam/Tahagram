@@ -645,27 +645,35 @@ export default {
   },
   methods: {
     remove_profile_photo(filename) {
-      console.log(filename);
-      return;
-      this.$axios
-        .$post(
-          "/api/profile_photos/remove_profile_photo",
-          {
-            filename: "",
-          },
-          {
-            headers: {
-              "Content-Type": "application/json; charset=UTF-8",
-              username: this.$data.username,
+      if (filename && filename.length > 0) {
+        this.$axios
+          .$post(
+            "/api/profile_photos/remove_profile_photo",
+            {
+              filename: filename,
             },
-          }
-        )
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+            {
+              headers: {
+                auth_token: this.$store.state.auth.auth.auth_token,
+                username: this.username,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.message == "profile_photo removed") {
+              this.$store.commit("auth/removeProfilePhoto", filename);
+            }
+            this.$set(
+              this.$data.view_image,
+              "list",
+              this.$store.state.auth.user_info.profile_photos
+            );
+            this.preview_self_profile();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     its_my_message() {
       const chats_messages = this.$store.state.auth.user_info.chats_messages;
@@ -1362,7 +1370,7 @@ export default {
             .then((response) => {
               if (response.message == "profile photo uploaded") {
                 this.$store.commit(
-                  "auth/addProfilePhotos",
+                  "auth/addProfilePhoto",
                   response.profile_photo_filename
                 );
                 this.$set(
