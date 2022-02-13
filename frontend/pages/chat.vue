@@ -555,7 +555,7 @@
             </v-btn>
           </template>
           <div id="no_chat_selected">
-            <span class="badge_message">{{ $t("no_chat_selected") }}</span>
+            <span class="badge_message rtl">{{ $t("no_chat_selected") }}</span>
           </div>
         </div>
       </div>

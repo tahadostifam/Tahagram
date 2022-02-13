@@ -958,11 +958,14 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
+  margin-top: 10px;
+}
+
+.badge_message:not(.rtl) {
   position: relative;
   left: 50%;
   -webkit-transform: translate(-50%);
           transform: translate(-50%);
-  margin-top: 10px;
 }
 
 .chat_row_badge {

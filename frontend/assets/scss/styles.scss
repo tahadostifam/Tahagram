@@ -819,10 +819,12 @@ body .v-application .v-navigation-drawer {
   font-size: 13px;
   display: block;
   width: max-content;
-  position: relative;
-  left: 50%;
-  transform: translate(-50%);
   margin-top: 10px;
+  &:not(.rtl) {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+  }
 }
 
 .chat_row_badge {
