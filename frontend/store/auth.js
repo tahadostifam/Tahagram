@@ -23,6 +23,13 @@ export const mutations = {
         if (data.profile_photos) {
           state.user_info.chats[chat_index].profile_photos =
             data.profile_photos;
+          state.user_info.chats[chat_index].profile_photo =
+            state.user_info.chats[chat_index].profile_photos[0];
+          vm.$set(
+            vm.$data.active_chat,
+            "profile_photo",
+            data.profile_photos[0]
+          );
         }
       }
     }
