@@ -954,6 +954,15 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   padding: 4px 9px;
   border-radius: 50px;
   font-size: 13px;
+  display: block;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  position: relative;
+  left: 50%;
+  -webkit-transform: translate(-50%);
+          transform: translate(-50%);
+  margin-top: 10px;
 }
 
 .chat_row_badge {

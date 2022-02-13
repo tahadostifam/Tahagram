@@ -903,12 +903,16 @@ export default {
     },
     show_user_profile() {
       if (this.$data.active_chat.username) {
-        window.ws.send(
-          JSON.stringify({
-            event: "get_chat_full_info",
-            chat_id: this.$data.active_chat.chat_id,
-          })
-        );
+        let data_to_send = {
+          event: "get_chat_full_info",
+          chat_id: this.$data.active_chat.chat_id,
+          chat_type: this.$data.active_chat.chat_type,
+        };
+        console.log(data_to_send);
+        if (this.$data.active_chat.chat_type == "private") {
+          data_to_send.target_username = this.$data.active_chat.username;
+        }
+        window.ws.send(JSON.stringify(data_to_send));
       }
 
       this.$set(this.$data.view_user_profile, "show", true);
@@ -1016,6 +1020,7 @@ export default {
               vm.$set(vm.$data.active_chat, "messages", null);
             }
           } else {
+            console.log("cant find user.sides -> show_chat event");
             vm.$set(vm.$data.active_chat, "messages", null);
           }
           chat = {

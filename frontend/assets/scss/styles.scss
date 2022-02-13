@@ -817,6 +817,12 @@ body .v-application .v-navigation-drawer {
   padding: 4px 9px;
   border-radius: 50px;
   font-size: 13px;
+  display: block;
+  width: max-content;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 10px;
 }
 
 .chat_row_badge {
