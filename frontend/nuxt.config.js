@@ -147,6 +147,7 @@ export default {
           user: "User",
           send: "Send",
           caption: "Caption",
+          user_joined_in_chat: "joined in chat",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -215,6 +216,7 @@ export default {
           user: "کاربر",
           send: "ارسال",
           caption: "توضیحات",
+          user_joined_in_chat: "عضو شد",
         },
       },
     },

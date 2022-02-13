@@ -414,11 +414,13 @@
                     v-else-if="item.message_type == 'join'"
                     :key="index"
                   >
-                    <span class="badge_message"
+                    <span
+                      class="badge_message"
+                      :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
                       ><a @click="search_chat_input = item.username">{{
                         item.username
                       }}</a>
-                      joined in chat</span
+                      {{ $t("user_joined_in_chat") }}</span
                     >
                   </div>
                 </template>
@@ -958,6 +960,8 @@ export default {
     },
     join_into_chat() {
       if (this.$data.active_chat.chat_type != "private") {
+        this.getNonJoinedChatsMessage(this.$data.active_chat.chat_id);
+
         window.ws.send(
           JSON.stringify({
             event: "join_to_chat",
@@ -1058,7 +1062,7 @@ export default {
           if (chat.chat_type == "private") {
             doGetChatMessages();
           } else {
-            getNonJoinedChatsMessage();
+            this.getNonJoinedChatsMessage(chat_id);
             this.set_the_active_chat(chat);
           }
           break;
@@ -1069,7 +1073,7 @@ export default {
           if (chat.chat_type == "private") {
             doGetChatMessages();
           } else {
-            getNonJoinedChatsMessage();
+            this.getNonJoinedChatsMessage(chat_id);
             this.set_the_active_chat(chat);
           }
           break;
@@ -1092,16 +1096,16 @@ export default {
 
       this.$set(this.$data, "show_chat_view", true);
       this.$set(this.$data, "chat_is_loading", false);
-      function getNonJoinedChatsMessage() {
-        ws.send(
-          JSON.stringify({
-            event: "get_chat_messages",
-            chat_id: chat_id,
-          })
-        );
+    },
+    getNonJoinedChatsMessage(chat_id) {
+      ws.send(
+        JSON.stringify({
+          event: "get_chat_messages",
+          chat_id: chat_id,
+        })
+      );
 
-        vm.$set(vm.$data, "chat_is_loading", true);
-      }
+      vm.$set(vm.$data, "chat_is_loading", true);
     },
     set_the_active_chat(chat) {
       if (chat._id) {

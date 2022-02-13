@@ -254,6 +254,8 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
 
         // SECTION - checking user permissions
         if (channel) {
+            console.log("275: channel", channel);
+
             if (channel.members && channel.members.length > 0) {
                 var user_is_aadmin = channel.members.includes(ws.user.username);
             }
