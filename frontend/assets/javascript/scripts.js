@@ -159,6 +159,12 @@ function get_chat_full_info(vm, parsedData) {
   if (parsedData.user_info.last_seen) {
     vm.$set(vm.$data.active_chat, "last_seen", parsedData.user_info.last_seen);
   }
+  // SECTION -> updating chat info globally
+  vm.$store.commit("auth/updateChat", {
+    chat_id: vm.$data.active_chat.chat_id,
+    full_name: parsedData.user_info.full_name,
+    profile_photos: parsedData.user_info.profile_photos,
+  });
 }
 
 function chat_created(vm, parsedData) {

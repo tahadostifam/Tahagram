@@ -11,6 +11,22 @@ export const state = () => ({
 });
 
 export const mutations = {
+  updateChat(state, data) {
+    if (data.chat_id) {
+      const chat_index = state.user_info.chats.findIndex(
+        ({ chat_id }) => chat_id == data.chat_id
+      );
+      if (chat_index != null) {
+        if (data.full_name) {
+          state.user_info.chats[chat_index].full_name = data.full_name;
+        }
+        if (data.profile_photos) {
+          state.user_info.chats[chat_index].profile_photos =
+            data.profile_photos;
+        }
+      }
+    }
+  },
   addNewMessage(state, { chat_id, message }) {
     const chat = state.user_info.chats_messages.find(
       ({ _id }) => _id == chat_id
