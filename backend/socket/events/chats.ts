@@ -254,12 +254,10 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
 
         // SECTION - checking user permissions
         if (channel) {
-            console.log("275: channel", channel);
-
             if (channel.members && channel.members.length > 0) {
                 var user_is_aadmin = channel.members.includes(ws.user.username);
             }
-            if (channel.creator_username == ws.user.username || user_is_aadmin) {
+            if (channel.creator_username.trim() == ws.user.username.trim() || user_is_aadmin) {
                 let data_to_send: any = {
                     event: "you_have_new_message",
                     message: message,
@@ -268,7 +266,7 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
 
                 broadCastToAllMembers(channel.members, data_to_send, ws.user.username);
             } else {
-                console.log(`${chat_id} channel not found`);
+                console.log(`!! (channel.creator_username == ws.user.username || user_is_aadmin) !!`);
             }
             pushMessage(message, {
                 event: "send_text_message",
