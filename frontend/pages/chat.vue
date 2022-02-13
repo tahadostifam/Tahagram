@@ -76,7 +76,11 @@
           :src="crop_media_to_send.src"
           @change="crop_media_to_send_onchange"
         />
-        <v-text-field label="Caption" class="mt-2"></v-text-field>
+        <v-text-field
+          v-model="media_to_send_caption"
+          label="Caption"
+          class="mt-2"
+        ></v-text-field>
         <v-card-actions class="pr-0 pt-0">
           <v-spacer></v-spacer>
           <v-btn
@@ -84,7 +88,7 @@
             text
             @click="crop_media_to_send.show = false"
           >
-            CANCEL
+            {{ $t("cancel") }}
           </v-btn>
           <v-btn
             :color="theme_color"
@@ -92,7 +96,7 @@
             @click="upload_croped_media_to_send"
             :loading="crop_media_to_send.button_loading_state"
           >
-            SAVE
+            {{ $t("send") }}
           </v-btn>
         </v-card-actions>
       </div>
@@ -622,6 +626,7 @@ export default {
       },
       show_create_channel_dialog: false,
       show_create_group_dialog: false,
+      media_to_send_caption: "",
     };
   },
   mounted() {
@@ -859,6 +864,12 @@ export default {
           request_body.append("photo", imageFile);
           request_body.append("chat_id", this.$data.active_chat.chat_id);
           request_body.append("chat_type", this.$data.active_chat.chat_type);
+          if (
+            this.$data.media_to_send_caption &&
+            this.$data.media_to_send_caption.trim().length > 0
+          ) {
+            request_body.append("caption", this.$data.media_to_send_caption);
+          }
           if (this.$data.active_chat.chat_type == "private") {
             request_body.append(
               "target_username",

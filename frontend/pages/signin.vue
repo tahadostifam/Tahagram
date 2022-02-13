@@ -33,7 +33,11 @@
         v-model="remember_me"
       ></v-checkbox>
 
-      <div v-if="form_errors" class="form_errors mb-3">
+      <div
+        v-if="form_errors"
+        class="form_errors mb-3"
+        :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+      >
         <p v-for="(item, index) in form_errors" :key="index" class="item">
           {{ item }}
         </p>

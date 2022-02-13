@@ -1,4 +1,4 @@
-## ChatApp
+## ChatApp [BETA]
 
 ### Bio
 
@@ -11,6 +11,7 @@ I almsot after 2 months i will send it to [Kharazmi competitions](https://khwari
 
 ### ToDoS For Feature
 
+-   Changing members accessibility
 -   Selecting multiple messages in chat
 -   Broadcasting the state when user last_seen changed
 -   Saved Messages

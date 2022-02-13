@@ -128,7 +128,7 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
                     if (target_ws) {
                         broadCastToOtherSide(target_ws, chat.chat_type, false);
                     } else {
-                        console.error("B :: cannot find target_ws");
+                        console.error("B :: target_ws not found");
                     }
                 } else {
                     if (chat._id && target_username) {
@@ -136,7 +136,7 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
                             if (target_ws) {
                                 broadCastToOtherSide(target_ws, chat.chat_type, true);
                             } else {
-                                console.error("C :: cannot find target_ws");
+                                console.error("C :: target_ws not found");
                             }
                         });
                     } else {

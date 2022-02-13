@@ -145,6 +145,8 @@ export default {
           group: "Group",
           channel: "Channel",
           user: "User",
+          send: "Send",
+          caption: "Caption",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -211,6 +213,8 @@ export default {
           group: "گروه",
           channel: "کانال",
           user: "کاربر",
+          send: "ارسال",
+          caption: "توضیحات",
         },
       },
     },
