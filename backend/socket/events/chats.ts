@@ -591,5 +591,18 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
     }
 }
 
+export async function delete_chat(ws: IWebSocket, parsedData: any) {
+    const chat_id = parsedData.chat_id;
+    if (chat_id && chat_id.length > 0) {
+        const chat = await Chats.findOne({
+            _id: chat_id,
+        });
+        if (chat) {
+        } else {
+            console.log("chat_not found on delete_chat event");
+        }
+    }
+}
+
 // TODO
 export async function user_seened_message(ws: IWebSocket, parsedData: any) {}
