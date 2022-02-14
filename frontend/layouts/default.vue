@@ -57,7 +57,6 @@ export default {
         )
         .catch((err) => {
           console.log(err);
-          return this.$router.push({ path: "/500" });
         });
     }
   },

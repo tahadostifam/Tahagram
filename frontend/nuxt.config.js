@@ -83,7 +83,7 @@ export default {
           required_parameters_cannot_be_empty:
             "Required parameters can't be are empty",
           server_side_error:
-            "An error occurred on the client side. please try again",
+            "An error occurred on the server side. please try again",
           signup: "Signup",
           signin: "Signin",
           submit: "Submit",
@@ -148,6 +148,7 @@ export default {
           send: "Send",
           caption: "Caption",
           user_joined_in_chat: "joined in chat",
+          close: "Close",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -217,6 +218,7 @@ export default {
           send: "ارسال",
           caption: "توضیحات",
           user_joined_in_chat: "عضو شد",
+          close: "بستن",
         },
       },
     },

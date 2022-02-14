@@ -17,10 +17,13 @@ export const mutations = {
         ({ chat_id }) => chat_id == data.chat_id
       );
       if (chat_index != null) {
-        if (data.full_name) {
+        if (data.full_name && state.user_info.chats[chat_index].full_name) {
           state.user_info.chats[chat_index].full_name = data.full_name;
         }
-        if (data.profile_photos) {
+        if (
+          data.profile_photos &&
+          state.user_info.chats[chat_index].profile_photos
+        ) {
           state.user_info.chats[chat_index].profile_photos =
             data.profile_photos;
           state.user_info.chats[chat_index].profile_photo =

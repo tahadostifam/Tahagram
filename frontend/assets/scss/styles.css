@@ -63,6 +63,16 @@ body .v-btn,
   letter-spacing: normal;
 }
 
+body .v-snack[dir="rtl"] .v-snack__wrapper,
+.v-application .v-snack[dir="rtl"] .v-snack__wrapper {
+  padding-left: 9px;
+}
+
+body .v-snack[dir="rtl"] .v-snack__content,
+.v-application .v-snack[dir="rtl"] .v-snack__content {
+  padding-left: 0;
+}
+
 .form_top_overlay {
   position: absolute;
   overflow: hidden;

@@ -1,5 +1,10 @@
 <template>
   <div>
+    <ErrorSnakbar
+      v-on:update:show="update_error_snakbar"
+      :show="show_error_snakbar"
+    ></ErrorSnakbar>
+
     <ViewImage
       :images_list="view_image.list"
       :show="view_image.show"
@@ -417,9 +422,7 @@
                     <span
                       class="badge_message"
                       :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
-                      ><a @click="search_chat_input = item.username">{{
-                        item.username
-                      }}</a>
+                      ><a>{{ item.username }}</a>
                       {{ $t("user_joined_in_chat") }}</span
                     >
                   </div>
@@ -576,6 +579,7 @@ export default {
   mixins: [link_addrs, parse_last_seen],
   data() {
     return {
+      show_error_snakbar: false,
       theme_color: configs.theme_color,
       send_text_message_input: "",
       context_menu_for_messages: {
@@ -651,6 +655,9 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    update_error_snakbar(new_value) {
+      this.$set(this.$data, "show_error_snakbar", new_value);
+    },
     remove_profile_photo(filename) {
       if (filename && filename.length > 0) {
         this.$axios
@@ -684,6 +691,7 @@ export default {
           })
           .catch((error) => {
             console.log(error);
+            this.error_occurred();
           });
       }
     },
@@ -796,7 +804,6 @@ export default {
         )
         .catch((err) => {
           console.log(err);
-          return window.vm.$router.push({ path: "/500" });
         })
         .finally(() => {
           this.$set(this.$data, "updating_user_info_state", false);
@@ -889,6 +896,7 @@ export default {
             .then((response) => {})
             .catch((error) => {
               console.error(error.response);
+              this.error_occurred();
             });
           this.$set(
             this.$data.crop_media_to_send,
@@ -1408,7 +1416,8 @@ export default {
               }
             })
             .catch((error) => {
-              this.$router.push({ path: "/500" });
+              console.log(error);
+              this.error_occurred();
             })
             .finally(() => {
               this.$set(
@@ -1481,6 +1490,9 @@ export default {
     },
     logout() {
       this.$router.push({ path: "/" + this.$i18n.locale + "/logout" });
+    },
+    error_occurred() {
+      this.$set(this.$data, "show_error_snakbar", true);
     },
   },
   computed: {
