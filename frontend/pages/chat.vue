@@ -659,7 +659,14 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
-    submit_delete_chat() {},
+    submit_delete_chat() {
+      ws.send(
+        JSON.stringify({
+          event: "delete_chat",
+          chat_id: this.$data.active_chat.chat_id,
+        })
+      );
+    },
     update_error_snakbar(new_value) {
       this.$set(this.$data, "show_error_snakbar", new_value);
     },

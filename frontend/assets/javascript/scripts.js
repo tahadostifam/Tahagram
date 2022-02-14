@@ -128,6 +128,9 @@ window.handleSocketMessages = (vm, parsedData) => {
     if (active_chat_chat_id == parsedData.chat_id) {
       vm.$set(vm.$data.active_chat, "iam_amember_of_chat", true);
     }
+  } else if (parsedData.message == "chat_deleted") {
+    vm.$store.commit("auth/removeChat", parsedData.chat_id);
+    vm.$store.commit("auth/deleteChat", parsedData.chat_id);
   } else {
     console.log(parsedData);
   }

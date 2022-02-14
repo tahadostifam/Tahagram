@@ -593,13 +593,30 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
 
 export async function delete_chat(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
+
     if (chat_id && chat_id.length > 0) {
-        const chat = await Chats.findOne({
-            _id: chat_id,
-        });
-        if (chat) {
-        } else {
-            console.log("chat_not found on delete_chat event");
+        if (ws.user.chats) {
+            const user_have_chat = ws.user.chats.find(({ chat_id: _chat_id_ }) => _chat_id_ == chat_id);
+            if (user_have_chat) {
+                await User.updateOne(
+                    { username: ws.user.username },
+                    {
+                        $pull: {
+                            chats: {
+                                chat_id: chat_id,
+                            },
+                        },
+                    }
+                );
+                ws.send(
+                    JSON.stringify({
+                        message: "chat_deleted",
+                        chat_id: chat_id,
+                    })
+                );
+            } else {
+                console.log("user_have_chat is emty on delete_chat event");
+            }
         }
     }
 }

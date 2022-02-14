@@ -74,6 +74,24 @@ export const mutations = {
       state.user_info.chats_messages.push(chat);
     }
   },
+  deleteChat(state, chat_id) {
+    if (state.user_info.chats_messages) {
+      const chat_index = state.user_info.chats_messages.findIndex(
+        ({ _id }) => _id == chat_id
+      );
+      if (chat_index != null) {
+        state.user_info.chats_messages.splice(chat_index, 1);
+      }
+    }
+  },
+  removeChat(state, chat_id) {
+    if (state.chats_list) {
+      const chat_index = state.chats_list.findIndex(
+        ({ chat_id: _chat_id_ }) => _chat_id_ == chat_id
+      );
+      state.chats_list.splice(chat_index, 1);
+    }
+  },
   setRefreshToken(state, token) {
     state.auth.refresh_token = token;
   },
