@@ -154,10 +154,11 @@
 
 <script>
 import configs from "@/assets/javascript/configs";
-import slugify from "slugify";
+import validate_username from "@/mixins/validate_username.js";
 
 export default {
   name: "CreateChannelDialog",
+  mixins: [validate_username],
   data() {
     return {
       dialog_step: 1,
@@ -295,11 +296,7 @@ export default {
     keyup_username_event() {
       const username = this.$data.channel_username;
       if (username.trim().length > 0) {
-        let limited_username = slugify(username, {
-          lower: true,
-          strict: false,
-          locale: "vi",
-        });
+        const limited_username = this.validate_username(username);
         this.$set(this.$data, "channel_username", limited_username);
 
         // SECTION - checking username existly

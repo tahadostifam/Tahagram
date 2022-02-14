@@ -76,10 +76,11 @@
 
 <script>
 import configs from "@/assets/javascript/configs";
-import slugify from "slugify";
+import validate_username from "@/mixins/validate_username.js";
 
 export default {
   name: "signup",
+  mixins: [validate_username],
   data() {
     return {
       full_name: "",
@@ -95,11 +96,7 @@ export default {
   methods: {
     keyup_username_event() {
       const username = this.$data.username;
-      let limited_username = slugify(username, {
-        lower: true,
-        strict: false,
-        locale: "vi",
-      });
+      let limited_username = this.validate_username(username);
       this.$set(this.$data, "username", limited_username);
     },
     inputs_are_valid() {
