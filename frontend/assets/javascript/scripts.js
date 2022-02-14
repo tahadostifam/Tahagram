@@ -131,6 +131,19 @@ window.handleSocketMessages = (vm, parsedData) => {
   } else if (parsedData.message == "chat_deleted") {
     vm.$store.commit("auth/removeChat", parsedData.chat_id);
     vm.$store.commit("auth/deleteChat", parsedData.chat_id);
+    if (vm.$data.active_chat.chat_id == parsedData.chat_id) {
+      vm.$set(vm.$data.active_chat, "chat_id", null);
+      vm.$set(vm.$data.active_chat, "username", null);
+      vm.$set(vm.$data.active_chat, "full_name", null);
+      vm.$set(vm.$data.active_chat, "profile_photo", null);
+      vm.$set(vm.$data.active_chat, "profile_photos", null);
+      vm.$set(vm.$data.active_chat, "chat_type", null);
+      vm.$set(vm.$data.active_chat, "messages", null);
+      vm.$set(vm.$data.active_chat, "last_seen", null);
+      vm.$set(vm.$data.active_chat, "members", null);
+      vm.$set(vm.$data.active_chat, "bio", null);
+      vm.$set(vm.$data, "show_chat_view", false);
+    }
   } else {
     console.log(parsedData);
   }

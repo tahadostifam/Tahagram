@@ -595,28 +595,51 @@ export async function delete_chat(ws: IWebSocket, parsedData: any) {
     const chat_id = parsedData.chat_id;
 
     if (chat_id && chat_id.length > 0) {
-        if (ws.user.chats) {
-            const user_have_chat = ws.user.chats.find(({ chat_id: _chat_id_ }) => _chat_id_ == chat_id);
-            if (user_have_chat) {
-                await User.updateOne(
-                    { username: ws.user.username },
-                    {
-                        $pull: {
-                            chats: {
-                                chat_id: chat_id,
-                            },
-                        },
-                    }
-                );
-                ws.send(
-                    JSON.stringify({
+        const chat: IChat = await Chats.findOne({ _id: chat_id });
+        if (chat && chat.chat_type == "private") {
+            const user: IUser = await User.findOne({
+                username: ws.user.username,
+            });
+            if (user && user.chats) {
+                const user_have_chat = user.chats.find(({ chat_id: _chat_id_ }) => _chat_id_ == chat_id);
+                if (user_have_chat != null) {
+                    var data_to_send: any = {
                         message: "chat_deleted",
                         chat_id: chat_id,
-                    })
-                );
+                    };
+                    ws.send(JSON.stringify(data_to_send));
+                    if (chat.sides) {
+                        const other_side_username = findOutTUofChat(chat, ws.user.username);
+                        if (other_side_username) {
+                            const other_side_ws = users.find(({ username: _username_ }) => _username_ == other_side_username);
+                            if (other_side_ws) {
+                                other_side_ws.ws.send(JSON.stringify(data_to_send));
+                            } else {
+                                console.log("other_side_ws not found on delete_chat event");
+                            }
+                        } else {
+                            console.log("other_side_username not found on delete_chat event");
+                        }
+                    }
+                    await User.updateOne(
+                        { username: ws.user.username },
+                        {
+                            $pull: {
+                                chats: {
+                                    chat_id: chat_id,
+                                },
+                            },
+                        }
+                    );
+                    await Chats.deleteOne({ chat_id: chat_id });
+                } else {
+                    console.log("user_have_chat is empty on delete_chat event");
+                }
             } else {
-                console.log("user_have_chat is emty on delete_chat event");
+                console.log("user_not found on delete_chat event");
             }
+        } else {
+            console.log("chat deos not exists or chat_type is not private");
         }
     }
 }
