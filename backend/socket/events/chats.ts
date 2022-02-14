@@ -525,14 +525,17 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                 if (user_info_to_send) {
                     function collect_members() {
                         return new Promise(async (resolve) => {
+                            const creator: IUser = await User.findOne({
+                                username: chat.creator_username,
+                            });
                             const creator_info: any = {
-                                full_name: ws.user.full_name,
-                                username: ws.user.username,
+                                full_name: creator.full_name,
+                                username: creator.username,
                                 position: "creator",
-                                last_seen: ws.user.last_seen,
+                                last_seen: creator.last_seen,
                             };
-                            if (ws.user.profile_photos && ws.user.profile_photos.length > 0) {
-                                creator_info.profile_photos = [ws.user.profile_photos[ws.user.profile_photos.length - 1]];
+                            if (creator.profile_photos && creator.profile_photos.length > 0) {
+                                creator_info.profile_photos = [creator.profile_photos[creator.profile_photos.length - 1]];
                             }
 
                             if (
