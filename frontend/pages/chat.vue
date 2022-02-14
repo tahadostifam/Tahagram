@@ -304,13 +304,17 @@
                       </v-btn>
                     </template>
                     <v-list style="width: 220px">
-                      <v-list-item v-ripple>
+                      <!-- <v-list-item v-ripple>
                         <v-list-item-title>Mute</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item v-ripple>
-                        <v-list-item-title class="text-red"
-                          >Delete Chat</v-list-item-title
-                        >
+                      </v-list-item> -->
+                      <v-list-item
+                        v-ripple
+                        @click="submit_delete_chat"
+                        :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+                      >
+                        <v-list-item-title class="text-red">{{
+                          $t("delete_chat")
+                        }}</v-list-item-title>
                       </v-list-item>
                     </v-list>
                   </v-menu>
@@ -655,6 +659,7 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    submit_delete_chat() {},
     update_error_snakbar(new_value) {
       this.$set(this.$data, "show_error_snakbar", new_value);
     },

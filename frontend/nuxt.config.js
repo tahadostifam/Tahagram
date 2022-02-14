@@ -149,6 +149,7 @@ export default {
           caption: "Caption",
           user_joined_in_chat: "joined in chat",
           close: "Close",
+          delete_chat: "Delete Chat",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -219,6 +220,7 @@ export default {
           caption: "توضیحات",
           user_joined_in_chat: "عضو شد",
           close: "بستن",
+          delete_chat: "حذف کردن گفت و گو",
         },
       },
     },
