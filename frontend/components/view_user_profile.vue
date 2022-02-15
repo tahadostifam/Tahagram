@@ -89,12 +89,29 @@
               </div>
               <div>{{ active_chat.members.length }} {{ $t("members") }}</div>
             </div>
+
+            <!-- Context Menu For Messages -->
+            <v-menu
+              v-model="context_menu.show"
+              :position-x="context_menu.x"
+              :position-y="context_menu.y"
+              absolute
+              offset-y
+            >
+              <v-list style="width: 200px">
+                <v-list-item v-ripple @click="promote_to_admin">
+                  <v-list-item-title>Promote to admin</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+
             <div
               class="member_item"
               v-ripple
               v-for="(item, index) in active_chat.members"
               :key="index"
               @click="$emit('view_member_profile', item.username)"
+              @contextmenu="show_context_menu($event, item.username)"
             >
               <div>
                 <div
@@ -151,6 +168,12 @@ export default {
   data() {
     return {
       dialog: false,
+      context_menu: {
+        show: false,
+        x: 0,
+        y: 0,
+      },
+      context_menu_member_username: null,
     };
   },
   watch: {
@@ -179,6 +202,25 @@ export default {
   methods: {
     close() {
       this.$emit("update:show", false);
+    },
+    show_context_menu(e, member_username) {
+      e.preventDefault();
+      if (member_username != vm.username) {
+        this.$set(this.$data, "context_menu_member_username", member_username);
+        this.$set(this.$data.context_menu, "show", false);
+        this.$set(this.$data.context_menu, "x", e.clientX);
+        this.$set(this.$data.context_menu, "y", e.clientY);
+        this.$nextTick(() => {
+          this.$set(this.$data.context_menu, "show", true);
+        });
+      }
+    },
+    promote_to_admin() {
+      const username = this.$data.context_menu_member_username;
+      if (username && username.trim().length > 0) {
+      } else {
+        console.error("username is empty in promote_to_admin event");
+      }
     },
   },
 };
