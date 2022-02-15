@@ -97,7 +97,7 @@
               :position-y="context_menu.y"
               absolute
               offset-y
-              v-if="context_menu_member_rank"
+              v-if="context_menu_member_rank && active_chat.iam_creator"
             >
               <v-list style="width: 200px">
                 <v-list-item

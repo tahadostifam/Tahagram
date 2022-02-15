@@ -116,6 +116,10 @@ window.handleSocketMessages = (vm, parsedData) => {
     }
     vm.$set(vm.$data, "chat_is_loading", false);
   } else if (parsedData.message == "rank changed") {
+    vm.$store.commit("auth/updateRank", {
+      chat_id: parsedData.chat_id,
+      new_rank: parsedData.new_rank,
+    });
     if (vm.$data.active_chat.chat_id == parsedData.chat_id) {
       const member_index = vm.$data.active_chat.members.findIndex(
         ({ username: _username_ }) => _username_ == parsedData.member_username
@@ -181,6 +185,7 @@ function get_chat_full_info(vm, parsedData) {
   );
   vm.$set(vm.$data.active_chat, "bio", parsedData.user_info.bio);
   vm.$set(vm.$data.active_chat, "members", parsedData.user_info.members);
+  vm.$set(vm.$data.active_chat, "iam_creator", parsedData.iam_creator);
   if (parsedData.user_info.last_seen) {
     vm.$set(vm.$data.active_chat, "last_seen", parsedData.user_info.last_seen);
   }

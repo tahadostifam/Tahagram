@@ -70,6 +70,18 @@ export const mutations = {
       console.log("chat_index not found on removeMessage");
     }
   },
+  updateRank(state, { chat_id, new_rank }) {
+    const chat_index = state.user_info.chats.findIndex(
+      ({ chat_id: _chat_id_ }) => _chat_id_ == chat_id
+    );
+    if (chat_index != null) {
+      if (new_rank == "admin") {
+        state.user_info.chats[chat_index].iam_admin_of_chat = true;
+      } else if (new_rank == "member") {
+        state.user_info.chats[chat_index].iam_admin_of_chat = false;
+      }
+    }
+  },
   createNewChat(state, chat) {
     if (state.user_info.chats_messages) {
       state.user_info.chats_messages.push(chat);

@@ -520,6 +520,11 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                             profile_photos: profile_photos,
                         },
                     };
+                    if (chat.creator_username == ws.user.username) {
+                        user_info_to_send["iam_creator"] = true;
+                    } else {
+                        user_info_to_send["iam_creator"] = false;
+                    }
                 }
 
                 if (user_info_to_send) {
