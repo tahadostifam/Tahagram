@@ -911,7 +911,7 @@ body .v-application .v-navigation-drawer {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 10px);
+  max-width: 200px;
 }
 
 .members_list {

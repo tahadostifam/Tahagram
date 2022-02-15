@@ -1067,7 +1067,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 10px);
+  max-width: 200px;
 }
 
 .members_list .members_list_title {

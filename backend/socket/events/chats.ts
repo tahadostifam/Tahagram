@@ -491,7 +491,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
         if (chat_type == "private") {
             if (parsedData.target_username && parsedData.target_username.trim().length > 0) {
                 const user: IUser = await User.findOne({ username: parsedData.target_username });
-                const profile_photos = [user.profile_photos.reverse()[0]];
+                const profile_photos = user.profile_photos.reverse();
                 var user_info_to_send: any = {
                     event: "get_chat_full_info",
                     user_info: {

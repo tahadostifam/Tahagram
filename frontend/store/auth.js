@@ -16,7 +16,7 @@ export const mutations = {
       const chat_index = state.user_info.chats.findIndex(
         ({ chat_id }) => chat_id == data.chat_id
       );
-      if (chat_index != null) {
+      if (chat_index != null && state.user_info.chats[chat_index]) {
         if (data.full_name && state.user_info.chats[chat_index].full_name) {
           state.user_info.chats[chat_index].full_name = data.full_name;
         }
@@ -26,6 +26,7 @@ export const mutations = {
         ) {
           state.user_info.chats[chat_index].profile_photos =
             data.profile_photos;
+          console.log(data.profile_photos);
           state.user_info.chats[chat_index].profile_photo =
             state.user_info.chats[chat_index].profile_photos[0];
           vm.$set(
