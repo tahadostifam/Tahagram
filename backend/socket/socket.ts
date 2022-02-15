@@ -127,6 +127,9 @@ function handleSocketMessages(data: any, ws: IWebSocket) {
             case "delete_chat":
                 events.delete_chat(ws, parsedData);
                 break;
+            case "change_member_access":
+                events.change_member_access(ws, parsedData);
+                break;
             default:
                 ws.send(JSON.stringify({ message: "command not found" }));
                 break;

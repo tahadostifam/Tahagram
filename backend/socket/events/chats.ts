@@ -649,5 +649,75 @@ export async function delete_chat(ws: IWebSocket, parsedData: any) {
     }
 }
 
+export async function change_member_access(ws: IWebSocket, parsedData: any) {
+    const chat_id = parsedData.chat_id;
+    const member_username = parsedData.member_username;
+    const rank = parsedData.rank;
+    if (chat_id && chat_id.length > 0 && rank && rank.length > 0 && member_username && member_username.length > 0) {
+        const chat: IChat = await Chats.findOne({
+            chat_id: chat_id,
+        });
+        if (chat) {
+            const member: IUser = await User.findOne({ username: member_username });
+            const member_ws = users.find(({ username: _username_ }) => _username_ == member_username.trim());
+            if (member) {
+                // SECTION - checking user permissions
+                if (chat.admins) {
+                    function do_response() {
+                        const data_to_send: any = {
+                            message: "rank changed",
+                            chat_id: chat_id,
+                            new_rank: rank,
+                            member_username: member_username,
+                        };
+                        ws.send(JSON.stringify(data_to_send));
+                        if (member_ws) {
+                            member_ws.ws.send(JSON.stringify(data_to_send));
+                        }
+                    }
+                    const check_user_is_admin = chat.admins.includes(member_username);
+                    if (chat.creator_username == ws.user.username) {
+                        if (rank == "admin") {
+                            if (!check_user_is_admin) {
+                                await Chats.updateOne(
+                                    { _id: chat_id },
+                                    {
+                                        $push: {
+                                            admins: member_username,
+                                        },
+                                    }
+                                );
+                                do_response();
+                            } else {
+                                console.log("user already is a admin");
+                            }
+                        } else if (rank == "member") {
+                            if (check_user_is_admin) {
+                                await Chats.updateOne(
+                                    { _id: chat_id },
+                                    {
+                                        $pull: {
+                                            admins: member_username,
+                                        },
+                                    }
+                                );
+                                do_response();
+                            } else {
+                                console.log("user is not a admin");
+                            }
+                        }
+                    } else {
+                        console.log("user dont have permissions to change a member's permissions");
+                    }
+                }
+            } else {
+                console.log("member not found on change_member_access event");
+            }
+        } else {
+            console.log("chat not found on change_member_access");
+        }
+    }
+}
+
 // TODO
 export async function user_seened_message(ws: IWebSocket, parsedData: any) {}

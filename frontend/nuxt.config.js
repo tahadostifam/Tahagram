@@ -150,6 +150,8 @@ export default {
           user_joined_in_chat: "joined in chat",
           close: "Close",
           delete_chat: "Delete Chat",
+          promote_to_admin: "Promote to admin",
+          remove_admin_access: "Remove admin access",
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -221,6 +223,8 @@ export default {
           user_joined_in_chat: "عضو شد",
           close: "بستن",
           delete_chat: "حذف کردن گفت و گو",
+          promote_to_admin: "ارتقا به مدیر",
+          remove_admin_access: "حذف دسترسی مدیر",
         },
       },
     },

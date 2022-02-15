@@ -1,7 +1,17 @@
 // SECTION - events
 import search_in_chats from "./search_in_chats";
 import { update_full_name, update_bio, get_last_seen } from "./users";
-import { check_username_existly, get_chat_messages, getUserFullInfo, delete_message, join_to_chat, send_text_message, user_seened_message, delete_chat } from "./chats";
+import {
+    check_username_existly,
+    get_chat_messages,
+    getUserFullInfo,
+    delete_message,
+    join_to_chat,
+    send_text_message,
+    user_seened_message,
+    delete_chat,
+    change_member_access,
+} from "./chats";
 
 export default {
     search_in_chats: search_in_chats,
@@ -16,4 +26,5 @@ export default {
     join_to_chat: join_to_chat,
     get_last_seen: get_last_seen,
     delete_chat: delete_chat,
+    change_member_access: change_member_access,
 };

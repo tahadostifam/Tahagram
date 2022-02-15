@@ -115,6 +115,15 @@ window.handleSocketMessages = (vm, parsedData) => {
       vm.$set(vm.$data.active_chat, "messages", parsedData.messages_list);
     }
     vm.$set(vm.$data, "chat_is_loading", false);
+  } else if (parsedData.message == "rank changed") {
+    if (vm.$data.active_chat.chat_id == parsedData.chat_id) {
+      const member_index = vm.$data.active_chat.members.findIndex(
+        ({ username: _username_ }) => _username_ == parsedData.member_username
+      );
+      if (member_index != null) {
+        vm.$data.active_chat.members[member_index].rank = parsedData.new_rank;
+      }
+    }
   } else if (parsedData.message == "new_member_joined") {
     vm.$store.commit("auth/addNewMessage", {
       message: {

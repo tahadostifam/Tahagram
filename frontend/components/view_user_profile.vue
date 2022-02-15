@@ -97,10 +97,26 @@
               :position-y="context_menu.y"
               absolute
               offset-y
+              v-if="context_menu_member_rank"
             >
               <v-list style="width: 200px">
-                <v-list-item v-ripple @click="promote_to_admin">
-                  <v-list-item-title>Promote to admin</v-list-item-title>
+                <v-list-item
+                  v-if="context_menu_member_rank == 'member'"
+                  v-ripple
+                  @click="promote_to_admin"
+                >
+                  <v-list-item-title>{{
+                    $t("promote_to_admin")
+                  }}</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  v-ripple
+                  v-if="context_menu_member_rank == 'admin'"
+                  @click="remove_admin_access"
+                >
+                  <v-list-item-title>{{
+                    $t("remove_admin_access")
+                  }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -111,7 +127,7 @@
               v-for="(item, index) in active_chat.members"
               :key="index"
               @click="$emit('view_member_profile', item.username)"
-              @contextmenu="show_context_menu($event, item.username)"
+              @contextmenu="show_context_menu($event, item.username, item.rank)"
             >
               <div>
                 <div
@@ -173,6 +189,7 @@ export default {
         x: 0,
         y: 0,
       },
+      context_menu_member_rank: null,
       context_menu_member_username: null,
     };
   },
@@ -203,10 +220,11 @@ export default {
     close() {
       this.$emit("update:show", false);
     },
-    show_context_menu(e, member_username) {
+    show_context_menu(e, member_username, member_rank) {
       e.preventDefault();
       if (member_username != vm.username) {
         this.$set(this.$data, "context_menu_member_username", member_username);
+        this.$set(this.$data, "context_menu_member_rank", member_rank);
         this.$set(this.$data.context_menu, "show", false);
         this.$set(this.$data.context_menu, "x", e.clientX);
         this.$set(this.$data.context_menu, "y", e.clientY);
@@ -218,6 +236,29 @@ export default {
     promote_to_admin() {
       const username = this.$data.context_menu_member_username;
       if (username && username.trim().length > 0) {
+        window.ws.send(
+          JSON.stringify({
+            event: "change_member_access",
+            chat_id: this.active_chat.chat_id,
+            member_username: username,
+            rank: "admin",
+          })
+        );
+      } else {
+        console.error("username is empty in promote_to_admin event");
+      }
+    },
+    remove_admin_access() {
+      const username = this.$data.context_menu_member_username;
+      if (username && username.trim().length > 0) {
+        window.ws.send(
+          JSON.stringify({
+            event: "change_member_access",
+            chat_id: this.active_chat.chat_id,
+            member_username: username,
+            rank: "member",
+          })
+        );
       } else {
         console.error("username is empty in promote_to_admin event");
       }
