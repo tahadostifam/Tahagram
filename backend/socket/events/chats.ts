@@ -560,7 +560,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                                                 last_seen: user.last_seen,
                                             };
                                             if (chat.admins) {
-                                                const user_is_aadmin = chat.admins.includes(ws.user.username);
+                                                const user_is_aadmin = chat.admins.includes(member_username);
                                                 data_to_push["rank"] = user_is_aadmin == true ? "admin" : "member";
                                             }
                                             members_list.push(data_to_push);
