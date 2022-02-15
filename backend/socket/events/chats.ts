@@ -531,7 +531,7 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                             const creator_info: any = {
                                 full_name: creator.full_name,
                                 username: creator.username,
-                                position: "creator",
+                                rank: "creator",
                                 last_seen: creator.last_seen,
                             };
                             if (creator.profile_photos && creator.profile_photos.length > 0) {
@@ -552,13 +552,18 @@ export async function getUserFullInfo(ws: IWebSocket, parsedData: any) {
                                         });
 
                                         if (user) {
-                                            members_list.push({
+                                            let data_to_push: any = {
                                                 full_name: user.full_name,
                                                 username: user.username,
                                                 profile_photos: [user.profile_photos.reverse()[0]],
                                                 bio: user.bio,
                                                 last_seen: user.last_seen,
-                                            });
+                                            };
+                                            if (chat.admins) {
+                                                const user_is_aadmin = chat.admins.includes(ws.user.username);
+                                                data_to_push["rank"] = user_is_aadmin == true ? "admin" : "member";
+                                            }
+                                            members_list.push(data_to_push);
                                         }
                                         if (index == chat.members.length - 1) {
                                             if (chat.chat_type != "private") {

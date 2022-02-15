@@ -716,6 +716,10 @@ body .v-snack[dir="rtl"] .v-snack__content,
   color: #f44336;
 }
 
+.text-blue {
+  color: #5678ce;
+}
+
 .text-theme_color {
   color: #00c853;
 }
@@ -1092,6 +1096,7 @@ body .v-application .v-navigation-drawer .v-navigation-drawer__border {
 }
 
 .members_list .member_item {
+  position: relative;
   display: block;
   width: 100%;
   display: -webkit-box;

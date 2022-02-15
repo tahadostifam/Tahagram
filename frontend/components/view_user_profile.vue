@@ -110,7 +110,21 @@
                 </div>
               </div>
               <div>
-                <span>{{ item.full_name }}</span>
+                <span>
+                  {{ item.full_name }}
+                  <div
+                    class="d-inline-block text-blue"
+                    v-if="item.rank == 'creator'"
+                  >
+                    &starf;
+                  </div>
+                  <div
+                    class="d-inline-block text-grey"
+                    v-else-if="item.rank == 'admin'"
+                  >
+                    &starf;
+                  </div>
+                </span>
                 <span
                   v-if="item.last_seen"
                   class="text-left"

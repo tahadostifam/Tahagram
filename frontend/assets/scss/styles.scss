@@ -628,6 +628,10 @@ body,
   color: #f44336;
 }
 
+.text-blue {
+  color: #5678ce;
+}
+
 .text-theme_color {
   color: $theme_color;
 }
@@ -930,6 +934,7 @@ body .v-application .v-navigation-drawer {
     margin-bottom: 15px;
   }
   .member_item {
+    position: relative;
     display: block;
     width: 100%;
     display: flex;
