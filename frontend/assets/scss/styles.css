@@ -33,6 +33,11 @@ html {
 }
 
 body,
+.v-application {
+  overflow-x: hidden;
+}
+
+body,
 body .text-h6,
 body .v-dialog .text-h6,
 .v-application,

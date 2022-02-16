@@ -45,6 +45,7 @@ html {
 
 body,
 .v-application {
+  overflow-x: hidden;
   &,
   .text-h6,
   .v-dialog .text-h6 {
@@ -822,6 +823,7 @@ body .v-application .v-navigation-drawer {
   align-items: center;
   justify-content: center;
   text-align: center;
+  // display: none;
 }
 
 .badge_message {

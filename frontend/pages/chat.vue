@@ -561,7 +561,7 @@
               JOIN
             </v-btn>
           </template>
-          <div id="no_chat_selected">
+          <div v-if="!active_chat.chat_id" id="no_chat_selected">
             <span class="badge_message rtl">{{ $t("no_chat_selected") }}</span>
           </div>
         </div>
