@@ -14,7 +14,7 @@ import events from "./events/events";
 
 export default async function handleSocket() {
     const server = createServer();
-    const wss = new WebSocketServer({ noServer: true });
+    const wss = new WebSocketServer({ noServer: true, host: "0.0.0.0" });
 
     server.on("upgrade", (request, socket, head) => {
         let client_ip = clientIp(request);
