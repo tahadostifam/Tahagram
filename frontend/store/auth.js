@@ -77,9 +77,19 @@ export const mutations = {
     if (chat_index != null) {
       if (new_rank == "admin") {
         state.user_info.chats[chat_index].iam_admin_of_chat = true;
+        if (!vm.$data.active_chat.iam_creator) {
+          vm.$set(vm.$data.active_chat, "iam_admin_of_chat", true);
+        }
       } else if (new_rank == "member") {
         state.user_info.chats[chat_index].iam_admin_of_chat = false;
+        if (!vm.$data.active_chat.iam_creator) {
+          vm.$set(vm.$data.active_chat, "iam_admin_of_chat", false);
+        }
       }
+      state.user_info.chats[chat_index].iam_amember_of_chat = true;
+      vm.$set(vm.$data.active_chat, "iam_amember_of_chat", true);
+    } else {
+      console.log("chat_index not found on updateRank");
     }
   },
   createNewChat(state, chat) {

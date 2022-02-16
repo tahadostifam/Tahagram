@@ -127,6 +127,8 @@ window.handleSocketMessages = (vm, parsedData) => {
       if (member_index != null) {
         vm.$data.active_chat.members[member_index].rank = parsedData.new_rank;
       }
+    } else {
+      console.log("rank canged but chat is not active");
     }
   } else if (parsedData.message == "new_member_joined") {
     vm.$store.commit("auth/addNewMessage", {
