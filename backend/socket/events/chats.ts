@@ -668,10 +668,8 @@ export async function change_member_access(ws: IWebSocket, parsedData: any) {
     const rank = parsedData.rank;
     if (chat_id && chat_id.length > 0 && rank && rank.length > 0 && member_username && member_username.length > 0) {
         const chat: IChat = await Chats.findOne({
-            chat_id: chat_id,
+            _id: chat_id,
         });
-        console.log(chat.full_name);
-
         if (chat && chat.chat_type != "private") {
             const member: IUser = await User.findOne({ username: member_username });
             const member_ws = users.find(({ username: _username_ }) => _username_ == member_username.trim());
