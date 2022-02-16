@@ -248,14 +248,15 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
             }
         }
     } else if (chat_type == "channel") {
-        const channel = await Chats.findOne({
+        const channel: IChat = await Chats.findOne({
             _id: chat_id,
         });
 
         // SECTION - checking user permissions
-        if (channel) {
-            if (channel.members && channel.members.length > 0) {
-                var user_is_aadmin = channel.members.includes(ws.user.username);
+        if (channel && channel.creator_username && channel.members) {
+            let user_is_aadmin;
+            if (channel.admins && channel.admins.length > 0) {
+                user_is_aadmin = channel.admins.includes(ws.user.username);
             }
             if (channel.creator_username.trim() == ws.user.username.trim() || user_is_aadmin) {
                 let data_to_send: any = {
@@ -265,6 +266,13 @@ export async function handle_messages_socket(chat_id: string, chat_type: string,
                 };
 
                 broadCastToAllMembers(channel.members, data_to_send, ws.user.username);
+
+                if (user_is_aadmin) {
+                    const creator_ws = users.find(({ username: _username_ }) => _username_ == channel.creator_username);
+                    if (creator_ws) {
+                        creator_ws.ws.send(JSON.stringify(data_to_send));
+                    }
+                }
             } else {
                 console.log(`!! (channel.creator_username == ws.user.username || user_is_aadmin) !!`);
             }
