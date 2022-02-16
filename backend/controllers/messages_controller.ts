@@ -45,6 +45,9 @@ export default {
             });
 
             if (!user) return status_codes.invalid_token(req, res, next);
+            else {
+                console.log("invalid token");
+            }
 
             var final_filename: string = "";
             async function generateRandomFileName() {

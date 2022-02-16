@@ -285,7 +285,9 @@ function we_have_new_message(vm, parsedData) {
     );
 
     // Making a Notification to User
-    window.sendNotf(chat_exists.full_name, parsedData.message.content);
+    if (chat_exists.full_name) {
+      window.sendNotf(chat_exists.full_name, parsedData.message.content);
+    }
 
     if (!chat_exists) {
       vm.$store.commit("auth/addChat", {

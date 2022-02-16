@@ -913,14 +913,18 @@ export default {
             );
           }
 
+          console.log(vm.username);
+          console.log(vm.$store.state.auth.auth.auth_token);
           this.$axios
             .$post("/api/messages/new_photo_message", request_body, {
               headers: {
-                username: this.$store.state.auth.auth.username,
-                auth_token: this.$store.state.auth.auth.auth_token,
+                username: vm.username,
+                auth_token: vm.$store.state.auth.auth.auth_token,
               },
             })
-            .then((response) => {})
+            .then((response) => {
+              console.log(response);
+            })
             .catch((error) => {
               console.error(error.response);
               this.error_occurred();
