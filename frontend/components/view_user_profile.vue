@@ -239,7 +239,7 @@ export default {
         window.ws.send(
           JSON.stringify({
             event: "change_member_access",
-            chat_id: this.active_chat.chat_id,
+            chat_id: vm.$data.active_chat.chat_id,
             member_username: username,
             rank: "admin",
           })
@@ -254,7 +254,7 @@ export default {
         window.ws.send(
           JSON.stringify({
             event: "change_member_access",
-            chat_id: this.active_chat.chat_id,
+            chat_id: vm.$data.active_chat.chat_id,
             member_username: username,
             rank: "member",
           })

@@ -395,7 +395,7 @@
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.content"
                     :edited="item.edited"
-                    :my_message="item.sender_username == user_info.username"
+                    :my_message="choose_my_message(item)"
                     :seen_state="item.seen_state"
                   ></TextMessage>
                   <ImageMessage
@@ -411,7 +411,7 @@
                     :image_address="
                       gimme_photo_message_link_addr(item.filename)
                     "
-                    :my_message="item.sender_username == user_info.username"
+                    :my_message="choose_my_message(item)"
                     :edited="item.edited"
                     :seen_state="item.seen_state"
                     v-on:click="
@@ -659,6 +659,21 @@ export default {
     this.watch_internet_state_changes();
   },
   methods: {
+    choose_my_message(item) {
+      const chat_type = this.$data.active_chat.chat_type;
+      if (chat_type != "channel") {
+        return item.sender_username == vm.username;
+      } else {
+        if (
+          this.$data.active_chat.iam_admin_of_chat ||
+          this.$data.active_chat.iam_creator
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
     submit_delete_chat() {
       ws.send(
         JSON.stringify({
