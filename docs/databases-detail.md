@@ -100,19 +100,19 @@ Notes :
           "seen_state": "sended"
       },
       ```
-     * Photo Message :
-        ```javascript
-        {
-            "message_id": "620d131783820a348eec815f",
-            "sender_username": "tahad",
-            "message_type": "photo",
-            "send_time": 1645024023454,
-            "edited": false,
-            "seen_state": "sended",
-            "filename": "72d0698ed0ed065c067f",
-            "caption": "Photo :]"
-        }
-      ```
+    * Photo Message :
+      ```javascript
+      {
+          "message_id": "620d131783820a348eec815f",
+          "sender_username": "tahad",
+          "message_type": "photo",
+          "send_time": 1645024023454,
+          "edited": false,
+          "seen_state": "sended",
+          "filename": "72d0698ed0ed065c067f",
+          "caption": "Photo :]"
+      }
+        ```
       
 ### Redis
 Relevant file : `backend/lib/store.ts`   
