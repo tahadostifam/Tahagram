@@ -1,9 +1,12 @@
 FROM node:14
 
 WORKDIR /server
-COPY . /server
 
-RUN npm i;
+COPY . .
+
+RUN npm install
+
+RUN npm run build
 
 EXPOSE 8000
 EXPOSE 2345

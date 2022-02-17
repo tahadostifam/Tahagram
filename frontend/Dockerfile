@@ -1,7 +1,7 @@
 FROM node:14
 
-WORKDIR /app
-COPY . /app
+WORKDIR /frontend
+COPY . /frontend
 
 RUN npm i;
 
