@@ -30,13 +30,14 @@ Please checkout this [link](https://github.com/tahadostifam/ChatApp/tree/main/do
     -   Vuetifyjs
     -   I18n
     -   PWA
+    -   Axios
     -   [jsCookie](https://www.npmjs.com/package/js-cookie)
     -   [vue-advanced-cropper](https://www.npmjs.com/package/vue-advanced-cropper)
     -   [vue-emoji-picker](https://www.npmjs.com/package/vue-emoji-picker)
     -   webpack -> used by nuxtjs
 -   CI/CD Tools
     -   Docker, Docker-Compose
-    -   Ubuntu (Used by docker container)
+    -   Debian & Alpine Linux (Used by docker container)
     -   Git, Github
 -   Databases
     -   MongoDB
