@@ -9,6 +9,14 @@ import User from "../models/user";
 export default function (req: any, res: Response, next: NextFunction) {
     const client_ip = clientIp(req, res)?.toString();
     if (client_ip) {
+        // FIXME - fixing -> nginx forwarding_headers on reverse_proxy
+        if (req.body.username) {
+            req.headers.username = req.body.username;
+        }
+        if (req.body.auth_token) {
+            req.headers.auth_token = req.body.auth_token;
+        }
+
         if (req.headers.username && req.headers.auth_token) {
             const username: string = String(req.headers.username);
             const auth_token: string = String(req.headers.auth_token);

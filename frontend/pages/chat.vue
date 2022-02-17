@@ -696,12 +696,14 @@ export default {
             "/api/profile_photos/remove_profile_photo",
             {
               filename: filename,
+              auth_token: this.$store.state.auth.auth.auth_token,
+              username: this.username,
             },
             {
-              headers: {
-                auth_token: this.$store.state.auth.auth.auth_token,
-                username: this.username,
-              },
+              // headers: { FIXME
+              //   auth_token: this.$store.state.auth.auth.auth_token,
+              //   username: this.username,
+              // },
             }
           )
           .then((response) => {
@@ -917,12 +919,19 @@ export default {
             );
           }
 
+          // FIXME - nginx
+          request_body.append("username", vm.username);
+          request_body.append(
+            "auth_token",
+            vm.$store.state.auth.auth.auth_token
+          );
+
           this.$axios
             .$post("/api/messages/new_photo_message", request_body, {
-              headers: {
-                username: vm.username,
-                auth_token: this.$store.state.auth.auth.auth_token,
-              },
+              // headers: { FIXME - nginx
+              //   username: vm.username,
+              //   auth_token: vm.$store.state.auth.auth.auth_token,
+              // },
             })
             .then((response) => {
               console.log(response);
@@ -1421,45 +1430,57 @@ export default {
         const croppedImage = canvas.toDataURL("image/png");
         const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
         if (imageFile) {
-          const request_body = new FormData();
-          request_body.append("photo", imageFile);
+          if (vm.username && vm.$store.state.auth.auth.auth_token) {
+            const request_body = new FormData();
+            request_body.append("photo", imageFile);
 
-          this.$set(this.$data, "photo_uploading_state", true);
+            this.$set(this.$data, "photo_uploading_state", true);
 
-          this.$axios
-            .$post("/api/profile_photos/upload_photo", request_body, {
-              headers: {
-                username: this.$store.state.auth.auth.username,
-                auth_token: this.$store.state.auth.auth.auth_token,
-              },
-            })
-            .then((response) => {
-              if (response.message == "profile photo uploaded") {
-                this.$store.commit(
-                  "auth/addProfilePhoto",
-                  response.profile_photo_filename
-                );
+            // FIXME - nginx
+            request_body.append("username", vm.username);
+            request_body.append(
+              "auth_token",
+              vm.$store.state.auth.auth.auth_token
+            );
+            this.$axios
+              .$post("/api/profile_photos/upload_photo", request_body, {
+                // headers: { FIXME - nginx
+                //   username: vm.username,
+                //   auth_token: vm.$store.state.auth.auth.auth_token,
+                // },
+              })
+              .then((response) => {
+                if (response.message == "profile photo uploaded") {
+                  this.$store.commit(
+                    "auth/addProfilePhoto",
+                    response.profile_photo_filename
+                  );
+                  this.$set(
+                    this.$data,
+                    "user_default_avatar",
+                    this.gimme_profile_photo_link_addr({
+                      filename: response.profile_photo_filename,
+                    })
+                  );
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+                this.error_occurred();
+              })
+              .finally(() => {
                 this.$set(
-                  this.$data,
-                  "user_default_avatar",
-                  this.gimme_profile_photo_link_addr({
-                    filename: response.profile_photo_filename,
-                  })
+                  this.$data.crop_profile_photo,
+                  "button_loading_state",
+                  false
                 );
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-              this.error_occurred();
-            })
-            .finally(() => {
-              this.$set(
-                this.$data.crop_profile_photo,
-                "button_loading_state",
-                false
-              );
-              this.$set(this.$data, "photo_uploading_state", false);
-            });
+                this.$set(this.$data, "photo_uploading_state", false);
+              });
+          } else {
+            console.log(
+              "username or auth_token not found on sending photo as message"
+            );
+          }
         } else {
           console.log("no profile photo to upload");
         }
