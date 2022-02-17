@@ -45,9 +45,6 @@ export default {
             });
 
             if (!user) return status_codes.invalid_token(req, res, next);
-            else {
-                console.log("invalid token");
-            }
 
             var final_filename: string = "";
             async function generateRandomFileName() {
@@ -78,9 +75,12 @@ export default {
 
                     await photo.mv(process.cwd() + photo_messages_directory + String(final_filename));
 
-                    const user_ws = users.find(({ username: _username_ }) => user.username);
-                    if (user_ws && user_ws.ws) {
+                    const user_ws = await users.find(({ username: _username_ }) => user.username);
+
+                    if (user_ws) {
                         handle_messages_socket(chat_id, chat_type, target_username, user_ws.ws, message);
+                    } else {
+                        console.log("user_ws not found on new_photo_message");
                     }
                 } else {
                     console.log("final_filename is empty!");
