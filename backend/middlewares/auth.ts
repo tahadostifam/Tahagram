@@ -9,7 +9,6 @@ import User from "../models/user";
 export default function (req: any, res: Response, next: NextFunction) {
     const client_ip = clientIp(req, res)?.toString();
     if (client_ip) {
-        // FIXME - fixing -> nginx forwarding_headers on reverse_proxy
         if (req.body.username) {
             req.headers.username = req.body.username;
         }

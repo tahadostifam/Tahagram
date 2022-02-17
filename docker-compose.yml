@@ -19,14 +19,6 @@ services:
             - "8000:8000"
             - "2345:2345"
         network_mode: "host"
-    nginx:
-        container_name: "chat_app_nginx"
-        build:
-            context: ./backend
-            dockerfile: nginx.Dockerfile
-        ports:
-            - "5000:5000"
-        network_mode: "host"
     mongo:
         image: "mongo"
         container_name: "chat_app_database"

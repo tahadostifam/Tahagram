@@ -20,13 +20,9 @@ export const mutations = {
         if (data.full_name && state.user_info.chats[chat_index].full_name) {
           state.user_info.chats[chat_index].full_name = data.full_name;
         }
-        if (
-          data.profile_photos &&
-          state.user_info.chats[chat_index].profile_photos
-        ) {
+        if (data.profile_photos) {
           state.user_info.chats[chat_index].profile_photos =
             data.profile_photos;
-          console.log(data.profile_photos);
           state.user_info.chats[chat_index].profile_photo =
             state.user_info.chats[chat_index].profile_photos[0];
           vm.$set(
@@ -35,6 +31,8 @@ export const mutations = {
             data.profile_photos[0]
           );
         }
+      } else {
+        console.log("error in updateChat line 39");
       }
     }
   },

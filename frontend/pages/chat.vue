@@ -696,14 +696,12 @@ export default {
             "/api/profile_photos/remove_profile_photo",
             {
               filename: filename,
-              auth_token: this.$store.state.auth.auth.auth_token,
-              username: this.username,
             },
             {
-              // headers: { FIXME
-              //   auth_token: this.$store.state.auth.auth.auth_token,
-              //   username: this.username,
-              // },
+              headers: {
+                auth_token: this.$store.state.auth.auth.auth_token,
+                username: this.username,
+              },
             }
           )
           .then((response) => {
@@ -919,19 +917,12 @@ export default {
             );
           }
 
-          // FIXME - nginx
-          request_body.append("username", vm.username);
-          request_body.append(
-            "auth_token",
-            vm.$store.state.auth.auth.auth_token
-          );
-
           this.$axios
             .$post("/api/messages/new_photo_message", request_body, {
-              // headers: { FIXME - nginx
-              //   username: vm.username,
-              //   auth_token: vm.$store.state.auth.auth.auth_token,
-              // },
+              headers: {
+                username: vm.username,
+                auth_token: vm.$store.state.auth.auth.auth_token,
+              },
             })
             .then((response) => {
               console.log(response);
@@ -1436,18 +1427,12 @@ export default {
 
             this.$set(this.$data, "photo_uploading_state", true);
 
-            // FIXME - nginx
-            request_body.append("username", vm.username);
-            request_body.append(
-              "auth_token",
-              vm.$store.state.auth.auth.auth_token
-            );
             this.$axios
               .$post("/api/profile_photos/upload_photo", request_body, {
-                // headers: { FIXME - nginx
-                //   username: vm.username,
-                //   auth_token: vm.$store.state.auth.auth.auth_token,
-                // },
+                headers: {
+                  username: vm.username,
+                  auth_token: vm.$store.state.auth.auth.auth_token,
+                },
               })
               .then((response) => {
                 if (response.message == "profile photo uploaded") {
