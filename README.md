@@ -34,8 +34,6 @@ Please checkout this [link](https://github.com/tahadostifam/ChatApp/tree/main/do
     -   [vue-advanced-cropper](https://www.npmjs.com/package/vue-advanced-cropper)
     -   [vue-emoji-picker](https://www.npmjs.com/package/vue-emoji-picker)
     -   webpack -> used by nuxtjs
--   WebServer & Reverse Proxy
-    -   Nginx
 -   CI/CD Tools
     -   Docker, Docker-Compose
     -   Ubuntu (Used by docker container)
