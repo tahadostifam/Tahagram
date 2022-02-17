@@ -7,7 +7,7 @@ export default {
       if (profile_photo && profile_photo.filename) {
         return (
           this.$axios.defaults.baseURL +
-          "/uploads/profile_photos/" +
+          "/api/uploads/profile_photos/" +
           profile_photo.filename
         );
       }
@@ -15,7 +15,9 @@ export default {
     gimme_photo_message_link_addr(filename) {
       if (filename) {
         return (
-          this.$axios.defaults.baseURL + "/uploads/photo_messages/" + filename
+          this.$axios.defaults.baseURL +
+          "/api/uploads/photo_messages/" +
+          filename
         );
       }
     },
