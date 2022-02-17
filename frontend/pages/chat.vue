@@ -290,7 +290,11 @@
                 </div>
 
                 <div>
-                  <v-menu offset-y transition="slide-y-transition">
+                  <v-menu
+                    offset-y
+                    transition="slide-y-transition"
+                    v-if="active_chat.chat_type == 'private'"
+                  >
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         color="gray"
