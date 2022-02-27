@@ -1,0 +1,26 @@
+.dropdown {
+  position: relative;
+  .dropdown-content {
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    left: 0;
+    top: 45px;
+    background-color: var(--grey-dark-color);
+    max-width: 300px;
+    min-width: 140px;
+    padding: 6px 0;
+    .rounded-df();
+    .item {
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      text-align: left; // NOTE - rtl : right
+      padding: 12px 15px;
+      color: #fff;
+      &:hover {
+        background-color: var(--grey-lighter-color);
+      }
+    }
+  }
+}
