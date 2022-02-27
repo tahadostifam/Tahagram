@@ -1,0 +1,53 @@
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  --color: #fff;
+  color: var(--color);
+  fill: var(--color);
+  background-color: var(--primary-color);
+  transition: background-color 0.15s ease;
+  .rounded-df();
+  &.btn-glass {
+    background-color: transparent;
+    color: var(--primary-color);
+    &:hover {
+      background-color: var(--primary-glass-color);
+    }
+  }
+  &.rounded-full{
+    --size: 40px;
+    border-radius: 50%;
+    width: var(--size);
+    height: var(--size);
+    padding: 0;
+    text-align: center;
+  }
+}
+
+.make-buttons(@names, @colors) {
+  .button(@index) when (@index =< length(@names)) {
+    @name: extract(@names, @index);
+    @color: extract(@colors, @index);
+    @button: ~".btn-@{name}";
+    @button_glass: ~".btn-glass-@{name}";
+
+    @{button} {
+      background-color: @color;
+    }
+
+    @{button_glass}{
+      background-color: transparent;
+      color: @color;
+      &:hover {
+        background-color: extract(@buttons-light-colors, @index);
+      }
+    }
+
+    .button(@index + 1);
+  }
+  .button(1);
+}
+
+.make-buttons(@buttons-names, @buttons-colors);
