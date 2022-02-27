@@ -1,0 +1,18 @@
+@import url("../_theme.less");
+
+.make-radius(@names, @values) {
+  .radius(@index) when (@index =< length(@names)) {
+    @name: extract(@names, @index);
+    @value: extract(@values, @index);
+
+    @item: ~".rounded-@{name}";
+    @{item} {
+      border-radius: @value;
+    }
+
+    .radius(@index + 1);
+  }
+  .radius(1);
+}
+
+.make-radius(@radius-names, @radius-values);
