@@ -1,21 +1,26 @@
 <div id="signin_page">
   <div class="form">
     <div class="logo">
-      <img src="assets/images/logo.png" alt="Logo" />
+      <img src="assets/images/logo.svg" alt="Logo" />
     </div>
     <h1 class="title">Sign in to ChatApp</h1>
     <h2 class="sub-title text-grey">
       Please enter your email. after submit we will send you a verification
       code.
     </h2>
-    <div class="input-outlined-with-label">
-      <label class="input-label" for="email">Email</label>
+    <div class="input-outlined-with-label mt-40">
       <input
         id="email"
         type="text"
         class="theme-light input-outlined input_large label-input"
       />
+      <label class="input-label" for="email">Email</label>
     </div>
-    <button class="btn w-100 btn-large">Submit</button>
+    <label for="remember_me" class="checkbox">
+      <input hidden type="text" type="checkbox" id="remember_me" checked="1" />
+      <span class="checkbox-border"></span>
+      <span class="checkmark"></span>
+    </label>
+    <button class="btn w-100 btn-large mt-30">Submit</button>
   </div>
 </div>
