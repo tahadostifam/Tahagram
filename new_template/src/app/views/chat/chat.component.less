@@ -1,0 +1,34 @@
+#chat_container {
+  --sidebar-width: 420px;
+  width: 100%;
+  min-height: 100vh;
+  max-height: 100vh;
+  display: block;
+  #sidebar {
+    position: relative;
+    display: block;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: var(--grey-dark-color);
+    #sidebar_headbar {
+      width: 100%;
+      padding: 5px 10px;
+      --side-bar-menu-button-width: 45px;
+      #show_menu_button {
+        display: inline-block;
+        width: var(--side-bar-menu-button-width);
+        height: var(--side-bar-menu-button-width);
+        vertical-align: middle;
+        padding-top: 6px;
+      }
+      #search_in_chats_input {
+        vertical-align: middle;
+        display: inline-block;
+        margin: 0;
+        --margin: 10px;
+        margin-left: var(--margin);
+        width: calc(100% - var(--side-bar-menu-button-width) - var(--margin));
+      }
+    }
+  }
+}

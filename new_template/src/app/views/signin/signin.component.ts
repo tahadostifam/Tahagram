@@ -24,14 +24,13 @@ export class SigninComponent implements OnInit {
   email_isnt_valid: boolean = false;
 
   submit_form() {
-    this.router.navigate(['/']);
-
     // this.success_submit = true;
     // this.email_isnt_valid = true;
-    // this.button_loading = true;
-    // setTimeout(() => {
-    //   this.button_loading = false;
-    // }, 2000);
+    this.button_loading = true;
+    setTimeout(() => {
+      this.router.navigate(['/']);
+      this.button_loading = false;
+    }, 2000);
   }
 
   back_to_submit_form() {
