@@ -1,4 +1,14 @@
+@keyframes rotate_loading {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
 .btn {
+  position: relative;
   border: none;
   outline: none;
   cursor: pointer;
@@ -8,11 +18,37 @@
   fill: var(--color);
   background-color: var(--primary-color);
   transition: background-color 0.15s ease;
+  transition: opacity 0.3s ease;
   text-transform: uppercase;
-  font-family: var(--font);
+  font-family: "Roboto-Medium";
+  font-weight: lighter;
   font-size: 100%;
   font-weight: 500;
+  overflow: hidden;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content:center;
+  &.loading{
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .button__loading{
+    position: absolute;
+    --size: 28px;
+    height: var(--size);
+    width: var(--size);
+    border-radius: 50px;
+    border: 2px solid #fff;
+    border-right-color: #ffffff00;
+    animation-name: rotate_loading;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    right: 10px;
+    z-index: 5;
+  }
   &.btn-large{
     padding: 14px 8px;
   }

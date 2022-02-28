@@ -3,13 +3,18 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.less']
+  styleUrls: ['./signin.component.less'],
 })
 export class SigninComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
+  button_loading: boolean = false;
+  submit_form() {
+    this.button_loading = true;
+    setTimeout(() => {
+      this.button_loading = false;
+    }, 2000);
   }
-
 }
