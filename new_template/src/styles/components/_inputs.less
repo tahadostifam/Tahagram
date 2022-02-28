@@ -62,6 +62,9 @@
     border: var(--border-width) solid var(--primary-color);
     background-color: @input-focused-bg-color !important;
   }
+  &.not_valid {
+    border-color: var(--danger-color) !important;
+  }
 }
 
 .input-outlined-with-label {
@@ -84,6 +87,11 @@
   input:focus ~ .input-label {
     color: var(--primary-color);
     font-weight: 600;
+  }
+  input.not_valid {
+    & ~ .input-label {
+      color: var(--danger-color);
+    }
   }
 }
 

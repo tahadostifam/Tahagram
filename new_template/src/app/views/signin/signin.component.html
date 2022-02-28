@@ -12,9 +12,16 @@
       <input
         id="email"
         type="text"
+        required
+        [(ngModel)]="email"
+        name="email"
         class="theme-light input-outlined input_large label-input"
+        [class.not_valid]="email_isnt_valid"
       />
-      <label class="input-label" for="email">Email</label>
+      <label class="input-label" for="email">
+        <span *ngIf="!email_isnt_valid">Email</span>
+        <span *ngIf="email_isnt_valid">Email Invalid</span>
+      </label>
     </div>
     <label for="remember_me" class="checkbox mt-20">
       Keep me signed in
@@ -36,7 +43,7 @@
     <div class="logo-emoji">🎁</div>
     <h2 id="entered_email">
       mr.tahadostifam@gmail.com
-      <button class="btn-none">
+      <button class="btn-none" (click)="this.back_to_submit_form()">
         <span class="material-icons">edit</span>
       </button>
     </h2>
