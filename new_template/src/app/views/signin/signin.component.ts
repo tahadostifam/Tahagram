@@ -6,6 +6,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -13,7 +14,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./signin.component.less'],
 })
 export class SigninComponent implements OnInit {
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -23,7 +24,8 @@ export class SigninComponent implements OnInit {
   email_isnt_valid: boolean = false;
 
   submit_form() {
-    this.success_submit = true;
+    // this.success_submit = true;
+    this.router.navigate(['/']);
     // this.email_isnt_valid = true;
     // this.button_loading = true;
     // setTimeout(() => {
