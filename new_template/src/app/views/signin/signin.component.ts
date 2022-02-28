@@ -11,10 +11,13 @@ export class SigninComponent implements OnInit {
   ngOnInit(): void {}
 
   button_loading: boolean = false;
+  success_submit: boolean = true;
+
   submit_form() {
-    this.button_loading = true;
-    setTimeout(() => {
-      this.button_loading = false;
-    }, 2000);
+    this.success_submit = true;
+    // this.button_loading = true;
+    // setTimeout(() => {
+    //   this.button_loading = false;
+    // }, 2000);
   }
 }
