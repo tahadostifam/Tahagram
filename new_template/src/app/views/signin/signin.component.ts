@@ -19,13 +19,12 @@ export class SigninComponent implements OnInit {
   ngOnInit(): void {}
 
   button_loading: boolean = false;
-  success_submit: boolean = false;
+  success_submit: boolean = true;
   email: string = '';
   email_isnt_valid: boolean = false;
 
   submit_form() {
-    // this.success_submit = true;
-    // this.email_isnt_valid = true;
+    this.email_isnt_valid = true;
     this.button_loading = true;
     setTimeout(() => {
       this.router.navigate(['/']);

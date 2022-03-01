@@ -1,28 +1,41 @@
 <div id="chat_container">
   <div id="sidebar">
     <div id="sidebar_headbar">
+      <!-- FIXME - to component -->
+      <div class="dropdown" id="menu_dropdown">
+        <div
+          *ngIf="show_dropdown"
+          class="dropdown-content large-items"
+          (mouseleave)="closeDropDown()"
+          (click)="closeDropDown()"
+        >
+          <div class="dropdown-content-overlay"></div>
+          <a class="item">
+            <span class="mdi mdi-bookmark"></span>
+            Saved Messages</a
+          >
+          <a class="item">
+            <span class="mdi mdi-cog"></span>
+            Settings
+          </a>
+          <a class="item">
+            <span class="mdi mdi-information"></span>
+            ChatApp Features
+          </a>
+          <a class="item">
+            <span class="mdi mdi-bug"></span>
+            Report Bug
+          </a>
+        </div>
+      </div>
       <button
         id="show_menu_button"
         class="btn btn-danger btn-glass-grey rounded-full"
         #showMenuButton
         (click)="menuButtonClick()"
       >
-        <span *ngIf="!search_mode" class="material-icons">menu</span>
-        <svg
-          *ngIf="search_mode"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          style="width: 23px"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="48"
-            d="M244 400L100 256l144-144M120 256h292"
-          />
-        </svg>
+        <span *ngIf="!search_mode" class="mdi mdi-menu"></span>
+        <span class="mdi mdi-arrow-left" *ngIf="search_mode"></span>
       </button>
       <div id="search_in_chats_input">
         <input
@@ -33,7 +46,7 @@
           placeholder="Search"
           (focus)="searchInputFocus()"
         />
-        <span class="material-icons">search</span>
+        <span class="mdi mdi-magnify"></span>
       </div>
     </div>
     <div id="chats_list">

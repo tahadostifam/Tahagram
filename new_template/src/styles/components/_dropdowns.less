@@ -1,8 +1,7 @@
 .dropdown {
   position: relative;
   .dropdown-content {
-    overflow-x: hidden;
-    overflow-y: auto;
+    box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.24);
     position: absolute;
     left: 0;
     top: 45px;
@@ -10,7 +9,18 @@
     max-width: 300px;
     min-width: 140px;
     padding: 8px 0;
+    z-index: 20;
     .rounded-df();
+    .dropdown-content-overlay {
+      --size: -40px;
+      z-index: -1;
+      position: absolute;
+      top: var(--size);
+      left: var(--size);
+      right: var(--size);
+      bottom: var(--size);
+      opacity: 0;
+    }
     .item {
       cursor: pointer;
       display: block;
@@ -21,11 +31,17 @@
       &:hover {
         background-color: var(--grey-lighter-color);
       }
-      .material-icons {
+      .mdi {
         vertical-align: middle;
         margin-bottom: 1px;
         color: var(--grey-light-color);
         margin-right: 10px;
+        font-size: 25px;
+      }
+    }
+    &.large-items {
+      .item {
+        padding: 15px;
       }
     }
   }

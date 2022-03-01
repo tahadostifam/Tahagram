@@ -23,7 +23,10 @@
         width: var(--side-bar-menu-button-width);
         height: var(--side-bar-menu-button-width);
         vertical-align: middle;
-        padding-top: 5px;
+        padding-top: 3px;
+        .mdi {
+          font-size: 24px;
+        }
       }
       #search_in_chats_input {
         vertical-align: middle;
@@ -33,9 +36,10 @@
         margin-left: var(--margin);
         width: calc(100% - var(--side-bar-menu-button-width) - var(--margin));
         position: relative;
-        .material-icons {
+        .mdi {
+          font-size: 20px;
           position: absolute;
-          left: 10px;
+          left: 14px;
           top: 10px;
           color: var(--grey-light-color);
         }
@@ -43,7 +47,7 @@
           padding-left: calc(39px - var(--border-width));
           height: 42px;
         }
-        input:focus ~ .material-icons {
+        input:focus ~ .mdi {
           color: var(--primary-color);
           transition: 0.2s ease-in-out;
         }
@@ -70,6 +74,11 @@
         left: 0;
         right: 0;
         opacity: 1;
+      }
+    }
+    #menu_dropdown {
+      .dropdown-content {
+        width: 300px;
       }
     }
   }

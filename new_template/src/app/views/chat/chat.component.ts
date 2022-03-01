@@ -17,6 +17,8 @@ export class ChatComponent implements OnInit {
   show_search_chats_list: boolean = false;
   search_input: string = '';
 
+  show_dropdown = false;
+
   rotateIcon(el: ElementRef) {
     if (!el.nativeElement.classList.contains('rotate_icon')) {
       el.nativeElement.classList.add('rotate_icon');
@@ -48,12 +50,17 @@ export class ChatComponent implements OnInit {
       this.search_input = '';
       return;
     }
+    this.show_dropdown = true;
   }
 
   searchInputFocus() {
     this.search_mode = true;
     this.setSearchChatsListState(true);
     this.rotateIcon(this.menu_button);
+  }
+
+  closeDropDown() {
+    this.show_dropdown = false;
   }
 
   showChat() {}
