@@ -29,18 +29,19 @@
         vertical-align: middle;
         display: inline-block;
         margin: 0;
-        --margin: 10px;
+        --margin: 7px;
         margin-left: var(--margin);
         width: calc(100% - var(--side-bar-menu-button-width) - var(--margin));
         position: relative;
         .material-icons {
           position: absolute;
           left: 10px;
-          top: 8px;
+          top: 10px;
           color: var(--grey-light-color);
         }
         input {
           padding-left: calc(39px - var(--border-width));
+          height: 42px;
         }
         input:focus ~ .material-icons {
           color: var(--primary-color);
@@ -52,13 +53,14 @@
       padding: 10px 15px;
     }
     #search_chats_list {
+      --zoom-size: -15px;
+      top: calc(var(--top) - 15px);
       position: absolute;
       --top: 55px;
       height: calc(100% - var(--top));
-      top: calc(var(--top) - 10px);
-      bottom: -10px;
-      left: -10px;
-      right: -10px;
+      bottom: var(--zoom-size);
+      left: var(--zoom-size);
+      right: var(--zoom-size);
       background-color: var(--grey-dark-color);
       opacity: 0;
       transition: 0.1s ease-in-out;

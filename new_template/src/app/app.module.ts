@@ -9,7 +9,12 @@ import { ChatComponent } from './views/chat/chat.component';
 import { ChatRowComponent } from './components/chat-row/chat-row.component';
 
 @NgModule({
-  declarations: [AppComponent, SigninComponent, ChatComponent, ChatRowComponent],
+  declarations: [
+    AppComponent,
+    SigninComponent,
+    ChatComponent,
+    ChatRowComponent,
+  ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
