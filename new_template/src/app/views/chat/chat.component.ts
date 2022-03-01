@@ -37,4 +37,6 @@ export class ChatComponent implements OnInit {
     this.search_mode = true;
     this.rotateIcon(this.menu_button);
   }
+
+  showChat() {}
 }

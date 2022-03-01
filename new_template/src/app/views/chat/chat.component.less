@@ -50,5 +50,20 @@
     #chats_list {
       padding: 10px 15px;
     }
+    #search_chats_list {
+      position: absolute;
+      width: 100%;
+      --top: 56px;
+      height: calc(100% - var(--top));
+      top: var(--top);
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--grey-dark-color);
+      opacity: 0;
+      &.show {
+        opacity: 1;
+      }
+    }
   }
 }

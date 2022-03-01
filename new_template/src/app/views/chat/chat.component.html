@@ -37,9 +37,15 @@
       </div>
     </div>
     <div id="chats_list">
-      <chat-row [title]="'[Taha.D]'"></chat-row>
-      <chat-row></chat-row>
+      <chat-row
+        [title]="'[Taha.D]'"
+        [last_message]="'Hi Taha'"
+        [last_message_date]="'12:12'"
+        [avatar]="'assets/images/avatar.jpg'"
+        [unread_messages]="'1'"
+      ></chat-row>
     </div>
+    <div id="search_chats_list" [class.show]="search_mode">TODO</div>
   </div>
   <div id="chatside">
     <div id="chatside_headbar"></div>

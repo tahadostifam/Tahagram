@@ -1,12 +1,12 @@
 <div class="chat_row d-flex align-center flex-row" [class.active]="active">
   <div class="chat_avatar" [class.just_color]="!avatar">
-    <img *ngIf="avatar" src="assets/images/avatar.jpg" />
+    <img *ngIf="avatar" [src]="avatar" />
     <span *ngIf="!avatar">{{ title[0] }}</span>
   </div>
   <div class="d-inline-block chat_row_content">
     <div class="d-flex space-between align-center mb-10">
       <h1 class="chat_title">{{ title }}</h1>
-      <span class="chat_last_message_date">{{ last_message }}</span>
+      <span class="chat_last_message_date">{{ last_message_date }}</span>
     </div>
     <div class="d-flex space-between align-center">
       <p class="chat_last_message">{{ last_message }}</p>
