@@ -5,7 +5,7 @@
 @margins-names: "0", "1", "2", "3", "5", "10", "15", "20", "30", "40";
 
 @radius-names: "df", "sm", "md";
-@radius-values: 10px, 8px, 0.75rem;
+@radius-values: var(--radius-df), var(--radius-sm), var(--radius-md);
 
 @input-bg-color: var(--grey-darker-color);
 @input-border-color: #2f2f2f;
@@ -21,12 +21,16 @@
   --grey-dark-color: #212121;
   --grey-light-color: #707579;
   --grey-lighter-color: #aaaaaa14;
+  --grey-text: #aaaaaa;
   --light-border: #dfe1e5;
   --danger-color: #ff1d1d;
   --border-color: #0f0f0f;
+  --radius-df: 10px;
+  --radius-sm: 8px;
+  --radius-md: 0.75rem;
   --font: "Roboto", "Vazir", -apple-system, apple color emoji, "Segoe UI";
 }
 
 @buttons-names: "danger", "grey";
-@buttons-colors: var(--danger-color), #aaaaaa;
+@buttons-colors: var(--danger-color), var(--grey-text);
 @buttons-light-colors: #ff00002d, var(--grey-lighter-color);

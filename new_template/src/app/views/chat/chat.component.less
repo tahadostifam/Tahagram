@@ -16,11 +16,13 @@
       padding: 5px 18px;
       --side-bar-menu-button-width: 45px;
       #show_menu_button {
+        position: relative;
+        top: 1px;
         display: inline-block;
         width: var(--side-bar-menu-button-width);
         height: var(--side-bar-menu-button-width);
         vertical-align: middle;
-        padding-top: 6px;
+        padding-top: 5px;
       }
       #search_in_chats_input {
         vertical-align: middle;
@@ -44,6 +46,9 @@
           transition: 0.2s ease-in-out;
         }
       }
+    }
+    #chats_list {
+      padding: 10px 15px;
     }
   }
 }
