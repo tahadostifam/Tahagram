@@ -9,6 +9,7 @@
     display: block;
     width: var(--sidebar-width);
     height: 100vh;
+    overflow-x: hidden;
     background-color: var(--grey-dark-color);
     #sidebar_headbar {
       border-bottom: 1px solid var(--border-color);
@@ -52,16 +53,20 @@
     }
     #search_chats_list {
       position: absolute;
-      width: 100%;
-      --top: 56px;
+      --top: 55px;
       height: calc(100% - var(--top));
-      top: var(--top);
-      bottom: 0;
-      left: 0;
-      right: 0;
+      top: calc(var(--top) - 10px);
+      bottom: -10px;
+      left: -10px;
+      right: -10px;
       background-color: var(--grey-dark-color);
       opacity: 0;
+      transition: 0.1s ease-in-out;
       &.show {
+        top: var(--top);
+        bottom: 0;
+        left: 0;
+        right: 0;
         opacity: 1;
       }
     }

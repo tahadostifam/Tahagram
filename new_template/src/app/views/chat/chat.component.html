@@ -45,7 +45,9 @@
         [unread_messages]="'1'"
       ></chat-row>
     </div>
-    <div id="search_chats_list" [class.show]="search_mode">TODO</div>
+    <div #searchChatsList id="search_chats_list" *ngIf="show_search_chats_list">
+      TODO
+    </div>
   </div>
   <div id="chatside">
     <div id="chatside_headbar"></div>
