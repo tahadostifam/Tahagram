@@ -4,16 +4,32 @@
       <button
         id="show_menu_button"
         class="btn btn-danger btn-glass-grey rounded-full"
-        (click)="search_mode = !search_mode"
+        #showMenuButton
+        (click)="menuButtonClick()"
       >
         <span *ngIf="!search_mode" class="material-icons">menu</span>
+        <svg
+          *ngIf="search_mode"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          style="width: 23px"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="48"
+            d="M244 400L100 256l144-144M120 256h292"
+          />
+        </svg>
       </button>
-      <span class="material-icons">arrow-</span>
       <input
         type="text"
         class="input-outlined rounded-full"
         placeholder="Search"
         id="search_in_chats_input"
+        (focus)="searchInputFocus()"
       />
     </div>
   </div>
