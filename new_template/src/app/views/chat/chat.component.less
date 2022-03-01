@@ -11,8 +11,9 @@
     height: 100vh;
     background-color: var(--grey-dark-color);
     #sidebar_headbar {
+      border-bottom: 1px solid var(--border-color);
       width: 100%;
-      padding: 5px 10px;
+      padding: 5px 18px;
       --side-bar-menu-button-width: 45px;
       #show_menu_button {
         display: inline-block;
@@ -28,6 +29,20 @@
         --margin: 10px;
         margin-left: var(--margin);
         width: calc(100% - var(--side-bar-menu-button-width) - var(--margin));
+        position: relative;
+        .material-icons {
+          position: absolute;
+          left: 10px;
+          top: 8px;
+          color: var(--grey-light-color);
+        }
+        input {
+          padding-left: calc(39px - var(--border-width));
+        }
+        input:focus ~ .material-icons {
+          color: var(--primary-color);
+          transition: 0.2s ease-in-out;
+        }
       }
     }
   }

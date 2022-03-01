@@ -13,6 +13,7 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {}
 
   search_mode: boolean = false;
+  search_input: string = '';
 
   rotateIcon(el: ElementRef) {
     if (!el.nativeElement.classList.contains('rotate_icon')) {
@@ -27,9 +28,9 @@ export class ChatComponent implements OnInit {
     if (this.search_mode == true) {
       this.search_mode = false;
       this.rotateIcon(this.menu_button);
+      this.search_input = '';
       return;
     }
-    this.rotateIcon(this.menu_button);
   }
 
   searchInputFocus() {

@@ -24,13 +24,20 @@
           />
         </svg>
       </button>
-      <input
-        type="text"
-        class="input-outlined rounded-full"
-        placeholder="Search"
-        id="search_in_chats_input"
-        (focus)="searchInputFocus()"
-      />
+      <div id="search_in_chats_input">
+        <input
+          type="text"
+          class="input-outlined rounded-full"
+          ngModel
+          [(ngModel)]="search_input"
+          placeholder="Search"
+          (focus)="searchInputFocus()"
+        />
+        <span class="material-icons">search</span>
+      </div>
+    </div>
+    <div id="chats_list">
+      <chat-row></chat-row>
     </div>
   </div>
   <div id="chatside">
