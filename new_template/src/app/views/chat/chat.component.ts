@@ -55,9 +55,11 @@ export class ChatComponent implements OnInit {
   }
 
   searchInputFocus() {
-    this.search_mode = true;
-    this.setSearchChatsListState(true);
-    this.rotateIcon(this.menu_button);
+    if (!this.search_mode && !this.show_search_chats_list) {
+      this.search_mode = true;
+      this.setSearchChatsListState(true);
+      this.rotateIcon(this.menu_button);
+    }
   }
 
   showChat() {}

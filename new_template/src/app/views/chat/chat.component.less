@@ -42,6 +42,9 @@
         position: relative;
         .mdi {
           font-size: 20px;
+          color: var(--grey-light-color);
+        }
+        .mdi.mdi-magnify {
           position: absolute;
           left: 14px;
           top: 10px;
@@ -51,9 +54,15 @@
           padding-left: calc(39px - var(--border-width));
           height: 42px;
         }
-        input:focus ~ .mdi {
-          color: var(--primary-color);
+        input:focus ~ .mdi,
+        input:focus ~ #clear_search_input .mdi {
+          color: var(--primary-color) !important;
           transition: 0.2s ease-in-out;
+        }
+        #clear_search_input {
+          position: absolute;
+          top: 9.5px;
+          right: 12px;
         }
       }
     }

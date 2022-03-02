@@ -44,6 +44,14 @@
           (focus)="searchInputFocus()"
         />
         <span class="mdi mdi-magnify"></span>
+        <button
+          *ngIf="search_input.trim().length > 0"
+          id="clear_search_input"
+          (click)="search_input = ''"
+          class="btn-none"
+        >
+          <span class="mdi mdi-close"></span>
+        </button>
       </div>
     </div>
     <div id="chats_list">
