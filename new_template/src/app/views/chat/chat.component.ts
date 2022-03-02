@@ -14,11 +14,11 @@ export class ChatComponent implements OnInit {
 
   dropdown: DropdownComponent = new DropdownComponent(this.elref);
 
-  ngOnInit(): void {}
-
   search_mode: boolean = false;
   show_search_chats_list: boolean = false;
   search_input: string = '';
+
+  ngOnInit(): void {}
 
   rotateIcon(el: ElementRef) {
     if (!el.nativeElement.classList.contains('rotate_icon')) {
