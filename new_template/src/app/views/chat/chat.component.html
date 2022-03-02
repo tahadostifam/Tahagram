@@ -1,8 +1,9 @@
 <div id="chat_container">
   <div id="sidebar">
     <div id="sidebar_headbar">
+      <dropdown [id]="'menu_dropdown'" id="menu_dropdown"></dropdown>
       <!-- FIXME - to component -->
-      <div class="dropdown" id="menu_dropdown">
+      <!-- <div class="dropdown" id="menu_dropdown">
         <div
           *ngIf="show_dropdown"
           class="dropdown-content large-items"
@@ -27,7 +28,7 @@
             Report Bug
           </a>
         </div>
-      </div>
+      </div> -->
       <button
         id="show_menu_button"
         class="btn btn-danger btn-glass-grey rounded-full"

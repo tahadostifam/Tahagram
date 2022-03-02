@@ -1,0 +1,27 @@
+<div class="dropdown">
+  <div
+    class="dropdown-content large-items"
+    (mouseleave)="closeDropDown(id)"
+    (click)="closeDropDown(id)"
+    [id]="id"
+    style="display: none"
+  >
+    <div class="dropdown-content-overlay"></div>
+    <a class="item">
+      <span class="mdi mdi-bookmark"></span>
+      Saved Messages</a
+    >
+    <a class="item">
+      <span class="mdi mdi-cog"></span>
+      Settings
+    </a>
+    <a class="item">
+      <span class="mdi mdi-information"></span>
+      ChatApp Features
+    </a>
+    <a class="item">
+      <span class="mdi mdi-bug"></span>
+      Report Bug
+    </a>
+  </div>
+</div>

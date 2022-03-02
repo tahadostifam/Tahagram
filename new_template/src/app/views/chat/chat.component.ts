@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DropdownComponent } from '../../components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-chat',
@@ -9,15 +10,15 @@ export class ChatComponent implements OnInit {
   @ViewChild('showMenuButton') menu_button!: ElementRef;
   @ViewChild('searchChatsList') search_chats_list!: ElementRef;
 
-  constructor() {}
+  constructor(private elref: ElementRef) {}
+
+  dropdown: DropdownComponent = new DropdownComponent(this.elref);
 
   ngOnInit(): void {}
 
   search_mode: boolean = false;
   show_search_chats_list: boolean = false;
   search_input: string = '';
-
-  show_dropdown = false;
 
   rotateIcon(el: ElementRef) {
     if (!el.nativeElement.classList.contains('rotate_icon')) {
@@ -50,17 +51,13 @@ export class ChatComponent implements OnInit {
       this.search_input = '';
       return;
     }
-    this.show_dropdown = true;
+    this.dropdown.showDropDown('menu_dropdown');
   }
 
   searchInputFocus() {
     this.search_mode = true;
     this.setSearchChatsListState(true);
     this.rotateIcon(this.menu_button);
-  }
-
-  closeDropDown() {
-    this.show_dropdown = false;
   }
 
   showChat() {}

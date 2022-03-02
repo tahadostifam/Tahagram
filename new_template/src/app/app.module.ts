@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { SigninComponent } from './views/signin/signin.component';
 import { ChatComponent } from './views/chat/chat.component';
 import { ChatRowComponent } from './components/chat-row/chat-row.component';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { ChatRowComponent } from './components/chat-row/chat-row.component';
     SigninComponent,
     ChatComponent,
     ChatRowComponent,
+    DropdownComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [],
