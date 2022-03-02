@@ -41,18 +41,34 @@
     .chat_last_message_date {
       color: #fff;
     }
+    .chat_avatar .is_online {
+      border-color: var(--primary-color);
+    }
   }
   .chat_avatar {
+    position: relative;
     --size: 60px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    overflow: hidden;
     background-color: var(--grey-darker-color);
     display: inline-block;
     img {
+      border-radius: 50%;
       width: 100%;
       height: 100%;
+    }
+    .is_online {
+      position: absolute;
+      right: 0px;
+      bottom: -1px;
+      background-color: var(--success-color);
+      border-radius: 50%;
+      --size: 17px;
+      width: var(--size);
+      height: var(--size);
+      display: block;
+      border: 3px solid var(--grey-dark-color);
     }
   }
   .chat_row_content {

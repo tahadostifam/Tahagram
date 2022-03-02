@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ChatRowComponent implements OnInit {
   @Input('active') active?: boolean;
+  @Input('is_online') is_online?: boolean;
   @Input('title') title!: string;
   @Input('last_message') last_message!: string;
   @Input('last_message_date') last_message_date!: string;

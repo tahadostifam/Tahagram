@@ -56,7 +56,16 @@
     </div>
     <div id="chats_list">
       <chat-row
+        [is_online]="true"
         [active]="true"
+        [title]="'[Taha.D]'"
+        [last_message]="'Hi Taha'"
+        [last_message_date]="'12:12'"
+        [avatar]="'assets/images/avatar.jpg'"
+        [unread_messages]="'1'"
+      ></chat-row>
+      <chat-row
+        [is_online]="true"
         [title]="'[Taha.D]'"
         [last_message]="'Hi Taha'"
         [last_message_date]="'12:12'"
