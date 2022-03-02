@@ -28,7 +28,10 @@
             "inlineStyleLanguage": "less",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles/styles.less"],
-            "scripts": ["node_modules/jquery/dist/jquery.min.js"]
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/scripts/theme.js"
+            ]
           },
           "configurations": {
             "production": {
