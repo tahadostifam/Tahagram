@@ -8,7 +8,7 @@
     min-width: 140px;
     padding: 8px 0;
     z-index: 20;
-    transition: 0.2s ease;
+    transition: 0.15s ease;
     opacity: 0;
     left: -10px;
     transform-origin: top left;
@@ -19,6 +19,17 @@
       left: unset;
       right: 0px;
       transform-origin: top right;
+      &.bottom {
+        transform-origin: bottom right;
+      }
+    }
+    &.bottom {
+      top: unset;
+      bottom: 15px;
+      transform-origin: bottom left;
+      &.rtl {
+        transform-origin: bottom right;
+      }
     }
     &.show {
       transform: scale3d(1, 1, 1) !important;

@@ -68,6 +68,20 @@
     }
     #chats_list {
       padding: 10px 15px;
+
+      #new_chat_floating {
+        position: absolute;
+        bottom: 18px;
+        right: 20px;
+        #floating-action-button {
+          --size: 55px;
+          width: var(--size);
+          height: var(--size);
+          font-size: 24px;
+          box-shadow: 0 2px 2px 0 #00000024, 0 3px 1px -2px #0000001f,
+            0 1px 5px 0 #00000033;
+        }
+      }
     }
     #search_chats_list {
       --zoom-size: -15px;
@@ -126,6 +140,10 @@
         font-weight: 100;
         margin-top: 4px;
       }
+      box-shadow: 0px 1px 5px -1px #00000036;
     }
+  }
+  @media screen and (max-width: 1100px) {
+    --sidebar-width: 350px;
   }
 }

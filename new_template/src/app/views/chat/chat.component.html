@@ -3,7 +3,7 @@
     <div id="sidebar_headbar">
       <dropdown
         [width]="'300px'"
-        [offset]="'30px'"
+        [offset_top]="'30px'"
         [id]="'menu_dropdown'"
         id="menu_dropdown"
         [large_items]="true"
@@ -63,6 +63,34 @@
         [avatar]="'assets/images/avatar.jpg'"
         [unread_messages]="'1'"
       ></chat-row>
+
+      <div id="new_chat_floating">
+        <button
+          (click)="this.dropdown.showDropDown('new_chat_dropdown')"
+          class="btn rounded-full"
+          id="floating-action-button"
+        >
+          <span class="mdi mdi-pen"></span>
+        </button>
+        <dropdown
+          [width]="'240px'"
+          [offset_bottom]="'45px'"
+          id="new_chat_dropdown"
+          [id]="'new_chat_dropdown'"
+          [large_items]="false"
+          [rtl]="true"
+          [bottom]="true"
+        >
+          <a class="item">
+            <span class="mdi mdi-bullhorn-outline"></span>
+            New Channel</a
+          >
+          <a class="item">
+            <span class="mdi mdi-account-multiple"></span>
+            New Group</a
+          >
+        </dropdown>
+      </div>
     </div>
     <div #searchChatsList id="search_chats_list" *ngIf="show_search_chats_list">
       TODO
@@ -96,7 +124,7 @@
           </button>
           <dropdown
             [width]="'250px'"
-            [offset]="'5px'"
+            [offset_top]="'5px'"
             id="chat_view_menu"
             [id]="'chat_view_menu'"
             [large_items]="false"
