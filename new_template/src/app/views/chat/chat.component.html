@@ -71,7 +71,13 @@
           <h3 id="chat_subtitle">online</h3>
         </div>
       </div>
-      <div>
+      <div class="d-flex align-center">
+        <button
+          class="btn btn-glass-grey rounded-full mr-5"
+          style="font-size: 24px; padding-top: 2px"
+        >
+          <span class="mdi mdi-magnify"></span>
+        </button>
         <div>
           <button
             (click)="this.dropdown.showDropDown('chat_view_menu')"
@@ -91,6 +97,14 @@
             <a class="item">
               <span class="mdi mdi-volume-off"></span>
               Mute</a
+            >
+            <a class="item">
+              <span class="mdi mdi-check-circle"></span>
+              Select Messages</a
+            >
+            <a class="item item-danger">
+              <span class="mdi mdi-delete"></span>
+              Delete Chat</a
             >
           </dropdown>
         </div>
