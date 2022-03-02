@@ -8,6 +8,8 @@ export class DropdownComponent implements OnInit {
   @Input('id') id!: string;
   @Input('width') width!: string;
   @Input('offset') offset!: string;
+  @Input('rtl') rtl!: boolean;
+  @Input('large_items') large_items!: boolean;
 
   constructor(private elref: ElementRef) {}
 

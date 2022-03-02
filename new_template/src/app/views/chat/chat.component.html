@@ -3,9 +3,10 @@
     <div id="sidebar_headbar">
       <dropdown
         [width]="'300px'"
-        [offset]="'5px'"
+        [offset]="'30px'"
         [id]="'menu_dropdown'"
         id="menu_dropdown"
+        [large_items]="true"
       >
         <a class="item">
           <span class="mdi mdi-bookmark"></span>
@@ -60,6 +61,41 @@
     </div>
   </div>
   <div id="chatside">
-    <div id="chatside_headbar"></div>
+    <div id="chatside_headbar">
+      <div class="d-flex align-center">
+        <div class="avatar">
+          <img src="assets/images/avatar.jpg" />
+        </div>
+        <div class="ml-12">
+          <h1 id="chat_title">[Taha.D]</h1>
+          <h3 id="chat_subtitle">online</h3>
+        </div>
+      </div>
+      <div>
+        <div>
+          <button
+            (click)="this.dropdown.showDropDown('chat_view_menu')"
+            class="btn btn-glass-grey rounded-full"
+            style="font-size: 24px; padding-top: 2px"
+          >
+            <span class="mdi mdi-dots-vertical"></span>
+          </button>
+          <dropdown
+            [width]="'250px'"
+            [offset]="'5px'"
+            id="chat_view_menu"
+            [id]="'chat_view_menu'"
+            [large_items]="false"
+            [rtl]="true"
+          >
+            <a class="item">
+              <span class="mdi mdi-volume-off"></span>
+              Mute</a
+            >
+          </dropdown>
+        </div>
+      </div>
+    </div>
+    <div id="chat_view">aaa</div>
   </div>
 </div>

@@ -3,7 +3,6 @@
   .dropdown-content {
     box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.24);
     position: absolute;
-
     background-color: var(--grey-dark-color);
     max-width: 300px;
     min-width: 140px;
@@ -12,11 +11,15 @@
     transition: 0.2s ease;
     opacity: 0;
     left: -10px;
-    top: 35px;
     transform-origin: top left;
     left: 0;
-    top: 45px;
+    top: 15px;
     transform: scale(0.8) !important;
+    &.rtl {
+      left: unset;
+      right: 0px;
+      transform-origin: top right;
+    }
     &.show {
       transform: scale3d(1, 1, 1) !important;
       opacity: 1;
@@ -37,7 +40,7 @@
       display: block;
       width: 100%;
       text-align: left; // NOTE - rtl : right
-      padding: 12px 15px;
+      padding: 10px 15px;
       color: #fff;
       &:hover {
         background-color: var(--grey-lighter-color);

@@ -1,12 +1,14 @@
 <div class="dropdown">
   <div
-    class="dropdown-content large-items"
+    class="dropdown-content"
+    [class.large-items]="large_items"
     (mouseleave)="closeDropDown(id)"
     (click)="closeDropDown(id)"
     [id]="id"
     style="display: none"
     [style.width]="width"
     [style.margin-top]="offset"
+    [class.rtl]="rtl"
   >
     <div class="dropdown-content-overlay"></div>
     <ng-content></ng-content>
