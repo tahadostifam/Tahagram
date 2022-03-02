@@ -1,34 +1,12 @@
 <div id="chat_container">
   <div id="sidebar">
     <div id="sidebar_headbar">
-      <dropdown [id]="'menu_dropdown'" id="menu_dropdown"></dropdown>
-      <!-- FIXME - to component -->
-      <!-- <div class="dropdown" id="menu_dropdown">
-        <div
-          *ngIf="show_dropdown"
-          class="dropdown-content large-items"
-          (mouseleave)="closeDropDown()"
-          (click)="closeDropDown()"
-        >
-          <div class="dropdown-content-overlay"></div>
-          <a class="item">
-            <span class="mdi mdi-bookmark"></span>
-            Saved Messages</a
-          >
-          <a class="item">
-            <span class="mdi mdi-cog"></span>
-            Settings
-          </a>
-          <a class="item">
-            <span class="mdi mdi-information"></span>
-            ChatApp Features
-          </a>
-          <a class="item">
-            <span class="mdi mdi-bug"></span>
-            Report Bug
-          </a>
-        </div>
-      </div> -->
+      <dropdown
+        [width]="'300px'"
+        [offset]="'5px'"
+        [id]="'menu_dropdown'"
+        id="menu_dropdown"
+      ></dropdown>
       <button
         id="show_menu_button"
         class="btn btn-danger btn-glass-grey rounded-full"

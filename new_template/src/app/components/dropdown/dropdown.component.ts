@@ -6,6 +6,8 @@ import { Component, OnInit, Input, ElementRef } from '@angular/core';
 })
 export class DropdownComponent implements OnInit {
   @Input('id') id!: string;
+  @Input('width') width!: string;
+  @Input('offset') offset!: string;
 
   constructor(private elref: ElementRef) {}
 

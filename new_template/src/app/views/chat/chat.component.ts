@@ -34,7 +34,7 @@ export class ChatComponent implements OnInit {
       this.search_chats_list.nativeElement.classList.remove('show');
       setTimeout(() => {
         this.show_search_chats_list = false;
-      }, 100);
+      }, 200);
     } else {
       this.show_search_chats_list = true;
       setTimeout(() => {

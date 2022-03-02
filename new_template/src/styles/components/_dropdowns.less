@@ -13,10 +13,13 @@
     opacity: 0;
     left: -10px;
     top: 35px;
+    transform-origin: top left;
+    left: 0;
+    top: 45px;
+    transform: scale(0.8) !important;
     &.show {
+      transform: scale3d(1, 1, 1) !important;
       opacity: 1;
-      left: 0;
-      top: 45px;
     }
     .rounded-df();
     .dropdown-content-overlay {
