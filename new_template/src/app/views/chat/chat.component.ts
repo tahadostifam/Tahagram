@@ -17,6 +17,7 @@ export class ChatComponent implements OnInit {
   search_mode: boolean = false;
   show_search_chats_list: boolean = false;
   search_input: string = '';
+  send_text_message_input: string = '';
 
   ngOnInit(): void {}
 

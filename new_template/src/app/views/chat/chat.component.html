@@ -164,7 +164,11 @@
               <button class="btn btn-glass-grey rounded-full">
                 <span class="mdi mdi-emoticon-outline"></span>
               </button>
-              <input type="text" placeholder="Message" />
+              <input
+                [(ngModel)]="send_text_message_input"
+                type="text"
+                placeholder="Message"
+              />
               <button class="btn btn-glass-grey rounded-full">
                 <span class="mdi mdi-paperclip"></span>
               </button>
@@ -174,7 +178,14 @@
             id="send_voice_button"
             class="btn btn-glass-grey rounded-full btn-large"
           >
-            <span class="mdi mdi-microphone"></span>
+            <span
+              [class.show]="send_text_message_input.trim().length == 0"
+              class="mdi-animated mdi mdi-microphone"
+            ></span>
+            <span
+              [class.show]="send_text_message_input.trim().length > 0"
+              class="mdi-animated mdi-primary mdi mdi-send"
+            ></span>
           </button>
         </div>
       </div>

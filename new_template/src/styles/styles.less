@@ -60,3 +60,16 @@ body {
   animation-duration: 0.4s;
   transform: rotate(-360deg);
 }
+
+.mdi-animated {
+  position: absolute;
+  opacity: 0;
+  transition: 0.3s ease;
+  &.show {
+    opacity: 1;
+  }
+}
+
+.mdi-primary {
+  color: var(--primary-color);
+}
