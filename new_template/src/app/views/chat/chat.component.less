@@ -105,6 +105,7 @@
     }
   }
   #chatside {
+    position: relative;
     width: calc(100% - var(--sidebar-width));
     float: right;
     display: inline-block;
@@ -141,6 +142,41 @@
         margin-top: 4px;
       }
       box-shadow: 0px 1px 5px -1px #00000036;
+    }
+    #chat_view {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 61px);
+      display: block;
+      --send-text-message-height: 70px;
+      #chat_view_container {
+        --chat_view_container-width: 750px;
+        @media screen and (max-width: 1200px) {
+          & {
+            --chat_view_container-width: 600px;
+          }
+        }
+        @media screen and (max-width: 980px) {
+          & {
+            --chat_view_container-width: 98%;
+          }
+        }
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        width: var(--chat_view_container-width);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        #messages_list {
+          flex: 1 1 0;
+          width: 100%;
+        }
+        #send_message_section {
+          width: 100%;
+        }
+      }
     }
   }
   @media screen and (max-width: 1100px) {
