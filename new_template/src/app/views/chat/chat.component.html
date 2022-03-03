@@ -157,7 +157,41 @@
     </div>
     <div id="chat_view">
       <div id="chat_view_container">
-        <div id="messages_list">Messages</div>
+        <div id="messages_list">
+          <message
+            [sender]="'Taha'"
+            [send_time]="'17:00 PM'"
+            [my_message]="false"
+            [message_type]="'text'"
+            [seen_state]="'sended'"
+            [text_content]="'Hey Guys'"
+          ></message>
+          <message
+            [sender]="'Taha'"
+            [send_time]="'17:00 PM'"
+            [my_message]="false"
+            [message_type]="'text'"
+            [seen_state]="'seen'"
+            [text_content]="'Hey Guys'"
+            [edited]="true"
+          ></message>
+          <message
+            [send_time]="'17:00 PM'"
+            [my_message]="false"
+            [message_type]="'text'"
+            [seen_state]="'sending'"
+            [text_content]="'Hey Guys'"
+          ></message>
+          <message
+            [send_time]="'17:00 PM'"
+            [my_message]="true"
+            [message_type]="'text'"
+            [seen_state]="'sending'"
+            [text_content]="'سلام سلام
+خوبید؟ 
+چطورید؟'"
+          ></message>
+        </div>
         <div id="send_message_section">
           <div id="send_text_message_input">
             <div id="send_message_section_group">
