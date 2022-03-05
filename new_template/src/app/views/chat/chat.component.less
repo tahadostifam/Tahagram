@@ -17,6 +17,7 @@
     bottom: 0;
     overflow-x: hidden;
     background-color: var(--grey-dark-color);
+    border-right: 1px solid var(--border-color);
     #sidebar_headbar {
       border-bottom: 1px solid var(--border-color);
       width: 100%;
@@ -111,11 +112,16 @@
         border-bottom: 1px solid var(--border-color);
         padding: 0 10px;
         padding-top: 15px;
+        padding-bottom: 14px;
         margin-top: 10px;
         display: flex;
         flex-direction: row;
         &::-webkit-scrollbar {
-          width: 1px;
+          height: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: var(--grey-darker-color);
+          border-radius: 50px;
         }
         .item {
           width: max-content;
@@ -144,8 +150,9 @@
       }
       .search_chat_result {
         width: 100%;
-        margin-top: 10px;
         padding: 0 10px;
+        max-height: calc(100% - 144px);
+        overflow-y: scroll;
         .item {
           display: flex;
           flex-direction: row;
@@ -192,7 +199,6 @@
       width: 100%;
       height: 61px;
       background-color: var(--grey-dark-color);
-      border-left: 1px solid var(--border-color);
       padding: 0px 13px;
       display: flex;
       align-items: center;
@@ -225,7 +231,7 @@
     #chat_view {
       position: relative;
       width: 100%;
-      height: calc(100vh - 61px);
+      height: calc(100vh - 65px);
       display: block;
       --send-text-message-height: 70px;
       #chat_view_container {
