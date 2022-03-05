@@ -195,15 +195,19 @@
         <div id="send_message_section">
           <div id="send_text_message_input">
             <div id="send_message_section_group">
-              <button class="btn btn-glass-grey rounded-full">
+              <button class="btn btn-glass-grey rounded-full __center__">
                 <span class="mdi mdi-emoticon-outline"></span>
               </button>
-              <input
-                [(ngModel)]="send_text_message_input"
-                type="text"
-                placeholder="Message"
-              />
-              <button class="btn btn-glass-grey rounded-full">
+              <div type="text" class="text_input __center__" dir="auto">
+                <textarea
+                  [(ngModel)]="send_text_message_input"
+                  dir="auto"
+                  rows="1"
+                  placeholder="Message"
+                  oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'
+                ></textarea>
+              </div>
+              <button class="btn btn-glass-grey rounded-full __center__">
                 <span class="mdi mdi-paperclip"></span>
               </button>
             </div>
