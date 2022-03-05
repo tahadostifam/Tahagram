@@ -102,7 +102,14 @@
       </div>
     </div>
     <div #searchChatsList id="search_chats_list" *ngIf="show_search_chats_list">
-      TODO
+      <div class="chat_suggest_scroll">
+        <div class="item" *ngFor="let i of [].constructor(10)">
+          <div class="avatar">
+            <img src="assets/images/avatar.jpg" />
+          </div>
+          <span class="name">`Taha`</span>
+        </div>
+      </div>
     </div>
   </div>
   <div id="chatside">

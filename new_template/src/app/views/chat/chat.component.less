@@ -104,6 +104,44 @@
         right: 0;
         opacity: 1;
       }
+      .chat_suggest_scroll {
+        width: 100%;
+        overflow-x: scroll;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0 10px;
+        padding-top: 15px;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        &::-webkit-scrollbar {
+          width: 1px;
+        }
+        .item {
+          width: max-content;
+          padding: 6px 10px;
+          border-radius: var(--radius-sm);
+          &:hover {
+            background-color: var(--grey-lighter-color);
+          }
+          .avatar {
+            --size: 50px;
+            width: var(--size);
+            height: var(--size);
+            overflow: hidden;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            margin-top: 3px;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .name {
+            color: #fff;
+          }
+        }
+      }
     }
   }
   #chatside {
