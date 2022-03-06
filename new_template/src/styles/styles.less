@@ -87,3 +87,14 @@ body {
     background-color: var(--grey-dark-color);
   }
 }
+
+.avatar {
+  background-color: var(--grey-darker-color);
+  img {
+    transition: 0.3s ease;
+    opacity: 0;
+  }
+  &.image__loaded img {
+    opacity: 1;
+  }
+}

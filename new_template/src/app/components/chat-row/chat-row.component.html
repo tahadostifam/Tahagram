@@ -1,5 +1,5 @@
 <div class="chat_row d-flex align-center flex-row" [class.active]="active">
-  <div class="chat_avatar" [class.just_color]="!avatar">
+  <div class="avatar chat_avatar" [class.just_color]="!avatar">
     <img *ngIf="avatar" [src]="avatar" />
     <span class="is_online" *ngIf="is_online"></span>
     <span *ngIf="!avatar">{{ title[0] }}</span>
