@@ -61,6 +61,7 @@
         input:focus ~ #clear_search_input .mdi {
           color: var(--primary-color) !important;
           transition: 0.2s ease-in-out;
+          cursor: pointer;
         }
         #clear_search_input {
           position: absolute;
@@ -131,7 +132,7 @@
             background-color: var(--grey-lighter-color);
           }
           .avatar {
-            --size: 50px;
+            --size: 60px;
             width: var(--size);
             height: var(--size);
             overflow: hidden;
@@ -145,12 +146,15 @@
           }
           .name {
             color: #fff;
+            width: 100%;
+            display: block;
+            text-align: center;
           }
         }
       }
       .search_chat_result {
         width: 100%;
-        padding: 0 10px;
+        padding: 10px;
         max-height: calc(100% - 144px);
         overflow-y: scroll;
         .item {
