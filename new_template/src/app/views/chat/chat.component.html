@@ -110,7 +110,10 @@
           <span class="name">`Taha`</span>
         </div>
       </div>
-      <div class="search_chat_result scroll">
+      <div
+        class="search_chat_result scroll"
+        *ngIf="search_input.trim().length > 0"
+      >
         <div class="item" *ngFor="let i of [].constructor(30)">
           <div class="avatar">
             <img src="assets/images/avatar.jpg" />
