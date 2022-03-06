@@ -9,6 +9,7 @@ import { ChatComponent } from './views/chat/chat.component';
 import { ChatRowComponent } from './components/chat-row/chat-row.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { MessageComponent } from './components/message/message.component';
+import { SettingsPanelComponent } from './components/settings-panel/settings-panel.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { MessageComponent } from './components/message/message.component';
     ChatRowComponent,
     DropdownComponent,
     MessageComponent,
+    SettingsPanelComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [],

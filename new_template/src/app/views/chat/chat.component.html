@@ -1,5 +1,9 @@
 <div id="chat_container">
-  <div id="sidebar">
+  <div id="sidebar" [class.have_panel]="show_settings_panel">
+    <settings-panel
+      (changeShow)="this.changeShowSettings($event)"
+      [show]="show_settings_panel"
+    ></settings-panel>
     <div id="sidebar_headbar">
       <dropdown
         [width]="'300px'"
@@ -12,7 +16,7 @@
           <span class="mdi mdi-bookmark"></span>
           Saved Messages</a
         >
-        <a class="item">
+        <a class="item" (click)="show_settings_panel = !show_settings_panel">
           <span class="mdi mdi-cog"></span>
           Settings
         </a>

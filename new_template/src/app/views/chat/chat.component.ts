@@ -18,6 +18,7 @@ export class ChatComponent implements OnInit {
   show_search_chats_list: boolean = false;
   search_input: string = '';
   send_text_message_input: string = '';
+  show_settings_panel: boolean = true;
 
   ngOnInit(): void {}
 
@@ -61,6 +62,10 @@ export class ChatComponent implements OnInit {
       this.setSearchChatsListState(true);
       this.rotateIcon(this.menu_button);
     }
+  }
+
+  changeShowSettings(new_state: boolean) {
+    this.show_settings_panel = new_state;
   }
 
   showChat() {}
