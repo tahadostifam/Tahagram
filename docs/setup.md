@@ -1,10 +1,10 @@
 ### Setup
 **Respectively**
 ```bash
-sudo docker-compoe up -d --build mongo
-sudo docker-compoe up -d --build redis
-sudo docker-compoe up -d --build backend
-sudo docker-compoe up -d --build frontend
+sudo docker-compose up -d --build mongo
+sudo docker-compose up -d --build redis
+sudo docker-compose up -d --build backend
+sudo docker-compose up -d --build frontend
 ```
 
 ### Api Url
