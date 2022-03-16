@@ -5,10 +5,13 @@ import { Directive, ElementRef } from '@angular/core';
 })
 export class LazyImageLoadingDirective {
   constructor(private elm: ElementRef) {
-    console.log(this.elm);
-
-    this.elm.nativeElement.onload = () => {
-      this.elm.nativeElement.classList.add('__loaded__');
-    };
+    setTimeout(() => {
+      const img = this.elm.nativeElement.querySelector('img');
+      if (img) {
+        img.onload = () => {
+          this.elm.nativeElement.classList.add('image__loaded');
+        };
+      }
+    }, 5);
   }
 }
