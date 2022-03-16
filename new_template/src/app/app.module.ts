@@ -10,6 +10,7 @@ import { ChatRowComponent } from './components/chat-row/chat-row.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { MessageComponent } from './components/message/message.component';
 import { SettingsPanelComponent } from './components/settings-panel/settings-panel.component';
+import { LazyImageLoadingDirective } from './directives/lazy-image-loading.directive';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { SettingsPanelComponent } from './components/settings-panel/settings-pan
     DropdownComponent,
     MessageComponent,
     SettingsPanelComponent,
+    LazyImageLoadingDirective,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [],
