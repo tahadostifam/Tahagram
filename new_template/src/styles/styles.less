@@ -7,6 +7,7 @@
 @import url("./components/_buttons.less");
 @import url("./components/_dropdowns.less");
 @import url("./components/_panel.less");
+@import url("./components/_row_glass.less");
 
 @font-face {
   font-family: "Vazir";
@@ -88,6 +89,13 @@ body {
   }
 }
 
+.no-scroll {
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-thumb {
+    display: none;
+  }
+}
+
 .avatar {
   background-color: var(--grey-darker-color);
   img {
@@ -97,4 +105,11 @@ body {
   &.image__loaded img {
     opacity: 1;
   }
+}
+
+.black_sepa {
+  width: 100%;
+  height: 15px;
+  display: block;
+  background-color: var(--grey-darker-color);
 }
