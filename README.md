@@ -60,4 +60,4 @@ Please checkout this [link](https://github.com/tahadostifam/ChatApp/tree/main/do
 
 ### Contributors
 
--   [Taha. Dostifam [Maximilian]](https://github.com/tahadostifam)
+-   [Taha. Dostifam](https://github.com/tahadostifam)
