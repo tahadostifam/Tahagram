@@ -1,5 +1,9 @@
 ## ChatApp [BETA]
 
+### New Version [16 March, 2022]
+
+im working on a new version of this project at [CHATAPP-0](https://github.com/CHATAPP-0)
+
 ### Bio
 
 A Chat-Application built in Nodejs & Nuxtjs  
