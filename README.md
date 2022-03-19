@@ -1,13 +1,16 @@
 ## ChatApp [BETA]
 
-### New Version [16 March, 2022]
+### New Version [19 March, 2022]
 
-im working on a new version of this project at [CHATAPP-0](https://github.com/CHATAPP-0)
+im working on a new version of this project at a new branch   
+please see this [link](https://github.com/tahadostifam/ChatApp/tree/v-1.0)
 
 ### Bio
+Full Chat-Application (a mini clone of Telegram) developed using Nodejs & Nuxtjs
 
-A Chat-Application built in Nodejs & Nuxtjs  
-I almsot after 2 months i will send it to [Kharazmi competitions](https://khwarizmi.ir/). 💪🏿💀
+### Demo
+
+![screenshot](./docs/screenshots/26.png)
 
 ### Docs
 
@@ -46,10 +49,6 @@ Please checkout this [link](https://github.com/tahadostifam/ChatApp/tree/main/do
 -   Databases
     -   MongoDB
     -   Redis
-
-### Demo
-
-![screenshot](./docs/screenshots/26.png)
 
 ### ToDoS For Feature
 
