@@ -1,0 +1,38 @@
+.panel {
+  position: absolute;
+  height: 100%;
+  background-color: var(--grey-dark-color);
+  z-index: 20;
+  transition: left 0.35s ease;
+  left: 110%;
+  overflow: auto;
+  max-height: 100%;
+  &.show {
+    left: 0;
+  }
+  &.sidebar_panel {
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.panel_header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 61.5px;
+  background-color: var(--grey-darker-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.panel_title {
+  font-size: 20px;
+  color: #fff;
+  display: inline-block;
+}

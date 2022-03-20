@@ -1,0 +1,109 @@
+@keyframes rotate_loading {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+.btn-none{
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.btn {
+  position: relative;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px 8px;
+  --color: #fff;
+  color: var(--color);
+  fill: var(--color);
+  background-color: var(--primary-color);
+  transition: background-color 0.15s ease;
+  transition: opacity 0.3s ease;
+  text-transform: uppercase;
+  font-family: "Roboto-Medium";
+  font-weight: lighter;
+  font-size: 100%;
+  font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content:center;
+  &.loading{
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .button__loading{
+    position: absolute;
+    --size: 28px;
+    height: var(--size);
+    width: var(--size);
+    border-radius: 50px;
+    border: 2px solid #fff;
+    border-right-color: #ffffff00;
+    animation-name: rotate_loading;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    right: 10px;
+    z-index: 5;
+  }
+  &.btn-large{
+    padding: 14px 8px;
+  }
+  .rounded-sm();
+  &.btn-glass {
+    background-color: transparent;
+    color: var(--primary-color);
+    &:hover {
+      background-color: var(--primary-glass-color);
+    }
+  }
+  &.rounded-full{
+    --size: 40px;
+    border-radius: 50%;
+    width: var(--size);
+    height: var(--size);
+    padding: 0;
+    text-align: center;
+    letter-spacing: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.make-buttons(@names, @colors) {
+  .button(@index) when (@index =< length(@names)) {
+    @name: extract(@names, @index);
+    @color: extract(@colors, @index);
+    @button: ~".btn-@{name}";
+    @button_glass: ~".btn-glass-@{name}";
+
+    @{button} {
+      background-color: @color;
+    }
+
+    @{button_glass}{
+      background-color: transparent;
+      color: @color;
+      &:hover {
+        background-color: extract(@buttons-light-colors, @index);
+      }
+    }
+
+    .button(@index + 1);
+  }
+  .button(1);
+}
+
+.make-buttons(@buttons-names, @buttons-colors);

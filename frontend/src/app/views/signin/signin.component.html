@@ -1,0 +1,62 @@
+<div id="signin_page">
+  <div *ngIf="!this.success_submit" class="form">
+    <div class="logo">
+      <img src="assets/images/logo.svg" alt="Logo" />
+    </div>
+    <h1 class="title">Sign in to ChatApp</h1>
+    <h2 class="sub-title text-grey">
+      Please enter your email. after submit we will send you a verification
+      code.
+    </h2>
+    <div class="input-outlined-with-label mt-40">
+      <input
+        id="email"
+        type="text"
+        required
+        [(ngModel)]="email"
+        name="email"
+        class="theme-light input-outlined input_large label-input"
+        [class.not_valid]="email_isnt_valid"
+      />
+      <label class="input-label" for="email">
+        <span *ngIf="!email_isnt_valid">Email</span>
+        <span *ngIf="email_isnt_valid">Email Invalid</span>
+      </label>
+    </div>
+    <label for="remember_me" class="checkbox mt-20">
+      Keep me signed in
+      <input hidden type="text" type="checkbox" id="remember_me" checked="1" />
+      <span class="checkbox-border"></span>
+      <span class="checkmark"></span>
+    </label>
+    <button
+      class="btn w-100 btn-large mt-30"
+      (click)="this.submit_form()"
+      [class.loading]="this.button_loading"
+    >
+      <span *ngIf="!this.button_loading">Submit</span>
+      <span *ngIf="this.button_loading">Please Wait...</span>
+      <div *ngIf="this.button_loading" class="button__loading"></div>
+    </button>
+  </div>
+  <div *ngIf="this.success_submit" class="form" style="top: 130px">
+    <div class="logo-emoji">🎁</div>
+    <h2 id="entered_email">
+      mr.tahadostifam@gmail.com
+      <button class="btn-none" (click)="this.back_to_submit_form()">
+        <span class="mdi mdi-pen" style="font-size: 20px"></span>
+      </button>
+    </h2>
+    <h3 class="sub-title text-grey">
+      We have sent you an EMail with the code.
+    </h3>
+    <div class="input-outlined-with-label mt-40">
+      <input
+        id="verific_code"
+        type="text"
+        class="theme-light input-outlined input_large label-input"
+      />
+      <label class="input-label" for="verific_code">Code</label>
+    </div>
+  </div>
+</div>
