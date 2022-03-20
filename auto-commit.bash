@@ -3,5 +3,5 @@ if [[ -z $1 ]]; then
 else
     git add -A
     git commit -m "$1"
-    git push origin main
+    git push origin v-1.0
 fi
