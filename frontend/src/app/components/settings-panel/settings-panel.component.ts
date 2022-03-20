@@ -11,8 +11,14 @@ export class SettingsPanelComponent implements OnInit {
 
   constructor() {}
 
-  closeButton(new_state: boolean) {
-    this.changeShow.emit(new_state);
+  show_notifications_panel: boolean = true;
+
+  changeShowNotifications(new_state: boolean) {
+    this.show_notifications_panel = new_state;
+  }
+
+  closeButton() {
+    this.changeShow.emit(false);
   }
 
   ngOnInit(): void {}

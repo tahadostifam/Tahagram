@@ -6,7 +6,7 @@
   <div class="panel_header">
     <div>
       <button
-        (click)="this.closeButton(false)"
+        (click)="this.closeButton()"
         class="btn btn-glass-grey btn-large rounded-full d-inline-block"
       >
         <span class="mdi mdi-arrow-left" style="font-size: 20px"></span>
@@ -49,7 +49,7 @@
   <div class="black_sepa"></div>
 
   <div class="d-block w-100 pa-10">
-    <div class="row_glass all_center">
+    <div class="row_glass all_center" (click)="show_notifications_panel = true">
       <div class="icon">
         <span class="mdi mdi-bell"></span>
       </div>
@@ -107,3 +107,8 @@
     </div>
   </div>
 </div>
+
+<notifications-panel
+  (changeShow)="this.changeShowNotifications($event)"
+  [show]="show_notifications_panel"
+></notifications-panel>
