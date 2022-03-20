@@ -12,6 +12,7 @@ import { MessageComponent } from './components/message/message.component';
 import { SettingsPanelComponent } from './components/settings-panel/settings-panel.component';
 import { LazyImageLoadingDirective } from './directives/lazy-image-loading.directive';
 import { NotificationsPanelComponent } from './components/notifications-panel/notifications-panel.component';
+import { EditProfilePanelComponent } from './components/edit-profile-panel/edit-profile-panel.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { NotificationsPanelComponent } from './components/notifications-panel/no
     SettingsPanelComponent,
     LazyImageLoadingDirective,
     NotificationsPanelComponent,
+    EditProfilePanelComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [],

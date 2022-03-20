@@ -1,0 +1,36 @@
+<div
+  class="panel sidebar_panel no-scroll"
+  id="edit_profile_panel"
+  [class.show]="show"
+>
+  <div class="panel_header no-border">
+    <div>
+      <button
+        (click)="this.closeButton()"
+        class="btn btn-glass-grey btn-large rounded-full d-inline-block"
+      >
+        <span class="mdi mdi-arrow-left" style="font-size: 20px"></span>
+      </button>
+      <h1 class="panel_title ml-10">Edit Profile</h1>
+    </div>
+  </div>
+  <div>
+    <div class="avatar" id="edit_profile_avatar" LazyImageLoading>
+      <button class="btn-none">
+        <span class="mdi mdi-camera-plus-outline"></span>
+      </button>
+      <img src="assets/images/avatar.jpg" />
+    </div>
+    <div>
+      <div class="theme-grey-dark input-outlined-with-label mt-40">
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="input-outlined input_large label-input"
+        />
+        <label class="input-label" for="email"> Email </label>
+      </div>
+    </div>
+  </div>
+</div>

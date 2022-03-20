@@ -11,9 +11,14 @@ export class SettingsPanelComponent implements OnInit {
 
   constructor() {}
 
-  show_notifications_panel: boolean = true;
+  show_notifications_panel: boolean = false;
+  show_edit_profile_panel: boolean = true;
 
   changeShowNotifications(new_state: boolean) {
+    this.show_notifications_panel = new_state;
+  }
+
+  changeShowEditProfile(new_state: boolean) {
     this.show_notifications_panel = new_state;
   }
 

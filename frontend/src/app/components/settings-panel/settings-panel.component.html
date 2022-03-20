@@ -15,7 +15,11 @@
     </div>
     <div>
       <button class="btn btn-glass-grey btn-large rounded-full d-inline-block">
-        <span class="mdi mdi-pen" style="font-size: 20px"></span>
+        <span
+          class="mdi mdi-pen"
+          style="font-size: 20px"
+          (click)="show_edit_profile_panel = true"
+        ></span>
       </button>
       <button class="btn btn-glass-grey btn-large rounded-full d-inline-block">
         <span class="mdi mdi-dots-vertical" style="font-size: 20px"></span>
@@ -112,3 +116,8 @@
   (changeShow)="this.changeShowNotifications($event)"
   [show]="show_notifications_panel"
 ></notifications-panel>
+
+<edit-profile-panel
+  (changeShow)="(this.changeShowEditProfile)"
+  [show]="show_edit_profile_panel"
+></edit-profile-panel>
