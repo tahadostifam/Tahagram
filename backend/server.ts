@@ -6,7 +6,8 @@ import * as database from "./lib/database";
 const fileUpload = require("express-fileupload");
 import { initSocket } from "./socket/socket";
 const app: Express = express();
-const expressWS = require("express-ws")(app);
+require("express-ws")(app);
+import session from "express-session";
 
 app.set("base", "/api");
 app.enable("trust proxy");
@@ -18,6 +19,7 @@ app.use(
         createParentPath: true,
     })
 );
+app.use(session({ secret: configs.api.jwt_secret, cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }));
 
 app.use("/api/uploads/profile_photos/:filename", (req, res) => {
     res.type("png");

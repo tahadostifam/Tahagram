@@ -1,3 +1,8 @@
+<search-in-chat-panel
+  (changeShow)="this.changeShowSearchInChat($event)"
+  [show]="show_search_in_chat_panel"
+></search-in-chat-panel>
+
 <div id="chat_container">
   <div id="sidebar" [class.have_panel]="show_settings_panel">
     <settings-panel
@@ -143,6 +148,7 @@
       </div>
       <div class="d-flex align-center">
         <button
+          (click)="show_search_in_chat_panel = !show_search_in_chat_panel"
           class="btn btn-glass-grey rounded-full mr-5"
           style="font-size: 24px; padding-top: 2px"
         >

@@ -13,6 +13,7 @@ import { SettingsPanelComponent } from './components/settings-panel/settings-pan
 import { LazyImageLoadingDirective } from './directives/lazy-image-loading.directive';
 import { NotificationsPanelComponent } from './components/notifications-panel/notifications-panel.component';
 import { EditProfilePanelComponent } from './components/edit-profile-panel/edit-profile-panel.component';
+import { SearchInChatPanelComponent } from './components/search-in-chat-panel/search-in-chat-panel.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { EditProfilePanelComponent } from './components/edit-profile-panel/edit-
     LazyImageLoadingDirective,
     NotificationsPanelComponent,
     EditProfilePanelComponent,
+    SearchInChatPanelComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [],

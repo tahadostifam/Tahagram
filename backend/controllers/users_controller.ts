@@ -11,33 +11,40 @@ import { IChat, IUser, IUserChatLink } from "../lib/interfaces";
 import { findOutTUofChat } from "../lib/socket";
 import { compareToken, generateToken } from "../lib/jwt";
 
+declare module "express-session" {
+    interface SessionData {
+        user: IUser;
+    }
+    interface Cookie {
+        user_id: string;
+    }
+}
+
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
         signinUserWithUserPassword(req.body.username, req.body.password).then(
             async (user: IUser) => {
                 // success
-                generateToken(req.body.username).then(async (token) => {
-                    const final_profile_photos = user.profile_photos.reverse();
-                    getUserChats(user).then((chats) => {
-                        getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
-                            status_codes.success_signin(
-                                {
-                                    user: {
-                                        full_name: user.full_name,
-                                        username: user.username,
-                                        bio: user.bio,
-                                        last_seen: user.last_seen,
-                                        profile_photos: final_profile_photos,
-                                        chats: chats,
-                                        chats_messages: chats_messages,
-                                    },
-                                    token: token,
+                const final_profile_photos = user.profile_photos.reverse();
+                getUserChats(user).then((chats) => {
+                    getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
+                        req.session.user = user;
+                        status_codes.success_signin(
+                            {
+                                user: {
+                                    full_name: user.full_name,
+                                    username: user.username,
+                                    bio: user.bio,
+                                    last_seen: user.last_seen,
+                                    profile_photos: final_profile_photos,
+                                    chats: chats,
+                                    chats_messages: chats_messages,
                                 },
-                                req,
-                                res,
-                                next
-                            );
-                        });
+                            },
+                            req,
+                            res,
+                            next
+                        );
                     });
                 });
             },
