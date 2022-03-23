@@ -8,6 +8,7 @@ import { initSocket } from "./socket/socket";
 const app: Express = express();
 require("express-ws")(app);
 import session from "express-session";
+const randomToken = require("random-token");
 
 app.set("base", "/api");
 app.enable("trust proxy");
@@ -19,7 +20,15 @@ app.use(
         createParentPath: true,
     })
 );
-app.use(session({ secret: configs.api.jwt_secret, cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }));
+app.use(
+    session({
+        name: "auth_token",
+        secret: configs.api.jwt_secret,
+        cookie: { maxAge: 60000 },
+        resave: true,
+        saveUninitialized: true,
+    })
+);
 
 app.use("/api/uploads/profile_photos/:filename", (req, res) => {
     res.type("png");

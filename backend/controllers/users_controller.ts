@@ -29,6 +29,7 @@ export default {
                 getUserChats(user).then((chats) => {
                     getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
                         req.session.user = user;
+
                         status_codes.success_signin(
                             {
                                 user: {
@@ -86,36 +87,28 @@ export default {
     },
 
     AuthenticationAction: async (req: Request, res: Response, next: NextFunction) => {
-        if (req.headers.authorization) {
-            await compareToken(req.headers.authorization).then(
-                async () => {
-                    // success | requested token is valid
-                    const user = await User.findOne({
-                        username: req.body.username,
+        if (req.session.user) {
+            const user = await User.findOne({
+                username: req.session.user.username,
+            });
+            if (!user) return status_codes.invalid_token(req, res, next);
+            const final_profile_photos = user.profile_photos.reverse();
+            await getUserChats(user).then((chats) => {
+                getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
+                    res.send({
+                        message: "success",
+                        data: {
+                            full_name: user.full_name,
+                            username: user.username,
+                            bio: user.bio,
+                            last_seen: user.last_seen,
+                            profile_photos: final_profile_photos,
+                            chats: chats,
+                            chats_messages: chats_messages,
+                        },
                     });
-                    if (!user) return status_codes.invalid_token(req, res, next);
-                    const final_profile_photos = user.profile_photos.reverse();
-                    await getUserChats(user).then((chats) => {
-                        getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
-                            res.send({
-                                message: "success",
-                                data: {
-                                    full_name: user.full_name,
-                                    username: user.username,
-                                    bio: user.bio,
-                                    last_seen: user.last_seen,
-                                    profile_photos: final_profile_photos,
-                                    chats: chats,
-                                    chats_messages: chats_messages,
-                                },
-                            });
-                        });
-                    });
-                },
-                () => {
-                    status_codes.invalid_token(req, res, next);
-                }
-            );
+                });
+            });
         } else {
             status_codes.invalid_token(req, res, next);
         }
@@ -141,7 +134,7 @@ export function signinUserWithUserPassword(username: string, password: string) {
 }
 
 export function checkUsernameUniqueness(username: string) {
-    return new Promise(async (deos_not_exists: any, exists: any) => {
+    return new Promise<void>(async (deos_not_exists: () => void, exists: () => void) => {
         const result = await User.findOne({
             username: username,
         });

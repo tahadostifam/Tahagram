@@ -730,11 +730,6 @@
   "resolved" "https://registry.npmjs.org/crypto-random-string/-/crypto-random-string-2.0.0.tgz"
   "version" "2.0.0"
 
-"crypto@^1.0.1":
-  "integrity" "sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig=="
-  "resolved" "https://registry.npmjs.org/crypto/-/crypto-1.0.1.tgz"
-  "version" "1.0.1"
-
 "debug@^3.2.7":
   "integrity" "sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ=="
   "resolved" "https://registry.npmjs.org/debug/-/debug-3.2.7.tgz"
@@ -1987,6 +1982,11 @@
   "integrity" "sha1-T2ih3Arli9P7lYSMMDJNt11kNgs="
   "resolved" "https://registry.npmjs.org/random-bytes/-/random-bytes-1.0.0.tgz"
   "version" "1.0.0"
+
+"random-token@^0.0.8":
+  "integrity" "sha1-HPhFrz+zHlf3yqS5oXNHjEZIO2E="
+  "resolved" "https://registry.npmjs.org/random-token/-/random-token-0.0.8.tgz"
+  "version" "0.0.8"
 
 "randombytes@^2.1.0":
   "integrity" "sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ=="
