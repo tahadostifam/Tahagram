@@ -39,7 +39,7 @@ export function sendMail(template_name: string, data: any, to: string, subject: 
     });
 }
 
-sendMail("verific", {}, "mr.tahadostifam@gmail.com", "Test!")
+sendMail("verific", {}, "mr.tahadostifam@gmail.com", "Logging In Account")
     .then(() => {
         console.log("email sended");
     })
