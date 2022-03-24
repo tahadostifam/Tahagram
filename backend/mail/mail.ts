@@ -30,13 +30,19 @@ export function sendMail(template_name: string, data: any, to: string, subject: 
                 .then(() => {
                     resolve();
                 })
-                .catch(() => {
+                .catch((err) => {
+                    console.log("Error: " + err);
+
                     reject();
                 });
         });
     });
 }
 
-sendMail("verific", {}, "mr.tahadostifam@gmail.com", "Test!").then(() => {
-    console.log("email sended");
-});
+sendMail("verific", {}, "mr.tahadostifam@gmail.com", "Test!")
+    .then(() => {
+        console.log("email sended");
+    })
+    .catch(() => {
+        console.log("Error in sending the email!");
+    });
