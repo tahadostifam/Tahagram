@@ -1,0 +1,22 @@
+@import url("../_theme.less");
+
+.make-colors(@names, @values) {
+  .color(@index) when (@index =< length(@names)) {
+    @name: extract(@names, @index);
+    @value: extract(@values, @index);
+
+    @text: ~".text-@{name}";
+    @bg: ~".bg-@{name}";
+    @{text} {
+      color: @value !important;
+    }
+    @{bg} {
+      background-color: @value !important;
+    }
+
+    .color(@index + 1);
+  }
+  .color(1);
+}
+
+.make-colors(@colors-names, @colors-values);

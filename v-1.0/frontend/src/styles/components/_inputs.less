@@ -1,0 +1,181 @@
+.input__base {
+  border: none;
+  outline: none;
+  display: block;
+  width: 100%;
+  --height: 40px;
+  --border-width: 1px;
+  height: var(--height);
+  line-height: var(--height);
+  padding: calc(3px - var(--border-width)) calc(15px - var(--border-width));
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition-property: background-color, border-color;
+  transition-duration: 0.2s, 0.2s;
+  transition-timing-function: ease-in-out, ease-in-out;
+  .rounded-md();
+}
+
+.input__theme__light {
+  &.theme-light {
+    color: #000;
+    background-color: #fff !important;
+    border-color: var(--light-border);
+    &:hover {
+      border-color: var(--primary-color);
+    }
+    &:focus {
+      --border-width: 2px;
+      border: var(--border-width) solid var(--primary-color);
+      background-color: #fff !important;
+    }
+  }
+}
+
+.input-solo {
+  .input__base();
+  background-color: @input-focused-bg-color;
+  color: #fff;
+  --height: 45px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.input-outlined {
+  .input__base();
+  --border-width: 1px;
+  color: #fff;
+  font-size: 15px;
+  font-family: "Roboto", -apple-system, apple color emoji, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+    sans-serif;
+  border: var(--border-width) solid @input-border-color;
+  background-color: @input-bg-color !important;
+  &.rounded-full {
+    border-radius: 50px;
+  }
+  &.input_large {
+    height: 50px;
+  }
+  .input__theme__light();
+
+  &:hover {
+    border-color: @input-hover-border-color;
+  }
+  &:focus {
+    --border-width: 2px;
+    border: var(--border-width) solid var(--primary-color);
+    background-color: @input-focused-bg-color !important;
+  }
+  &.not_valid {
+    border-color: var(--danger-color) !important;
+  }
+}
+
+.input-outlined-with-label {
+  position: relative;
+  .input-label {
+    position: absolute;
+    display: block;
+    top: -8px;
+    left: 12px;
+    z-index: 5;
+    padding: 0px 5px;
+    background-color: #fff;
+    color: #9e9e9e;
+    transition: color 0.2s ease-in-out;
+    font-size: 13px;
+  }
+  &.theme-grey-dark {
+    input {
+      background-color: var(--grey-dark-color) !important;
+    }
+    .input-label,
+    .input-label span {
+      background-color: var(--grey-dark-color) !important;
+    }
+    input:hover {
+      border-color: var(--primary-color);
+    }
+  }
+  input:hover ~ .input-label {
+    color: var(--primary-color);
+  }
+  input:focus ~ .input-label {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+  input.not_valid {
+    & ~ .input-label {
+      color: var(--danger-color);
+    }
+  }
+}
+
+.checkbox {
+  position: relative;
+  display: block;
+  height: 22px;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 13px;
+  padding-top: 3px;
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    --size: 22px;
+    height: var(--size);
+    width: var(--size);
+    border-radius: 0.25rem;
+    transition: 0.2s ease-in-out;
+  }
+  .checkbox-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #8d969c;
+    border-radius: 0.25rem;
+    transition: 0.3s ease;
+    --size: 22px;
+    height: var(--size);
+    width: var(--size);
+  }
+  input:checked ~ .checkmark {
+    background-color: var(--primary-color);
+  }
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    opacity: 0;
+  }
+  input:checked ~ .checkmark:after {
+    opacity: 1;
+  }
+  .checkmark:after {
+    left: 8px;
+    top: 3.5px;
+    width: 5px;
+    height: 10px;
+    border-style: solid;
+    border-color: #fff;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+}

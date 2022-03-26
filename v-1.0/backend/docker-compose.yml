@@ -1,0 +1,20 @@
+version: "3.3"
+services:
+    backend:
+        image: "node:14"
+        container_name: "chat_app_backend"
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8000"
+            - "2345:2345"
+    mongo:
+        image: "mongo"
+        container_name: "chat_app_database"
+        volumes:
+            - chatapp_database_volume:/data/db
+        ports:
+            - 27017:27017
+volumes:
+    chatapp_database_volume:

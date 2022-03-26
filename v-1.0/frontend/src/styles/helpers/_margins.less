@@ -1,0 +1,55 @@
+@import url("../_theme.less");
+
+.make-margins(@names, @values) {
+  .margin(@index) when (@index =< length(@names)) {
+    @name: extract(@names, @index);
+    @value: extract(@values, @index);
+
+    @item_ma: ~".ma-@{name}";
+    @{item_ma} {
+      margin: @value;
+    }
+    @item_mt: ~".mt-@{name}";
+    @{item_mt} {
+      margin-top: @value !important;
+    }
+    @item_mb: ~".mb-@{name}";
+    @{item_mb} {
+      margin-bottom: @value !important;
+    }
+    @item_mr: ~".mr-@{name}";
+    @{item_mr} {
+      margin-right: @value !important;
+    }
+    @item_ml: ~".ml-@{name}";
+    @{item_ml} {
+      margin-left: @value !important;
+    }
+
+    @item_pa: ~".pa-@{name}";
+    @{item_pa} {
+      padding: @value;
+    }
+    @item_pt: ~".pt-@{name}";
+    @{item_pt} {
+      padding-top: @value !important;
+    }
+    @item_pb: ~".pb-@{name}";
+    @{item_pb} {
+      padding-bottom: @value !important;
+    }
+    @item_pr: ~".pr-@{name}";
+    @{item_pr} {
+      padding-right: @value !important;
+    }
+    @item_pl: ~".pl-@{name}";
+    @{item_pl} {
+      padding-left: @value !important;
+    }
+
+    .margin(@index + 1);
+  }
+  .margin(1);
+}
+
+.make-margins(@margins-names, @margins-values);
