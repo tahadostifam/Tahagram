@@ -2,7 +2,7 @@
 
 ### New Version [19 March, 2022]
 
-im working on a new version of this project at a new branch   
+im working on a new version of this project
 please see this [link](https://github.com/tahadostifam/ChatApp/tree/v-1.0)
 
 ### Bio
