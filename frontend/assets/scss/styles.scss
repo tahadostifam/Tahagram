@@ -14,13 +14,18 @@ $bk_desktop_mini: 1100px;
 $bk_mobile: 920px;
 
 @font-face {
-  font-family: "Roboto";
-  src: url("~/assets/fonts/Roboto-Regular.ttf");
+  font-family: "CherryBomb";
+  src: url("~/assets/fonts/CherryBomb/CherryBomb-Regular.ttf");
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("~/assets/fonts/OpenSans/OpenSans-Regular.ttf");
 }
 
 @font-face {
   font-family: "Vazir";
-  src: url("~/assets/fonts/Vazir.ttf");
+  src: url("~/assets/fonts/Vazir/Vazir.ttf");
 }
 
 * {
@@ -49,7 +54,7 @@ body,
   &,
   .text-h6,
   .v-dialog .text-h6 {
-    font-family: "Roboto", "Vazir" !important;
+    font-family: "OpenSans", "Vazir" !important;
   }
   .v-input {
     &.v-text-field .v-input__control .v-input__slot:before {
@@ -88,7 +93,7 @@ body,
   background-color: $theme_color;
   text-align: center;
   padding-top: 30px;
-  font-family: "Roboto";
+  font-family: "OpenSans";
   h1 {
     font-weight: 500;
     font-size: 60px;

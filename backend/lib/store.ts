@@ -4,7 +4,8 @@ import crypto from "crypto";
 const secrets = require("../configs/secrets.json");
 const configs = require("../configs/configs.json");
 
-const client = createClient();
+const client = createClient({
+});
 
 client.on("error", (err) => console.log("Redis Client Error", err));
 

@@ -15,14 +15,14 @@
         "port": 2345
     },
     "mongo": {
-        "host": "127.0.0.1",
+        "host": "172.20.0.3",
         "port": 27017,
         "user": null,
         "pass": null,
         "db": "chatapp"
     },
     "redis": {
-        "host": "127.0.0.1",
+        "host": "172.20.0.2",
         "port": 6379,
         "user": "",
         "pass": ""
