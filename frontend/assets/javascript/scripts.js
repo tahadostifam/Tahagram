@@ -343,7 +343,6 @@ window.initilizing_socket_again = () => {
 };
 
 window.onload = () => {
-  window.handleSplashScreen();
   (async function () {
     const notificationsAllowed = await navigator.permissions.query({
       name: "notifications",
@@ -361,14 +360,6 @@ window.onload = () => {
 
 window.lazyImage = (e) => {
   e.classList.add("image__loaded");
-};
-
-window.handleSplashScreen = () => {
-  const splash = document.querySelector("#full_splash_screen");
-  splash.style.opacity = 0;
-  setTimeout(() => {
-    splash.style.display = "none";
-  }, 200);
 };
 
 window.dataURLtoFile = (dataurl, filename) => {

@@ -1,5 +1,5 @@
 export default {
-  theme_color: "green accent-4",
+  theme_color: "#674FFF",
   socket_address: "ws://127.0.0.1:2345",
   baseURL: "http://127.0.0.1:8000",
   avatar_random_colors: [

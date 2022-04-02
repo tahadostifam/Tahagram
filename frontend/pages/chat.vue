@@ -57,14 +57,14 @@
         <v-card-actions class="pr-0">
           <v-spacer></v-spacer>
           <v-btn
-            :color="theme_color"
+            :color="$configs.theme_color"
             text
             @click="crop_profile_photo.show = false"
           >
             CANCEL
           </v-btn>
           <v-btn
-            :color="theme_color"
+            :color="$configs.theme_color"
             text
             @click="upload_croped_profile_photo"
             :loading="crop_profile_photo.button_loading_state"
@@ -89,14 +89,14 @@
         <v-card-actions class="pr-0 pt-0">
           <v-spacer></v-spacer>
           <v-btn
-            :color="theme_color"
+            :color="$configs.theme_color"
             text
             @click="crop_media_to_send.show = false"
           >
             {{ $t("cancel") }}
           </v-btn>
           <v-btn
-            :color="theme_color"
+            :color="$configs.theme_color"
             text
             @click="upload_croped_media_to_send"
             :loading="crop_media_to_send.button_loading_state"
@@ -331,7 +331,7 @@
                 <v-progress-circular
                   class="mb-2 d-block"
                   indeterminate
-                  :color="theme_color"
+                  :color="$configs.theme_color"
                 ></v-progress-circular>
               </div>
             </div>
@@ -453,7 +453,7 @@
               <div class="send_box">
                 <v-btn
                   id="send_media_button"
-                  :color="theme_color"
+                  :color="$configs.theme_color"
                   dark
                   icon
                   x-large
@@ -472,7 +472,7 @@
                     accept="image/png,image/jpg,image/jpeg"
                     onchange="window.select_photo_to_send(this)"
                   />
-                  <v-icon small :color="theme_color"> mdi-image </v-icon>
+                  <v-icon small :color="$configs.theme_color"> mdi-image </v-icon>
                 </v-btn>
 
                 <v-text-field
@@ -494,12 +494,12 @@
                   >
                     <v-btn
                       id="emojies_button"
-                      :color="theme_color"
+                      :color="$configs.theme_color"
                       dark
                       icon
                       x-large
                     >
-                      <v-icon small :color="theme_color"> mdi-emoticon </v-icon>
+                      <v-icon small :color="$configs.theme_color"> mdi-emoticon </v-icon>
                     </v-btn>
                   </div>
                   <div slot="emoji-picker" slot-scope="{ emojis, insert }">
@@ -535,13 +535,13 @@
                 <v-btn
                   id="send_message_button"
                   @click="submit_send_text_messages"
-                  :color="theme_color"
+                  :color="$configs.theme_color"
                   dark
                   icon
                   x-large
                   :disabled="send_text_message_input.trim().length == 0"
                 >
-                  <v-icon class="pl-1" small :color="theme_color">
+                  <v-icon class="pl-1" small :color="$configs.theme_color">
                     mdi-send
                   </v-icon>
                 </v-btn>

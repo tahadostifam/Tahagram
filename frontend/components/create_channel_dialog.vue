@@ -13,14 +13,14 @@
         <v-card-actions class="pr-0">
           <v-spacer></v-spacer>
           <v-btn
-            :color="theme_color"
+            :color="$configs.theme_color"
             text
             @click="crop_profile_photo.show = false"
           >
             {{ $t("cancel") }}
           </v-btn>
           <v-btn
-            :color="theme_color"
+            :color="$configs.theme_color"
             text
             @click="set_croped_photo"
             :loading="crop_profile_photo.button_loading_state"
@@ -94,13 +94,13 @@
 
           <v-card-actions class="pr-2">
             <v-spacer></v-spacer>
-            <v-btn :color="theme_color" text @click="show_dialog = false">
+            <v-btn :color="$configs.theme_color" text @click="show_dialog = false">
               {{ $t("cancel") }}
             </v-btn>
             <v-btn
               :disabled="channel_name.trim().length == 0"
               @click="dialog_step = 2"
-              :color="theme_color"
+              :color="$configs.theme_color"
               text
             >
               {{ $t("next") }}
@@ -130,7 +130,7 @@
 
           <v-card-actions class="pr-2">
             <v-spacer></v-spacer>
-            <v-btn :color="theme_color" text @click="dialog_step = 1">
+            <v-btn :color="$configs.theme_color" text @click="dialog_step = 1">
               {{ $t("back") }}
             </v-btn>
             <v-btn
@@ -140,7 +140,7 @@
               "
               :loading="submit_button_loading_state"
               @click="submit_create_channel"
-              :color="theme_color"
+              :color="$configs.theme_color"
               text
             >
               {{ $t("create") }}

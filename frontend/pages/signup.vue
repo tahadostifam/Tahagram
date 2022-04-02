@@ -10,7 +10,7 @@
         outlined
         filled
         dense
-        :color="theme_color"
+        :color="$configs.theme_color"
         v-model="full_name"
       ></v-text-field>
 
@@ -20,7 +20,7 @@
         outlined
         filled
         dense
-        :color="theme_color"
+        :color="$configs.theme_color"
         @keyup="keyup_username_event"
         v-model="username"
       ></v-text-field>
@@ -31,7 +31,7 @@
         outlined
         filled
         dense
-        :color="theme_color"
+        :color="$configs.theme_color"
         v-model="password"
       ></v-text-field>
 
@@ -41,7 +41,7 @@
         outlined
         filled
         dense
-        :color="theme_color"
+        :color="$configs.theme_color"
         v-model="password_confirmation"
       ></v-text-field>
 
@@ -57,7 +57,7 @@
 
       <v-btn
         :loading="submit_button_loading_state"
-        :color="theme_color"
+        :color="$configs.theme_color"
         depressed
         @click="submit"
         >{{ $t("submit") }}</v-btn

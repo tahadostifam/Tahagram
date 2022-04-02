@@ -38,6 +38,9 @@ html {
 
 body,
 .v-application {
+  a{
+    color: vars.$theme_color;
+  }
   overflow-x: hidden;
   &,
   .text-h6,

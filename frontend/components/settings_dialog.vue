@@ -138,13 +138,13 @@
             <v-card-actions class="pr-2">
               <v-spacer></v-spacer>
               <v-btn
-                :color="theme_color"
+                :color="$configs.theme_color"
                 text
                 @click="settings_dialog_edit_full_name = false"
               >
                 {{ $t("cancel") }}
               </v-btn>
-              <v-btn @click="submit_edit_full_name" :color="theme_color" text>
+              <v-btn @click="submit_edit_full_name" :color="$configs.theme_color" text>
                 {{ $t("save") }}
               </v-btn>
             </v-card-actions>
@@ -200,7 +200,7 @@
           <v-btn
             class="rounded-pill mt-4"
             depressed
-            :color="theme_color"
+            :color="$configs.theme_color"
             style="overflow: hidden"
           >
             <input

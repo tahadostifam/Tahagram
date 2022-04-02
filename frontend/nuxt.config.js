@@ -23,7 +23,9 @@ export default {
   css: ["@/assets/scss/dist/styles.css"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    "~/plugins/configs.js"
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -157,6 +159,7 @@ export default {
           delete_chat: "Delete Chat",
           promote_to_admin: "Promote to admin",
           remove_admin_access: "Remove admin access",
+          email: "Email"
         },
         fa: {
           developed_by: "توسعه داده شده توسط",
@@ -230,6 +233,7 @@ export default {
           delete_chat: "حذف کردن گفت و گو",
           promote_to_admin: "ارتقا به مدیر",
           remove_admin_access: "حذف دسترسی مدیر",
+          email: "ایمیل"
         },
       },
     },

@@ -45,7 +45,7 @@
 
         <v-card-actions class="pr-2">
           <v-spacer></v-spacer>
-          <v-btn :color="theme_color" text @click="dialog_step = 1">
+          <v-btn :color="$configs.theme_color" text @click="dialog_step = 1">
             {{ $t("cancel") }}
           </v-btn>
           <v-btn
@@ -55,7 +55,7 @@
             "
             :loading="submit_button_loading_state"
             @click="submit_create_group"
-            :color="theme_color"
+            :color="$configs.theme_color"
             text
           >
             {{ $t("create") }}
