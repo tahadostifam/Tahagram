@@ -1,8 +1,6 @@
 <template>
   <div>
-    <FormTopOverlay />
-
-    <div class="form rounded-sm grey darken-4 pa-5 elevation-3">
+    <!-- <div class="form">
       <h2 :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'" class="mb-3">
         {{ $t("signin") }}
       </h2>
@@ -58,6 +56,9 @@
           >{{ $t("signup") }}</NuxtLink
         >
       </div>
+    </div> -->
+    <div id="signin_form">
+      <img id="logo" src="~/assets/images/logo.png" alt="Logo">
     </div>
   </div>
 </template>

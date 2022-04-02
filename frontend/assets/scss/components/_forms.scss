@@ -1,0 +1,37 @@
+@use "../variables" as vars;
+
+#signin_form {
+  #logo{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    width: 100%;
+  }
+  width: 520px;
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translate(-50%);
+
+  @media screen and (max-width: 560px) {
+    & {
+      width: 95%;
+    }
+  }
+  
+}
+
+.form_errors {
+  width: 100%;
+
+  .item {
+    color: vars.$danger_color;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: block;
+  }
+
+  margin-bottom: 10px;
+}
+  
