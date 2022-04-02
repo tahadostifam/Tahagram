@@ -17,3 +17,12 @@
     border: 2px solid vars.$theme_color;
   }
 }
+
+#search_input_clear_button {
+  position: absolute;
+  right: 18px;
+  top: 17px;
+  .v-icon {
+    color: vars.$color_6;
+  }
+}

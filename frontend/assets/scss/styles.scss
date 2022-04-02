@@ -38,7 +38,7 @@ html {
 
 body,
 .v-application {
-  a{
+  a {
     color: vars.$theme_color;
   }
   overflow-x: hidden;
@@ -628,33 +628,6 @@ body .v-application .v-navigation-drawer {
   // display: none;
 }
 
-.badge_message {
-  background-color: vars.$color_5;
-  padding: 4px 9px;
-  border-radius: 50px;
-  font-size: 13px;
-  display: block;
-  width: max-content;
-  margin-top: 10px;
-  &:not(.rtl) {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%);
-  }
-}
-
-.chat_row_badge {
-  position: relative;
-  display: block;
-  left: -9px;
-  top: -10px;
-  padding: 4px 20px;
-  width: calc(100% + 18px);
-  background-color: vars.$color_5;
-  color: vars.$color_6;
-  font-weight: 400;
-}
-
 #page_center_error {
   position: relative;
   top: 50%;
@@ -680,46 +653,6 @@ body .v-application .v-navigation-drawer {
   border-radius: 10px;
   display: flex;
   align-items: center;
-}
-
-.icon_and_value_grid {
-  ._row {
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    padding: 14px 0;
-    .v-icon {
-      width: 70px;
-      padding-left: 20px;
-      display: inline-block;
-      text-align: center;
-      color: vars.$color_6;
-    }
-    .content {
-      width: auto;
-      display: inline-block;
-      padding-right: 13px;
-      padding-left: 15px;
-      .value {
-        display: block;
-        width: 100%;
-        font-size: 15px;
-      }
-      ._title {
-        display: block;
-        width: 100%;
-        font-size: 13px;
-        color: vars.$color_6;
-      }
-    }
-  }
-}
-
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
 }
 
 .members_list {
@@ -758,14 +691,5 @@ body .v-application .v-navigation-drawer {
     .avatar {
       --size: 50px;
     }
-  }
-}
-
-#search_input_clear_button {
-  position: absolute;
-  right: 18px;
-  top: 17px;
-  .v-icon {
-    color: vars.$color_6;
   }
 }
