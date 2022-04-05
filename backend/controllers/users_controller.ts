@@ -37,7 +37,7 @@ export default {
             await new User({
                 email: email,
                 verific_code: verific_code,
-                verific_tries_number: 0
+                verific_try_count: 0
             }).save();
         }
         sendMail(
@@ -92,15 +92,15 @@ export default {
                 email: email, 
             }, {
                 $inc: {
-                    verific_tries_number: 1
+                    verific_try_count: 1
                 }
             })
             status_codes.bad_verific_code(req, res, next);            
         }
         if (user) {
-            // NOTE -> Limiting user verific_code to 5 times
-            const current_verific_code: number|undefined = user.verific_code;
-            if (current_verific_code && Number(user.verific_code) >= 5) {
+            const current_verific_code: number|undefined = user.verific_try_count;
+            
+            if (current_verific_code && Number(current_verific_code) >= 5) {
                 return status_codes.verific_code_limit(req, res, next)
             } else {
                 try {
@@ -109,7 +109,7 @@ export default {
                         await User.findOneAndUpdate({
                             email: email, 
                         }, {                        
-                            verific_tries_number: null,
+                            verific_try_count: null,
                             first_login_filled: true
                         })
                     } else {

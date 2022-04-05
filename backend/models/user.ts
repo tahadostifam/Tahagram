@@ -19,7 +19,7 @@ var schema = new mongoose.Schema({
     verific_code: {
         type: Number
     },
-    verific_tries_number: {
+    verific_try_count: {
         type: Number, 
     },
     verific_limit_date: {
