@@ -9,17 +9,29 @@ var schema = new mongoose.Schema({
         },
     },
     full_name: {
+        type: String,  
+    },
+    email: {
         type: String,
-        required: true,
+        required: true, 
+        unique: true,
+    },
+    verific_code: {
+        type: Number
+    },
+    verific_tries_number: {
+        type: Number, 
+    },
+    verific_limit_date: {
+        type: Date,
+    },
+    first_login_filled: {
+        type: Boolean,
+        default: false
     },
     username: {
         type: String,
-        unique: true,
-        required: true,
-    },
-    password_digest: {
-        type: String,
-        required: true,
+        unique: true,        
     },
     bio: {
         type: String,

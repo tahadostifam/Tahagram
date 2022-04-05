@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import { WebSocket } from "ws";
 
 export default {
-    user_created(req: Request, res: Response, next: NextFunction) {
+    verific_email_sent(req: Request, res: Response, next: NextFunction) {
         res.send({
-            message: "user created successfully",
+            message: "verific email sent",
         });
     },
     success_signin(data: any, req: Request, res: Response, next: NextFunction) {
@@ -14,22 +14,16 @@ export default {
             token: data.token,
         });
     },
-    username_or_password_is_incorrect(req: Request, res: Response, next: NextFunction) {
-        res.statusCode = 401;
-        res.send({
-            message: "username or password is incorrect",
-        });
-    },
     error(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 500;
         res.send({
             message: "an error occurred on the server side",
         });
     },
-    username_already_registered(req: Request, res: Response, next: NextFunction) {
+    email_already_registered(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 409;
         res.send({
-            message: "username already registered",
+            message: "email already registered",
         });
     },
     invalid_token(req: Request, res: Response, next: NextFunction) {
@@ -70,10 +64,10 @@ export default {
             })
         );
     },
-    username_is_not_unique(req: Request, res: Response, next: NextFunction) {
+    email_is_not_unique(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 409;
         res.send({
-            message: "another chat exists with this username",
+            message: "another chat exists with this email",
         });
     },
     file_not_valid(req: Request, res: Response, next: NextFunction) {

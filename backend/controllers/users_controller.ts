@@ -2,14 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { comparePassword, makeHashPassword } from "../lib/bcrypt";
 import slugify from "slugify";
 import status_codes from "../lib/status_codes";
-import jwt from "jsonwebtoken";
 const secrets = require("../configs/secrets.json");
 
 import User from "../models/user";
 import Chats from "../models/chats";
 import { IChat, IUser, IUserChatLink } from "../lib/interfaces";
 import { findOutTUofChat } from "../lib/socket";
-import { compareToken, generateToken } from "../lib/jwt";
+import { sendMail } from "../mail/mail";
 
 declare module "express-session" {
     interface SessionData {
@@ -22,68 +21,49 @@ declare module "express-session" {
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
-        signinUserWithUserPassword(req.body.username, req.body.password).then(
-            async (user: IUser) => {
-                // success
-                const final_profile_photos = user.profile_photos.reverse();
-                getUserChats(user).then((chats) => {
-                    getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
-                        req.session.user = user;
-
-                        status_codes.success_signin(
-                            {
-                                user: {
-                                    full_name: user.full_name,
-                                    username: user.username,
-                                    bio: user.bio,
-                                    last_seen: user.last_seen,
-                                    profile_photos: final_profile_photos,
-                                    chats: chats,
-                                    chats_messages: chats_messages,
-                                },
-                            },
-                            req,
-                            res,
-                            next
-                        );
-                    });
+        const verific_code = RandomVerificCode()
+        const email = req.body.email;
+        const user = await User.findOne({
+            email: email
+        })
+        if (user) {
+            res.send("in progress")
+        } else {
+            sendMail("verific", {
+                name: CleanEmailAt(email),
+                code: verific_code
+            }, "mr.tahadostifam@gmail.com", "Logging In Account (First Time)")
+                .then(() => {
+                    status_codes.verific_email_sent(req, res, next)
+                })
+                .catch(() => {
+                    status_codes.error(req, res, next)
                 });
-            },
-            (state) => {
-                if (state == "not_found") {
-                    status_codes.username_or_password_is_incorrect(req, res, next);
-                }
-                if (state == "error") {
-                    status_codes.error(req, res, next);
-                }
-            }
-        );
-    },
+        }
+        // ANCHOR
+        //const final_profile_photos = user.profile_photos.reverse();
+        // getUserChats(user).then((chats) => {
+        //     getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
+        //         req.session.user = user;
 
-    SignupAction: (req: Request, res: Response, next: NextFunction) => {
-        req.body.username = slugify(req.body.username, {
-            lower: true,
-            strict: false,
-            locale: "vi",
-        });
-
-        checkUsernameUniqueness(req.body.username).then(
-            () => {
-                makeHashPassword(req.body.password).then(
-                    async (password_digest) => {
-                        const user = new User({
-                            full_name: req.body.full_name,
-                            username: req.body.username,
-                            password_digest: password_digest,
-                        });
-                        await user.save();
-                        status_codes.user_created(req, res, next);
-                    },
-                    () => status_codes.error(req, res, next)
-                );
-            },
-            () => status_codes.username_already_registered(req, res, next)
-        );
+        //         status_codes.success_signin(
+        //             {
+        //                 user: {
+        //                     full_name: user.full_name,
+        //                     username: user.username,
+        //                     bio: user.bio,
+        //                     last_seen: user.last_seen,
+        //                     profile_photos: final_profile_photos,
+        //                     chats: chats,
+        //                     chats_messages: chats_messages,
+        //                 },
+        //             },
+        //             req,
+        //             res,
+        //             next
+        //         );
+        //     });
+        // }); 
     },
 
     AuthenticationAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -115,33 +95,15 @@ export default {
     },
 };
 
-export function signinUserWithUserPassword(username: string, password: string) {
-    return new Promise(async (success: (user: IUser) => void, failed: (message: string) => void) => {
-        const user = await User.findOne({
-            username: username,
-        });
-
-        if (!user) {
-            return failed("not_found");
-        }
-        comparePassword(password, user.password_digest).then(
-            () => {
-                success(user);
-            },
-            () => failed("not_found")
-        );
-    });
-}
-
-export function checkUsernameUniqueness(username: string) {
-    return new Promise<void>(async (deos_not_exists: () => void, exists: () => void) => {
+export function checkEmailUniqueness(email: string) {
+    return new Promise<void>(async (does_not_exists: () => void, exists: () => void) => {
         const result = await User.findOne({
-            username: username,
+            email: email,
         });
         if (result) {
             exists();
         } else {
-            deos_not_exists();
+            does_not_exists();
         }
     });
 }
@@ -262,4 +224,12 @@ export function getUserChatsMessages(username: string, user_chats_list: IUserCha
         }
         success([]);
     });
+}
+
+export function RandomVerificCode(): number {
+    return Math.floor(Math.random() * 999999)
+}
+
+export function CleanEmailAt(email: string): string {
+    return email.slice(0, email.indexOf("@"))
 }

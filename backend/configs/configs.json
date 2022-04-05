@@ -1,9 +1,4 @@
 {
-    "api": {
-        "port": 8000,
-        "jwt_secret": "secret",
-        "jwt_expire": "10d"
-    },
     "socket": {
         "port": 2345
     },

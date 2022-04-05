@@ -1,4 +1,5 @@
 const configs = require("./configs/configs.json");
+const secrets = require("./configs/secrets.json");
 import express, { Request, Express } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -23,20 +24,21 @@ app.use(
 app.use(
     session({
         name: "auth_token",
-        secret: configs.api.jwt_secret,
+        secret: secrets.SESSION_SECRET,
         cookie: { maxAge: 60000 },
         resave: true,
         saveUninitialized: true,
     })
 );
 
+// FIXME - Security bug fix on serving files
 app.use("/api/uploads/profile_photos/:filename", (req, res) => {
-    res.type("png");
+    res.type("image/png");
     res.sendFile(`${process.cwd()}/uploads/profile_photos/${req.params.filename}`);
 });
 
 app.use("/api/uploads/photo_messages/:filename", (req, res) => {
-    res.type("png");
+    res.type("image/png");
     res.sendFile(`${process.cwd()}/uploads/photo_messages/${req.params.filename}`);
 });
 

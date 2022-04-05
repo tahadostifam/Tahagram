@@ -3,7 +3,6 @@ import * as database from "../lib/database";
 import status_codes from "../lib/status_codes";
 import { IMiddleWareRequest, IUser } from "../lib/interfaces";
 import User from "../models/user";
-import { compareToken, removeBearerKeyword } from "../lib/jwt";
 
 export default async function (req: any, res: Response, next: NextFunction, dosomething?: (user: IUser) => void) {
     const user = req.session.user;
