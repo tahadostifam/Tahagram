@@ -46,6 +46,8 @@ var schema = new mongoose.Schema({
         type: Array,
         default: [],
     },
+}, {
+    versionKey: false
 });
 
 var collection = mongoose.model("chats", schema);

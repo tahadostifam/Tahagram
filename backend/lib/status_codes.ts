@@ -12,6 +12,11 @@ export default {
             message: "verific code is not valid"
         })
     },
+    verific_code_expired(req: Request, res: Response, next: NextFunction) {
+        res.send({
+            message: "verific code expired"
+        })
+    },
     verific_code_limit(req: Request, res: Response, next: NextFunction){
         res.statusCode = 503
         res.send({

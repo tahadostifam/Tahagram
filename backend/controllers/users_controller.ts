@@ -31,13 +31,15 @@ export default {
                 { email: email },
                 {
                     verific_code: verific_code,
+                    verific_code_expire: VerificCodeExpireDate(),
                 }
             );
         } else {
             await new User({
                 email: email,
                 verific_code: verific_code,
-                verific_try_count: 0
+                verific_try_count: 0,
+                verific_code_expire: VerificCodeExpireDate(),
             }).save();
         }
         sendMail(
@@ -55,30 +57,6 @@ export default {
             .catch(() => {
                 status_codes.error(req, res, next);
             });
-        // ANCHOR
-        //const final_profile_photos = user.profile_photos.reverse();
-        // getUserChats(user).then((chats) => {
-        //     getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
-        //         req.session.user = user;
-
-        //         status_codes.success_signin(
-        //             {
-        //                 user: {
-        //                     full_name: user.full_name,
-        //                     username: user.username,
-        //                     bio: user.bio,
-        //                     last_seen: user.last_seen,
-        //                     profile_photos: final_profile_photos,
-        //                     chats: chats,
-        //                     chats_messages: chats_messages,
-        //                 },
-        //             },
-        //             req,
-        //             res,
-        //             next
-        //         );
-        //     });
-        // });
     },
 
     SigninWithCode: async (req: Request, res: Response, next: NextFunction) => {
@@ -87,40 +65,76 @@ export default {
         const user: IUser = await User.findOne({
             email: email,
         });
-        async function response_bad_verific_code(){
-            await User.findOneAndUpdate({
-                email: email, 
-            }, {
-                $inc: {
-                    verific_try_count: 1
+        async function response_bad_verific_code() {
+            await User.findOneAndUpdate(
+                {
+                    email: email,
+                },
+                {
+                    $inc: {
+                        verific_try_count: 1,
+                    },
                 }
-            })
-            status_codes.bad_verific_code(req, res, next);            
+            );
+            status_codes.bad_verific_code(req, res, next);
         }
         if (user) {
-            const current_verific_code: number|undefined = user.verific_try_count;
-            
+            const current_verific_code: number | undefined = user.verific_try_count;
+
             if (current_verific_code && Number(current_verific_code) >= 5) {
-                return status_codes.verific_code_limit(req, res, next)
+                return status_codes.verific_code_limit(req, res, next);
             } else {
                 try {
                     if (user.verific_code === parseInt(verific_code)) {
-                        res.send("valid code");
-                        await User.findOneAndUpdate({
-                            email: email, 
-                        }, {                        
-                            verific_try_count: null,
-                            first_login_filled: true
-                        })
+                        // const final_profile_photos = user.profile_photos.reverse();
+                        // getUserChats(user).then((chats) => {
+                        //     getUserChatsMessages(user.username, user.chats).then((chats_messages) => {
+                        //         req.session.user = user;
+
+                        //         status_codes.success_signin(
+                        //             {
+                        //                 user: {
+                        //                     full_name: user.full_name,
+                        //                     username: user.username,
+                        //                     bio: user.bio,
+                        //                     last_seen: user.last_seen,
+                        //                     profile_photos: final_profile_photos,
+                        //                     chats: chats,
+                        //                     chats_messages: chats_messages,
+                        //                 },
+                        //             },
+                        //             req,
+                        //             res,
+                        //             next
+                        //         );
+                        //     });
+                        // });
+                        const verific_code_expire_date = user.verific_code_expire;
+                        if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
+                            res.send("success");
+                            // the input_code is valid | success!
+                            await User.findOneAndUpdate(
+                                {
+                                    email: email,
+                                },
+                                {
+                                    verific_code: null,
+                                    verific_try_count: 0,
+                                    first_login_filled: true,
+                                }
+                            );
+                        } else {
+                            status_codes.verific_code_expired(req, res, next);
+                        }
                     } else {
-                        response_bad_verific_code()
+                        response_bad_verific_code();
                     }
                 } catch {
-                    response_bad_verific_code()
+                    response_bad_verific_code();
                 }
             }
         } else {
-            response_bad_verific_code()
+            response_bad_verific_code();
         }
     },
 
@@ -292,4 +306,12 @@ export function RandomVerificCode(): number {
 
 export function CleanEmailAt(email: string): string {
     return email.slice(0, email.indexOf("@"));
+}
+
+export function VerificCodeExpireDate(): number {
+    return Date.now() + 1200
+}
+
+export function isVerificCodeExpired(date: number): boolean {
+    return Date.now() > date;
 }

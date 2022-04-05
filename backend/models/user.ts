@@ -19,10 +19,15 @@ var schema = new mongoose.Schema({
     verific_code: {
         type: Number
     },
+    verific_code_expire: {
+        // Expire for verific_code
+        type: Number
+    },
     verific_try_count: {
         type: Number, 
     },
     verific_limit_date: {
+        // Ban or access to try signin again after in another time
         type: Date,
     },
     first_login_filled: {
@@ -48,6 +53,8 @@ var schema = new mongoose.Schema({
         type: Array,
         default: [],
     },
+}, {
+    versionKey: false
 });
 
 var collection = mongoose.model("users", schema);
