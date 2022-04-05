@@ -7,6 +7,18 @@ export default {
             message: "verific email sent",
         });
     },
+    bad_verific_code(req: Request, res: Response, next: NextFunction) {
+        res.send({
+            message: "verific code is not valid"
+        })
+    },
+    verific_code_limit(req: Request, res: Response, next: NextFunction){
+        res.statusCode = 503
+        res.send({
+            message: "verific_code_limit",
+            full_message: "The limits are full, please try again in 3 hours"
+        })
+    },
     username_is_not_unique(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 409
         res.send({

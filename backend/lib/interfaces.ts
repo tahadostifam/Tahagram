@@ -16,7 +16,10 @@ export interface IUser {
     _id: string;
     full_name: string;
     username: string;
-    password_digest: string;
+    verific_code?: number;
+    verific_tries_number?: number;
+    verific_limit_date?: Date,
+    first_login_filled?: Boolean,
     bio: string;
     last_seen: string;
     profile_photos: IProfilePhoto[];

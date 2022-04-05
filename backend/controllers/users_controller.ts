@@ -21,29 +21,40 @@ declare module "express-session" {
 
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
-        const verific_code = RandomVerificCode()
+        const verific_code = RandomVerificCode();
         const email = req.body.email;
         const user = await User.findOne({
-            email: email
-        })
+            email: email,
+        });
         if (user) {
-            res.send("in progress")
+            await User.findOneAndUpdate(
+                { email: email },
+                {
+                    verific_code: verific_code,
+                }
+            );
         } else {
             await new User({
-                email: email, 
-                verific_code: verific_code
-            }).save()
-            sendMail("verific", {
-                name: CleanEmailAt(email),
-                code: verific_code
-            }, "mr.tahadostifam@gmail.com", "Logging In Account (First Time)")
-                .then(() => {
-                    status_codes.verific_email_sent(req, res, next)
-                })
-                .catch(() => {
-                    status_codes.error(req, res, next)
-                });
+                email: email,
+                verific_code: verific_code,
+                verific_tries_number: 0
+            }).save();
         }
+        sendMail(
+            "verific",
+            {
+                name: CleanEmailAt(email),
+                code: verific_code,
+            },
+            "mr.tahadostifam@gmail.com",
+            "Logging In Account (First Time)"
+        )
+            .then(() => {
+                status_codes.verific_email_sent(req, res, next);
+            })
+            .catch(() => {
+                status_codes.error(req, res, next);
+            });
         // ANCHOR
         //const final_profile_photos = user.profile_photos.reverse();
         // getUserChats(user).then((chats) => {
@@ -67,7 +78,50 @@ export default {
         //             next
         //         );
         //     });
-        // }); 
+        // });
+    },
+
+    SigninWithCode: async (req: Request, res: Response, next: NextFunction) => {
+        const email = req.body.email;
+        const verific_code = req.body.verific_code;
+        const user: IUser = await User.findOne({
+            email: email,
+        });
+        async function response_bad_verific_code(){
+            await User.findOneAndUpdate({
+                email: email, 
+            }, {
+                $inc: {
+                    verific_tries_number: 1
+                }
+            })
+            status_codes.bad_verific_code(req, res, next);            
+        }
+        if (user) {
+            // NOTE -> Limiting user verific_code to 5 times
+            const current_verific_code: number|undefined = user.verific_code;
+            if (current_verific_code && Number(user.verific_code) >= 5) {
+                return status_codes.verific_code_limit(req, res, next)
+            } else {
+                try {
+                    if (user.verific_code === parseInt(verific_code)) {
+                        res.send("valid code");
+                        await User.findOneAndUpdate({
+                            email: email, 
+                        }, {                        
+                            verific_tries_number: null,
+                            first_login_filled: true
+                        })
+                    } else {
+                        response_bad_verific_code()
+                    }
+                } catch {
+                    response_bad_verific_code()
+                }
+            }
+        } else {
+            response_bad_verific_code()
+        }
     },
 
     AuthenticationAction: async (req: Request, res: Response, next: NextFunction) => {
@@ -231,9 +285,11 @@ export function getUserChatsMessages(username: string, user_chats_list: IUserCha
 }
 
 export function RandomVerificCode(): number {
-    return Math.floor(Math.random() * 999999)
+    const min = Math.ceil(100000);
+    const max = Math.floor(999999);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 export function CleanEmailAt(email: string): string {
-    return email.slice(0, email.indexOf("@"))
+    return email.slice(0, email.indexOf("@"));
 }
