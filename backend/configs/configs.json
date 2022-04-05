@@ -1,4 +1,5 @@
 {
+    "http_port": 3000,
     "socket": {
         "port": 2345
     },
@@ -7,6 +8,6 @@
         "port": 27017,
         "user": null,
         "pass": null,
-        "db": "chatapp"
+        "db": "tahagram_db"
     }
 }

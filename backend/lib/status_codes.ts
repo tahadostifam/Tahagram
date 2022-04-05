@@ -7,6 +7,12 @@ export default {
             message: "verific email sent",
         });
     },
+    username_is_not_unique(req: Request, res: Response, next: NextFunction) {
+        res.statusCode = 409
+        res.send({
+            message: "username is not unique",
+        });
+    },
     success_signin(data: any, req: Request, res: Response, next: NextFunction) {
         res.send({
             message: "success",

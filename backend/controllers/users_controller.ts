@@ -29,6 +29,10 @@ export default {
         if (user) {
             res.send("in progress")
         } else {
+            await new User({
+                email: email, 
+                verific_code: verific_code
+            }).save()
             sendMail("verific", {
                 name: CleanEmailAt(email),
                 code: verific_code

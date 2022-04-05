@@ -53,10 +53,10 @@ app.use("/api/profile_photos", ProfilePhotosRoutes);
 app.use("/api/messages", MessagesRoutes);
 app.use("/api/chats", ChatsRoutes);
 
-app.listen(configs.api.port, "0.0.0.0", () => {
+app.listen(configs.http_port, "0.0.0.0", () => {
     console.clear();
 
-    console.log(`Api listening on port ${configs.api.port}!`);
+    console.log(`Api listening on port ${configs.http_port}!`);
 
     initSocket(app);
 
