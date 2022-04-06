@@ -1,5 +1,5 @@
 {
-    "http_port": 3000,
+    "http_port": 8000,
     "socket": {
         "port": 2345
     },

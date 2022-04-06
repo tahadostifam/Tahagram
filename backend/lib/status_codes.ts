@@ -34,7 +34,6 @@ export default {
         res.send({
             message: "success",
             data: data.user,
-            token: data.token,
         });
     },
     error(req: Request, res: Response, next: NextFunction) {

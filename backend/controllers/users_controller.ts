@@ -12,7 +12,7 @@ import { sendMail } from "../mail/mail";
 
 declare module "express-session" {
     interface SessionData {
-        user: IUser;
+        user_id: string;
     }
     interface Cookie {
         user_id: string;
@@ -23,7 +23,7 @@ export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
         const verific_code = RandomVerificCode();
         const email = req.body.email;
-        const user = await User.findOne({
+        const user: IUser = await User.findOne({
             email: email,
         });
         if (user) {
@@ -87,32 +87,12 @@ export default {
             } else {
                 try {
                     if (user.verific_code === parseInt(verific_code)) {
-                        // const final_profile_photos = user.profile_photos.reverse();
-                        // getUserChats(user).then((chats) => {
-                        //     getUserChatsMessages(user.username, user.chats).then((chats_messages) => {
-                        //         req.session.user = user;
-
-                        //         status_codes.success_signin(
-                        //             {
-                        //                 user: {
-                        //                     full_name: user.full_name,
-                        //                     username: user.username,
-                        //                     bio: user.bio,
-                        //                     last_seen: user.last_seen,
-                        //                     profile_photos: final_profile_photos,
-                        //                     chats: chats,
-                        //                     chats_messages: chats_messages,
-                        //                 },
-                        //             },
-                        //             req,
-                        //             res,
-                        //             next
-                        //         );
-                        //     });
-                        // });
                         const verific_code_expire_date = user.verific_code_expire;
                         if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
-                            res.send("success");
+                            req.session.user_id = user._id
+                            status_codes.success_signin({
+                                name: "Taha",
+                            }, req, res, next)
                             // the input_code is valid | success!
                             await User.findOneAndUpdate(
                                 {
@@ -140,11 +120,12 @@ export default {
     },
 
     AuthenticationAction: async (req: Request, res: Response, next: NextFunction) => {
-        if (req.session.user) {
-            const user = await User.findOne({
-                username: req.session.user.username,
+        if (req.session.user_id) {
+            const user: IUser = await User.findOne({
+                _id: req.session.user_id
             });
             if (!user) return status_codes.invalid_token(req, res, next);
+            
             const final_profile_photos = user.profile_photos.reverse();
             await getUserChats(user).then((chats) => {
                 getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
