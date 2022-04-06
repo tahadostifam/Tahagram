@@ -30,12 +30,6 @@ export default {
             message: "username is not unique",
         });
     },
-    success_signin(data: any, req: Request, res: Response, next: NextFunction) {
-        res.send({
-            message: "success",
-            data: data.user,
-        });
-    },
     error(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 500;
         res.send({

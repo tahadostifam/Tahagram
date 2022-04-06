@@ -90,9 +90,7 @@ export default {
                         const verific_code_expire_date = user.verific_code_expire;
                         if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
                             req.session.user_id = user._id
-                            status_codes.success_signin({
-                                name: "Taha",
-                            }, req, res, next)
+                            ResponseUserData(user, req, res, next)
                             // the input_code is valid | success!
                             await User.findOneAndUpdate(
                                 {
@@ -125,29 +123,34 @@ export default {
                 _id: req.session.user_id
             });
             if (!user) return status_codes.invalid_token(req, res, next);
+
+            ResponseUserData(user, req, res, next)
             
-            const final_profile_photos = user.profile_photos.reverse();
-            await getUserChats(user).then((chats) => {
-                getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
-                    res.send({
-                        message: "success",
-                        data: {
-                            full_name: user.full_name,
-                            username: user.username,
-                            bio: user.bio,
-                            last_seen: user.last_seen,
-                            profile_photos: final_profile_photos,
-                            chats: chats,
-                            chats_messages: chats_messages,
-                        },
-                    });
-                });
-            });
         } else {
             status_codes.invalid_token(req, res, next);
         }
     },
 };
+
+async function ResponseUserData(user: IUser, req: Request, res: Response, next: NextFunction){
+    const final_profile_photos = user.profile_photos.reverse();
+    await getUserChats(user).then((chats) => {
+        getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
+            res.send({
+                message: "success",
+                data: {
+                    full_name: user.full_name,
+                    username: user.username,
+                    bio: user.bio,
+                    last_seen: user.last_seen,
+                    profile_photos: final_profile_photos,
+                    chats: chats,
+                    chats_messages: chats_messages,
+                },
+            });
+        });
+    });
+}
 
 export function checkEmailUniqueness(email: string) {
     return new Promise<void>(async (does_not_exists: () => void, exists: () => void) => {
