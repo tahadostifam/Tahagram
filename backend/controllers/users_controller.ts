@@ -42,6 +42,7 @@ export default {
                 verific_code_expire: VerificCodeExpireDate(),
             }).save();
         }
+        
         sendMail(
             "verific",
             {
@@ -309,7 +310,7 @@ export function CleanEmailAt(email: string): string {
 }
 
 export function VerificCodeExpireDate(): number {
-    return Date.now() + 1200
+    return Date.now() + (1200 * 1000)
 }
 
 export function isVerificCodeExpired(date: number): boolean {
