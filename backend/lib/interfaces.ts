@@ -18,9 +18,9 @@ export interface IUser {
     username: string;
     verific_code?: number;
     verific_try_count?: number;
-    verific_code_expire?: Date;
-    verific_limit_date?: Date,
-    first_login_filled?: Boolean,
+    verific_code_expire?: number;
+    verific_limit_date?: number,
+    first_login_filled?: boolean,
     bio: string;
     last_seen: string;
     profile_photos: IProfilePhoto[];

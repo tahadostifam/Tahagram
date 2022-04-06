@@ -25,7 +25,7 @@ app.use(
     session({
         name: "auth_token",
         secret: secrets.SESSION_SECRET,
-        cookie: { maxAge: 60000 },
+        cookie: { maxAge: 6000000 },
         resave: true,
         saveUninitialized: true,
     })

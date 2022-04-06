@@ -28,7 +28,7 @@ var schema = new mongoose.Schema({
     },
     verific_limit_date: {
         // Ban or access to try signin again after in another time
-        type: Date,
+        type: Number,
     },
     first_login_filled: {
         type: Boolean,

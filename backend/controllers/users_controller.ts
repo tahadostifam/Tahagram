@@ -80,10 +80,21 @@ export default {
             status_codes.bad_verific_code(req, res, next);
         }
         if (user) {
-            const current_verific_code: number | undefined = user.verific_try_count;
-
-            if (current_verific_code && Number(current_verific_code) >= 5) {
+            if (user.verific_limit_date && !isUserLimited(Number(user.verific_limit_date))) {
                 return status_codes.verific_code_limit(req, res, next);
+            }
+
+            const current_verific_code: number | undefined = user.verific_try_count;
+            if (current_verific_code && Number(current_verific_code) >= 5) {
+                await User.findOneAndUpdate(
+                    {
+                        email: email,
+                    },
+                    {
+                        verific_code_limit: makeUserLimitDate()
+                    }
+                );
+                return status_codes.maximum_try_count(req, res, next);
             } else {
                 try {
                     if (user.verific_code === parseInt(verific_code)) {
@@ -299,4 +310,12 @@ export function VerificCodeExpireDate(): number {
 
 export function isVerificCodeExpired(date: number): boolean {
     return Date.now() > date;
+}
+
+export function isUserLimited(date: number): boolean {
+    return Date.now() > date;
+}
+
+export function makeUserLimitDate(){
+    return Date.now() + (10800 * 1000)
 }

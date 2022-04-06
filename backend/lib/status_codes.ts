@@ -24,6 +24,12 @@ export default {
             full_message: "The limits are full, please try again in 3 hours"
         })
     },
+    maximum_try_count(req: Request, res: Response, next: NextFunction){
+        res.statusCode = 503
+        res.send({
+            message: "maximum verific code try count",
+        });
+    },
     username_is_not_unique(req: Request, res: Response, next: NextFunction) {
         res.statusCode = 409
         res.send({
