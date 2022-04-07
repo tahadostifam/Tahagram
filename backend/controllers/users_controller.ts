@@ -22,18 +22,26 @@ declare module "express-session" {
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
         const verific_code = RandomVerificCode();
-        const email = req.body.email;
+        const email = req.body.channel_username = slugify(req.body.email, {
+            lower: true,
+            strict: false,
+            locale: "vi",
+        });
         const user: IUser = await User.findOne({
             email: email,
         });
         if (user) {
-            await User.findOneAndUpdate(
-                { email: email },
-                {
-                    verific_code: verific_code,
-                    verific_code_expire: VerificCodeExpireDate(),
-                }
-            );
+            if (user.verific_limit_date && isUserLimited(Number(user.verific_limit_date))) {
+                return status_codes.verific_code_limit(req, res, next);
+            } else {
+                await User.findOneAndUpdate(
+                    { email: email },
+                    {
+                        verific_code: verific_code,
+                        verific_code_expire: VerificCodeExpireDate(),
+                    }
+                );
+            }
         } else {
             await new User({
                 email: email,
@@ -66,6 +74,12 @@ export default {
         const user: IUser = await User.findOne({
             email: email,
         });
+        await User.updateOne({email: email}, {
+            verific_limit_date: makeUserLimitDate()
+        })
+        res.send(user)
+        return
+        
         async function response_bad_verific_code() {
             await User.findOneAndUpdate(
                 {
@@ -80,49 +94,57 @@ export default {
             status_codes.bad_verific_code(req, res, next);
         }
         if (user) {
-            if (user.verific_limit_date && !isUserLimited(Number(user.verific_limit_date))) {
-                return status_codes.verific_code_limit(req, res, next);
-            }
-
-            const current_verific_code: number | undefined = user.verific_try_count;
-            if (current_verific_code && Number(current_verific_code) >= 5) {
-                await User.findOneAndUpdate(
-                    {
-                        email: email,
-                    },
-                    {
-                        verific_code_limit: makeUserLimitDate()
-                    }
-                );
-                return status_codes.maximum_try_count(req, res, next);
-            } else {
-                try {
-                    if (user.verific_code === parseInt(verific_code)) {
-                        const verific_code_expire_date = user.verific_code_expire;
-                        if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
-                            req.session.user_id = user._id
-                            ResponseUserData(user, req, res, next)
-                            // the input_code is valid | success!
-                            await User.findOneAndUpdate(
-                                {
-                                    email: email,
-                                },
-                                {
-                                    verific_code: null,
-                                    verific_try_count: 0,
-                                    first_login_filled: true,
-                                }
-                            );
-                        } else {
-                            status_codes.verific_code_expired(req, res, next);
-                        }
-                    } else {
-                        response_bad_verific_code();
-                    }
-                } catch {
-                    response_bad_verific_code();
+            User.updateOne(
+                {
+                    email: email,
+                },
+                {
+                    verific_code_limit: 200
                 }
-            }
+            ).then(() => {
+                status_codes.maximum_try_count(req, res, next);
+            });
+
+            // const current_verific_code: number | undefined = user.verific_try_count;
+            // if (current_verific_code && Number(current_verific_code) >= 5) {
+            //     User.findOneAndUpdate(
+            //         {
+            //             email: email,
+            //         },
+            //         {
+            //             verific_code_limit: 200
+            //         }
+            //     ).then(() => {
+            //         status_codes.maximum_try_count(req, res, next);
+            //     });
+            // } else {
+            //     try {
+            //         if (user.verific_code === parseInt(verific_code)) {
+            //             const verific_code_expire_date = user.verific_code_expire;
+            //             if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
+            //                 req.session.user_id = user._id
+            //                 ResponseUserData(user, req, res, next)
+            //                 // the input_code is valid | success!
+            //                 await User.findOneAndUpdate(
+            //                     {
+            //                         email: email,
+            //                     },
+            //                     {
+            //                         verific_code: null,
+            //                         verific_try_count: 0,
+            //                         first_login_filled: true,
+            //                     }
+            //                 );
+            //             } else {
+            //                 status_codes.verific_code_expired(req, res, next);
+            //             }
+            //         } else {
+            //             response_bad_verific_code();
+            //         }
+            //     } catch {
+            //         response_bad_verific_code();
+            //     }
+            // }
         } else {
             response_bad_verific_code();
         }
