@@ -31,7 +31,9 @@ export default {
             email: email,
         });
         if (user) {
-            if (user.verific_limit_date && isUserLimited(Number(user.verific_limit_date))) {
+            console.log(user.verific_limit_date);
+            
+            if (isUserLimited(Number(user.verific_limit_date))) {
                 return status_codes.verific_code_limit(req, res, next);
             } else {
                 await User.findOneAndUpdate(
@@ -74,11 +76,6 @@ export default {
         const user: IUser = await User.findOne({
             email: email,
         });
-        await User.updateOne({email: email}, {
-            verific_limit_date: makeUserLimitDate()
-        })
-        res.send(user)
-        return
         
         async function response_bad_verific_code() {
             await User.findOneAndUpdate(
@@ -94,57 +91,48 @@ export default {
             status_codes.bad_verific_code(req, res, next);
         }
         if (user) {
-            User.updateOne(
-                {
-                    email: email,
-                },
-                {
-                    verific_code_limit: 200
-                }
-            ).then(() => {
+            const current_verific_code: number | undefined = user.verific_try_count;
+            if (current_verific_code && Number(current_verific_code) >= 5) {
+                await User.updateOne(
+                    {
+                        email: email,
+                    },
+                    {
+                        verific_limit_date: VerificCodeExpireDate()
+                    }
+                )
+                console.log(VerificCodeExpireDate());
+                
                 status_codes.maximum_try_count(req, res, next);
-            });
-
-            // const current_verific_code: number | undefined = user.verific_try_count;
-            // if (current_verific_code && Number(current_verific_code) >= 5) {
-            //     User.findOneAndUpdate(
-            //         {
-            //             email: email,
-            //         },
-            //         {
-            //             verific_code_limit: 200
-            //         }
-            //     ).then(() => {
-            //         status_codes.maximum_try_count(req, res, next);
-            //     });
-            // } else {
-            //     try {
-            //         if (user.verific_code === parseInt(verific_code)) {
-            //             const verific_code_expire_date = user.verific_code_expire;
-            //             if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
-            //                 req.session.user_id = user._id
-            //                 ResponseUserData(user, req, res, next)
-            //                 // the input_code is valid | success!
-            //                 await User.findOneAndUpdate(
-            //                     {
-            //                         email: email,
-            //                     },
-            //                     {
-            //                         verific_code: null,
-            //                         verific_try_count: 0,
-            //                         first_login_filled: true,
-            //                     }
-            //                 );
-            //             } else {
-            //                 status_codes.verific_code_expired(req, res, next);
-            //             }
-            //         } else {
-            //             response_bad_verific_code();
-            //         }
-            //     } catch {
-            //         response_bad_verific_code();
-            //     }
-            // }
+            } else {
+                try {
+                    if (user.verific_code === parseInt(verific_code)) {
+                        const verific_code_expire_date = user.verific_code_expire;
+                        if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
+                            req.session.user_id = user._id
+                            ResponseUserData(user, req, res, next)
+                            // the input_code is valid | success!
+                            await User.findOneAndUpdate(
+                                {
+                                    email: email,
+                                },
+                                {
+                                    verific_code: null,
+                                    verific_try_count: 0,
+                                    verific_limit_date: null,
+                                    first_login_filled: true,
+                                }
+                            );
+                        } else {
+                            status_codes.verific_code_expired(req, res, next);
+                        }
+                    } else {
+                        response_bad_verific_code();
+                    }
+                } catch {
+                    response_bad_verific_code();
+                }
+            }
         } else {
             response_bad_verific_code();
         }
@@ -335,9 +323,12 @@ export function isVerificCodeExpired(date: number): boolean {
 }
 
 export function isUserLimited(date: number): boolean {
+    if (!date) {
+        return false
+    }
     return Date.now() > date;
 }
 
 export function makeUserLimitDate(){
-    return Date.now() + (10800 * 1000)
+    return Date.now() // + (10800 * 1000)
 }
