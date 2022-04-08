@@ -9,6 +9,7 @@ import Chats from "../models/chats";
 import { IChat, IUser, IUserChatLink } from "../lib/interfaces";
 import { findOutTUofChat } from "../lib/socket";
 import { sendMail } from "../mail/mail";
+import { listenerCount } from "stream";
 
 declare module "express-session" {
     interface SessionData {
@@ -30,42 +31,48 @@ export default {
         const user: IUser = await User.findOne({
             email: email,
         });
+        
         if (user) {
-            if (user.verific_limit_date != null && isUserLimited(Number(user.verific_limit_date))) {
-                return status_codes.verific_code_limit(user.verific_limit_date, req, res, next);
+            if (user.verific_limit_date != null && isUserLimited(String(user.verific_limit_date))) {
+                return status_codes.verific_code_limit(Date.parse(user.verific_limit_date), req, res, next);
             } else {
                 await User.findOneAndUpdate(
                     { email: email },
                     {
                         verific_code: verific_code,
-                        verific_code_expire: VerificCodeExpireDate(),
+                        verific_code_expire: makeVerificCodeExpireDate(),
                     }
                 );
+                doSendEmail()
             }
         } else {
             await new User({
                 email: email,
                 verific_code: verific_code,
                 verific_try_count: 0,
-                verific_code_expire: VerificCodeExpireDate(),
+                verific_code_expire: makeVerificCodeExpireDate(),
             }).save();
+            doSendEmail()
         }
-        
-        sendMail(
-            "verific",
-            {
-                name: CleanEmailAt(email),
-                code: verific_code,
-            },
-            "mr.tahadostifam@gmail.com",
-            "Logging In Account (First Time)"
-        )
-            .then(() => {
-                status_codes.verific_email_sent(req, res, next);
-            })
-            .catch(() => {
-                status_codes.error(req, res, next);
-            });
+
+        function doSendEmail(){
+            sendMail(
+                "verific",
+                {
+                    name: CleanEmailAt(email),
+                    code: verific_code,
+                },
+                "mr.tahadostifam@gmail.com",
+                "Logging In Account (First Time)"
+            )
+                .then(async () => {
+    
+                    status_codes.verific_email_sent(req, res, next);
+                })
+                .catch(() => {
+                    status_codes.error(req, res, next);
+                });
+        }
     },
 
     SigninWithCode: async (req: Request, res: Response, next: NextFunction) => {
@@ -96,7 +103,7 @@ export default {
                         email: email,
                     },
                     {
-                        verific_limit_date: VerificCodeExpireDate()
+                        verific_limit_date: makeVerificCodeExpireDate()
                     }
                 )
                 
@@ -105,7 +112,7 @@ export default {
                 try {
                     if (user.verific_code === parseInt(verific_code)) {
                         const verific_code_expire_date = user.verific_code_expire;
-                        if (verific_code_expire_date && !isVerificCodeExpired(Number(verific_code_expire_date))) {
+                        if (verific_code_expire_date && !isVerificCodeExpired(String(verific_code_expire_date))) {
                             req.session.user_id = user._id
                             ResponseUserData(user, req, res, next)
                             // the input_code is valid | success!
@@ -311,21 +318,28 @@ export function CleanEmailAt(email: string): string {
     return email.slice(0, email.indexOf("@"));
 }
 
-export function VerificCodeExpireDate(): number {
-    return Date.now() + (1200 * 1000)
+export function makeVerificCodeExpireDate() {
+    let currentDate = new Date()
+    currentDate.setMinutes(currentDate.getMinutes() + 10)
+    return currentDate.toString()
 }
 
-export function isVerificCodeExpired(date: number): boolean {
-    return Date.now() > date;
-}
-
-export function isUserLimited(date: number): boolean {
+export function isVerificCodeExpired(date: string) {
     if (!date) {
         return false
     }
-    return Date.now() > date;
+    return Date.parse(date) > Date.now();
 }
 
-export function makeUserLimitDate(){
-    return Date.now() + (10800 * 1000)
+export function isUserLimited(date: string) {
+    if (!date) {
+        return false
+    }
+    return Date.parse(date) > Date.now();
+}
+
+export function makeUserLimitDate() {
+    let currentDate = new Date()
+    currentDate.setHours(currentDate.getHours() + 3)
+    return currentDate.toString()
 }

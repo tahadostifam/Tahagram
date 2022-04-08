@@ -18,8 +18,8 @@ export interface IUser {
     username: string;
     verific_code?: number;
     verific_try_count?: number;
-    verific_code_expire?: number;
-    verific_limit_date?: number,
+    verific_code_expire?: string;
+    verific_limit_date?: string,
     first_login_filled?: boolean,
     bio: string;
     last_seen: string;

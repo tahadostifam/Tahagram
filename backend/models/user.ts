@@ -21,15 +21,14 @@ var schema = new mongoose.Schema({
     },
     verific_code_expire: {
         // Expire for verific_code
-        type: Number
+        type: String
     },
     verific_try_count: {
         type: Number, 
     },
     verific_limit_date: {
         // Ban or access to try signin again after in another time
-        type: Number,
-        default: null,
+        type: String,
     },
     first_login_filled: {
         type: Boolean,
