@@ -31,10 +31,8 @@ export default {
             email: email,
         });
         if (user) {
-            console.log(user.verific_limit_date);
-            
-            if (isUserLimited(Number(user.verific_limit_date))) {
-                return status_codes.verific_code_limit(req, res, next);
+            if (user.verific_limit_date != null && isUserLimited(Number(user.verific_limit_date))) {
+                return status_codes.verific_code_limit(user.verific_limit_date, req, res, next);
             } else {
                 await User.findOneAndUpdate(
                     { email: email },
@@ -101,7 +99,6 @@ export default {
                         verific_limit_date: VerificCodeExpireDate()
                     }
                 )
-                console.log(VerificCodeExpireDate());
                 
                 status_codes.maximum_try_count(req, res, next);
             } else {
@@ -330,5 +327,5 @@ export function isUserLimited(date: number): boolean {
 }
 
 export function makeUserLimitDate(){
-    return Date.now() // + (10800 * 1000)
+    return Date.now() + (10800 * 1000)
 }

@@ -17,11 +17,12 @@ export default {
             message: "verific code expired"
         })
     },
-    verific_code_limit(req: Request, res: Response, next: NextFunction){
+    verific_code_limit(limit_end: number, req: Request, res: Response, next: NextFunction){
         res.statusCode = 503
         res.send({
             message: "verific_code_limit",
-            full_message: "The limits are full, please try again in 3 hours"
+            limit_start: Date.now(),
+            limit_end: limit_end
         })
     },
     maximum_try_count(req: Request, res: Response, next: NextFunction){
