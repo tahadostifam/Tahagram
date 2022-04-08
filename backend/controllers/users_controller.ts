@@ -41,6 +41,7 @@ export default {
                     {
                         verific_code: verific_code,
                         verific_code_expire: makeVerificCodeExpireDate(),
+                        verific_limit_date: null
                     }
                 );
                 doSendEmail()
