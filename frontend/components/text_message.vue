@@ -23,13 +23,31 @@
 <script>
 export default {
   name: "TextMessage",
-  props: [
-    "sender",
-    "text_content",
-    "send_time",
-    "edited",
-    "my_message",
-    "seen_state",
-  ],
+  props: {
+    sender: {
+      type: String,
+      default: null
+    },
+    textContent: {
+      type: String,
+      required: true
+    },
+    sendTime: {
+      type: String, 
+      required: true
+    },
+    edited: {
+      type: Boolean,
+      default: false
+    },
+    isMyMessage: {
+      type: Boolean,
+      default: false
+    },
+    seenState: {
+      type: String,
+      required: true
+    }
+  },
 };
 </script>

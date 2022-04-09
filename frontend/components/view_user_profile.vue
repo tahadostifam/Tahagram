@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="450" v-model="dialog" @input="close" scrollable>
+  <v-dialog v-model="dialog" max-width="450" scrollable @input="close">
     <div class="pt-2">
       <div class="d-flex justify-space-between align-center pl-4">
         <h3 class="text-h6">
@@ -22,8 +22,8 @@
 
       <div class="d-flex align-center px-4 pb-5 pt-2">
         <div
-          class="avatar avatar_large"
           v-if="user_default_avatar"
+          class="avatar avatar_large"
           @click="$emit('preview_self_profile')"
         >
           <img :src="user_default_avatar" />
@@ -31,8 +31,8 @@
 
         <template v-else>
           <div
-            class="solid_color_avatar avatar_large"
             v-if="active_chat.username"
+            class="solid_color_avatar avatar_large"
           >
             {{ active_chat.username[0] }}
           </div>
@@ -92,12 +92,12 @@
 
             <!-- Context Menu For Messages -->
             <v-menu
+              v-if="context_menu_member_rank && active_chat.iam_creator"
               v-model="context_menu.show"
               :position-x="context_menu.x"
               :position-y="context_menu.y"
               absolute
               offset-y
-              v-if="context_menu_member_rank && active_chat.iam_creator"
             >
               <v-list style="width: 200px">
                 <v-list-item
@@ -110,8 +110,8 @@
                   }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item
-                  v-ripple
                   v-if="context_menu_member_rank == 'admin'"
+                  v-ripple
                   @click="remove_admin_access"
                 >
                   <v-list-item-title>{{
@@ -122,17 +122,17 @@
             </v-menu>
 
             <div
-              class="member_item"
-              v-ripple
               v-for="(item, index) in active_chat.members"
               :key="index"
+              v-ripple
+              class="member_item"
               @click="$emit('view_member_profile', item.username)"
               @contextmenu="show_context_menu($event, item.username, item.rank)"
             >
               <div>
                 <div
-                  class="avatar"
                   v-if="item.profile_photos && item.profile_photos[0]"
+                  class="avatar"
                 >
                   <img
                     :src="gimme_profile_photo_link_addr(item.profile_photos[0])"
@@ -146,14 +146,14 @@
                 <span>
                   {{ item.full_name }}
                   <div
-                    class="d-inline-block text-blue"
                     v-if="item.rank == 'creator'"
+                    class="d-inline-block text-blue"
                   >
                     &starf;
                   </div>
                   <div
-                    class="d-inline-block text-grey"
                     v-else-if="item.rank == 'admin'"
+                    class="d-inline-block text-grey"
                   >
                     &starf;
                   </div>
@@ -174,13 +174,23 @@
   </v-dialog>
 </template>
 
-<script>
-import link_addrs from "~/mixins/link_addrs.js";
-import parse_last_seen from "~/mixins/parse_last_seen.js";
+<script lang="ts">
+import linkAddrs from "../mixins/link_addrs";
+import parseLastSeen from "../mixins/parse_last_seen";
 
 export default {
-  mixins: [link_addrs, parse_last_seen],
-  name: "view_user_profile",
+  name: "ViewUserProfile",
+  mixins: [linkAddrs, parseLastSeen],
+  props: {
+    userDefaultAvatar: {
+      type: String,
+      default: null
+    },
+    active_chat: {}, // FIXME
+    show: {
+      type: Boolean,
+    },
+  },
   data() {
     return {
       dialog: false,
@@ -196,24 +206,15 @@ export default {
   watch: {
     show: {
       immediate: true,
-      handler(new_value) {
-        this.dialog = new_value;
+      handler(newValue: Boolean) {
+        this.dialog = newValue;
       },
     },
     dialog: {
       immediate: true,
-      handler(new_value) {
-        this.$emit("update:show", new_value);
+      handler(newValue: Boolean) {
+        this.$emit("update:show", newValue);
       },
-    },
-  },
-  props: {
-    user_default_avatar: {
-      type: String,
-    },
-    active_chat: {},
-    show: {
-      type: Boolean,
     },
   },
   methods: {
@@ -221,6 +222,7 @@ export default {
       this.$emit("update:show", false);
     },
     show_context_menu(e, member_username, member_rank) {
+      // FIXME
       e.preventDefault();
       if (member_username != vm.username) {
         this.$set(this.$data, "context_menu_member_username", member_username);
@@ -249,19 +251,20 @@ export default {
       }
     },
     remove_admin_access() {
-      const username = this.$data.context_menu_member_username;
-      if (username && username.trim().length > 0) {
-        window.ws.send(
-          JSON.stringify({
-            event: "change_member_access",
-            chat_id: vm.$data.active_chat.chat_id,
-            member_username: username,
-            rank: "member",
-          })
-        );
-      } else {
-        console.error("username is empty in promote_to_admin event");
-      }
+      // FIXME
+      // const username = this.$data.context_menu_member_username;
+      // if (username && username.trim().length > 0) {
+      //   window.ws.send(
+      //     JSON.stringify({
+      //       event: "change_member_access",
+      //       chat_id: vm.$data.active_chat.chat_id,
+      //       member_username: username,
+      //       rank: "member",
+      //     })
+      //   );
+      // } else {
+      //   console.error("username is empty in promote_to_admin event");
+      // }
     },
   },
 };

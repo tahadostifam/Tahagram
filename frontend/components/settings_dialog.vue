@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="450" v-model="show_settings_dialog" scrollable>
+  <v-dialog v-model="show_settings_dialog" max-width="450" scrollable>
     <div class="pt-2">
       <div v-if="settings_dialog_active_section == 'home'">
         <div class="d-flex justify-space-between align-center mb-2">
@@ -18,12 +18,12 @@
 
         <div class="d-flex align-center px-4 pb-5">
           <div
-            class="avatar"
             v-if="avatar"
+            class="avatar"
             @click="$emit('preview_self_profile')"
           >
             <img :src="avatar" />
-            <div class="photo_uploading" v-if="photo_uploading">
+            <div v-if="photo_uploading" class="photo_uploading">
               <v-progress-circular indeterminate></v-progress-circular>
             </div>
           </div>
@@ -43,11 +43,11 @@
               </template>
             </span>
             <span
-              class="text-theme_color d-block w-100"
               v-if="user_info.last_seen"
+              class="text-theme_color d-block w-100"
               >{{ user_info.last_seen }}</span
             >
-            <span class="text-grey d-block w-100" v-else>{{
+            <span v-else class="text-grey d-block w-100">{{
               $t("last_seen_recently")
             }}</span>
             <!-- TODO -->
@@ -75,8 +75,8 @@
             </v-list-item>
 
             <v-list-item
-              :to="switchLocalePath('en')"
               v-if="$i18n.locale == 'fa'"
+              :to="switchLocalePath('en')"
             >
               <v-list-item-icon>
                 <v-icon class="icon">mdi-keyboard-outline</v-icon>
@@ -92,8 +92,8 @@
             </v-list-item>
 
             <v-list-item
-              :to="switchLocalePath('fa')"
               v-if="$i18n.locale == 'en'"
+              :to="switchLocalePath('fa')"
             >
               <v-list-item-icon>
                 <v-icon class="icon">mdi-keyboard-outline</v-icon>
@@ -124,7 +124,7 @@
         </v-list>
       </div>
       <div v-if="settings_dialog_active_section == 'edit_profile'">
-        <v-dialog max-width="400" v-model="settings_dialog_edit_full_name">
+        <v-dialog v-model="settings_dialog_edit_full_name" max-width="400">
           <div>
             <h3 style="font-size: 17px" class="mb-2 pb-0 pl-4 pt-2">
               {{ $t("edit_your_name") }}
@@ -144,7 +144,7 @@
               >
                 {{ $t("cancel") }}
               </v-btn>
-              <v-btn @click="submit_edit_full_name" :color="$configs.theme_color" text>
+              <v-btn :color="$configs.theme_color" text @click="submit_edit_full_name">
                 {{ $t("save") }}
               </v-btn>
             </v-card-actions>
@@ -179,12 +179,12 @@
 
         <div class="d-flex align-center justify-center px-4 pb-5 flex-column">
           <div
-            class="avatar avatar_xlarge"
             v-if="avatar"
+            class="avatar avatar_xlarge"
             @click="$emit('preview_self_profile')"
           >
             <img :src="avatar" />
-            <div class="photo_uploading" v-if="photo_uploading">
+            <div v-if="photo_uploading" class="photo_uploading">
               <v-progress-circular indeterminate></v-progress-circular>
             </div>
           </div>
@@ -204,9 +204,9 @@
             style="overflow: hidden"
           >
             <input
+              id="upload_profile_photo_input"
               type="file"
               accept="image/png,image/jpg,image/jpeg"
-              id="upload_profile_photo_input"
               style="opacity: 0; position: absolute; width: 200px; height: 40px"
               onchange="window.upload_profile_photo(this)"
             />
@@ -259,15 +259,15 @@
 
         <div class="px-5 py-3">
           <v-text-field
+            v-model="bio_input"
             placeholder="Bio"
             counter="70"
             maxlength="70"
-            v-model="bio_input"
             @input="submit_bio_change"
           ></v-text-field>
           <p
             class="text-grey mt-2"
-            :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+            :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
           >
             {{ $t("any_detail_such_as") }}
             <br />
@@ -279,11 +279,33 @@
   </v-dialog>
 </template>
 
-<script>
-import configs from "@/assets/javascript/configs";
+<script lang="ts">
+import configs from "../configs/configs";
 
 export default {
   name: "SettingsDialog",
+  props: {
+    userInfo: {
+      type: Object, 
+      required: true
+    },
+    show: {
+      type: Boolean,
+    },
+    activeSection: {
+      type: String,
+      required: true
+    },
+    userDefaultAvatar: {
+      type: String,
+      default: null
+    },
+    photoUploadingState: {
+      type: Boolean,
+      default: false
+    },
+    initilizing_socket_again: {}, // FIXME
+  },
   data() {
     return {
       show_settings_dialog: false,
@@ -296,6 +318,39 @@ export default {
       settings_dialog_edit_full_name: false,
     };
   },
+  watch: {
+    show: {
+      immediate: true,
+      handler(newValue: Boolean) {
+        this.show_settings_dialog = newValue;
+        this.$set(this.$data, "settings_dialog_active_section", "home");
+      },
+    },
+    showSettingsDialog: {
+      immediate: true,
+      handler(newValue: Boolean) {
+        this.$emit("update:show", newValue);
+      },
+    },
+    activeSection: {
+      immediate: true,
+      handler(newValue: Boolean) {
+        this.settings_dialog_active_section = newValue;
+      },
+    },
+    userDefaultAvatar: {
+      immediate: true,
+      handler(newValue: Boolean) {
+        this.avatar = newValue;
+      },
+    },
+    photoUploadingState: {
+      immediate: true,
+      handler(newValue: Boolean) {
+        this.photo_uploading = newValue;
+      },
+    },
+  },
   mounted() {
     this.$set(this.$data, "bio_input", this.$store.state.auth.user_info.bio);
     this.$set(
@@ -304,81 +359,34 @@ export default {
       this.$store.state.auth.user_info.full_name
     );
   },
-  watch: {
-    show: {
-      immediate: true,
-      handler(new_value) {
-        this.show_settings_dialog = new_value;
-        this.$set(this.$data, "settings_dialog_active_section", "home");
-      },
-    },
-    show_settings_dialog: {
-      immediate: true,
-      handler(new_value) {
-        this.$emit("update:show", new_value);
-      },
-    },
-    active_section: {
-      immediate: true,
-      handler(new_value) {
-        this.settings_dialog_active_section = new_value;
-      },
-    },
-    user_default_avatar: {
-      immediate: true,
-      handler(new_value) {
-        this.avatar = new_value;
-      },
-    },
-    photo_uploading_state: {
-      immediate: true,
-      handler(new_value) {
-        this.photo_uploading = new_value;
-      },
-    },
-  },
-  props: {
-    user_info: {},
-    show: {
-      type: Boolean,
-    },
-    active_section: {
-      type: String,
-    },
-    user_default_avatar: {
-      type: String,
-    },
-    photo_uploading_state: {
-      type: Boolean,
-    },
-    initilizing_socket_again: {},
-  },
   methods: {
     close() {
       this.$emit("update:show", false);
     },
     submit_bio_change() {
-      const ws = window.ws;
-      if (ws) {
-        ws.send(
-          JSON.stringify({
-            event: "update_bio",
-            bio: this.$data.bio_input,
-          })
-        );
-      } else {
-        this.$emit("initilizing_socket_again").then(() => {
-          this.submit_bio_change();
-        });
-      }
+      // FIXME
+      // const ws = window.ws;
+      // if (ws) {
+      //   ws.send(
+      //     JSON.stringify({
+      //       event: "update_bio",
+      //       bio: this.$data.bio_input,
+      //     })
+      //   );
+      // } else {
+      //   this.$emit("initilizing_socket_again").then(() => {
+      //     this.submit_bio_change();
+      //   });
+      // }
     },
     submit_edit_full_name() {
-      window.ws.send(
-        JSON.stringify({
-          event: "update_full_name",
-          full_name: this.$data.update_full_name_input,
-        })
-      );
+      // FIXME
+      // window.ws.send(
+      //   JSON.stringify({
+      //     event: "update_full_name",
+      //     full_name: this.$data.update_full_name_input,
+      //   })
+      // );
       this.$set(this.$data, "settings_dialog_edit_full_name", false);
     },
   },

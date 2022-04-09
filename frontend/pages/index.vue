@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
 export default {
-  name: "index",
+  name: "IndexPage",
   middleware: ["need_auth"],
 };
 </script>

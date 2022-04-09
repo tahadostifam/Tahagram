@@ -3,12 +3,13 @@
     <div id="signin_form">
       <img id="logo" src="~/assets/images/logo.png" alt="Logo" />
 
-      <div id="signin_form_content" v-if="!email_sended">
+      <div v-if="!email_sended" id="signin_form_content">
         <p class="text-center mb-10">
           Please enter your email we will send you an email that has verification code.
         </p>
 
         <v-text-field
+          v-model="email"
           hint="Only email, yahoo, outlock"
           type="text"
           :label="$t('email')"
@@ -16,35 +17,34 @@
           filled
           dense
           :color="$configs.theme_color"
-          v-model="email"
         ></v-text-field>
 
         <v-checkbox
+          v-model="remember_me"
           class="mt-2 pa-0"
           :label="$t('remember_me')"
           :color="$configs.theme_color"
-          v-model="remember_me"
         ></v-checkbox>
 
         <div
           v-if="form_errors"
           class="form_errors mb-3"
-          :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+          :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
         >
           <p v-for="(item, index) in form_errors" :key="index" class="item">
             {{ item }}
           </p>
         </div>
 
-        <div :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'">
+        <div :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'">
           <v-btn
             x-large
             class="rounded-lg"
             style="width: 100%;"
-            @click="submit"
             :loading="submit_button_loading_state"
             :color="$configs.theme_color"
             depressed
+            @click="submit"
             >{{ $t("submit") }}</v-btn
           >
         </div>
@@ -59,13 +59,13 @@
         </div>
 
         <v-text-field
+          v-model="verific_code"
           type="text"
           :label="$t('code')"
           outlined
           filled
           dense
           :color="$configs.theme_color"
-          v-model="verific_code"
         ></v-text-field>
 
       </div>
@@ -74,11 +74,11 @@
 </template>
 
 <script>
+// import Cookies from "js-cookie";
 import configs from "@/assets/javascript/configs";
-import Cookies from "js-cookie";
 
 export default {
-  name: "signin",
+  name: "SigninPage",
   data() {
     return {
       theme_color: configs.theme_color,
@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     inputs_are_valid() {
-      if (this.$data.username != "" && this.$data.password != "") {
+      if (this.$data.username.trim().length > 0 && this.$data.password.trim().length > 0) {
         return true;
       } else {
         this.$set(this.$data, "form_errors", [
@@ -103,6 +103,7 @@ export default {
     },
     submit() {
       this.$data.email_sended = true
+      // FIXME
       // if (this.inputs_are_valid() == true) {
       //   this.$set(this.$data, "submit_button_loading_state", true);
       //   this.$axios

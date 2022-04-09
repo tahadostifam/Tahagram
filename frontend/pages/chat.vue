@@ -584,7 +584,7 @@ import link_addrs from "~/mixins/link_addrs.js";
 import parse_last_seen from "~/mixins/parse_last_seen.js";
 
 export default {
-  name: "Chat",
+  name: "ChatPage",
   components: {
     EmojiPicker,
     Cropper,

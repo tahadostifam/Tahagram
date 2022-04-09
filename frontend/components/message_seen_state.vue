@@ -16,6 +16,11 @@
 <script>
 export default {
   name: "MessageSeenState",
-  props: ["seen_state"],
+  props: {
+    seenState: {
+      type: String,
+      required: true
+    }
+  },
 };
 </script>

@@ -7,13 +7,13 @@
   >
     <v-list nav>
       <v-list-item
-        class="py-5 px-4 bg-theme rounded-0"
         id="user_info_at_nav_drawer"
+        class="py-5 px-4 bg-theme rounded-0"
       >
         <div
+          v-if="user_default_avatar"
           class="image ml-2"
           style="position: relative; top: 3px"
-          v-if="user_default_avatar"
         >
           <img
             :src="user_default_avatar"
@@ -56,7 +56,7 @@
           <v-list-item-title>{{ $t("settings") }}</v-list-item-title>
         </v-list-item>
 
-        <v-list-item @click="$emit('logout')" color="red">
+        <v-list-item color="red" @click="$emit('logout')">
           <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
           </v-list-item-icon>
@@ -73,50 +73,49 @@
   </v-navigation-drawer>
 </template>
 
-<script>
+<script lang="ts">
 export default {
+  props: {
+    show: {
+      type: Boolean,
+    },
+    userInfo: {
+      type: Object, // FIXME
+      required: true
+    },
+  },
   data() {
     return {
       show_nav_drawer: false,
       nav_drawer_width: 350,
     };
   },
-  props: {
-    show: {
-      type: Boolean,
-    },
-    user_info: {},
-    user_default_avatar: {
-      type: String,
-    },
-  },
   watch: {
     show: {
       immediate: true,
-      handler(new_value) {
-        this.show_nav_drawer = new_value;
+      handler(newValue: Boolean) {
+        this.show_nav_drawer = newValue;
       },
     },
     show_nav_drawer: {
       immediate: true,
-      handler(new_value) {
-        this.$emit("update:show", new_value);
+      handler(newValue: Boolean) {
+        this.$emit("update:show", newValue);
       },
     },
   },
   mounted() {
-    this.handle_resize();
+    this.handleResize();
   },
   methods: {
-    handle_resize() {
-      let vm = this;
-      function __resize() {
+    handleResize() {
+      window.onresize = () => this.handleResize();
+      this.handleResize();
+    },
+    doResizeHandler() {
         if (window.innerWidth <= 1100)
-          vm.$set(vm.$data, "nav_drawer_width", 300);
-        else vm.$set(vm.$data, "nav_drawer_width", 350);
-      }
-      window.onresize = () => __resize();
-      __resize();
+          this.$set(this.$data, "nav_drawer_width", 300);
+        else this.$set(this.$data, "nav_drawer_width", 350);
     },
   },
 };

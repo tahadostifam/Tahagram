@@ -2,9 +2,10 @@
   <div></div>
 </template>
 
-<script>
+<script lang="ts">
 import Cookies from "js-cookie";
 export default {
+  name: "LogoutPage",
   mounted() {
     this.$store.commit("auth/setRefreshToken", null);
     this.$store.commit("auth/setAuthToken", null);
