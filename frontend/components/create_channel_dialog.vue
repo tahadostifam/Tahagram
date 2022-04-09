@@ -1,14 +1,14 @@
 <template>
   <div>
-    <v-dialog max-width="350" v-model="crop_profile_photo.show">
+    <v-dialog v-model="crop_profile_photo.show" max-width="350">
       <div class="pa-5 pb-0">
         <cropper
           :src="crop_profile_photo.src"
-          @change="crop_profile_photo_onchange"
           :stencil-size="{
             width: 280,
             height: 280,
           }"
+          @change="cropProfilePhotoOnChange"
         />
         <v-card-actions class="pr-0">
           <v-spacer></v-spacer>
@@ -22,8 +22,8 @@
           <v-btn
             :color="$configs.theme_color"
             text
-            @click="set_croped_photo"
             :loading="crop_profile_photo.button_loading_state"
+            @click="setCroppedPhoto"
           >
             {{ $t("save") }}
           </v-btn>
@@ -31,7 +31,7 @@
       </div>
     </v-dialog>
 
-    <v-dialog max-width="450" v-model="show_dialog" scrollable>
+    <v-dialog v-model="show_dialog" max-width="450" scrollable>
       <div>
         <div class="d-flex justify-space-between align-center">
           <v-card-title class="text-h6"> {{ $t("new_channel") }} </v-card-title>
@@ -49,15 +49,15 @@
         <template v-if="dialog_step == 1">
           <div class="d-flex align-center px-4">
             <input
+              id="channel_profile_photo"
               type="file"
               accept="image/png,image/jpg,image/jpeg"
               hidden
-              id="channel_profile_photo"
-              @change="choosing_channel_photo($event)"
+              @change="choosingChannelPhoto($event)"
             />
             <label
-              class="avatar avatar_xlarge"
               v-if="avatar_src"
+              class="avatar avatar_xlarge"
               for="channel_profile_photo"
             >
               <img :src="avatar_src" />
@@ -75,20 +75,20 @@
 
             <div class="ml-5 d-block" style="width: calc(100% - 155px)">
               <v-text-field
+                v-model="channel_name"
                 :label="$t('channel_name')"
                 :full-with="true"
                 maxlength="30"
-                v-model="channel_name"
               ></v-text-field>
             </div>
           </div>
           <div class="px-6 pb-2 pt-2">
             <v-text-field
+              v-model="channel_desc"
               :label="$t('desc')"
               :full-with="true"
               counter="200"
               maxlength="200"
-              v-model="channel_desc"
             ></v-text-field>
           </div>
 
@@ -99,9 +99,9 @@
             </v-btn>
             <v-btn
               :disabled="channel_name.trim().length == 0"
-              @click="dialog_step = 2"
               :color="$configs.theme_color"
               text
+              @click="dialog_step = 2"
             >
               {{ $t("next") }}
             </v-btn>
@@ -110,11 +110,11 @@
         <template v-if="dialog_step == 2">
           <div class="px-6">
             <v-text-field
+              v-model="channel_username"
               :label="$t('channel_username')"
               :full-with="true"
               maxlength="60"
               @keyup="keyup_username_event"
-              v-model="channel_username"
             ></v-text-field>
             <p
               v-if="chat_is_available_state != null"
@@ -139,9 +139,9 @@
                 chat_is_available_state == false
               "
               :loading="submit_button_loading_state"
-              @click="submit_create_channel"
               :color="$configs.theme_color"
               text
+              @click="submit_create_channel"
             >
               {{ $t("create") }}
             </v-btn>
@@ -152,12 +152,13 @@
   </div>
 </template>
 
-<script>
-import validateUsername from "@/mixins/validate_username.js";
+<script lang="ts">
+import validateUsername from "../mixins/validate_username";
 
 export default {
   name: "CreateChannelDialog",
   mixins: [validateUsername],
+  props: ["show"],
   data() {
     return {
       dialog_step: 1,
@@ -177,8 +178,28 @@ export default {
       chat_is_available_state: null,
     };
   },
+  watch: {
+    show: {
+      immediate: true,
+      handler(newValue: Boolean) {
+        this.show_dialog = newValue;
+        this.clear_all_items();
+      },
+    },
+    show_dialog: {
+      immediate: true,
+      handler(newValue: Boolean) {
+        this.$emit("update:show", newValue);
+        this.clear_all_items();
+      },
+    },
+  },
+  mounted() {
+    // FIXME
+    // window.choosingChannelPhoto = this.choosingChannelPhoto;
+  },
   methods: {
-    choosing_channel_photo(e) {
+    choosingChannelPhoto(e) {
       const file = e.target.files[0];
       if (file) {
         const localPath = URL.createObjectURL(file);
@@ -189,13 +210,13 @@ export default {
           Console.error("localPath not found");
         }
       } else {
-        console.error("profile_photo file not found");
+        Console.error("profile_photo file not found");
       }
     },
-    crop_profile_photo_onchange({ coordinates, canvas }) {
+    cropProfilePhotoOnChange({ _coordinates, canvas }) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
-    set_croped_photo() {
+    setCroppedPhoto() {
       this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
       this.$set(this.$data.crop_profile_photo, "show", false);
 
@@ -208,76 +229,77 @@ export default {
           this.$set(this.$data, "avatar_src", URL.createObjectURL(imageFile));
         }
       } else
-        console.log(
+        Console.log(
           "uploading profile photo failed! :: cropped image canvas is empty"
         );
       this.$set(this.$data.crop_profile_photo, "button_loading_state", false);
     },
     submit_create_channel() {
-      const username = this.$data.channel_username;
-      const name = this.$data.channel_name;
-      const desc = this.$data.channel_desc;
-      const canvas = this.$data.crop_profile_photo.canvas;
+      // const vm = this;
+      // const username = this.$data.channel_username;
+      // const name = this.$data.channel_name;
+      // const desc = this.$data.channel_desc;
+      // const canvas = this.$data.crop_profile_photo.canvas;
 
-      const request_body = new FormData();
+      // const requestBody = new FormData();
 
-      if (name.trim().length > 0 && username.trim().length > 0) {
-        request_body.append("channel_username", username);
-        request_body.append("channel_name", name);
-        if (canvas) {
-          const croppedImage = canvas.toDataURL("image/png");
-          const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
-          request_body.append("profile_photo", imageFile);
-        }
-        if (desc) {
-          request_body.append("bio", desc);
-        }
+      // if (name.trim().length > 0 && username.trim().length > 0) { FIXME
+      //   requestBody.append("channel_username", username);
+      //   requestBody.append("channel_name", name);
+      //   if (canvas) {
+      //     const croppedImage = canvas.toDataURL("image/png");
+      //     const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
+      //     requestBody.append("profile_photo", imageFile);
+      //   }
+      //   if (desc) {
+      //     requestBody.append("bio", desc);
+      //   }
 
-        this.$set(this.$data, "submit_button_loading_state", true);
-        this.$axios
-          .$post("/api/chats/create_channel", request_body, {
-            headers: {
-              username: vm.username,
-              auth_token: vm.$store.state.auth.auth.auth_token,
-            },
-          })
-          .then((response) => {
-            if (response.message == "channel created") {
-              let data_to_callback = {
-                chat_id: response.chat_id,
-                name: name,
-                username: username,
-                chat_type: "channel",
-              };
-              if (desc) {
-                data_to_callback["bio"] = desc;
-              }
+      //   this.$set(this.$data, "submit_button_loading_state", true);
+      //   this.$axios
+      //     .$post("/api/chats/create_channel", requestBody, {
+      //       headers: {
+      //         username: vm.username,
+      //         auth_token: vm.$store.state.auth.auth.auth_token,
+      //       },
+      //     })
+      //     .then((response) => {
+      //       if (response.message == "channel created") {
+      //         const dataToCallback = {
+      //           chat_id: response.chat_id,
+      //           name,
+      //           username,
+      //           chat_type: "channel",
+      //         };
+      //         if (desc) {
+      //           dataToCallback.bio = desc;
+      //         }
 
-              if (response.profile_photo) {
-                data_to_callback["profile_photo"] = {
-                  filename: response.profile_photo,
-                };
-              }
-              this.$emit("chat_created", data_to_callback);
-            } else {
-              throw new Error("An error occurred on the server side");
-            }
-          })
-          .catch((error) => {
-            if (error.response.status == 401) {
-              alert("unauthorized");
-            } else if (
-              error.response.message == "another chat exists with this username"
-            ) {
-              this.$set(this.$data, "chat_is_available_state", false);
-            } else {
-              throw new Error("An error occurred on the server side");
-            }
-          })
-          .finally(() => {
-            this.$set(this.$data, "submit_button_loading_state", false);
-          });
-      }
+      //         if (response.profile_photo) {
+      //           dataToCallback.profile_photo = {
+      //             filename: response.profile_photo,
+      //           };
+      //         }
+      //         this.$emit("chat_created", dataToCallback);
+      //       } else {
+      //         throw new Error("An error occurred on the server side");
+      //       }
+      //     })
+      //     .catch((error) => {
+      //       if (error.response.status == 401) {
+      //         alert("unauthorized");
+      //       } else if (
+      //         error.response.message == "another chat exists with this username"
+      //       ) {
+      //         this.$set(this.$data, "chat_is_available_state", false);
+      //       } else {
+      //         throw new Error("An error occurred on the server side");
+      //       }
+      //     })
+      //     .finally(() => {
+      //       this.$set(this.$data, "submit_button_loading_state", false);
+      //     });
+      // }
     },
     clear_all_items() {
       this.$set(this.$data, "channel_username", "");
@@ -295,60 +317,40 @@ export default {
     keyup_username_event() {
       const username = this.$data.channel_username;
       if (username.trim().length > 0) {
-        const limited_username = this.validate_username(username);
-        this.$set(this.$data, "channel_username", limited_username);
+        const limitedUsername = this.validate_username(username);
+        this.$set(this.$data, "channel_username", limitedUsername);
 
         // SECTION - checking username existly
 
-        window.ws.send(
-          JSON.stringify({
-            event: "check_username_existly",
-            username: username,
-          })
-        );
+        // window.ws.send( FIXME
+        //   JSON.stringify({
+        //     event: "check_username_existly",
+        //     username: username,
+        //   })
+        // );
 
-        window.ws.onmessage = (event) => {
-          let parsedData;
-          try {
-            parsedData = JSON.parse(event.data);
-          } catch {}
-          if (parsedData) {
-            if (
-              parsedData.message == "chat exists" &&
-              parsedData.username == username
-            ) {
-              this.$set(this.$data, "chat_is_available_state", false);
-            } else if (
-              parsedData.message == "chat not exists" &&
-              parsedData.username == username
-            ) {
-              this.$set(this.$data, "chat_is_available_state", true);
-            } else {
-              this.$set(this.$data, "chat_is_available_state", null);
-            }
-          }
-        };
+        // window.ws.onmessage = (event) => {
+        //   let parsedData;
+        //   try {
+        //     parsedData = JSON.parse(event.data);
+        //   } catch {}
+        //   if (parsedData) {
+        //     if (
+        //       parsedData.message == "chat exists" &&
+        //       parsedData.username == username
+        //     ) {
+        //       this.$set(this.$data, "chat_is_available_state", false);
+        //     } else if (
+        //       parsedData.message == "chat not exists" &&
+        //       parsedData.username == username
+        //     ) {
+        //       this.$set(this.$data, "chat_is_available_state", true);
+        //     } else {
+        //       this.$set(this.$data, "chat_is_available_state", null);
+        //     }
+        //   }
+        // };
       }
-    },
-  },
-  mounted() {
-    window.choosing_channel_photo = this.choosing_channel_photo;
-  },
-  props: ["show"],
-  watch: {
-    show: {
-      immediate: true,
-      handler(new_value) {
-        this.show_dialog = new_value;
-        this.clear_all_items();
-      },
-    },
-    show_dialog: {
-      immediate: true,
-      handler(new_value) {
-        this.$emit("update:show", new_value);
-        this.clear_all_items();
-      },
     },
   },
 };
