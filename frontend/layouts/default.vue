@@ -14,12 +14,5 @@ export default {
       theme_color: 'green accent-4',
     };
   },
-  mounted() {
-    this.$nextTick(function () {
-      require('../assets/javascript/scripts');
-    });
-
-    // TODO
-  },
 };
 </script>

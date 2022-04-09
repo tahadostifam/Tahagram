@@ -21,7 +21,10 @@ export default {
 
   css: ['@/assets/scss/dist/styles.css'],
 
-  plugins: ['~/plugins/configs.js'],
+  plugins: [
+    '~/plugins/configs.ts',
+    '~/plugins/directives.ts'
+  ],
 
   components: true,
 
