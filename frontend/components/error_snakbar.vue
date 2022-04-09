@@ -1,12 +1,12 @@
 <template>
   <v-snackbar
-    color="red"
     v-model="snackbar"
+    color="red"
     :timeout="5000"
-    :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+    :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
   >
     {{ $t("server_side_error") }}
-    <template v-slot:action="{ attrs }">
+    <template #action="{ attrs }">
       <v-btn text v-bind="attrs" @click="snackbar = false">
         {{ $t("close") }}
       </v-btn>
@@ -14,26 +14,31 @@
   </v-snackbar>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "ErrorSnakbar",
+  props: {
+    show: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
       snackbar: false,
     };
   },
-  props: ["show"],
   watch: {
     show: {
       immediate: true,
-      handler(new_value) {
-        this.snackbar = new_value;
+      handler(newValue: Boolean) {
+        this.snackbar = newValue;
       },
     },
     snackbar: {
       immediate: true,
-      handler(new_value) {
-        this.$emit("update:show", new_value);
+      handler(newValue: Boolean) {
+        this.$emit("update:show", newValue);
       },
     },
   },

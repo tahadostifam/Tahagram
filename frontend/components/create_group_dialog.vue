@@ -66,17 +66,21 @@
   </div>
 </template>
 
-<script>
-import validateUsername from "@/mixins/validate_username.ts";
+<script lang="ts">
+import validateUsername from "../mixins/validate_username";
 
 export default {
   name: "CreateGroupDialog",
   mixins: [validateUsername],
-  props: ["show"],
+  props: {
+    show: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
       dialog_step: 1,
-      theme_color: configs.theme_color,
       show_dialog: false,
       group_name: "",
       group_username: "",
@@ -88,14 +92,14 @@ export default {
   watch: {
     show: {
       immediate: true,
-      handler(new_value) {
-        this.show_dialog = new_value;
+      handler(newValue: Boolean) {
+        this.show_dialog = newValue;
       },
     },
     show_dialog: {
       immediate: true,
-      handler(new_value) {
-        this.$emit("update:show", new_value);
+      handler(newValue) {
+        this.$emit("update:show", newValue);
       },
     },
   },

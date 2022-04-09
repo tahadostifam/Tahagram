@@ -1,4 +1,21 @@
-<script>
+
+<template>
+  <div :style="style">
+    <bounding-box @resize="onResize" @resize-end="onMoveEnd">
+      <draggable-area @move="onMove" @move-end="onMoveEnd">
+        <stencil-preview
+          :image="image"
+          :width="stencilCoordinates.width"
+          :height="stencilCoordinates.height"
+          :coordinates="coordinates"
+          :transitions="transitions"
+        />
+      </draggable-area>
+    </bounding-box>
+  </div>
+</template>
+
+<script lang="ts">
 import {
   StencilPreview,
   BoundingBox,
@@ -28,7 +45,7 @@ export default {
   computed: {
     style() {
       const { height, width } = this.stencilCoordinates;
-      const style = {
+      const style: any = {
         position: "absolute",
         width: `${width}px`,
         height: `${height}px`,
@@ -62,19 +79,3 @@ export default {
   },
 };
 </script>
-
-<template>
-  <div :style="style">
-    <bounding-box @resize="onResize" @resize-end="onMoveEnd">
-      <draggable-area @move="onMove" @move-end="onMoveEnd">
-        <stencil-preview
-          :image="image"
-          :width="stencilCoordinates.width"
-          :height="stencilCoordinates.height"
-          :coordinates="coordinates"
-          :transitions="transitions"
-        />
-      </draggable-area>
-    </bounding-box>
-  </div>
-</template>

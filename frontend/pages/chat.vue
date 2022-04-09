@@ -1,36 +1,36 @@
 <template>
   <div>
     <ErrorSnakbar
-      v-on:update:show="update_error_snakbar"
       :show="show_error_snakbar"
+      @update:show="update_error_snakbar"
     ></ErrorSnakbar>
 
     <ViewImage
       :images_list="view_image.list"
       :show="view_image.show"
-      v-on:close_button="view_image.show = false"
-      v-on:remove_button="remove_profile_photo"
       :show_remove_button="view_image.show_remove_button"
+      @close_button="view_image.show = false"
+      @remove_button="remove_profile_photo"
     ></ViewImage>
 
     <NavDrawer
       :show="show_nav_drawer"
       :user_info="user_info"
       :user_default_avatar="user_default_avatar"
-      v-on:logout="logout"
-      v-on:show_settings_dialog="
+      @logout="logout"
+      @show_settings_dialog="
         show_nav_drawer = false;
         show_settings_dialog = true;
       "
-      v-on:show_create_channel_dialog="
+      @show_create_channel_dialog="
         show_nav_drawer = false;
         show_create_channel_dialog = true;
       "
-      v-on:show_create_group_dialog="
+      @show_create_group_dialog="
         show_nav_drawer = false;
         show_create_group_dialog = true;
       "
-      v-on:update:show="(new_value) => (show_nav_drawer = new_value)"
+      @update:show="(new_value) => (show_nav_drawer = new_value)"
     ></NavDrawer>
 
     <SettingsDialog
@@ -39,20 +39,20 @@
       :user_info="user_info"
       :active_section="settings_dialog_active_section"
       :photo_uploading_state="photo_uploading_state"
-      v-on:initilizing_socket_again="initilizing_socket_again"
-      v-on:preview_self_profile="preview_self_profile"
-      v-on:update:show="(new_value) => (show_settings_dialog = new_value)"
+      @initilizing_socket_again="initilizing_socket_again"
+      @preview_self_profile="preview_self_profile"
+      @update:show="(new_value) => (show_settings_dialog = new_value)"
     ></SettingsDialog>
 
-    <v-dialog max-width="350" v-model="crop_profile_photo.show">
+    <v-dialog v-model="crop_profile_photo.show" max-width="350">
       <div class="pa-5 pb-0">
         <cropper
           :src="crop_profile_photo.src"
-          @change="crop_profile_photo_onchange"
           :stencil-size="{
             width: 280,
             height: 280,
           }"
+          @change="crop_profile_photo_onchange"
         />
         <v-card-actions class="pr-0">
           <v-spacer></v-spacer>
@@ -66,8 +66,8 @@
           <v-btn
             :color="$configs.theme_color"
             text
-            @click="upload_croped_profile_photo"
             :loading="crop_profile_photo.button_loading_state"
+            @click="upload_croped_profile_photo"
           >
             SAVE
           </v-btn>
@@ -75,7 +75,7 @@
       </div>
     </v-dialog>
 
-    <v-dialog max-width="350" v-model="crop_media_to_send.show">
+    <v-dialog v-model="crop_media_to_send.show" max-width="350">
       <div class="pa-5 pb-0">
         <cropper
           :src="crop_media_to_send.src"
@@ -98,8 +98,8 @@
           <v-btn
             :color="$configs.theme_color"
             text
-            @click="upload_croped_media_to_send"
             :loading="crop_media_to_send.button_loading_state"
+            @click="upload_croped_media_to_send"
           >
             {{ $t("send") }}
           </v-btn>
@@ -109,16 +109,16 @@
 
     <CreateChannelDialog
       :show="show_create_channel_dialog"
-      v-on:close_button="show_create_channel_dialog = false"
-      v-on:update:show="(new_value) => (show_create_channel_dialog = new_value)"
-      v-on:chat_created="a_channel_or_group_chat_created"
+      @close_button="show_create_channel_dialog = false"
+      @update:show="(new_value) => (show_create_channel_dialog = new_value)"
+      @chat_created="a_channel_or_group_chat_created"
     ></CreateChannelDialog>
 
     <CreateGroupDialog
       :show="show_create_group_dialog"
-      v-on:close_button="show_create_group_dialog = false"
-      v-on:update:show="(new_value) => (show_create_group_dialog = new_value)"
-      v-on:chat_created="a_channel_or_group_chat_created"
+      @close_button="show_create_group_dialog = false"
+      @update:show="(new_value) => (show_create_group_dialog = new_value)"
+      @chat_created="a_channel_or_group_chat_created"
     ></CreateGroupDialog>
 
     <ViewUserProfile
@@ -127,13 +127,13 @@
         gimme_profile_photo_link_addr(active_chat.profile_photo)
       "
       :active_chat="active_chat"
-      v-on:preview_self_profile="preview_user_profile"
-      v-on:update:show="(new_value) => (view_user_profile.show = new_value)"
-      v-on:view_member_profile="view_member_profile"
-      v-on:remove_button="remove_profile_photo"
+      @preview_self_profile="preview_user_profile"
+      @update:show="(new_value) => (view_user_profile.show = new_value)"
+      @view_member_profile="view_member_profile"
+      @remove_button="remove_profile_photo"
     ></ViewUserProfile>
 
-    <div class="pa-0" id="main_container">
+    <div id="main_container" class="pa-0">
       <div class="chats_list">
         <div class="section_header border">
           <div class="row_flex mx-auto" style="height: 100%">
@@ -150,10 +150,10 @@
             </div>
             <div>
               <input
+                v-model="search_chat_input"
                 type="text"
                 class="custom_input pr-9"
                 placeholder="Search"
-                v-model="search_chat_input"
               />
               <button
                 v-if="search_chat_input.trim().length > 0"
@@ -167,7 +167,7 @@
         </div>
 
         <div class="chats">
-          <div class="internet_bar" v-if="updating_user_info_state">
+          <div v-if="updating_user_info_state" class="internet_bar">
             <v-progress-circular
               class="d-inline-block mr-4"
               indeterminate
@@ -175,8 +175,8 @@
             Updating...
           </div>
           <div
-            class="internet_bar"
             v-else-if="$nuxt.isOffline || show_internet_bar"
+            class="internet_bar"
           >
             <v-progress-circular
               class="d-inline-block mr-4"
@@ -190,11 +190,11 @@
               <ChatRow
                 v-for="(item, index) in user_info.chats"
                 :key="index"
-                @click_event="show_chat(item.chat_id, 'chats_list')"
                 :chat_name="item.full_name"
                 :active_chat="item.chat_id == active_chat.chat_id"
                 :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
                 :last_message="gimme_last_message(item.chat_id)"
+                @click_event="show_chat(item.chat_id, 'chats_list')"
               ></ChatRow>
             </template>
             <ThereIsNothing v-else />
@@ -204,26 +204,26 @@
             <ChatRow
               v-for="(item, index) in search_chat_result"
               :key="index"
-              @click_event="show_chat(item._id, 'search_chat_result')"
               :chat_name="item.full_name"
               :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
               :last_message="gimme_last_message(item.chat_id)"
+              @click_event="show_chat(item._id, 'search_chat_result')"
             ></ChatRow>
             <template v-if="search_chat_in_local_result">
               <span class="chat_row_badge mt-5">Local search</span>
               <ChatRow
                 v-for="(item, index) in search_chat_in_local_result"
                 :key="index + item.username"
-                @click_event="show_chat(item._id, 'search_chat_in_local')"
                 :chat_name="item.full_name"
                 :image_url="gimme_profile_photo_link_addr(item.profile_photo)"
                 :last_message="gimme_last_message(item.chat_id)"
+                @click_event="show_chat(item._id, 'search_chat_in_local')"
               ></ChatRow>
             </template>
           </template>
         </div>
 
-        <div class="chat_view" v-bind:class="{ show: show_chat_view }">
+        <div class="chat_view" :class="{ show: show_chat_view }">
           <template v-if="show_chat_view">
             <div class="section_header border px-3">
               <div
@@ -231,26 +231,26 @@
                 style="height: 100%"
               >
                 <v-btn
-                  @click="leaving_chat_button"
+                  id="back_button_from_chat"
                   icon
                   depressed
                   large
                   class="mr-3"
-                  id="back_button_from_chat"
+                  @click="leaving_chat_button"
                 >
                   <v-icon> mdi-arrow-left </v-icon>
                 </v-btn>
                 <div
-                  @click="show_user_profile"
                   class="d-flex align-center text-decoration-none mr-5"
                   style="width: 100%"
+                  @click="show_user_profile"
                 >
                   <div
-                    class="image"
                     v-if="
                       active_chat.profile_photo &&
                       active_chat.profile_photo.filename
                     "
+                    class="image"
                   >
                     <img
                       :src="
@@ -266,7 +266,7 @@
                       active_chat.full_name
                     }}</span>
                     <span
-                      :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+                      :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
                       class="d-block text-sm-caption font-weight-bold ml-3 text--secondary text-left"
                     >
                       <template v-if="active_chat.chat_type == 'private'">
@@ -291,18 +291,18 @@
 
                 <div>
                   <v-menu
+                    v-if="active_chat.chat_type == 'private'"
                     offset-y
                     transition="slide-y-transition"
-                    v-if="active_chat.chat_type == 'private'"
                   >
-                    <template v-slot:activator="{ on, attrs }">
+                    <template #activator="{ on, attrs }">
                       <v-btn
                         color="gray"
                         dark
                         v-bind="attrs"
-                        v-on="on"
                         icon
                         large
+                        v-on="on"
                       >
                         <v-icon color="grey"> mdi-dots-vertical </v-icon>
                       </v-btn>
@@ -313,8 +313,8 @@
                       </v-list-item> -->
                       <v-list-item
                         v-ripple
+                        :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
                         @click="submit_delete_chat"
-                        :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
                       >
                         <v-list-item-title class="text-red">{{
                           $t("delete_chat")
@@ -326,7 +326,7 @@
               </div>
             </div>
 
-            <div class="splash_screen absolute" v-if="chat_is_loading">
+            <div v-if="chat_is_loading" class="splash_screen absolute">
               <div class="center">
                 <v-progress-circular
                   class="mb-2 d-block"
@@ -338,13 +338,13 @@
 
             <div class="messages-scroll">
               <div
-                class="messages_list"
                 v-if="
                   active_chat.messages &&
                   active_chat.messages.length > 0 &&
                   active_chat.username &&
                   active_chat.full_name
                 "
+                class="messages_list"
               >
                 <!-- Context Menu For Messages -->
                 <v-menu
@@ -356,12 +356,12 @@
                 >
                   <v-list style="width: 200px">
                     <v-list-item
-                      v-ripple
                       v-if="
                         active_chat.chat_type == 'private' ||
                         active_chat.chat_type == 'group' ||
                         active_chat.iam_admin_of_chat == true
                       "
+                      v-ripple
                     >
                       <v-list-item-title>Reply</v-list-item-title>
                     </v-list-item>
@@ -372,13 +372,13 @@
                       <v-list-item-title>Forward</v-list-item-title>
                     </v-list-item>
                     <v-list-item
-                      v-ripple
-                      @click="delete_message"
                       v-if="
                         active_chat.chat_type == 'private' ||
                         active_chat.iam_admin_of_chat == true ||
                         its_my_message()
                       "
+                      v-ripple
+                      @click="delete_message"
                     >
                       <v-list-item-title class="text-red"
                         >Delete</v-list-item-title
@@ -392,23 +392,20 @@
                     v-if="item.message_type == 'text'"
                     :key="index"
                     :message_id="item.message_id"
-                    @contextmenu.native="
-                      show_contextmenu_of_message($event, item.message_id)
-                    "
                     :sender="select_message_sender_fullname(item.message_id)"
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.content"
                     :edited="item.edited"
                     :my_message="choose_my_message(item)"
                     :seen_state="item.seen_state"
+                    @contextmenu.native="
+                      show_contextmenu_of_message($event, item.message_id)
+                    "
                   ></TextMessage>
                   <ImageMessage
                     v-else-if="item.message_type == 'photo'"
                     :key="index"
                     :message_id="item.message_id"
-                    @contextmenu.native="
-                      show_contextmenu_of_message($event, item.message_id)
-                    "
                     :sender="select_message_sender_fullname(item.message_id)"
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.caption"
@@ -418,14 +415,17 @@
                     :my_message="choose_my_message(item)"
                     :edited="item.edited"
                     :seen_state="item.seen_state"
-                    v-on:click="
+                    @contextmenu.native="
+                      show_contextmenu_of_message($event, item.message_id)
+                    "
+                    @click="
                       view_photo_message_as_full_screen(item.filename)
                     "
                   ></ImageMessage>
                   <div
-                    class="text-center"
                     v-else-if="item.message_type == 'join'"
                     :key="index"
+                    class="text-center"
                   >
                     <span
                       class="badge_message"
@@ -442,13 +442,13 @@
             </div>
 
             <div
-              class="send_message_section"
               v-if="
                 active_chat.chat_type == 'private' ||
                 (active_chat.chat_type == 'group' &&
                   active_chat.iam_amember_of_chat) ||
                 active_chat.iam_admin_of_chat
               "
+              class="send_message_section"
             >
               <div class="send_box">
                 <v-btn
@@ -460,8 +460,8 @@
                   style="overflow: hidden"
                 >
                   <input
-                    type="file"
                     id="send_media_input"
+                    type="file"
                     style="
                       opacity: 0;
                       position: absolute;
@@ -482,8 +482,8 @@
                   class="rounded-pill"
                   solo
                   :placeholder="$t('write_message')"
-                  v-on:keypress.enter="submit_send_text_messages()"
-                  :dir="this.$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+                  :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+                  @keypress.enter="submit_send_text_messages()"
                 ></v-text-field>
 
                 <emoji-picker class="emoji_picker" @emoji="insert">
@@ -517,11 +517,11 @@
                             <h5 class="set_title">{{ category }}</h5>
                             <div>
                               <span
-                                class="emoji_span"
                                 v-for="(emoji, emojiName) in emojiGroup"
                                 :key="emojiName"
-                                @click="insert(emoji)"
+                                class="emoji_span"
                                 :title="emojiName"
+                                @click="insert(emoji)"
                                 >{{ emoji }}</span
                               >
                             </div>
@@ -534,12 +534,12 @@
 
                 <v-btn
                   id="send_message_button"
-                  @click="submit_send_text_messages"
                   :color="$configs.theme_color"
                   dark
                   icon
                   x-large
                   :disabled="send_text_message_input.trim().length == 0"
+                  @click="submit_send_text_messages"
                 >
                   <v-icon class="pl-1" small :color="$configs.theme_color">
                     mdi-send
@@ -548,19 +548,19 @@
               </div>
             </div>
             <v-btn
+              v-else-if="active_chat.iam_amember_of_chat"
               height="65"
               depressed
-              v-else-if="active_chat.iam_amember_of_chat"
               class="bottom_full_bar rounded-0"
             >
               MUTE
             </v-btn>
             <v-btn
-              @click="join_into_chat"
+              v-else
               height="65"
               depressed
-              v-else
               class="bottom_full_bar rounded-0"
+              @click="join_into_chat"
             >
               JOIN
             </v-btn>
@@ -578,13 +578,20 @@
 import { EmojiPicker } from "vue-emoji-picker";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
-import configs from "@/assets/javascript/configs";
 import ViewUserProfile from "../components/view_user_profile.vue";
+import configs from "@/assets/javascript/configs";
 import link_addrs from "~/mixins/link_addrs.js";
 import parse_last_seen from "~/mixins/parse_last_seen.js";
 
 export default {
+  name: "Chat",
+  components: {
+    EmojiPicker,
+    Cropper,
+    ViewUserProfile,
+  },
   mixins: [link_addrs, parse_last_seen],
+  middleware: ["need_auth"],
   data() {
     return {
       show_error_snakbar: false,
@@ -643,6 +650,14 @@ export default {
       media_to_send_caption: "",
     };
   },
+  computed: {
+    username() {
+      return this.$store.state.auth.auth.username;
+    },
+    user_info() {
+      return this.$store.state.auth.user_info;
+    },
+  },
   mounted() {
     this.$nextTick(async function () {
       await window.initSocket();
@@ -667,8 +682,7 @@ export default {
       const chat_type = this.$data.active_chat.chat_type;
       if (chat_type != "channel") {
         return item.sender_username == vm.username;
-      } else {
-        if (
+      } else if (
           this.$data.active_chat.iam_admin_of_chat ||
           this.$data.active_chat.iam_creator
         ) {
@@ -676,7 +690,6 @@ export default {
         } else {
           return false;
         }
-      }
     },
     submit_delete_chat() {
       ws.send(
@@ -695,7 +708,7 @@ export default {
           .$post(
             "/api/profile_photos/remove_profile_photo",
             {
-              filename: filename,
+              filename,
             },
             {
               headers: {
@@ -787,7 +800,7 @@ export default {
     gimme_last_message(chat_id) {
       const chats_messages = this.$store.state.auth.user_info.chats_messages;
       if (chats_messages) {
-        const chat = chats_messages.find(({ _id: _id }) => _id === chat_id);
+        const chat = chats_messages.find(({ _id }) => _id === chat_id);
         if (chat && chat.messages_list && chat.messages_list.length > 0) {
           const message = chat.messages_list[chat.messages_list.length - 1];
           if (message) {
@@ -946,7 +959,7 @@ export default {
     },
     show_user_profile() {
       if (this.$data.active_chat.username) {
-        let data_to_send = {
+        const data_to_send = {
           event: "get_chat_full_info",
           chat_id: this.$data.active_chat.chat_id,
           chat_type: this.$data.active_chat.chat_type,
@@ -1142,7 +1155,7 @@ export default {
       ws.send(
         JSON.stringify({
           event: "get_chat_messages",
-          chat_id: chat_id,
+          chat_id,
         })
       );
 
@@ -1199,11 +1212,11 @@ export default {
 
       let hours = date.getHours();
       let minutes = date.getMinutes();
-      let ampm = hours >= 12 ? "pm" : "am";
+      const ampm = hours >= 12 ? "pm" : "am";
       hours = hours % 12;
-      hours = hours ? hours : 12;
+      hours = hours || 12;
       minutes = minutes < 10 ? "0" + minutes : minutes;
-      let time_string =
+      const time_string =
         hours + ":" + minutes + " " + String(ampm).toUpperCase();
 
       return time_string;
@@ -1264,7 +1277,7 @@ export default {
         () => this.$data.search_chat_input,
         (value) => {
           let chats_list = this.$data.chats_list;
-          if (typeof chats_list == Object) {
+          if (typeof chats_list === Object) {
             chats_list = Array(this.$data.chats_list);
           }
           const input = this.$data.search_chat_input;
@@ -1290,7 +1303,7 @@ export default {
               ws.send(
                 JSON.stringify({
                   event: "search_in_chats",
-                  input: input,
+                  input,
                 })
               );
             } else {
@@ -1303,7 +1316,7 @@ export default {
       );
     },
     preview_user_profile() {
-      let list = [];
+      const list = [];
       if (this.$data.active_chat.profile_photos) {
         this.$data.active_chat.profile_photos.forEach((item) => {
           const photo_addr = this.gimme_profile_photo_link_addr(item);
@@ -1333,7 +1346,7 @@ export default {
       }
     },
     preview_self_profile() {
-      let list = [];
+      const list = [];
       this.$store.state.auth.user_info.profile_photos.forEach((item) => {
         const photo_addr = this.gimme_profile_photo_link_addr(item);
         if (photo_addr) {
@@ -1384,7 +1397,7 @@ export default {
       this.$set(this.$data, "show_chat_view", false);
     },
     handle_escape_button() {
-      let vm = this;
+      const vm = this;
       document.addEventListener("keydown", (e) => {
         if (e.code == "Escape") {
           if (vm.$data.show_nav_drawer == true) {
@@ -1521,8 +1534,8 @@ export default {
         ws.send(
           JSON.stringify({
             event: "delete_message",
-            chat_id: chat_id,
-            message_id: message_id,
+            chat_id,
+            message_id,
           })
         );
       }
@@ -1533,21 +1546,6 @@ export default {
     error_occurred() {
       this.$set(this.$data, "show_error_snakbar", true);
     },
-  },
-  computed: {
-    username() {
-      return this.$store.state.auth.auth.username;
-    },
-    user_info() {
-      return this.$store.state.auth.user_info;
-    },
-  },
-  name: "chat",
-  middleware: ["need_auth"],
-  components: {
-    EmojiPicker,
-    Cropper,
-    ViewUserProfile,
   },
 };
 </script>
