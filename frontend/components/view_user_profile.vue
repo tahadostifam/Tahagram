@@ -175,10 +175,11 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue/types/umd";
 import linkAddrs from "../mixins/link_addrs";
 import parseLastSeen from "../mixins/parse_last_seen";
 
-export default {
+export default Vue.extend({
   name: "ViewUserProfile",
   mixins: [linkAddrs, parseLastSeen],
   props: {
@@ -207,7 +208,7 @@ export default {
     show: {
       immediate: true,
       handler(newValue: Boolean) {
-        this.dialog = newValue;
+        this.$set(this.$data, "dialog", newValue)
       },
     },
     dialog: {
@@ -219,36 +220,38 @@ export default {
   },
   methods: {
     close() {
+      
       this.$emit("update:show", false);
     },
-    show_context_menu(e, member_username, member_rank) {
+    show_context_menu(_e: any, _member_username: any, _member_rank: any) {
       // FIXME
-      e.preventDefault();
-      if (member_username != vm.username) {
-        this.$set(this.$data, "context_menu_member_username", member_username);
-        this.$set(this.$data, "context_menu_member_rank", member_rank);
-        this.$set(this.$data.context_menu, "show", false);
-        this.$set(this.$data.context_menu, "x", e.clientX);
-        this.$set(this.$data.context_menu, "y", e.clientY);
-        this.$nextTick(() => {
-          this.$set(this.$data.context_menu, "show", true);
-        });
-      }
+      // e.preventDefault();
+      // if (member_username != vm.username) {
+      //   this.$set(this.$data, "context_menu_member_username", member_username);
+      //   this.$set(this.$data, "context_menu_member_rank", member_rank);
+      //   this.$set(this.$data.context_menu, "show", false);
+      //   this.$set(this.$data.context_menu, "x", e.clientX);
+      //   this.$set(this.$data.context_menu, "y", e.clientY);
+      //   this.$nextTick(() => {
+      //     this.$set(this.$data.context_menu, "show", true);
+      //   });
+      // }
     },
     promote_to_admin() {
-      const username = this.$data.context_menu_member_username;
-      if (username && username.trim().length > 0) {
-        window.ws.send(
-          JSON.stringify({
-            event: "change_member_access",
-            chat_id: vm.$data.active_chat.chat_id,
-            member_username: username,
-            rank: "admin",
-          })
-        );
-      } else {
-        console.error("username is empty in promote_to_admin event");
-      }
+      // FIXME
+      // const username = this.$data.context_menu_member_username;
+      // if (username && username.trim().length > 0) {
+      //   window.ws.send(
+      //     JSON.stringify({
+      //       event: "change_member_access",
+      //       chat_id: vm.$data.active_chat.chat_id,
+      //       member_username: username,
+      //       rank: "admin",
+      //     })
+      //   );
+      // } else {
+      //   console.error("username is empty in promote_to_admin event");
+      // }
     },
     remove_admin_access() {
       // FIXME
@@ -267,5 +270,5 @@ export default {
       // }
     },
   },
-};
+});
 </script>

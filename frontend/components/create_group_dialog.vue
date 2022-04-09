@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog max-width="450" v-model="show_dialog" scrollable>
+    <v-dialog v-model="show_dialog" max-width="450" scrollable>
       <div>
         <div class="d-flex justify-space-between align-center">
           <h3 class="text-h6 ml-4">{{ $t("new_group") }}</h3>
@@ -18,17 +18,17 @@
 
         <div class="px-4">
           <v-text-field
+            v-model="group_name"
             :label="$t('group_name')"
             :full-with="true"
             maxlength="30"
-            v-model="group_name"
           ></v-text-field>
 
           <v-text-field
+            v-model="group_username"
             :label="$t('group_username')"
             :full-with="true"
             maxlength="30"
-            v-model="group_username"
             @keyup="keyup_username_event"
           ></v-text-field>
           <p
@@ -54,9 +54,9 @@
               chat_is_available_state == false
             "
             :loading="submit_button_loading_state"
-            @click="submit_create_group"
             :color="$configs.theme_color"
             text
+            @click="submit_create_group"
           >
             {{ $t("create") }}
           </v-btn>
@@ -155,10 +155,10 @@ export default {
           .then((response) => {
             console.log(response);
             if (response.message == "group created") {
-              let data_to_callback = {
+              const data_to_callback = {
                 chat_id: response.chat_id,
-                name: name,
-                username: username,
+                name,
+                username,
                 chat_type: "group",
                 members: response.members,
               };
@@ -187,7 +187,7 @@ export default {
     keyup_username_event() {
       const username = this.$data.group_username;
       if (username.trim().length > 0) {
-        let limited_username = this.validate_username(username);
+        const limited_username = this.validate_username(username);
         this.$set(this.$data, "group_username", limited_username);
 
         // SECTION - checking username existly
@@ -195,7 +195,7 @@ export default {
         window.ws.send(
           JSON.stringify({
             event: "check_username_existly",
-            username: username,
+            username,
           })
         );
 

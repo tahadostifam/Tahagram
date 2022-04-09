@@ -4,7 +4,8 @@
 
 <script lang="ts">
 import Cookies from "js-cookie";
-export default {
+import Vue from "vue/types/umd";
+export default Vue.extend({
   name: "LogoutPage",
   mounted() {
     this.$store.commit("auth/setRefreshToken", null);
@@ -15,8 +16,8 @@ export default {
     Cookies.remove("refresh_token");
     Cookies.remove("auth_token");
     Cookies.remove("username");
-
+    
     this.$router.push({ path: "/" + this.$i18n.locale + "/signin" });
   },
-};
+})
 </script>
