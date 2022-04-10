@@ -53,7 +53,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue/types/umd"
+
+export default Vue.extend({
   props: {
     show: {
       type: Boolean,
@@ -89,14 +91,14 @@ export default {
       immediate: true,
       handler(newValue: Array<any> /* FIXME -> add interface */) {        
         if (newValue) {
-          this.view_image.list = newValue;
-          if (newValue && newValue.length > 0) {
-            const index = this.$data.view_image.active_item;
-            this.$set(index, 'src', newValue[0].src);
-            this.modal_right_left_rules(newValue);
-          } else {
-            this.$emit('close_button');
-          }
+          // this.view_image.list = newValue;
+          // if (newValue && newValue.length > 0) {
+          //   const index = this.$data.view_image.active_item;
+          //   this.$set(index, 'src', newValue[0].src);
+          //   this.modal_right_left_rules(newValue);
+          // } else {
+          //   this.$emit('close_button');
+          // }
         }
       },
     },
@@ -104,82 +106,82 @@ export default {
       immediate: true,
       handler(newValue: Boolean) {
         if (newValue) {
-          this.show_view_image_modal(this.$props.images_list);
+          // this.show_view_image_modal(this.$props.images_list); FIXME
         }
-        this.view_image.show = newValue;
+        // this.view_image.show = newValue;
       },
     },
   },
-  methods: {
-    gimme_image_filename() {
-      return this.$data.view_image.list[this.$data.view_image.active_item.index]
-        .filename;
-    },
-    view_image_move_right() {
-      const activeIndex = this.$data.view_image.active_item.index;
-      const length = this.$data.view_image.list.length;
+  // methods: {
+  //   gimme_image_filename() {
+  //     return this.$data.view_image.list[this.$data.view_image.active_item.index]
+  //       .filename;
+  //   },
+  //   view_image_move_right() {
+  //     const activeIndex = this.$data.view_image.active_item.index;
+  //     const length = this.$data.view_image.list.length;
 
-      const toIndex = activeIndex + 1;
-      if (activeIndex + 2 > length - 1) {
-        this.$set(this.$data.view_image.controls, 'right', false);
-      }
+  //     const toIndex = activeIndex + 1;
+  //     if (activeIndex + 2 > length - 1) {
+  //       this.$set(this.$data.view_image.controls, 'right', false);
+  //     }
 
-      if (toIndex > 0) {
-        this.$set(this.$data.view_image.controls, 'left', true);
-      }
+  //     if (toIndex > 0) {
+  //       this.$set(this.$data.view_image.controls, 'left', true);
+  //     }
 
-      if (toIndex < length) {
-        this.$set(this.$data.view_image.active_item, 'index', toIndex);
-        this.$set(
-          this.$data.view_image.active_item,
-          'src',
-          this.$data.view_image.list[toIndex].src
-        );
-      }
-    },
-    view_image_move_left() {
-      const activeIndex = this.$data.view_image.active_item.index;
-      const length = this.$data.view_image.list.length;
+  //     if (toIndex < length) {
+  //       this.$set(this.$data.view_image.active_item, 'index', toIndex);
+  //       this.$set(
+  //         this.$data.view_image.active_item,
+  //         'src',
+  //         this.$data.view_image.list[toIndex].src
+  //       );
+  //     }
+  //   },
+  //   view_image_move_left() {
+  //     const activeIndex = this.$data.view_image.active_item.index;
+  //     const length = this.$data.view_image.list.length;
 
-      if (activeIndex === 1) {
-        this.$set(this.$data.view_image.controls, 'left', false);
-        this.$set(this.$data.view_image.controls, 'right', true);
-      }
+  //     if (activeIndex === 1) {
+  //       this.$set(this.$data.view_image.controls, 'left', false);
+  //       this.$set(this.$data.view_image.controls, 'right', true);
+  //     }
 
-      if (activeIndex >= 1) {
-        const toIndex = activeIndex - 1;
-        this.$set(this.$data.view_image.active_item, 'index', toIndex);
-        this.$set(
-          this.$data.view_image.active_item,
-          'src',
-          this.$data.view_image.list[toIndex].src
-        );
-      }
+  //     if (activeIndex >= 1) {
+  //       const toIndex = activeIndex - 1;
+  //       this.$set(this.$data.view_image.active_item, 'index', toIndex);
+  //       this.$set(
+  //         this.$data.view_image.active_item,
+  //         'src',
+  //         this.$data.view_image.list[toIndex].src
+  //       );
+  //     }
 
-      if (activeIndex <= length) {
-        this.$set(this.$data.view_image.controls, 'right', true);
-      }
-    },
-    show_view_image_modal(list) {
-      this.$set(this.$data.view_image.active_item, 'index', 0);
-      this.$set(this.$data.view_image.active_item, 'src', null);
-      this.modal_right_left_rules(list);
-    },
-    modal_right_left_rules(list) {
-      if (list && list.length > 0) {
-        const index = this.$data.view_image.active_item;
-        this.$set(index, 'src', list[0].src);
-        if (list.length === 1) {
-          this.$set(this.$data.view_image.controls, 'right', false);
-        }
-        if (list.length > 1) {
-          this.$set(this.$data.view_image.controls, 'right', true);
-        }
-        this.$set(this.$data.view_image.controls, 'left', false);
-      } else {
-        console.error('List of show_view_image_modal cannot be empty!');
-      }
-    },
-  },
-};
+  //     if (activeIndex <= length) {
+  //       this.$set(this.$data.view_image.controls, 'right', true);
+  //     }
+  //   },
+  //   show_view_image_modal(list) {
+  //     this.$set(this.$data.view_image.active_item, 'index', 0);
+  //     this.$set(this.$data.view_image.active_item, 'src', null);
+  //     this.modal_right_left_rules(list);
+  //   },
+  //   modal_right_left_rules(list) {
+  //     if (list && list.length > 0) {
+  //       const index = this.$data.view_image.active_item;
+  //       this.$set(index, 'src', list[0].src);
+  //       if (list.length === 1) {
+  //         this.$set(this.$data.view_image.controls, 'right', false);
+  //       }
+  //       if (list.length > 1) {
+  //         this.$set(this.$data.view_image.controls, 'right', true);
+  //       }
+  //       this.$set(this.$data.view_image.controls, 'left', false);
+  //     } else {
+  //       console.error('List of show_view_image_modal cannot be empty!');
+  //     }
+  //   },
+  // },
+});
 </script>

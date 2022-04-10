@@ -280,9 +280,10 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue/types/umd";
 import configs from "../configs/configs";
 
-export default {
+export default Vue.extend({
   name: "SettingsDialog",
   props: {
     userInfo: {
@@ -322,7 +323,7 @@ export default {
     show: {
       immediate: true,
       handler(newValue: Boolean) {
-        this.show_settings_dialog = newValue;
+        this.$set(this.$data, "show_settings_dialog", newValue)
         this.$set(this.$data, "settings_dialog_active_section", "home");
       },
     },
@@ -335,19 +336,19 @@ export default {
     activeSection: {
       immediate: true,
       handler(newValue: Boolean) {
-        this.settings_dialog_active_section = newValue;
+        this.$set(this.$data, "settings_dialog_active_section", newValue)
       },
     },
     userDefaultAvatar: {
       immediate: true,
       handler(newValue: Boolean) {
-        this.avatar = newValue;
+        this.$set(this.$data, "avatar", newValue)
       },
     },
     photoUploadingState: {
       immediate: true,
       handler(newValue: Boolean) {
-        this.photo_uploading = newValue;
+        this.$set(this.$data, "photo_uploading", newValue)
       },
     },
   },
@@ -390,5 +391,5 @@ export default {
       this.$set(this.$data, "settings_dialog_edit_full_name", false);
     },
   },
-};
+});
 </script>
