@@ -5,13 +5,13 @@
       @update:show="update_error_snakbar"
     ></ErrorSnakbar>
 
-    <ViewImage
+    <!-- <ViewImage
       :images_list="view_image.list"
       :show="view_image.show"
       :show_remove_button="view_image.show_remove_button"
       @close_button="view_image.show = false"
       @remove_button="remove_profile_photo"
-    ></ViewImage>
+    ></ViewImage> -->
 
     <NavDrawer
       :show="show_nav_drawer"
@@ -33,7 +33,7 @@
       @update:show="(new_value) => (show_nav_drawer = new_value)"
     ></NavDrawer>
 
-    <SettingsDialog
+    <!-- <SettingsDialog
       :show="show_settings_dialog"
       :user_default_avatar="user_default_avatar"
       :user_info="user_info"
@@ -42,9 +42,9 @@
       @initilizing_socket_again="initilizing_socket_again"
       @preview_self_profile="preview_self_profile"
       @update:show="(new_value) => (show_settings_dialog = new_value)"
-    ></SettingsDialog>
+    ></SettingsDialog> -->
 
-    <v-dialog v-model="crop_profile_photo.show" max-width="350">
+    <!-- <v-dialog v-model="crop_profile_photo.show" max-width="350">
       <div class="pa-5 pb-0">
         <cropper
           :src="crop_profile_photo.src"
@@ -73,9 +73,9 @@
           </v-btn>
         </v-card-actions>
       </div>
-    </v-dialog>
+    </v-dialog> -->
 
-    <v-dialog v-model="crop_media_to_send.show" max-width="350">
+    <!-- <v-dialog v-model="crop_media_to_send.show" max-width="350">
       <div class="pa-5 pb-0">
         <cropper
           :src="crop_media_to_send.src"
@@ -99,15 +99,15 @@
             :color="$configs.theme_color"
             text
             :loading="crop_media_to_send.button_loading_state"
-            @click="upload_croped_media_to_send"
+            @click="upload_cropped_media_to_send"
           >
             {{ $t("send") }}
           </v-btn>
         </v-card-actions>
       </div>
-    </v-dialog>
+    </v-dialog> -->
 
-    <CreateChannelDialog
+    <!-- <CreateChannelDialog
       :show="show_create_channel_dialog"
       @close_button="show_create_channel_dialog = false"
       @update:show="(new_value) => (show_create_channel_dialog = new_value)"
@@ -131,7 +131,7 @@
       @update:show="(new_value) => (view_user_profile.show = new_value)"
       @view_member_profile="view_member_profile"
       @remove_button="remove_profile_photo"
-    ></ViewUserProfile>
+    ></ViewUserProfile> -->
 
     <div id="main_container" class="pa-0">
       <div class="chats_list">
@@ -574,24 +574,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { EmojiPicker } from "vue-emoji-picker";
-import { Cropper } from "vue-advanced-cropper";
+// import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
-import ViewUserProfile from "../components/view_user_profile.vue";
-import configs from "@/assets/javascript/configs";
-import link_addrs from "~/mixins/link_addrs.js";
-import parse_last_seen from "~/mixins/parse_last_seen.js";
+import Vue from "vue/types/umd";
+import configs from "../configs/configs";
+import linkAddrs from "../mixins/link_addrs";
+import parseLastSeen from "../mixins/parse_last_seen";
 
-export default {
+export default Vue.extend({
   name: "ChatPage",
   components: {
     EmojiPicker,
-    Cropper,
-    ViewUserProfile,
+    // Cropper,
   },
-  mixins: [link_addrs, parse_last_seen],
-  middleware: ["need_auth"],
+  mixins: [linkAddrs, parseLastSeen],
   data() {
     return {
       show_error_snakbar: false,
@@ -659,123 +657,113 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(async function () {
-      await window.initSocket();
-    });
-
     this.check_if_user_had_profile_photo();
     this.handle_escape_button();
     this.watch_profile_photos_change();
     this.watch_user_info_changes();
     this.watch_search_chat_submit();
-
-    window.upload_profile_photo = this.handle_upload_profile_photo;
-    window.select_photo_to_send = this.select_photo_to_send;
-    window.vm = this;
-
-    window.update_user_info = this.update_user_info;
-
     this.watch_internet_state_changes();
   },
   methods: {
-    choose_my_message(item) {
-      const chat_type = this.$data.active_chat.chat_type;
-      if (chat_type != "channel") {
-        return item.sender_username == vm.username;
-      } else if (
-          this.$data.active_chat.iam_admin_of_chat ||
-          this.$data.active_chat.iam_creator
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+    choose_my_message(_item: any) {
+      // const chat_type = this.$data.active_chat.chat_type;
+      // if (chat_type != "channel") {
+      //   return item.sender_username == vm.username;
+      // } else if (
+      //     this.$data.active_chat.iam_admin_of_chat ||
+      //     this.$data.active_chat.iam_creator
+      //   ) {
+      //     return true;
+      //   } else {
+      //     return false;
+      //   }
     },
     submit_delete_chat() {
-      ws.send(
-        JSON.stringify({
-          event: "delete_chat",
-          chat_id: this.$data.active_chat.chat_id,
-        })
-      );
+      // ws.send(
+      //   JSON.stringify({
+      //     event: "delete_chat",
+      //     chat_id: this.$data.active_chat.chat_id,
+      //   })
+      // );
     },
-    update_error_snakbar(new_value) {
-      this.$set(this.$data, "show_error_snakbar", new_value);
+    update_error_snakbar(newValue: Boolean) {
+      this.$set(this.$data, "show_error_snakbar", newValue);
     },
-    remove_profile_photo(filename) {
-      if (filename && filename.length > 0) {
-        this.$axios
-          .$post(
-            "/api/profile_photos/remove_profile_photo",
-            {
-              filename,
-            },
-            {
-              headers: {
-                auth_token: this.$store.state.auth.auth.auth_token,
-                username: this.username,
-              },
-            }
-          )
-          .then((response) => {
-            if (response.message == "profile_photo removed") {
-              this.$store.commit("auth/removeProfilePhoto", filename);
-            }
-            this.$set(
-              this.$data.view_image,
-              "list",
-              this.$store.state.auth.user_info.profile_photos
-            );
-            const def_prof = this.$store.state.auth.user_info.profile_photos[0];
-            this.$set(
-              this.$data,
-              "user_default_avatar",
-              this.gimme_profile_photo_link_addr(def_prof)
-            );
-          })
-          .catch((error) => {
-            console.log(error);
-            this.error_occurred();
-          });
-      }
+    remove_profile_photo(_filename: string) {
+      // if (filename && filename.length > 0) {
+      //   this.$axios
+      //     .$post(
+      //       "/api/profile_photos/remove_profile_photo",
+      //       {
+      //         filename,
+      //       },
+      //       {
+      //         headers: {
+      //           auth_token: this.$store.state.auth.auth.auth_token,
+      //           username: this.username,
+      //         },
+      //       }
+      //     )
+      //     .then((response) => {
+      //       if (response.message == "profile_photo removed") {
+      //         this.$store.commit("auth/removeProfilePhoto", filename);
+      //       }
+      //       this.$set(
+      //         this.$data.view_image,
+      //         "list",
+      //         this.$store.state.auth.user_info.profile_photos
+      //       );
+      //       const def_prof = this.$store.state.auth.user_info.profile_photos[0];
+      //       this.$set(
+      //         this.$data,
+      //         "user_default_avatar",
+      //         this.gimme_profile_photo_link_addr(def_prof)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //       this.error_occurred();
+      //     });
+      // }
     },
-    its_my_message() {
-      const chats_messages = this.$store.state.auth.user_info.chats_messages;
-      const chat_id = this.$data.active_chat.chat_id;
-      if (
-        chat_id &&
-        chat_id.length > 0 &&
-        this.$data.message_context_menu_message_id
-      ) {
-        const chat = chats_messages.find(({ _id }) => _id == chat_id);
-        if (chat) {
-          const message = chat.messages_list.find(
-            ({ message_id }) =>
-              message_id == this.$data.message_context_menu_message_id
-          );
-          if (message) {
-            if (message.sender_username == this.username) {
-              return true;
-            } else {
-              return false;
-            }
-          }
-        }
-      }
+    its_my_message(): boolean {
+      return true
+      // const chats_messages = this.$store.state.auth.user_info.chats_messages;
+      // const chat_id = this.$data.active_chat.chat_id;
+      // if (
+      //   chat_id &&
+      //   chat_id.length > 0 &&
+      //   this.$data.message_context_menu_message_id
+      // ) {
+      //   const chat = chats_messages.find(({ _id }) => _id == chat_id);
+      //   if (chat) {
+      //     const message = chat.messages_list.find(
+      //       ({ message_id }) =>
+      //         message_id == this.$data.message_context_menu_message_id
+      //     );
+      //     if (message) {
+      //       if (message.sender_username == this.username) {
+      //         return true;
+      //       } else {
+      //         return false;
+      //       }
+      //     }
+      //   }
+      // }
     },
     view_photo_message_as_full_screen(filename) {
-      const photo_addr = this.gimme_photo_message_link_addr(filename);
+      const photoAddr = this.gimme_photo_message_link_addr(filename);
       this.show_view_image_modal(
         [
           {
-            src: photo_addr,
+            src: photoAddr,
           },
         ],
         false
       );
     },
     view_member_profile(username) {
-      if (username == this.username) {
+      if (username === this.username) {
         this.$set(this.$data, "show_settings_dialog", true);
       } else {
         this.$set(this.$data, "search_chat_input", username);
@@ -783,32 +771,32 @@ export default {
       }
     },
     copy_message_to_clipboard() {
-      const message_id = this.$data.message_context_menu_message_id;
+      const messageId = this.$data.message_context_menu_message_id;
       if (
         this.$data.active_chat.messages &&
         this.$data.active_chat.messages.length > 0 &&
-        message_id
+        messageId
       ) {
         const message = this.$data.active_chat.messages.find(
-          ({ message_id: _message_id }) => _message_id === message_id
+          ({ message_id: localMessageId }) => localMessageId === messageId
         );
         if (message) {
           navigator.clipboard.writeText(message.content);
         }
       }
     },
-    gimme_last_message(chat_id) {
-      const chats_messages = this.$store.state.auth.user_info.chats_messages;
-      if (chats_messages) {
-        const chat = chats_messages.find(({ _id }) => _id === chat_id);
+    gimme_last_message(chatId: String): String {
+      const chatsMessages = this.$store.state.auth.user_info.chatsMessages;
+      if (chatsMessages) {
+        const chat = chatsMessages.find(({ _id }) => _id === chatId);
         if (chat && chat.messages_list && chat.messages_list.length > 0) {
           const message = chat.messages_list[chat.messages_list.length - 1];
           if (message) {
-            const message_type = message.message_type;
-            if (message_type == "text") {
+            const messageType = message.message_type;
+            if (messageType === "text") {
               return message.content.substr(0, 30);
             }
-            if (message_type == "photo") {
+            if (messageType === "photo") {
               return "📷";
             }
           }
@@ -820,42 +808,42 @@ export default {
       this.$store.watch(
         () => this.$nuxt.isOffline,
         (value) => {
-          if (value == false) {
+          if (value === false) {
             this.update_user_info();
           }
         }
       );
     },
-    async update_user_info() {
+    update_user_info() {
       this.$set(this.$data, "updating_user_info_state", true);
-      await window.vm.$store
-        .dispatch("auth/Authenticate")
-        .then(
-          (user_data) => {
-            console.log("Updating user info...");
+      // await window.vm.$store
+      //   .dispatch("auth/Authenticate")
+      //   .then(
+      //     (user_data) => {
+      //       console.log("Updating user info...");
 
-            console.log("logging in with saved tokens");
+      //       console.log("logging in with saved tokens");
 
-            window.vm.$store.commit("auth/setUserData", user_data);
-            window.vm.$store.commit("auth/setChatsList", user_data.chats);
+      //       window.vm.$store.commit("auth/setUserData", user_data);
+      //       window.vm.$store.commit("auth/setChatsList", user_data.chats);
 
-            // TODO
-            // update the messages of active_chat
-          },
-          () => {
-            console.log("login with saved tokens failed!");
-          }
-        )
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.$set(this.$data, "updating_user_info_state", false);
-        });
+      //       // TODO
+      //       // update the messages of active_chat
+      //     },
+      //     () => {
+      //       console.log("login with saved tokens failed!");
+      //     }
+      //   )
+      //   .catch((err) => {
+      //     console.log(err);
+      //   })
+      //   .finally(() => {
+      //     this.$set(this.$data, "updating_user_info_state", false);
+      //   });
     },
     a_channel_or_group_chat_created(chat) {
-      window.ws.close(); // FIXME - i cannot find a really important bug in this section
-      // problem deatail : users cannot send message after creating a new_channel
+      // window.ws.close(); // FIXME - i cannot find a really important bug in this section
+      // problem detail : users cannot send message after creating a new_channel
       // for fix this we have to update our info in frontend side
 
       // this.set_the_active_chat({
@@ -900,133 +888,132 @@ export default {
     },
     select_photo_to_send(e) {
       const file = e.files[0];
-      const local_path = URL.createObjectURL(file);
-      this.$set(this.$data.crop_media_to_send, "src", local_path);
+      const localPath = URL.createObjectURL(file);
+      this.$set(this.$data.crop_media_to_send, "src", localPath);
       this.$set(this.$data.crop_media_to_send, "show", true);
     },
-    upload_croped_media_to_send() {
-      this.$set(this.$data.crop_media_to_send, "button_loading_state", true);
-      this.$set(this.$data.crop_media_to_send, "show", false);
+    upload_cropped_media_to_send() {
+      // this.$set(this.$data.crop_media_to_send, "button_loading_state", true);
+      // this.$set(this.$data.crop_media_to_send, "show", false);
 
-      const canvas = this.$data.crop_media_to_send.canvas;
-      if (canvas) {
-        const croppedImage = canvas.toDataURL("image/png");
-        const imageFile = window.dataURLtoFile(croppedImage, "photo_message");
-        if (imageFile && this.$data.active_chat.chat_id) {
-          const request_body = new FormData();
-          request_body.append("photo", imageFile);
-          request_body.append("chat_id", this.$data.active_chat.chat_id);
-          request_body.append("chat_type", this.$data.active_chat.chat_type);
-          if (
-            this.$data.media_to_send_caption &&
-            this.$data.media_to_send_caption.trim().length > 0
-          ) {
-            request_body.append("caption", this.$data.media_to_send_caption);
-          }
-          if (this.$data.active_chat.chat_type == "private") {
-            request_body.append(
-              "target_username",
-              this.$data.active_chat.username
-            );
-          }
+      // const canvas = this.$data.crop_media_to_send.canvas;
+      // if (canvas) {
+      //   const croppedImage = canvas.toDataURL("image/png");
+      //   const imageFile = window.dataURLtoFile(croppedImage, "photo_message");
+      //   if (imageFile && this.$data.active_chat.chat_id) {
+      //     const request_body = new FormData();
+      //     request_body.append("photo", imageFile);
+      //     request_body.append("chat_id", this.$data.active_chat.chat_id);
+      //     request_body.append("chat_type", this.$data.active_chat.chat_type);
+      //     if (
+      //       this.$data.media_to_send_caption &&
+      //       this.$data.media_to_send_caption.trim().length > 0
+      //     ) {
+      //       request_body.append("caption", this.$data.media_to_send_caption);
+      //     }
+      //     if (this.$data.active_chat.chat_type == "private") {
+      //       request_body.append(
+      //         "target_username",
+      //         this.$data.active_chat.username
+      //       );
+      //     }
 
-          this.$axios
-            .$post("/api/messages/new_photo_message", request_body, {
-              headers: {
-                username: vm.username,
-                auth_token: vm.$store.state.auth.auth.auth_token,
-              },
-            })
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.error(error.response);
-              this.error_occurred();
-            });
-          this.$set(
-            this.$data.crop_media_to_send,
-            "button_loading_state",
-            false
-          );
-        } else {
-          console.log("no photo to upload");
-        }
-      } else
-        console.log(
-          "uploading photo_message failed! :: cropped image canvas is empty"
-        );
+      //     this.$axios
+      //       .$post("/api/messages/new_photo_message", request_body, {
+      //         headers: {
+      //           username: vm.username,
+      //           auth_token: vm.$store.state.auth.auth.auth_token,
+      //         },
+      //       })
+      //       .then((response) => {
+      //         console.log(response);
+      //       })
+      //       .catch((error) => {
+      //         console.error(error.response);
+      //         this.error_occurred();
+      //       });
+      //     this.$set(
+      //       this.$data.crop_media_to_send,
+      //       "button_loading_state",
+      //       false
+      //     );
+      //   } else {
+      //     console.log("no photo to upload");
+      //   }
+      // } else
+      //   console.log(
+      //     "uploading photo_message failed! :: cropped image canvas is empty"
+      //   );
     },
     show_user_profile() {
       if (this.$data.active_chat.username) {
-        const data_to_send = {
+        const dataToSend: any = {
           event: "get_chat_full_info",
           chat_id: this.$data.active_chat.chat_id,
           chat_type: this.$data.active_chat.chat_type,
         };
-        console.log(data_to_send);
-        if (this.$data.active_chat.chat_type == "private") {
-          data_to_send.target_username = this.$data.active_chat.username;
+        if (this.$data.active_chat.chat_type === "private") {
+          dataToSend.target_username = this.$data.active_chat.username;
         }
-        window.ws.send(JSON.stringify(data_to_send));
+        // window.ws.send(JSON.stringify(dataToSend)); FIXME
       }
 
       this.$set(this.$data.view_user_profile, "show", true);
     },
     submit_send_text_messages() {
-      const input = this.$data.send_text_message_input.trim();
-      this.$set(this.$data, "send_text_message_input", "");
-      if (input != "") {
-        const ws = window.ws;
-        if (ws) {
-          if (this.$data.active_chat.chat_id) {
-            switch (this.$data.active_chat.chat_type) {
-              case "private":
-                ws.send(
-                  JSON.stringify({
-                    event: "send_text_message",
-                    send_text_message_input: input,
-                    chat_id: this.$data.active_chat.chat_id,
-                    target_username: this.$data.active_chat.username,
-                    chat_type: "private",
-                  })
-                );
-                break;
-              case "channel":
-              case "group":
-                ws.send(
-                  JSON.stringify({
-                    event: "send_text_message",
-                    send_text_message_input: input,
-                    chat_id: this.$data.active_chat.chat_id,
-                    chat_type: this.$data.active_chat.chat_type,
-                  })
-                );
-                break;
-            }
-          }
-        } else {
-          this.initilizing_socket_again().then(() => {
-            this.submit_send_text_messages();
-          });
-        }
-      }
+      // const input = this.$data.send_text_message_input.trim();
+      // this.$set(this.$data, "send_text_message_input", "");
+      // if (input != "") {
+      //   const ws = window.ws;
+      //   if (ws) {
+      //     if (this.$data.active_chat.chat_id) {
+      //       switch (this.$data.active_chat.chat_type) {
+      //         case "private":
+      //           ws.send(
+      //             JSON.stringify({
+      //               event: "send_text_message",
+      //               send_text_message_input: input,
+      //               chat_id: this.$data.active_chat.chat_id,
+      //               target_username: this.$data.active_chat.username,
+      //               chat_type: "private",
+      //             })
+      //           );
+      //           break;
+      //         case "channel":
+      //         case "group":
+      //           ws.send(
+      //             JSON.stringify({
+      //               event: "send_text_message",
+      //               send_text_message_input: input,
+      //               chat_id: this.$data.active_chat.chat_id,
+      //               chat_type: this.$data.active_chat.chat_type,
+      //             })
+      //           );
+      //           break;
+      //       }
+      //     }
+      //   } else {
+      //     this.initilizing_socket_again().then(() => {
+      //       this.submit_send_text_messages();
+      //     });
+      //   }
+      // }
     },
     join_into_chat() {
-      if (this.$data.active_chat.chat_type != "private") {
+      if (this.$data.active_chat.chat_type !== "private") {
         this.getNonJoinedChatsMessage(this.$data.active_chat.chat_id);
 
-        window.ws.send(
-          JSON.stringify({
-            event: "join_to_chat",
-            chat_id: this.$data.active_chat.chat_id,
-          })
-        );
+        // window.ws.send(
+        //   JSON.stringify({
+        //     event: "join_to_chat",
+        //     chat_id: this.$data.active_chat.chat_id,
+        //   })
+        // );
 
-        const chat_row_exists = this.$store.state.auth.user_info.chats.find(
-          ({ chat_id }) => chat_id === this.$data.active_chat.chat_id
+        const chatRowExists = this.$store.state.auth.user_info.chats.find(
+          ({ localChatId }) => localChatId === this.$data.active_chat.chat_id
         );
-        if (!chat_row_exists) {
+        if (!chatRowExists) {
           this.$store.commit("auth/addChat", {
             chat_id: this.$data.active_chat.chat_id,
             chat_type: this.$data.active_chat.chat_type,
@@ -1037,11 +1024,11 @@ export default {
           });
         }
 
-        const chat_exists =
+        const chatExists =
           this.$store.state.auth.user_info.chats_messages.find(
             ({ _id }) => _id === this.$data.active_chat.chat_id
           );
-        if (!chat_exists) {
+        if (!chatExists) {
           this.$store.commit("auth/createNewChat", {
             _id: this.$data.active_chat.chat_id,
             chat_type: this.$data.active_chat.chat_type,
@@ -1051,7 +1038,7 @@ export default {
         }
       }
     },
-    async show_chat(chat_id, chat_location) {
+    async show_chat(chatId: string, chatLocation: string) {
       this.$set(this.$data, "chat_is_loading", true);
 
       const vm = this;
@@ -1062,17 +1049,17 @@ export default {
           vm.$store.state.auth.user_info.chats_messages &&
           vm.$store.state.auth.user_info.chats_messages.length > 0
         ) {
-          const chats_messages = vm.$store.state.auth.user_info.chats_messages;
-          if (chats_messages && chat.sides) {
-            const find_result = chats_messages.find(
+          const chatsMessages = vm.$store.state.auth.user_info.chats_messages;
+          if (chatsMessages && chat.sides) {
+            const findResult = chatsMessages.find(
               ({ sides }) =>
                 sides.user_1 === chat.username || sides.user_2 === chat.username
             );
-            if (find_result && find_result.sides) {
+            if (findResult && findResult.sides) {
               vm.$set(
                 vm.$data.active_chat,
                 "messages",
-                find_result.messages_list
+                findResult.messages_list
               );
             } else {
               vm.$set(vm.$data.active_chat, "messages", null);
@@ -1095,54 +1082,54 @@ export default {
         vm.set_the_active_chat(chat);
       }
 
-      switch (chat_location) {
+      switch (chatLocation) {
         case "chats_list":
           chat = this.user_info.chats.find(
-            ({ chat_id: _chat_id_ }) => _chat_id_ == chat_id
+            ({ chat_id: localChatId }) => localChatId === chatId
           );
-          if (chat && chat.chat_type == "private") {
-            const msgs_list = await this.fetch_chat_messages_list(chat_id);
-            this.$set(this.$data.active_chat, "messages", msgs_list);
+          if (chat && chat.chat_type === "private") {
+            const msgsList = await this.fetch_chat_messages_list(chatId);
+            this.$set(this.$data.active_chat, "messages", msgsList);
           } else {
-            const msgs_list = await this.fetch_chat_messages_list(chat_id);
-            this.$set(this.$data.active_chat, "messages", msgs_list);
+            const msgsList = await this.fetch_chat_messages_list(chatId);
+            this.$set(this.$data.active_chat, "messages", msgsList);
           }
           this.set_the_active_chat(chat);
           break;
         case "search_chat_result":
           chat = this.$data.search_chat_result.find(
-            ({ _id }) => _id == chat_id
+            ({ _id }) => _id === chatId
           );
-          if (chat.chat_type == "private") {
+          if (chat.chat_type === "private") {
             doGetChatMessages();
           } else {
-            this.getNonJoinedChatsMessage(chat_id);
+            this.getNonJoinedChatsMessage(chatId);
             this.set_the_active_chat(chat);
           }
           break;
         case "search_chat_in_local":
           chat = this.$data.search_chat_in_local_result.find(
-            ({ _id }) => _id == chat_id
+            ({ _id }) => _id === chatId
           );
-          if (chat.chat_type == "private") {
+          if (chat.chat_type === "private") {
             doGetChatMessages();
           } else {
-            this.getNonJoinedChatsMessage(chat_id);
+            this.getNonJoinedChatsMessage(chatId);
             this.set_the_active_chat(chat);
           }
           break;
       }
 
-      if (chat && chat.username && chat.chat_type == "private") {
-        window.ws.send(
-          JSON.stringify({
-            event: "get_last_seen",
-            username: chat.username,
-          })
-        );
+      if (chat && chat.username && chat.chat_type === "private") {
+        // window.ws.send( FIXME
+        //   JSON.stringify({
+        //     event: "get_last_seen",
+        //     username: chat.username,
+        //   })
+        // );
       }
 
-      if (chat.chat_type != "private") {
+      if (chat.chat_type !== "private") {
         this.$set(this.$data.active_chat, "members_length", chat.members);
       }
 
@@ -1151,15 +1138,15 @@ export default {
       this.$set(this.$data, "show_chat_view", true);
       this.$set(this.$data, "chat_is_loading", false);
     },
-    getNonJoinedChatsMessage(chat_id) {
-      ws.send(
-        JSON.stringify({
-          event: "get_chat_messages",
-          chat_id,
-        })
-      );
+    getNonJoinedChatsMessage(_chatIid) {
+      // ws.send(
+      //   JSON.stringify({
+      //     event: "get_chat_messages",
+      //     chat_id,
+      //   })
+      // );
 
-      vm.$set(vm.$data, "chat_is_loading", true);
+      // vm.$set(vm.$data, "chat_is_loading", true);
     },
     set_the_active_chat(chat) {
       if (chat._id) {
@@ -1173,7 +1160,7 @@ export default {
       this.$set(this.$data.active_chat, "profile_photo", chat.profile_photo);
       this.$set(this.$data.active_chat, "chat_type", chat.chat_type);
 
-      if (chat.chat_type != "private") {
+      if (chat.chat_type !== "private") {
         if (chat.iam_admin_of_chat) {
           this.$set(
             this.$data.active_chat,
@@ -1194,51 +1181,51 @@ export default {
         }
       }
     },
-    fetch_chat_messages_list(chat_id) {
+    fetch_chat_messages_list(chatId: string) {
       // NOTE
       // this method will be work when user clicked on the a chat
       // when it happend... we should going to user_chats_messages and finding the messages for that chat
-      const chats_messages = this.$store.state.auth.user_info.chats_messages;
-      if (chats_messages) {
-        const find_result = chats_messages.find(({ _id }) => _id === chat_id);
-        if (find_result) {
-          return find_result.messages_list; // messages of chat
+      const chatsMessages = this.$store.state.auth.user_info.chats_messages;
+      if (chatsMessages) {
+        const findResult = chatsMessages.find(({ _id }) => _id === chatId);
+        if (findResult) {
+          return findResult.messages_list; // messages of chat
         }
       }
       return null;
     },
-    parse_message_date(send_time) {
-      const date = new Date(send_time);
+    parse_message_date(sendTime: number): String {
+      const date = new Date(sendTime);
 
       let hours = date.getHours();
-      let minutes = date.getMinutes();
+      const minutes = date.getMinutes();
       const ampm = hours >= 12 ? "pm" : "am";
       hours = hours % 12;
       hours = hours || 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      const time_string =
-        hours + ":" + minutes + " " + String(ampm).toUpperCase();
+      const finalMinutes = minutes < 10 ? "0" + minutes : minutes;
+      const timeString =
+        hours + ":" + finalMinutes + " " + String(ampm).toUpperCase();
 
-      return time_string;
+      return timeString;
     },
-    select_message_sender_fullname(message_id) {
-      if (this.$data.active_chat.chat_type == "private") {
+    select_message_sender_fullname(messageId: String) {
+      if (this.$data.active_chat.chat_type === "private") {
         return null;
-      } else if (this.$data.active_chat.chat_type == "channel") {
+      } else if (this.$data.active_chat.chat_type === "channel") {
         return null;
       } else {
-        const chats_messages = this.$store.state.auth.user_info.chats_messages;
+        const chatsMessages = this.$store.state.auth.user_info.chats_messages;
         if (
-          chats_messages &&
-          chats_messages.length > 0 &&
+          chatsMessages &&
+          chatsMessages.length > 0 &&
           this.$data.active_chat.chat_id
         ) {
-          const chat = chats_messages.find(
+          const chat = chatsMessages.find(
             ({ _id }) => _id === this.$data.active_chat.chat_id
           );
           if (chat) {
             const message = chat.messages_list.find(
-              ({ message_id: _message_id }) => _message_id === message_id
+              ({ message_id: localMessageId }) => localMessageId === messageId
             );
             if (message) {
               return message.sender_username;
@@ -1258,16 +1245,16 @@ export default {
         this.$store.state.auth.user_info.profile_photos &&
         this.$store.state.auth.user_info.profile_photos.length > 0
       ) {
-        const profile_photo =
+        const profilePhoto =
           this.$store.state.auth.user_info.profile_photos[0];
-        if (profile_photo && profile_photo.filename) {
-          const first_photo_filename = profile_photo.filename;
+        if (profilePhoto && profilePhoto.filename) {
+          const firstPhotoFilename = profilePhoto.filename;
           this.$set(
             this.$data,
             "user_default_avatar",
             this.$axios.defaults.baseURL +
               "/uploads/profile_photos/" +
-              first_photo_filename
+              firstPhotoFilename
           );
         }
       }
@@ -1275,15 +1262,15 @@ export default {
     watch_search_chat_submit() {
       this.$store.watch(
         () => this.$data.search_chat_input,
-        (value) => {
-          let chats_list = this.$data.chats_list;
-          if (typeof chats_list === Object) {
-            chats_list = Array(this.$data.chats_list);
+        (_value) => {
+          let chatsList = this.$data.chats_list;
+          if (typeof chatsList === "object") {
+            chatsList = Array(this.$data.chats_list);
           }
           const input = this.$data.search_chat_input;
           if (input.trim()) {
-            if (chats_list) {
-              const local_search_result = chats_list.filter((item) => {
+            if (chatsList) {
+              const localSearchResult = chatsList.filter((item) => {
                 if (
                   String(item.username).includes(input) ||
                   String(item.full_name).includes(input)
@@ -1295,22 +1282,22 @@ export default {
               this.$set(
                 this.$data,
                 "search_chat_in_local_result",
-                local_search_result
+                localSearchResult
               );
             }
-            const ws = window.ws;
-            if (ws) {
-              ws.send(
-                JSON.stringify({
-                  event: "search_in_chats",
-                  input,
-                })
-              );
-            } else {
-              this.initilizing_socket_again().then(() => {
-                this.search_chat_submit();
-              });
-            }
+            // const ws = window.ws; FIXME
+            // if (ws) {
+            //   ws.send(
+            //     JSON.stringify({
+            //       event: "search_in_chats",
+            //       input,
+            //     })
+            //   );
+            // } else {
+            //   this.initilizing_socket_again().then(() => {
+            //     this.search_chat_submit();
+            //   });
+            // }
           }
         }
       );
@@ -1319,10 +1306,10 @@ export default {
       const list = [];
       if (this.$data.active_chat.profile_photos) {
         this.$data.active_chat.profile_photos.forEach((item) => {
-          const photo_addr = this.gimme_profile_photo_link_addr(item);
-          if (photo_addr) {
+          const photoAddr = this.gimme_profile_photo_link_addr(item);
+          if (photoAddr) {
             list.push({
-              src: photo_addr,
+              src: photoAddr,
             });
           }
         });
@@ -1330,14 +1317,14 @@ export default {
           this.show_view_image_modal(list, false);
         }
       } else if (this.$data.active_chat.profile_photo) {
-        const photo_addr = this.gimme_profile_photo_link_addr(
+        const photoAddr = this.gimme_profile_photo_link_addr(
           this.$data.active_chat.profile_photo
         );
-        if (photo_addr) {
+        if (photoAddr) {
           this.show_view_image_modal(
             [
               {
-                src: photo_addr,
+                src: photoAddr,
               },
             ],
             false
@@ -1348,10 +1335,10 @@ export default {
     preview_self_profile() {
       const list = [];
       this.$store.state.auth.user_info.profile_photos.forEach((item) => {
-        const photo_addr = this.gimme_profile_photo_link_addr(item);
-        if (photo_addr) {
+        const photoAddr = this.gimme_profile_photo_link_addr(item);
+        if (photoAddr) {
           list.push({
-            src: photo_addr,
+            src: photoAddr,
             filename: item.filename,
           });
         }
@@ -1362,30 +1349,30 @@ export default {
 
       this.show_view_image_modal(list, true);
     },
-    show_view_image_modal(list, show_remove_button) {
+    show_view_image_modal(list, showRemoveButton: boolean) {
       this.$set(this.$data.view_image, "list", list);
       this.$set(this.$data.view_image, "show", true);
       this.$set(
         this.$data.view_image,
         "show_remove_button",
-        show_remove_button
+        showRemoveButton
       );
     },
-    initilizing_socket_again() {
-      return new Promise((resolve) => {
-        setTimeout(async () => {
+    initializing_socket_again() { // FIXME -> Remove this shit method from project
+      return new Promise(resolve => {
+        setTimeout(() => {
           console.error("socket is empty!");
-          await window.initSocket();
-          resolve();
+          // await window.initSocket(); FIXME
+          resolve(null);
         }, 1000);
       });
     },
     insert(emoji) {
       this.send_text_message_input += emoji;
     },
-    show_contextmenu_of_message(e, message_id) {
+    show_contextmenu_of_message(e, messageId: string) {
       e.preventDefault();
-      this.$set(this.$data, "message_context_menu_message_id", message_id);
+      this.$set(this.$data, "message_context_menu_message_id", messageId);
       this.$set(this.$data.context_menu_for_messages, "show", false);
       this.$set(this.$data.context_menu_for_messages, "x", e.clientX);
       this.$set(this.$data.context_menu_for_messages, "y", e.clientY);
@@ -1399,16 +1386,16 @@ export default {
     handle_escape_button() {
       const vm = this;
       document.addEventListener("keydown", (e) => {
-        if (e.code == "Escape") {
-          if (vm.$data.show_nav_drawer == true) {
+        if (e.code === "Escape") {
+          if (vm.$data.show_nav_drawer === true) {
             return vm.$set(vm.$data, "show_nav_drawer", false);
-          } else if (vm.$data.view_image.show == true) {
+          } else if (vm.$data.view_image.show === true) {
             return vm.$set(vm.$data.view_image, "show", false);
-          } else if (vm.$data.settings_dialog_active_section != "home") {
+          } else if (vm.$data.settings_dialog_active_section !== "home") {
             return vm.$set(vm.$data, "settings_dialog_active_section", "home");
-          } else if (vm.$data.show_settings_dialog == true) {
+          } else if (vm.$data.show_settings_dialog === true) {
             return vm.$set(vm.$data, "show_settings_dialog", false);
-          } else if (vm.$data.show_chat_view == true) {
+          } else if (vm.$data.show_chat_view === true) {
             vm.$set(vm.$data.active_chat, "chat_id", null);
             vm.$set(vm.$data.active_chat, "username", null);
             vm.$set(vm.$data.active_chat, "full_name", null);
@@ -1419,73 +1406,73 @@ export default {
         }
       });
     },
-    handle_upload_profile_photo(e) {
-      const file = e.files[0];
-      const local_path = URL.createObjectURL(file);
-      this.$set(this.$data.crop_profile_photo, "src", local_path);
-      this.$set(this.$data.crop_profile_photo, "show", true);
+    handle_upload_profile_photo(_e) {
+      // const file = e.files[0];
+      // const local_path = URL.createObjectURL(file);
+      // this.$set(this.$data.crop_profile_photo, "src", local_path);
+      // this.$set(this.$data.crop_profile_photo, "show", true);
     },
     upload_croped_profile_photo() {
-      this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
-      this.$set(this.$data.crop_profile_photo, "show", false);
+      // this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
+      // this.$set(this.$data.crop_profile_photo, "show", false);
 
-      const canvas = this.$data.crop_profile_photo.canvas;
-      if (canvas) {
-        const croppedImage = canvas.toDataURL("image/png");
-        const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
-        if (imageFile) {
-          if (vm.username && vm.$store.state.auth.auth.auth_token) {
-            const request_body = new FormData();
-            request_body.append("photo", imageFile);
+      // const canvas = this.$data.crop_profile_photo.canvas;
+      // if (canvas) {
+      //   const croppedImage = canvas.toDataURL("image/png");
+      //   const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
+      //   if (imageFile) {
+      //     if (vm.username && vm.$store.state.auth.auth.auth_token) {
+      //       const request_body = new FormData();
+      //       request_body.append("photo", imageFile);
 
-            this.$set(this.$data, "photo_uploading_state", true);
+      //       this.$set(this.$data, "photo_uploading_state", true);
 
-            this.$axios
-              .$post("/api/profile_photos/upload_photo", request_body, {
-                headers: {
-                  username: vm.username,
-                  auth_token: vm.$store.state.auth.auth.auth_token,
-                },
-              })
-              .then((response) => {
-                if (response.message == "profile photo uploaded") {
-                  this.$store.commit(
-                    "auth/addProfilePhoto",
-                    response.profile_photo_filename
-                  );
-                  this.$set(
-                    this.$data,
-                    "user_default_avatar",
-                    this.gimme_profile_photo_link_addr({
-                      filename: response.profile_photo_filename,
-                    })
-                  );
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-                this.error_occurred();
-              })
-              .finally(() => {
-                this.$set(
-                  this.$data.crop_profile_photo,
-                  "button_loading_state",
-                  false
-                );
-                this.$set(this.$data, "photo_uploading_state", false);
-              });
-          } else {
-            console.log(
-              "username or auth_token not found on sending photo as message"
-            );
-          }
-        } else {
-          console.log("no profile photo to upload");
-        }
-      } else
-        console.log(
-          "uploading profile photo failed! :: cropped image canvas is empty"
-        );
+      //       this.$axios
+      //         .$post("/api/profile_photos/upload_photo", request_body, {
+      //           headers: {
+      //             username: vm.username,
+      //             auth_token: vm.$store.state.auth.auth.auth_token,
+      //           },
+      //         })
+      //         .then((response) => {
+      //           if (response.message == "profile photo uploaded") {
+      //             this.$store.commit(
+      //               "auth/addProfilePhoto",
+      //               response.profile_photo_filename
+      //             );
+      //             this.$set(
+      //               this.$data,
+      //               "user_default_avatar",
+      //               this.gimme_profile_photo_link_addr({
+      //                 filename: response.profile_photo_filename,
+      //               })
+      //             );
+      //           }
+      //         })
+      //         .catch((error) => {
+      //           console.log(error);
+      //           this.error_occurred();
+      //         })
+      //         .finally(() => {
+      //           this.$set(
+      //             this.$data.crop_profile_photo,
+      //             "button_loading_state",
+      //             false
+      //           );
+      //           this.$set(this.$data, "photo_uploading_state", false);
+      //         });
+      //     } else {
+      //       console.log(
+      //         "username or auth_token not found on sending photo as message"
+      //       );
+      //     }
+      //   } else {
+      //     console.log("no profile photo to upload");
+      //   }
+      // } else
+      //   console.log(
+      //     "uploading profile photo failed! :: cropped image canvas is empty"
+      //   );
     },
     watch_profile_photos_change() {
       if (this.$store.state.auth.user_info) {
@@ -1521,24 +1508,24 @@ export default {
         );
       }
     },
-    crop_profile_photo_onchange({ coordinates, canvas }) {
+    crop_profile_photo_onchange({ _coordinates, canvas }) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
-    crop_media_to_send_onchange({ coordinates, canvas }) {
+    crop_media_to_send_onchange({ _coordinates, canvas }) {
       this.$set(this.$data.crop_media_to_send, "canvas", canvas);
     },
     delete_message() {
-      const message_id = this.$data.message_context_menu_message_id;
-      const chat_id = this.$data.active_chat.chat_id;
-      if (message_id && chat_id) {
-        ws.send(
-          JSON.stringify({
-            event: "delete_message",
-            chat_id,
-            message_id,
-          })
-        );
-      }
+      // const message_id = this.$data.message_context_menu_message_id;
+      // const chat_id = this.$data.active_chat.chat_id;
+      // if (message_id && chat_id) {
+      //   ws.send(
+      //     JSON.stringify({
+      //       event: "delete_message",
+      //       chat_id,
+      //       message_id,
+      //     })
+      //   );
+      // }
     },
     logout() {
       this.$router.push({ path: "/" + this.$i18n.locale + "/logout" });
@@ -1547,7 +1534,7 @@ export default {
       this.$set(this.$data, "show_error_snakbar", true);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
