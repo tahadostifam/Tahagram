@@ -5,7 +5,8 @@
 
       <div v-if="!email_sended" id="signin_form_content">
         <p class="text-center mb-10">
-          Please enter your email we will send you an email that has verification code.
+          Please enter your email we will send you an email that has
+          verification code.
         </p>
 
         <v-text-field
@@ -40,12 +41,12 @@
           <v-btn
             x-large
             class="rounded-lg"
-            style="width: 100%;"
+            style="width: 100%"
             :loading="submit_button_loading_state"
             :color="$configs.theme_color"
             depressed
             @click="submit"
-            >{{ $t("submit") }}</v-btn
+            >{{ $t('submit') }}</v-btn
           >
         </div>
       </div>
@@ -53,9 +54,7 @@
       <div v-else id="signin_form_content">
         <div class="text-center mb-10">
           <h1>+98 922 346 6074</h1>
-          <p>
-            Please enter the code.
-          </p>
+          <p>Please enter the code.</p>
         </div>
 
         <v-text-field
@@ -67,7 +66,6 @@
           dense
           :color="$configs.theme_color"
         ></v-text-field>
-
       </div>
     </div>
   </div>
@@ -75,34 +73,37 @@
 
 <script>
 // import Cookies from "js-cookie";
-import configs from "@/assets/javascript/configs";
+import configs from '../configs/configs';
 
-export default {
-  name: "SigninPage",
+export default Vue.extend({
+  name: 'SigninPage',
   data() {
     return {
       theme_color: configs.theme_color,
-      email: "",
+      email: '',
       remember_me: true,
       form_errors: [],
       submit_button_loading_state: false,
       email_sended: false,
-      verific_code: ""
+      verific_code: '',
     };
   },
   methods: {
     inputs_are_valid() {
-      if (this.$data.username.trim().length > 0 && this.$data.password.trim().length > 0) {
+      if (
+        this.$data.username.trim().length > 0 &&
+        this.$data.password.trim().length > 0
+      ) {
         return true;
       } else {
-        this.$set(this.$data, "form_errors", [
+        this.$set(this.$data, 'form_errors', [
           "Required params can't be empty",
         ]);
         return false;
       }
     },
     submit() {
-      this.$data.email_sended = true
+      this.$data.email_sended = true;
       // FIXME
       // if (this.inputs_are_valid() == true) {
       //   this.$set(this.$data, "submit_button_loading_state", true);
@@ -177,5 +178,5 @@ export default {
       // }
     },
   },
-};
+});
 </script>

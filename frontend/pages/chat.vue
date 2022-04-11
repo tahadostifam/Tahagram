@@ -582,6 +582,7 @@ import Vue from "vue/types/umd";
 import configs from "../configs/configs";
 import linkAddrs from "../mixins/link_addrs";
 import parseLastSeen from "../mixins/parse_last_seen";
+import { IImageCropperCallback } from "../lib/interfaces"
 
 export default Vue.extend({
   name: "ChatPage",
@@ -1406,7 +1407,8 @@ export default Vue.extend({
         }
       });
     },
-    handle_upload_profile_photo(_e) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    handle_upload_profile_photo(e: Event) {
       // const file = e.files[0];
       // const local_path = URL.createObjectURL(file);
       // this.$set(this.$data.crop_profile_photo, "src", local_path);
@@ -1475,24 +1477,24 @@ export default Vue.extend({
       //   );
     },
     watch_profile_photos_change() {
-      if (this.$store.state.auth.user_info) {
-        this.$store.watch(
-          (state) => state.auth.user_info,
-          (value) => {
-            if (
-              value &&
-              value.profile_photos &&
-              value.profile_photos.length > 0
-            ) {
-              this.$set(
-                this.$data,
-                "user_default_avatar",
-                this.gimme_profile_photo_link_addr(value.profile_photos[0])
-              );
-            }
-          }
-        );
-      }
+      // if (this.$store.state.auth.user_info) {
+      //   this.$store.watch(
+      //     (state) => state.auth.user_info,
+      //     (value) => {
+      //       if (
+      //         value &&
+      //         value.profile_photos &&
+      //         value.profile_photos.length > 0
+      //       ) {
+      //         this.$set(
+      //           this.$data,
+      //           "user_default_avatar",
+      //           this.gimme_profile_photo_link_addr(value.profile_photos[0])
+      //         );
+      //       }
+      //     }
+      //   );
+      // }
     },
     watch_user_info_changes() {
       if (this.$store.state.auth.user_info) {
@@ -1508,10 +1510,12 @@ export default Vue.extend({
         );
       }
     },
-    crop_profile_photo_onchange({ _coordinates, canvas }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    crop_profile_photo_onchange({ coordinates, canvas }: IImageCropperCallback) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
-    crop_media_to_send_onchange({ _coordinates, canvas }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    crop_media_to_send_onchange({ coordinates, canvas }: IImageCropperCallback) {
       this.$set(this.$data.crop_media_to_send, "canvas", canvas);
     },
     delete_message() {

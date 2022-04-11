@@ -74,7 +74,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue/types/umd"
+
+export default Vue.extend({
   props: {
     show: {
       type: Boolean,
@@ -94,7 +96,7 @@ export default {
     show: {
       immediate: true,
       handler(newValue: Boolean) {
-        this.show_nav_drawer = newValue;
+        this.$set(this.$data, "show_nav_drawer", newValue)
       },
     },
     show_nav_drawer: {
@@ -118,5 +120,5 @@ export default {
         else this.$set(this.$data, "nav_drawer_width", 350);
     },
   },
-};
+});
 </script>

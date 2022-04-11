@@ -16,13 +16,14 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue/types/umd"
 import {
   StencilPreview,
   BoundingBox,
   DraggableArea,
 } from "vue-advanced-cropper";
 
-export default {
+export default Vue.extend({
   components: {
     StencilPreview,
     BoundingBox,
@@ -72,10 +73,10 @@ export default {
     },
     aspectRatios() {
       return {
-        minimum: this.aspectRatio || this.minAspectRatio,
-        maximum: this.aspectRatio || this.maxAspectRatio,
+        minimum: this.aspectRatio || null,
+        maximum: this.aspectRatio || null,
       };
     },
   },
-};
+});
 </script>
