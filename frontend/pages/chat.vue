@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 <template>
   <div>
     <ErrorSnakbar
@@ -67,7 +68,7 @@
             :color="$configs.theme_color"
             text
             :loading="crop_profile_photo.button_loading_state"
-            @click="upload_croped_profile_photo"
+            @click="upload_cropped_profile_photo"
           >
             SAVE
           </v-btn>
@@ -396,7 +397,7 @@
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.content"
                     :edited="item.edited"
-                    :my_message="choose_my_message(item)"
+                    :my_message="itsMyMessage(item)"
                     :seen_state="item.seen_state"
                     @contextmenu.native="
                       show_contextmenu_of_message($event, item.message_id)
@@ -410,9 +411,9 @@
                     :send_time="parse_message_date(item.send_time)"
                     :text_content="item.caption"
                     :image_address="
-                      gimme_photo_message_link_addr(item.filename)
+                      gimmePhotoMessageLinkAddr(item.filename)
                     "
-                    :my_message="choose_my_message(item)"
+                    :my_message="itsMyMessage(item)"
                     :edited="item.edited"
                     :seen_state="item.seen_state"
                     @contextmenu.native="
@@ -486,7 +487,7 @@
                   @keypress.enter="submit_send_text_messages()"
                 ></v-text-field>
 
-                <emoji-picker class="emoji_picker" @emoji="insert">
+                <emoji-picker class="emoji_picker" @emoji="insertEmoji">
                   <div
                     slot="emoji-invoker"
                     slot-scope="{ events: { click: clickEvent } }"
@@ -502,7 +503,7 @@
                       <v-icon small :color="$configs.theme_color"> mdi-emoticon </v-icon>
                     </v-btn>
                   </div>
-                  <div slot="emoji-picker" slot-scope="{ emojis, insert }">
+                  <div slot="emoji-picker" slot-scope="{ emojis, insertEmoji }">
                     <v-card
                       id="emoji_picker_card"
                       class="rounded-lg"
@@ -521,7 +522,7 @@
                                 :key="emojiName"
                                 class="emoji_span"
                                 :title="emojiName"
-                                @click="insert(emoji)"
+                                @click="insertEmoji(emoji)"
                                 >{{ emoji }}</span
                               >
                             </div>
@@ -578,7 +579,7 @@
 import { EmojiPicker } from "vue-emoji-picker";
 // import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
-import Vue from "vue/types/umd";
+import Vue from "vue";
 import configs from "../configs/configs";
 import linkAddrs from "../mixins/link_addrs";
 import parseLastSeen from "../mixins/parse_last_seen";
@@ -666,7 +667,8 @@ export default Vue.extend({
     this.watch_internet_state_changes();
   },
   methods: {
-    choose_my_message(_item: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    itsMyMessage(item: any): void {
       // const chat_type = this.$data.active_chat.chat_type;
       // if (chat_type != "channel") {
       //   return item.sender_username == vm.username;
@@ -690,7 +692,8 @@ export default Vue.extend({
     update_error_snakbar(newValue: Boolean) {
       this.$set(this.$data, "show_error_snakbar", newValue);
     },
-    remove_profile_photo(_filename: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    remove_profile_photo(filename: string) {
       // if (filename && filename.length > 0) {
       //   this.$axios
       //     .$post(
@@ -752,8 +755,8 @@ export default Vue.extend({
       //   }
       // }
     },
-    view_photo_message_as_full_screen(filename) {
-      const photoAddr = this.gimme_photo_message_link_addr(filename);
+    view_photo_message_as_full_screen(filename: string) {
+      const photoAddr = this.gimmePhotoMessageLinkAddr(filename);
       this.show_view_image_modal(
         [
           {
@@ -763,7 +766,7 @@ export default Vue.extend({
         false
       );
     },
-    view_member_profile(username) {
+    view_member_profile(username: string) {
       if (username === this.username) {
         this.$set(this.$data, "show_settings_dialog", true);
       } else {
@@ -1003,7 +1006,6 @@ export default Vue.extend({
     join_into_chat() {
       if (this.$data.active_chat.chat_type !== "private") {
         this.getNonJoinedChatsMessage(this.$data.active_chat.chat_id);
-
         // window.ws.send(
         //   JSON.stringify({
         //     event: "join_to_chat",
@@ -1012,7 +1014,7 @@ export default Vue.extend({
         // );
 
         const chatRowExists = this.$store.state.auth.user_info.chats.find(
-          ({ localChatId }) => localChatId === this.$data.active_chat.chat_id
+          ({ localChatId }: { localChatId: string}) => localChatId === this.$data.active_chat.chat_id
         );
         if (!chatRowExists) {
           this.$store.commit("auth/addChat", {
@@ -1027,7 +1029,7 @@ export default Vue.extend({
 
         const chatExists =
           this.$store.state.auth.user_info.chats_messages.find(
-            ({ _id }) => _id === this.$data.active_chat.chat_id
+            ({ _id }: { _id: string }) => _id === this.$data.active_chat.chat_id
           );
         if (!chatExists) {
           this.$store.commit("auth/createNewChat", {
@@ -1039,107 +1041,109 @@ export default Vue.extend({
         }
       }
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async show_chat(chatId: string, chatLocation: string) {
-      this.$set(this.$data, "chat_is_loading", true);
+      // this.$set(this.$data, "chat_is_loading", true);
 
-      const vm = this;
-      let chat = null;
+      // const vm = this;
+      // let chat = null;
 
-      function doGetChatMessages() {
-        if (
-          vm.$store.state.auth.user_info.chats_messages &&
-          vm.$store.state.auth.user_info.chats_messages.length > 0
-        ) {
-          const chatsMessages = vm.$store.state.auth.user_info.chats_messages;
-          if (chatsMessages && chat.sides) {
-            const findResult = chatsMessages.find(
-              ({ sides }) =>
-                sides.user_1 === chat.username || sides.user_2 === chat.username
-            );
-            if (findResult && findResult.sides) {
-              vm.$set(
-                vm.$data.active_chat,
-                "messages",
-                findResult.messages_list
-              );
-            } else {
-              vm.$set(vm.$data.active_chat, "messages", null);
-            }
-          } else {
-            console.log("cant find user.sides -> show_chat event");
-            vm.$set(vm.$data.active_chat, "messages", null);
-          }
-          chat = {
-            chat_id: chat._id,
-            username: chat.username,
-            profile_photo: chat.profile_photo,
-            full_name: chat.full_name,
-            chat_type: chat.chat_type,
-          };
+      // function doGetChatMessages() {
+      //   if (
+      //     vm.$store.state.auth.user_info.chats_messages &&
+      //     vm.$store.state.auth.user_info.chats_messages.length > 0
+      //   ) {
+      //     const chatsMessages = vm.$store.state.auth.user_info.chats_messages;
+      //     if (chatsMessages && chat.sides) {
+      //       const findResult = chatsMessages.find(
+      //         ({ sides }) =>
+      //           sides.user_1 === chat.username || sides.user_2 === chat.username
+      //       );
+      //       if (findResult && findResult.sides) {
+      //         vm.$set(
+      //           vm.$data.active_chat,
+      //           "messages",
+      //           findResult.messages_list
+      //         );
+      //       } else {
+      //         vm.$set(vm.$data.active_chat, "messages", null);
+      //       }
+      //     } else {
+      //       console.log("cant find user.sides -> show_chat event");
+      //       vm.$set(vm.$data.active_chat, "messages", null);
+      //     }
+      //     chat = {
+      //       chat_id: chat._id,
+      //       username: chat.username,
+      //       profile_photo: chat.profile_photo,
+      //       full_name: chat.full_name,
+      //       chat_type: chat.chat_type,
+      //     };
 
-          vm.set_the_active_chat(chat);
-        }
+      //     vm.set_the_active_chat(chat);
+      //   }
 
-        vm.set_the_active_chat(chat);
-      }
+      //   vm.set_the_active_chat(chat);
+      // }
 
-      switch (chatLocation) {
-        case "chats_list":
-          chat = this.user_info.chats.find(
-            ({ chat_id: localChatId }) => localChatId === chatId
-          );
-          if (chat && chat.chat_type === "private") {
-            const msgsList = await this.fetch_chat_messages_list(chatId);
-            this.$set(this.$data.active_chat, "messages", msgsList);
-          } else {
-            const msgsList = await this.fetch_chat_messages_list(chatId);
-            this.$set(this.$data.active_chat, "messages", msgsList);
-          }
-          this.set_the_active_chat(chat);
-          break;
-        case "search_chat_result":
-          chat = this.$data.search_chat_result.find(
-            ({ _id }) => _id === chatId
-          );
-          if (chat.chat_type === "private") {
-            doGetChatMessages();
-          } else {
-            this.getNonJoinedChatsMessage(chatId);
-            this.set_the_active_chat(chat);
-          }
-          break;
-        case "search_chat_in_local":
-          chat = this.$data.search_chat_in_local_result.find(
-            ({ _id }) => _id === chatId
-          );
-          if (chat.chat_type === "private") {
-            doGetChatMessages();
-          } else {
-            this.getNonJoinedChatsMessage(chatId);
-            this.set_the_active_chat(chat);
-          }
-          break;
-      }
+      // switch (chatLocation) {
+      //   case "chats_list":
+      //     chat = this.user_info.chats.find(
+      //       ({ chat_id: localChatId }) => localChatId === chatId
+      //     );
+      //     if (chat && chat.chat_type === "private") {
+      //       const msgsList = await this.fetch_chat_messages_list(chatId);
+      //       this.$set(this.$data.active_chat, "messages", msgsList);
+      //     } else {
+      //       const msgsList = await this.fetch_chat_messages_list(chatId);
+      //       this.$set(this.$data.active_chat, "messages", msgsList);
+      //     }
+      //     this.set_the_active_chat(chat);
+      //     break;
+      //   case "search_chat_result":
+      //     chat = this.$data.search_chat_result.find(
+      //       ({ _id }) => _id === chatId
+      //     );
+      //     if (chat.chat_type === "private") {
+      //       doGetChatMessages();
+      //     } else {
+      //       this.getNonJoinedChatsMessage(chatId);
+      //       this.set_the_active_chat(chat);
+      //     }
+      //     break;
+      //   case "search_chat_in_local":
+      //     chat = this.$data.search_chat_in_local_result.find(
+      //       ({ _id }) => _id === chatId
+      //     );
+      //     if (chat.chat_type === "private") {
+      //       doGetChatMessages();
+      //     } else {
+      //       this.getNonJoinedChatsMessage(chatId);
+      //       this.set_the_active_chat(chat);
+      //     }
+      //     break;
 
-      if (chat && chat.username && chat.chat_type === "private") {
-        // window.ws.send( FIXME
-        //   JSON.stringify({
-        //     event: "get_last_seen",
-        //     username: chat.username,
-        //   })
-        // );
-      }
+      // if (chat && chat.username && chat.chat_type === "private") {
+      //   // window.ws.send( FIXME
+      //   //   JSON.stringify({
+      //   //     event: "get_last_seen",
+      //   //     username: chat.username,
+      //   //   })
+      //   // );
+      // }
 
-      if (chat.chat_type !== "private") {
-        this.$set(this.$data.active_chat, "members_length", chat.members);
-      }
+      // if (chat.chat_type !== "private") {
+      //   this.$set(this.$data.active_chat, "members_length", chat.members);
+      // }
 
-      this.$set(this.$data, "search_chat_input", "");
+      // this.$set(this.$data, "search_chat_input", "");
 
-      this.$set(this.$data, "show_chat_view", true);
-      this.$set(this.$data, "chat_is_loading", false);
+      // this.$set(this.$data, "show_chat_view", true);
+      // this.$set(this.$data, "chat_is_loading", false);},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     },
-    getNonJoinedChatsMessage(_chatIid) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getNonJoinedChatsMessage(chatIid: string) {
       // ws.send(
       //   JSON.stringify({
       //     event: "get_chat_messages",
@@ -1149,7 +1153,8 @@ export default Vue.extend({
 
       // vm.$set(vm.$data, "chat_is_loading", true);
     },
-    set_the_active_chat(chat) {
+    // FIXME TYPE
+    set_the_active_chat(chat: any) {
       if (chat._id) {
         this.$set(this.$data.active_chat, "chat_id", chat._id);
       }
@@ -1182,17 +1187,18 @@ export default Vue.extend({
         }
       }
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     fetch_chat_messages_list(chatId: string) {
       // NOTE
       // this method will be work when user clicked on the a chat
       // when it happend... we should going to user_chats_messages and finding the messages for that chat
-      const chatsMessages = this.$store.state.auth.user_info.chats_messages;
-      if (chatsMessages) {
-        const findResult = chatsMessages.find(({ _id }) => _id === chatId);
-        if (findResult) {
-          return findResult.messages_list; // messages of chat
-        }
-      }
+      // const chatsMessages = this.$store.state.auth.user_info.chats_messages;
+      // if (chatsMessages) {
+      //   const findResult = chatsMessages.find(({ _id }) => _id === chatId);
+      //   if (findResult) {
+      //     return findResult.messages_list; // messages of chat
+      //   }
+      // }
       return null;
     },
     parse_message_date(sendTime: number): String {
@@ -1209,37 +1215,39 @@ export default Vue.extend({
 
       return timeString;
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     select_message_sender_fullname(messageId: String) {
-      if (this.$data.active_chat.chat_type === "private") {
-        return null;
-      } else if (this.$data.active_chat.chat_type === "channel") {
-        return null;
-      } else {
-        const chatsMessages = this.$store.state.auth.user_info.chats_messages;
-        if (
-          chatsMessages &&
-          chatsMessages.length > 0 &&
-          this.$data.active_chat.chat_id
-        ) {
-          const chat = chatsMessages.find(
-            ({ _id }) => _id === this.$data.active_chat.chat_id
-          );
-          if (chat) {
-            const message = chat.messages_list.find(
-              ({ message_id: localMessageId }) => localMessageId === messageId
-            );
-            if (message) {
-              return message.sender_username;
-            } else {
-              console.log(
-                "cannot find message in select_message_sender_fullname function -> chat.vue"
-              );
-            }
-          } else {
-            console.log("chat not found on select_message_sender_fullname");
-          }
-        }
-      }
+      ""
+      // if (this.$data.active_chat.chat_type === "private") {
+      //   return null;
+      // } else if (this.$data.active_chat.chat_type === "channel") {
+      //   return null;
+      // } else {
+      //   const chatsMessages = this.$store.state.auth.user_info.chats_messages;
+      //   if (
+      //     chatsMessages &&
+      //     chatsMessages.length > 0 &&
+      //     this.$data.active_chat.chat_id
+      //   ) {
+      //     const chat = chatsMessages.find(
+      //       ({ _id }) => _id === this.$data.active_chat.chat_id
+      //     );
+      //     if (chat) {
+      //       const message = chat.messages_list.find(
+      //         ({ message_id: localMessageId }) => localMessageId === messageId
+      //       );
+      //       if (message) {
+      //         return message.sender_username;
+      //       } else {
+      //         console.log(
+      //           "cannot find message in select_message_sender_fullname function -> chat.vue"
+      //         );
+      //       }
+      //     } else {
+      //       console.log("chat not found on select_message_sender_fullname");
+      //     }
+      //   }
+      // }
     },
     check_if_user_had_profile_photo() {
       if (
@@ -1271,7 +1279,7 @@ export default Vue.extend({
           const input = this.$data.search_chat_input;
           if (input.trim()) {
             if (chatsList) {
-              const localSearchResult = chatsList.filter((item) => {
+              const localSearchResult = chatsList.filter((item: any) => {
                 if (
                   String(item.username).includes(input) ||
                   String(item.full_name).includes(input)
@@ -1304,53 +1312,54 @@ export default Vue.extend({
       );
     },
     preview_user_profile() {
-      const list = [];
-      if (this.$data.active_chat.profile_photos) {
-        this.$data.active_chat.profile_photos.forEach((item) => {
-          const photoAddr = this.gimme_profile_photo_link_addr(item);
-          if (photoAddr) {
-            list.push({
-              src: photoAddr,
-            });
-          }
-        });
-        if (list.length > 0) {
-          this.show_view_image_modal(list, false);
-        }
-      } else if (this.$data.active_chat.profile_photo) {
-        const photoAddr = this.gimme_profile_photo_link_addr(
-          this.$data.active_chat.profile_photo
-        );
-        if (photoAddr) {
-          this.show_view_image_modal(
-            [
-              {
-                src: photoAddr,
-              },
-            ],
-            false
-          );
-        }
-      }
+      // const list = [];
+      // if (this.$data.active_chat.profile_photos) {
+      //   this.$data.active_chat.profile_photos.forEach((item) => {
+      //     const photoAddr = this.gimme_profile_photo_link_addr(item);
+      //     if (photoAddr) {
+      //       list.push({
+      //         src: photoAddr,
+      //       });
+      //     }
+      //   });
+      //   if (list.length > 0) {
+      //     this.show_view_image_modal(list, false);
+      //   }
+      // } else if (this.$data.active_chat.profile_photo) {
+      //   const photoAddr = this.gimme_profile_photo_link_addr(
+      //     this.$data.active_chat.profile_photo
+      //   );
+      //   if (photoAddr) {
+      //     this.show_view_image_modal(
+      //       [
+      //         {
+      //           src: photoAddr,
+      //         },
+      //       ],
+      //       false
+      //     );
+      //   }
+      // }
     },
     preview_self_profile() {
-      const list = [];
-      this.$store.state.auth.user_info.profile_photos.forEach((item) => {
-        const photoAddr = this.gimme_profile_photo_link_addr(item);
-        if (photoAddr) {
-          list.push({
-            src: photoAddr,
-            filename: item.filename,
-          });
-        }
-        if (list.length > 0) {
-          this.show_view_image_modal(list, true);
-        }
-      });
+      // const list: Array<any> = []; // FIXME
+      // this.$store.state.auth.user_info.profile_photos.forEach((item) => {
+      //   const photoAddr = this.gimme_profile_photo_link_addr(item);
+      //   if (photoAddr) {
+      //     list.push({
+      //       src: photoAddr,
+      //       filename: item.filename,
+      //     });
+      //   }
+      //   if (list.length > 0) {
+      //     this.show_view_image_modal(list, true);
+      //   }
+      // });
 
-      this.show_view_image_modal(list, true);
+      // this.show_view_image_modal(list, true);
     },
-    show_view_image_modal(list, showRemoveButton: boolean) {
+    // FIXME TYPE
+    show_view_image_modal(list: any , showRemoveButton: boolean) {
       this.$set(this.$data.view_image, "list", list);
       this.$set(this.$data.view_image, "show", true);
       this.$set(
@@ -1368,10 +1377,10 @@ export default Vue.extend({
         }, 1000);
       });
     },
-    insert(emoji) {
-      this.send_text_message_input += emoji;
+    insertEmoji(emoji: string) {
+      this.$set(this.$data, "send_text_message_input", this.$data.send_text_message_input + emoji)
     },
-    show_contextmenu_of_message(e, messageId: string) {
+    show_contextmenu_of_message(e: any, messageId: string) {
       e.preventDefault();
       this.$set(this.$data, "message_context_menu_message_id", messageId);
       this.$set(this.$data.context_menu_for_messages, "show", false);
@@ -1414,7 +1423,7 @@ export default Vue.extend({
       // this.$set(this.$data.crop_profile_photo, "src", local_path);
       // this.$set(this.$data.crop_profile_photo, "show", true);
     },
-    upload_croped_profile_photo() {
+    upload_cropped_profile_photo() {
       // this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
       // this.$set(this.$data.crop_profile_photo, "show", false);
 

@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue/types/umd"
+import Vue from "vue"
 
 export default Vue.extend({
   props: {

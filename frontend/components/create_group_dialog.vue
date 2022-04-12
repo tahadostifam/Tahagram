@@ -67,9 +67,11 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
+import { IImageCropperCallback } from "../lib/interfaces";
 import validateUsername from "../mixins/validate_username";
 
-export default {
+export default Vue.extend({
   name: "CreateGroupDialog",
   mixins: [validateUsername],
   props: {
@@ -105,123 +107,126 @@ export default {
   },
   mounted() {},
   methods: {
-    choosing_channel_photo(e) {
-      const file = e.files[0];
-      const local_path = URL.createObjectURL(file);
-      this.$set(this.$data.crop_profile_photo, "src", local_path);
-      this.$set(this.$data.crop_profile_photo, "show", true);
+    // FIXME - Type
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    choosing_channel_photo(e: any) {
+      // const file = e.files[0];
+      // const local_path = URL.createObjectURL(file);
+      // this.$set(this.$data.crop_profile_photo, "src", local_path);
+      // this.$set(this.$data.crop_profile_photo, "show", true);
     },
-    crop_profile_photo_onchange({ coordinates, canvas }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    crop_profile_photo_onchange({ coordinates, canvas }: IImageCropperCallback) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
-    set_croped_photo() {
-      this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
-      this.$set(this.$data.crop_profile_photo, "show", false);
+    set_cropped_photo() {
+      // this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
+      // this.$set(this.$data.crop_profile_photo, "show", false);
 
-      const canvas = this.$data.crop_profile_photo.canvas;
-      if (canvas) {
-        const croppedImage = canvas.toDataURL("image/png");
-        const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
+      // const canvas = this.$data.crop_profile_photo.canvas;
+      // if (canvas) {
+      //   const croppedImage = canvas.toDataURL("image/png");
+      //   // const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
 
-        if (imageFile) {
-          this.$set(this.$data, "avatar_src", URL.createObjectURL(imageFile));
-        }
-      } else
-        console.log(
-          "uploading profile photo failed! :: cropped image canvas is empty"
-        );
-      this.$set(this.$data.crop_profile_photo, "button_loading_state", false);
+      //   // if (imageFile) {
+      //   //   this.$set(this.$data, "avatar_src", URL.createObjectURL(imageFile));
+      //   // }
+      // } else
+      //   console.log(
+      //     "uploading profile photo failed! :: cropped image canvas is empty"
+      //   );
+      // this.$set(this.$data.crop_profile_photo, "button_loading_state", false);
     },
     submit_create_group() {
-      const username = this.$data.group_username;
-      const name = this.$data.group_name;
+      // const username = this.$data.group_username;
+      // const name = this.$data.group_name;
 
-      if (name.trim().length > 0 && username.trim().length > 0) {
-        this.$set(this.$data, "submit_button_loading_state", true);
-        this.$axios
-          .$post(
-            "/api/chats/create_group",
-            {
-              group_name: name,
-              group_username: username,
-            },
-            {
-              headers: {
-                username: this.$store.state.auth.auth.username,
-                auth_token: this.$store.state.auth.auth.auth_token,
-              },
-            }
-          )
-          .then((response) => {
-            console.log(response);
-            if (response.message == "group created") {
-              const data_to_callback = {
-                chat_id: response.chat_id,
-                name,
-                username,
-                chat_type: "group",
-                members: response.members,
-              };
+      // if (name.trim().length > 0 && username.trim().length > 0) {
+      //   this.$set(this.$data, "submit_button_loading_state", true);
+      //   this.$axios
+      //     .$post(
+      //       "/api/chats/create_group",
+      //       {
+      //         group_name: name,
+      //         group_username: username,
+      //       },
+      //       {
+      //         headers: {
+      //           username: this.$store.state.auth.auth.username,
+      //           auth_token: this.$store.state.auth.auth.auth_token,
+      //         },
+      //       }
+      //     )
+      //     .then((response) => {
+      //       console.log(response);
+      //       if (response.message == "group created") {
+      //         const data_to_callback = {
+      //           chat_id: response.chat_id,
+      //           name,
+      //           username,
+      //           chat_type: "group",
+      //           members: response.members,
+      //         };
 
-              this.$emit("chat_created", data_to_callback);
-            } else {
-              throw new Error("An error occurred on the server side");
-            }
-          })
-          .catch((error) => {
-            if (error.response.status == 401) {
-              alert("unauthorized");
-            } else if (
-              error.response.message == "another chat exists with this username"
-            ) {
-              this.$set(this.$data, "chat_is_available_state", false);
-            } else {
-              throw new Error("An error occurred on the server side");
-            }
-          })
-          .finally(() => {
-            this.$set(this.$data, "submit_button_loading_state", false);
-          });
-      }
+      //         this.$emit("chat_created", data_to_callback);
+      //       } else {
+      //         throw new Error("An error occurred on the server side");
+      //       }
+      //     })
+      //     .catch((error) => {
+      //       if (error.response.status == 401) {
+      //         alert("unauthorized");
+      //       } else if (
+      //         error.response.message == "another chat exists with this username"
+      //       ) {
+      //         this.$set(this.$data, "chat_is_available_state", false);
+      //       } else {
+      //         throw new Error("An error occurred on the server side");
+      //       }
+      //     })
+      //     .finally(() => {
+      //       this.$set(this.$data, "submit_button_loading_state", false);
+      //     });
+      // }
     },
     keyup_username_event() {
-      const username = this.$data.group_username;
-      if (username.trim().length > 0) {
-        const limited_username = this.validate_username(username);
-        this.$set(this.$data, "group_username", limited_username);
+      // const username = this.$data.group_username;
+      // if (username.trim().length > 0) {
+      //   const limited_username = this.validate_username(username);
+      //   this.$set(this.$data, "group_username", limited_username);
 
-        // SECTION - checking username existly
+      //   // SECTION - checking username existly
 
-        window.ws.send(
-          JSON.stringify({
-            event: "check_username_existly",
-            username,
-          })
-        );
+      //   window.ws.send(
+      //     JSON.stringify({
+      //       event: "check_username_existly",
+      //       username,
+      //     })
+      //   );
 
-        window.ws.onmessage = (event) => {
-          let parsedData;
-          try {
-            parsedData = JSON.parse(event.data);
-          } catch {}
-          if (parsedData) {
-            if (
-              parsedData.message == "chat exists" &&
-              parsedData.username == username
-            ) {
-              this.$set(this.$data, "chat_is_available_state", false);
-            } else if (
-              parsedData.message == "chat not exists" &&
-              parsedData.username == username
-            ) {
-              this.$set(this.$data, "chat_is_available_state", true);
-            } else {
-              this.$set(this.$data, "chat_is_available_state", null);
-            }
-          }
-        };
-      }
+      //   window.ws.onmessage = (event) => {
+      //     let parsedData;
+      //     try {
+      //       parsedData = JSON.parse(event.data);
+      //     } catch {}
+      //     if (parsedData) {
+      //       if (
+      //         parsedData.message == "chat exists" &&
+      //         parsedData.username == username
+      //       ) {
+      //         this.$set(this.$data, "chat_is_available_state", false);
+      //       } else if (
+      //         parsedData.message == "chat not exists" &&
+      //         parsedData.username == username
+      //       ) {
+      //         this.$set(this.$data, "chat_is_available_state", true);
+      //       } else {
+      //         this.$set(this.$data, "chat_is_available_state", null);
+      //       }
+      //     }
+      //   };
+      // }
     },
   },
-};
+});
 </script>

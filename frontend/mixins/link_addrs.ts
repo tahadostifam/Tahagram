@@ -1,4 +1,4 @@
-import Vue from "vue/types/umd";
+import Vue from "vue";
 
 export default Vue.extend({
   methods: {
@@ -12,7 +12,7 @@ export default Vue.extend({
       }
       return ""
     },
-    gimme_photo_message_link_addr(fileName: any) {
+    gimmePhotoMessageLinkAddr(fileName: any) {
       if (fileName) {
         return (
           this.$axios.defaults.baseURL +

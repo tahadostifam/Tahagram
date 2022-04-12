@@ -280,7 +280,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue/types/umd";
+import Vue from "vue";
 import configs from "../configs/configs";
 
 export default Vue.extend({

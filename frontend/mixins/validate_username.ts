@@ -1,4 +1,6 @@
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   methods: {
     validate_username(username: string) {
       return username.replace(
@@ -7,4 +9,4 @@ export default {
       ).trim();
     },
   },
-};
+});

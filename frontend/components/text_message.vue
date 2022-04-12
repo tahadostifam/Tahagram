@@ -21,7 +21,9 @@
 </template>
 
 <script>
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   name: "TextMessage",
   props: {
     sender: {
@@ -49,5 +51,5 @@ export default {
       required: true
     }
   },
-};
+});
 </script>

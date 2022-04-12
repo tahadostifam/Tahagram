@@ -175,7 +175,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue/types/umd";
+import Vue from "vue";
 import linkAddrs from "../mixins/link_addrs";
 import parseLastSeen from "../mixins/parse_last_seen";
 

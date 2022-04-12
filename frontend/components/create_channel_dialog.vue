@@ -153,12 +153,19 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
+import { IImageCropperCallback } from "../lib/interfaces";
 import validateUsername from "../mixins/validate_username";
 
-export default {
+export default Vue.extend({
   name: "CreateChannelDialog",
   mixins: [validateUsername],
-  props: ["show"],
+  props: {
+    show:{
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       dialog_step: 1,
@@ -182,7 +189,7 @@ export default {
     show: {
       immediate: true,
       handler(newValue: Boolean) {
-        this.show_dialog = newValue;
+        this.$set(this.$data, "show_dialog", newValue)
         this.clear_all_items();
       },
     },
@@ -199,7 +206,7 @@ export default {
     // window.choosingChannelPhoto = this.choosingChannelPhoto;
   },
   methods: {
-    choosingChannelPhoto(e) {
+    choosingChannelPhoto(e: any) {
       const file = e.target.files[0];
       if (file) {
         const localPath = URL.createObjectURL(file);
@@ -207,31 +214,33 @@ export default {
           this.$set(this.$data.crop_profile_photo, "src", localPath);
           this.$set(this.$data.crop_profile_photo, "show", true);
         } else {
-          Console.error("localPath not found");
+          console.error("localPath not found");
         }
       } else {
-        Console.error("profile_photo file not found");
+        console.error("profile_photo file not found");
       }
     },
-    cropProfilePhotoOnChange({ _coordinates, canvas }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    cropProfilePhotoOnChange({ coordinates, canvas }: IImageCropperCallback) {
       this.$set(this.$data.crop_profile_photo, "canvas", canvas);
     },
     setCroppedPhoto() {
-      this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
-      this.$set(this.$data.crop_profile_photo, "show", false);
+      // FIXME
+      // this.$set(this.$data.crop_profile_photo, "button_loading_state", true);
+      // this.$set(this.$data.crop_profile_photo, "show", false);
 
-      const canvas = this.$data.crop_profile_photo.canvas;
-      if (canvas) {
-        const croppedImage = canvas.toDataURL("image/png");
-        const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
+      // const canvas = this.$data.crop_profile_photo.canvas;
+      // if (canvas) {
+      //   const croppedImage = canvas.toDataURL("image/png");
+      //   const imageFile = window.dataURLtoFile(croppedImage, "profile_photo");
 
-        if (imageFile) {
-          this.$set(this.$data, "avatar_src", URL.createObjectURL(imageFile));
-        }
-      } else
-        Console.log(
-          "uploading profile photo failed! :: cropped image canvas is empty"
-        );
+      //   if (imageFile) {
+      //     this.$set(this.$data, "avatar_src", URL.createObjectURL(imageFile));
+      //   }
+      // } else
+      //   console.log(
+      //     "uploading profile photo failed! :: cropped image canvas is empty"
+      //   );
       this.$set(this.$data.crop_profile_photo, "button_loading_state", false);
     },
     submit_create_channel() {
@@ -353,5 +362,5 @@ export default {
       }
     },
   },
-};
+});
 </script>
