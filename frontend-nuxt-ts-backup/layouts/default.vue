@@ -9,5 +9,10 @@
 <script>
 export default {
   name: 'DefaultLayout',
-}
+  data() {
+    return {
+      theme_color: 'green accent-4',
+    };
+  },
+};
 </script>

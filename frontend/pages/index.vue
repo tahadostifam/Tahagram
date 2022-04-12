@@ -1,6 +1,13 @@
+<template>
+  <h1>Hello World</h1>
+</template>
+
 <script lang="ts">
-export default {
-  name: "IndexPage",
-  middleware: ["need_auth"],
-};
+import Vue from 'vue'
+export default Vue.extend({
+  name: "IndexPage"
+})
+// export default {
+//   name: "IndexPage"
+// }
 </script>
