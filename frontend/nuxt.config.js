@@ -1,4 +1,3 @@
-import colors from 'vuetify/es5/util/colors';
 import configs from './configs/configs';
 import I18nMessages from './plugins/i18n';
 
@@ -30,7 +29,7 @@ export default {
 
   buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify'],
 
-  modules: ['@nuxtjs/axios', '@nuxtjs/pwa'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/pwa', "@nuxtjs/i18n"],
 
   axios: {
     baseURL: configs.baseURL,
@@ -57,7 +56,7 @@ export default {
       dark: true,
       themes: {
         dark: {
-          primary: colors.green.accent4,
+          primary: configs.theme_color,
         },
       },
     },
