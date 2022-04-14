@@ -29,11 +29,7 @@ export default {
 
   buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify'],
 
-  modules: ['@nuxtjs/axios', '@nuxtjs/pwa', "@nuxtjs/i18n"],
-
-  axios: {
-    baseURL: configs.baseURL,
-  },
+  modules: ['@nuxtjs/pwa', "@nuxtjs/i18n"],
 
   loading: false,
 

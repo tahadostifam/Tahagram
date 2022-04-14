@@ -53,6 +53,9 @@ export default {
               Form.
               Enjoy using ChatApp :)
             `.trim(),
+    signin_intro_text: `
+      Please enter your email we will send you an email that has
+      verification code.`.trim(),
     goto_signin: 'Go To Signin',
     last_seen_at: 'last seen at {0}',
     online: 'online',
@@ -72,6 +75,8 @@ export default {
     promote_to_admin: 'Promote to admin',
     remove_admin_access: 'Remove admin access',
     email: 'Email',
+    required: "Required!",
+    invalid_email: "Invalid Email!"
   },
   fa: {
     developed_by: 'توسعه داده شده توسط',
@@ -124,6 +129,8 @@ export default {
     account_created_text: `
               اکانت شما با اطلاعاتی که وارد کرده بودید با موفقیت ساخته شد. برای وارد شدن به اکانت خود به فرم ورود بروید. موفق باشید!
             `.trim(),
+    signin_intro_text: `
+      لطفا ایمیل خودتان را وارد کنید. ما ایمیلی حاوی کد ورود برایتان ارسال خواهیم کرد.`.trim(),
     goto_signin: 'صفحه ورود',
     last_seen_at: 'آخرین بازدید در {0}',
     online: 'آنلاین',
@@ -143,5 +150,7 @@ export default {
     promote_to_admin: 'ارتقا به مدیر',
     remove_admin_access: 'حذف دسترسی مدیر',
     email: 'ایمیل',
+    required: "ضروری!",
+    invalid_email: "ایمیل نامعتبر است!"
   },
 }

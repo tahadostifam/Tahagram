@@ -4,9 +4,8 @@
       <img id="logo" src="~/assets/images/logo.png" alt="Logo" />
 
       <div v-if="!email_sended" id="signin_form_content">
-        <p class="text-center mb-10">
-          Please enter your email we will send you an email that has
-          verification code.
+        <p class="text-center mb-10" dir="auto">
+          {{ $t("signin_intro_text") }}
         </p>
 
         <v-text-field
@@ -18,6 +17,7 @@
           filled
           dense
           :color="$configs.theme_color"
+          :rules="[input_rules.required, input_rules.email]"
         ></v-text-field>
 
         <v-checkbox
@@ -39,6 +39,7 @@
 
         <div :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'">
           <v-btn
+            :disabled="!email.trim().length > 0"
             x-large
             class="rounded-lg"
             style="width: 100%"
@@ -71,10 +72,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 // import Cookies from "js-cookie";
 import Vue from 'vue';
 import configs from '../configs/configs';
+import isValidEmail from '../lib/valid_email'
+import UsersHttp from '../http/users.http'
+
+const usersHttp = new UsersHttp();
 
 export default Vue.extend({
   name: 'SigninPage',
@@ -87,96 +92,25 @@ export default Vue.extend({
       submit_button_loading_state: false,
       email_sended: false,
       verific_code: '',
+      input_rules: {
+        required: (value) => !!value || this.$t('required'),
+        email: (value) => isValidEmail(value, this)
+      },
     };
   },
   methods: {
-    inputsAreValid() {
-      if (
-        this.$data.username.trim().length > 0 &&
-        this.$data.password.trim().length > 0
-      ) {
-        return true;
-      } else {
-        this.$set(this.$data, 'form_errors', [
-          "Required params can't be empty",
-        ]);
-        return false;
-      }
-    },
     submit() {
-      this.$data.email_sended = true;
-      // FIXME
-      // if (this.inputs_are_valid() == true) {
-      //   this.$set(this.$data, "submit_button_loading_state", true);
-      //   this.$axios
-      //     .$post(
-      //       "/api/users/signin",
-      //       {
-      //         username: this.$data.username,
-      //         password: this.$data.password,
-      //       },
-      //       {
-      //         headers: {
-      //           "Content-Type": "application/json; charset=UTF-8",
-      //         },
-      //       }
-      //     )
-      //     .then((response) => {
-      //       if (response.message == "success") {
-      //         this.$store.commit(
-      //           "auth/setRefreshToken",
-      //           response.tokens.refresh_token
-      //         );
-      //         this.$store.commit(
-      //           "auth/setAuthToken",
-      //           response.tokens.auth_token
-      //         );
-      //         this.$store.commit("auth/setUserData", response.data);
-      //         this.$store.commit("auth/setUserLoggedIn", true);
-      //         this.$store.commit("auth/setUsername", this.$data.username);
-      //         this.$store.commit("auth/setChatsList", response.chats);
+      const email = this.$data.email.trim();
+      if (email.length > 0) {
+        this.$set(this.$data, "submit_button_loading_state", true);
 
-      //         if (this.$data.remember_me) {
-      //           Cookies.set("refresh_token", response.tokens.refresh_token);
-      //           Cookies.set("auth_token", response.tokens.auth_token);
-      //           Cookies.set("username", this.$data.username);
-      //         }
-
-      //         this.$router.push({ path: "/" + this.$i18n.locale + "/chat" });
-      //       } else {
-      //         this.$set(this.$data, "form_errors", [
-      //           this.$t("server_side_error"),
-      //         ]);
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       if (error && error.response && error.response.data) {
-      //         if (
-      //           error.response.data.message ==
-      //           "username or password is incorrect"
-      //         ) {
-      //           this.$set(this.$data, "form_errors", [
-      //             this.$t("username_or_password_is_incorrect"),
-      //           ]);
-      //         } else if (error.response.status == 400) {
-      //           this.$set(this.$data, "form_errors", [
-      //             this.$t("required_parameters_cannot_be_empty"),
-      //           ]);
-      //         } else if (error.response.status == 500) {
-      //           this.$set(this.$data, "form_errors", [
-      //             this.$t("server_side_error"),
-      //           ]);
-      //         }
-      //       } else {
-      //         this.$set(this.$data, "form_errors", [
-      //           this.$t("server_side_error"),
-      //         ]);
-      //       }
-      //     })
-      //     .finally(() => {
-      //       this.$set(this.$data, "submit_button_loading_state", false);
-      //     });
-      // }
+        usersHttp.SigninAction(email).then(() => {
+          this.$set(this.$data, "submit_button_loading_state", true);
+          this.$set(this.$data, "email_sended", true);
+        }, () => {
+          alert("error")
+        })
+      }
     },
   },
 });
