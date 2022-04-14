@@ -76,7 +76,7 @@
 // import Cookies from "js-cookie";
 import Vue from 'vue';
 import configs from '../configs/configs';
-import isValidEmail from '../lib/valid_email'
+import isValidEmail from '../lib/input_rules'
 import UsersHttp from '../http/users.http'
 
 const usersHttp = new UsersHttp();
@@ -93,8 +93,8 @@ export default Vue.extend({
       email_sended: false,
       verific_code: '',
       input_rules: {
-        required: (value) => !!value || this.$t('required'),
-        email: (value) => isValidEmail(value, this)
+        required: (value: any) => !!value || (this as any).$t('required'),
+        email: (value: any) => isValidEmail(value, this)
       },
     };
   },
