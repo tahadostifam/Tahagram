@@ -1,6 +1,6 @@
 import colors from 'vuetify/es5/util/colors';
-// import configs from './configs/configs';
-// import I18nMessages from './lib/i18n';
+import configs from './configs/configs';
+import I18nMessages from './plugins/i18n';
 
 export default {
   head: {
@@ -19,13 +19,11 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
-  css: [
-    // '@/assets/scss/dist/styles.css'
-  ],
+  css: ['~/assets/dist/styles.css'],
 
   plugins: [
-    // '~/plugins/configs.ts',
-    // '~/plugins/directives.ts'
+    '~/plugins/configs.ts',
+    '~/plugins/directives.ts'
   ],
 
   components: true,
@@ -35,7 +33,7 @@ export default {
   modules: ['@nuxtjs/axios', '@nuxtjs/pwa'],
 
   axios: {
-    // baseURL: configs.baseURL,
+    baseURL: configs.baseURL,
   },
 
   loading: false,
@@ -43,7 +41,7 @@ export default {
   i18n: {
     locales: ['en', 'fa'],
     vueI18n: {
-      // messages: I18nMessages,
+      messages: I18nMessages,
     },
   },
 
@@ -54,9 +52,7 @@ export default {
   },
 
   vuetify: {
-    customVariables: [
-      // '~/assets/scss/vuetify.configs.scss'
-    ],
+    customVariables: ['~/assets/scss/vuetify.configs.scss'],
     theme: {
       dark: true,
       themes: {
