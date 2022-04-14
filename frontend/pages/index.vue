@@ -7,7 +7,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import jsCookie from "js-cookie"
+
 export default Vue.extend({
   name: "IndexPage",
+  created(){
+    jsCookie
+  }
 })
 </script>
