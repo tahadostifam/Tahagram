@@ -268,7 +268,7 @@
     "chalk" "^2.0.0"
     "js-tokens" "^4.0.0"
 
-"@babel/parser@^7.1.0", "@babel/parser@^7.16.7", "@babel/parser@^7.17.8", "@babel/parser@^7.17.9", "@babel/parser@^7.9.6":
+"@babel/parser@^7.1.0", "@babel/parser@^7.14.9", "@babel/parser@^7.16.7", "@babel/parser@^7.17.8", "@babel/parser@^7.17.9", "@babel/parser@^7.9.6":
   "integrity" "sha512-vqUSBLP8dQHFPdPi9bc5GK9vRkYHJ49fsZdtoJ8EQ8ibpwk5rPKfvNIwChB0KVXcIjcepEBBd2VHC5r9Gy8ueg=="
   "resolved" "https://registry.npmjs.org/@babel/parser/-/parser-7.17.9.tgz"
   "version" "7.17.9"
@@ -910,7 +910,7 @@
     "@babel/parser" "^7.16.7"
     "@babel/types" "^7.16.7"
 
-"@babel/traverse@^7.13.0", "@babel/traverse@^7.16.7", "@babel/traverse@^7.16.8", "@babel/traverse@^7.17.3", "@babel/traverse@^7.17.9":
+"@babel/traverse@^7.13.0", "@babel/traverse@^7.14.9", "@babel/traverse@^7.16.7", "@babel/traverse@^7.16.8", "@babel/traverse@^7.17.3", "@babel/traverse@^7.17.9":
   "integrity" "sha512-PQO8sDIJ8SIwipTPiR71kJQCKQYB5NGImbOviK8K+kg5xkNSYXLBupuX9QhatFowrsvo9Hj8WgArg3W7ijNAQw=="
   "resolved" "https://registry.npmjs.org/@babel/traverse/-/traverse-7.17.9.tgz"
   "version" "7.17.9"
@@ -3198,6 +3198,11 @@
   "integrity" "sha1-5+Ch+e9DtMi6klxcWpboBtFoc7s="
   "resolved" "https://registry.npmjs.org/cookie/-/cookie-0.3.1.tgz"
   "version" "0.3.1"
+
+"cookie@^0.4.1":
+  "integrity" "sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA=="
+  "resolved" "https://registry.npmjs.org/cookie/-/cookie-0.4.2.tgz"
+  "version" "0.4.2"
 
 "cookie@^0.4.2":
   "integrity" "sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA=="
@@ -5553,7 +5558,7 @@
   "resolved" "https://registry.npmjs.org/jiti/-/jiti-1.13.0.tgz"
   "version" "1.13.0"
 
-"js-cookie@^3.0.1":
+"js-cookie@^3.0.0", "js-cookie@^3.0.1":
   "integrity" "sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw=="
   "resolved" "https://registry.npmjs.org/js-cookie/-/js-cookie-3.0.1.tgz"
   "version" "3.0.1"
@@ -6388,6 +6393,24 @@
   "integrity" "sha1-b2gragJ6Tp3fpFZM0lidHU5mnt4="
   "resolved" "https://registry.npmjs.org/num2fraction/-/num2fraction-1.2.2.tgz"
   "version" "1.2.2"
+
+"nuxt-i18n@^6.28.1":
+  "integrity" "sha512-JKRs8AmixVZ7k90Rrwq468McfnInP1ymuejYHRGA4VV0nZCLYsdDQXZxXl3JXaER9VatM9C24GM3ArAYFOtUhg=="
+  "resolved" "https://registry.npmjs.org/nuxt-i18n/-/nuxt-i18n-6.28.1.tgz"
+  "version" "6.28.1"
+  dependencies:
+    "@babel/parser" "^7.14.9"
+    "@babel/traverse" "^7.14.9"
+    "@intlify/vue-i18n-extensions" "^1.0.2"
+    "@intlify/vue-i18n-loader" "^1.1.0"
+    "cookie" "^0.4.1"
+    "devalue" "^2.0.1"
+    "is-https" "^4.0.0"
+    "js-cookie" "^3.0.0"
+    "klona" "^2.0.4"
+    "lodash.merge" "^4.6.2"
+    "ufo" "^0.7.7"
+    "vue-i18n" "^8.25.0"
 
 "nuxt@^2.15.8":
   "integrity" "sha512-ceK3qLg/Baj7J8mK9bIxqw9AavrF+LXqwYEreBdY/a4Sj8YV4mIvhqea/6E7VTCNNGvKT2sJ/TTJjtfQ597lTA=="
@@ -8972,7 +8995,7 @@
   "resolved" "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.31.tgz"
   "version" "0.7.31"
 
-"ufo@^0.7.4":
+"ufo@^0.7.4", "ufo@^0.7.7":
   "integrity" "sha512-IT3q0lPvtkqQ8toHQN/BkOi4VIqoqheqM1FnkNWT9y0G8B3xJhwnoKBu5OHx8zHDOvveQzfKuFowJ0VSARiIDg=="
   "resolved" "https://registry.npmjs.org/ufo/-/ufo-0.7.11.tgz"
   "version" "0.7.11"
@@ -9224,7 +9247,7 @@
   "resolved" "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
   "version" "2.3.4"
 
-"vue-i18n@^8.27.1":
+"vue-i18n@^8.25.0", "vue-i18n@^8.27.1":
   "integrity" "sha512-lWrGm4F25qReJ7XxSnFVb2h3PfW54ldnM4C+YLBGGJ75+Myt/kj4hHSTKqsyDLamvNYpvINMicSOdW+7yuqgIQ=="
   "resolved" "https://registry.npmjs.org/vue-i18n/-/vue-i18n-8.27.1.tgz"
   "version" "8.27.1"

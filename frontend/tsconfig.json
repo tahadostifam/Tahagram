@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "importHelpers": true,
+    // "experimentalDecorators": true,
+    // "importHelpers": true,
     "target": "ES2018",
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -29,6 +29,7 @@
     "types": [
       "@types/node",
       "@nuxt/types",
+      "nuxt-i18n"
     ]
   },
   "exclude": [
