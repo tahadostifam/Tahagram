@@ -39,7 +39,7 @@
 
         <div :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'">
           <v-btn
-            :disabled="!email.trim().length > 0"
+            :disabled="!email.trim().length > 0 || input_rules.email() !== false"
             x-large
             class="rounded-lg"
             style="width: 100%"
@@ -101,7 +101,7 @@ export default Vue.extend({
   methods: {
     submit() {
       const email = this.$data.email.trim();
-      if (email.length > 0) {
+      if (email.length > 0 && this.$data.input_rules.required !== false && this.$data.input_rules.email !== false) {
         this.$set(this.$data, "submit_button_loading_state", true);
 
         usersHttp.SigninAction(email).then(() => {
