@@ -17,7 +17,6 @@
           filled
           dense
           :color="$configs.theme_color"
-          :rules="[input_rules.required, input_rules.email]"
         ></v-text-field>
 
         <v-checkbox
@@ -81,6 +80,15 @@ import UsersHttp from '../http/users.http'
 
 const usersHttp = new UsersHttp();
 
+enum EFormError {
+  Success,
+  Error
+}
+interface IFormError {
+  message: string,
+  type: EFormError
+}
+
 export default Vue.extend({
   name: 'SigninPage',
   data() {
@@ -92,16 +100,21 @@ export default Vue.extend({
       submit_button_loading_state: false,
       email_sended: false,
       verific_code: '',
-      input_rules: {
-        required: (value: any) => !!value || (this as any).$t('required'),
-        email: (value: any) => isValidEmail(value, this)
-      },
     };
   },
+  mounted(){
+    (window as any).test = this.$data.input_rules.email;
+  },
   methods: {
+    addFormError(item: Array<IFormError>) {
+      this.$data.form_errors.push(item);
+    },
+    clearFormErrors(){
+      this.$set(this.$data, "form_errors", [])
+    },
     submit() {
       const email = this.$data.email.trim();
-      if (email.length > 0 && this.$data.input_rules.required !== false && this.$data.input_rules.email !== false) {
+      if (email.length > 0) {
         this.$set(this.$data, "submit_button_loading_state", true);
 
         usersHttp.SigninAction(email).then(() => {
@@ -110,6 +123,13 @@ export default Vue.extend({
         }, () => {
           alert("error")
         })
+      } else {
+        this.addFormError([
+          {
+            message: this.$t("required_parameters_cannot_be_empty"),
+            // ANCHOR
+          }
+        ])
       }
     },
   },
