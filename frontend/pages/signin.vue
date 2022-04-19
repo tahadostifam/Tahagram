@@ -53,7 +53,7 @@
             :loading="submit_button_loading_state"
             :color="$configs.theme_color"
             depressed
-            @click="submit"
+            @click=""
             >{{ $t('submit') }}</v-btn
           >
         </div>
@@ -86,7 +86,7 @@
 import Vue from 'vue';
 import configs from '../configs/configs';
 // import isValidEmail from '../lib/input_rules'
-import UsersHttp from '../http/users.http'
+import UsersHttp, { IUserSigninError } from '../http/users.http'
 
 const usersHttp = new UsersHttp();
 
@@ -124,7 +124,7 @@ export default Vue.extend({
     clearFormErrors(){
       this.$set(this.$data, "form_errors", [])
     },
-    submit() {
+    submitFirstForm() {
       this.clearFormErrors();
 
       const email = this.$data.email.trim();
