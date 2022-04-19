@@ -4,7 +4,7 @@ export default {
     username_or_password_is_incorrect: 'Username or password is incorrect',
     required_parameters_cannot_be_empty:
       "Required parameters can't be are empty",
-    server_side_error: 'An error occurred on the server side. please try again',
+    server_side_error: 'An error occurred on the server side, Please try again later.',
     signup: 'Signup',
     signin: 'Signin',
     submit: 'Submit',
@@ -83,7 +83,7 @@ export default {
     username_or_password_is_incorrect:
       'نام کاربری یا گذرواژه شما صحیح نمی باشد',
     required_parameters_cannot_be_empty: 'فیلد ها نمیتواند خالی باشد',
-    server_side_error: 'خطایی در سمت سرور رخ داده است لطفا دوباره امتحان کنید',
+    server_side_error: 'خطایی در سمت سرور رخ داده است لطفا بعدا دوباره امتحان کنید.',
     signup: 'ثبت نام',
     signin: 'ورود',
     submit: 'ارسال',

@@ -29,7 +29,13 @@
   width: 100%;
 
   .item {
-    color: vars.$danger_color;
+    color: #777;
+    &.item-error{
+      color: vars.$danger_color;
+    }
+    &.item-success{
+      color: vars.$success_color;
+    }
     padding: 0;
     margin: 0;
     width: 100%;

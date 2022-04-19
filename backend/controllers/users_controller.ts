@@ -57,22 +57,24 @@ export default {
         }
 
         function doSendEmail(){
-            sendMail(
-                "verific",
-                {
-                    name: CleanEmailAt(email),
-                    code: verific_code,
-                },
-                "mr.tahadostifam@gmail.com",
-                "Logging In Account (First Time)"
-            )
-                .then(async () => {
+            status_codes.verific_email_sent(req, res, next);
+            // Commented just in devel mode
+            // sendMail(
+            //     "verific",
+            //     {
+            //         name: CleanEmailAt(email),
+            //         code: verific_code,
+            //     },
+            //     "mr.tahadostifam@gmail.com",
+            //     "Logging In Account (First Time)"
+            // )
+            //     .then(async () => {
     
-                    status_codes.verific_email_sent(req, res, next);
-                })
-                .catch(() => {
-                    status_codes.error(req, res, next);
-                });
+            //         status_codes.verific_email_sent(req, res, next);
+            //     })
+            //     .catch(() => {
+            //         status_codes.error(req, res, next);
+            //     });
         }
     },
 

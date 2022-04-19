@@ -1,3 +1,6 @@
 {
-    "vetur.experimental.templateInterpolationService": false
+    "vetur.experimental.templateInterpolationService": false,
+    "cSpell.words": [
+        "devel"
+    ]
 }

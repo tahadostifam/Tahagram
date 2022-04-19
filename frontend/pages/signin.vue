@@ -31,8 +31,16 @@
           class="form_errors mb-3"
           :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
         >
-          <p v-for="(item, index) in form_errors" :key="index" class="item">
-            {{ item }}
+          <p
+            v-for="(item, index) in form_errors"
+            :key="index"
+            class="item"
+            :class="{
+              'item-success': item.type === 'success',
+              'item-error': item.type === 'error'
+            }"
+          >
+            {{ item.message }}
           </p>
         </div>
 
@@ -53,7 +61,9 @@
 
       <div v-else id="signin_form_content">
         <div class="text-center mb-10">
-          <h1>+98 922 346 6074</h1>
+          <h1>
+            {{email}}
+          </h1>
           <p>Please enter the code.</p>
         </div>
 
@@ -75,14 +85,14 @@
 // import Cookies from "js-cookie";
 import Vue from 'vue';
 import configs from '../configs/configs';
-import isValidEmail from '../lib/input_rules'
+// import isValidEmail from '../lib/input_rules'
 import UsersHttp from '../http/users.http'
 
 const usersHttp = new UsersHttp();
 
 enum EFormError {
-  Success,
-  Error
+  Success = "success",
+  Error = "error"
 }
 interface IFormError {
   message: string,
@@ -102,32 +112,43 @@ export default Vue.extend({
       verific_code: '',
     };
   },
-  mounted(){
-    (window as any).test = this.$data.input_rules.email;
-  },
   methods: {
-    addFormError(item: Array<IFormError>) {
-      this.$data.form_errors.push(item);
+    addFormError(items: Array<IFormError>) {
+      items.forEach((item) => {
+        this.$data.form_errors.push({
+          message: item.message,
+          type: item.type
+        });
+      });
     },
     clearFormErrors(){
       this.$set(this.$data, "form_errors", [])
     },
     submit() {
+      this.clearFormErrors();
+
       const email = this.$data.email.trim();
       if (email.length > 0) {
         this.$set(this.$data, "submit_button_loading_state", true);
 
         usersHttp.SigninAction(email).then(() => {
+          // State -> Success
           this.$set(this.$data, "submit_button_loading_state", true);
           this.$set(this.$data, "email_sended", true);
         }, () => {
-          alert("error")
+          // State -> Error
+          this.addFormError([
+            {
+              message: this.$t("server_side_error"),
+              type: EFormError.Error
+            }
+          ])
         })
       } else {
         this.addFormError([
           {
             message: this.$t("required_parameters_cannot_be_empty"),
-            // ANCHOR
+            type: EFormError.Error
           }
         ])
       }
