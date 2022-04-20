@@ -5,7 +5,7 @@
 
       <div v-if="!email_sended" id="signin_form_content">
         <p class="text-center mb-10" dir="auto">
-          {{ $t("signin_intro_text") }}
+          {{ $t('signin_intro_text') }}
         </p>
 
         <v-text-field
@@ -36,7 +36,7 @@
             class="item"
             :class="{
               'item-success': item.type === 'success',
-              'item-error': item.type === 'error'
+              'item-error': item.type === 'error',
             }"
           >
             {{ item.message }}
@@ -45,7 +45,9 @@
 
         <div :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'">
           <v-btn
-            :disabled="!email.trim().length > 0 || isValidEmail(email, this) !== true"
+            :disabled="
+              !email.trim().length > 0 || isValidEmail(email, this) !== true
+            "
             x-large
             class="rounded-lg"
             style="width: 100%"
@@ -61,7 +63,7 @@
       <div v-else id="signin_form_content">
         <div class="text-center mb-10">
           <h1>
-            {{email}}
+            {{ email }}
           </h1>
           <p>Please enter the code.</p>
         </div>
@@ -73,8 +75,8 @@
           single-line
           outlined
           filled
-          :rules="verific_code_rules"
           :color="$configs.theme_color"
+          :maxlength=6
           @keydown="verificCodeChange"
         ></v-text-field>
       </div>
@@ -86,19 +88,19 @@
 // import Cookies from "js-cookie";
 import Vue from 'vue';
 import configs from '../configs/configs';
-import isValidEmail from '../lib/input_rules'
-import UsersHttp, { SigninActionError } from '../http/users.http'
+import isValidEmail from '../lib/input_rules';
+import UsersHttp, { SigninActionError } from '../http/users.http';
 import { HttpCallbackBase } from '../http/base';
 
 const usersHttp = new UsersHttp();
 
 enum EFormError {
-  Success = "success",
-  Error = "error"
+  Success = 'success',
+  Error = 'error',
 }
 interface IFormError {
-  message: string,
-  type: EFormError
+  message: string;
+  type: EFormError;
 }
 
 export default Vue.extend({
@@ -112,9 +114,6 @@ export default Vue.extend({
       submit_button_loading_state: false,
       email_sended: false,
       verific_code: '',
-      verific_code_rules: [
-      ],
-
     };
   },
   methods: {
@@ -123,90 +122,100 @@ export default Vue.extend({
       items.forEach((item) => {
         this.$data.form_errors.push({
           message: item.message,
-          type: item.type
+          type: item.type,
         });
       });
     },
-    clearFormErrors(){
-      this.$set(this.$data, "form_errors", [])
+    clearFormErrors() {
+      this.$set(this.$data, 'form_errors', []);
     },
     submitFirstForm() {
       this.clearFormErrors();
 
       const email = this.$data.email.trim();
       if (email.length > 0) {
-        this.$set(this.$data, "submit_button_loading_state", true);
+        this.$set(this.$data, 'submit_button_loading_state', true);
 
-        usersHttp.SigninAction(email).then(() => {
-          // State -> Success
-          this.$set(this.$data, "submit_button_loading_state", true);
-          this.$set(this.$data, "email_sended", true);
-        }, (cb: SigninActionError) => {
-          console.log(cb);
-          
-          if (cb.message === "verific_code_limit" && cb.limit_end) {
-            // State -> Limit of getting verification code
-            this.addFormError([
-              {
-                message: this.$t("verific_code_limit", cb.limit_end.toString()),
-                type: EFormError.Error
-              }
-            ])
-          } else {
-            // State -> Unknown Error
-            this.addFormError([
-              {
-                message: this.$t("server_side_error"),
-                type: EFormError.Error
-              }
-            ])
+        usersHttp.SigninAction(email).then(
+          () => {
+            // State -> Success
+            this.$set(this.$data, 'email_sended', true);
+          },
+          (cb: SigninActionError) => {
+            if (cb.message === 'verific_code_limit' && cb.limit_end) {
+              // State -> Limit of getting verification code
+              const limitEndDate = new Date(cb.limit_end).toLocaleString(
+                'fa-IR'
+              );
+              // limitEndString.lcal
+              // let limitEndString = "";
+              // limitEndString +=
+              this.addFormError([
+                {
+                  message: this.$t('verific_code_limit', [limitEndDate]),
+                  type: EFormError.Error,
+                },
+              ]);
+            } else {
+              // State -> Unknown Error
+              this.addFormError([
+                {
+                  message: this.$t('server_side_error'),
+                  type: EFormError.Error,
+                },
+              ]);
+            }
           }
-        })
+        );
       } else {
         this.addFormError([
           {
-            message: this.$t("required_parameters_cannot_be_empty"),
-            type: EFormError.Error
-          }
-        ])
+            message: this.$t('required_parameters_cannot_be_empty'),
+            type: EFormError.Error,
+          },
+        ]);
       }
+      this.$set(this.$data, 'submit_button_loading_state', false);
     },
     submitSecondForm() {
       const vm = this;
-      usersHttp.SubmitValidateCodeForm(this.$data.email.trim(), this.$data.verific_code.trim()).then(() => {
-        console.log("success signin");
-      }).catch((cb: HttpCallbackBase) => {
-        this.clearFormErrors();
-        switch (cb.message) {
-          case "bad_verific_code":
-            
-            break;
-          case "verific_code_expired":
-            
-            break;
-          case "verific_code_limit":
-            
-            break;
-          case "maximum_try_count":
-            
-            break;
-          default:
-            this.addFormErrors([
-              {
-                message: vm.$t("server_side_error"),
-                type: EFormError.Error
-              }
-            ])
-            break;
-        }
-        console.log("success signin");
-      })
+      usersHttp
+        .SubmitValidateCodeForm(
+          this.$data.email.trim(),
+          this.$data.verific_code.trim()
+        )
+        .then(() => {
+          console.log('success signin');
+        })
+        .catch((cb: HttpCallbackBase) => {
+          this.clearFormErrors();
+          switch (cb.message) {
+            case 'bad_verific_code':
+              break;
+            case 'verific_code_expired':
+              break;
+            case 'verific_code_limit':
+              break;
+            case 'maximum_try_count':
+              break;
+            default:
+              this.addFormError([
+                {
+                  message: vm.$t('server_side_error'),
+                  type: EFormError.Error,
+                },
+              ]);
+              break;
+          }
+        });
     },
-    verificCodeChange(){
+    verificCodeChange() {
       const inputMaxLength = 6;
       const verificCode = this.$data.verific_code.trim();
-      if (verificCode.length >= inputMaxLength) this.$data.verific_code = verificCode.slice(0, inputMaxLength)
-      else this.submitSecondForm()
+      if (verificCode.length + 1 > inputMaxLength - 1) {
+        this.submitSecondForm()
+        this.$data.verific_code = verificCode.slice(0, inputMaxLength);
+      }
     },
   },
 });

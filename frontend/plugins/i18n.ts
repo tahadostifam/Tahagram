@@ -82,9 +82,15 @@ export default {
     remove_admin_access: 'Remove admin access',
     email: 'Email',
     required: "Required!",
-    invalid_email: "Invalid Email!"
+    invalid_email: "Invalid Email!",
+    bad_verific_code: "Incorrect!",
+    verific_code_expired: "Verification code expired.",
+    maximum_try_count: "Maximum number of attempts.",
   },
   fa: {
+    bad_verific_code: "کد تایید صحیح نمی باشد!",
+    verific_code_expired: "کد تایید منقضی شده است. ",
+    maximum_try_count: "حداکثر تعداد تلاش برای تایید کد ورود!",
     developed_by: 'توسعه داده شده توسط',
     username_or_password_is_incorrect:
       'نام کاربری یا گذرواژه شما صحیح نمی باشد',
@@ -94,7 +100,7 @@ export default {
     verific_code_limit:
       `حداکثر تلاش برای برای دریافت کد ورود!
       لطفا بعد از این {0} زمان دوباره تلاش کنید.
-      `,
+      `.trim(),
     signup: 'ثبت نام',
     signin: 'ورود',
     submit: 'ارسال',
