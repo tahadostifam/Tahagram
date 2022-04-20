@@ -4,7 +4,12 @@ export default {
     username_or_password_is_incorrect: 'Username or password is incorrect',
     required_parameters_cannot_be_empty:
       "Required parameters can't be are empty",
+    cant_be_empty: "Can't be empty!",
     server_side_error: 'An error occurred on the server side, Please try again later.',
+    verific_code_limit:
+      `Limit of getting verification code!
+      Please Try again after {0}.
+      `,
     signup: 'Signup',
     signin: 'Signin',
     submit: 'Submit',
@@ -56,6 +61,7 @@ export default {
     signin_intro_text: `
       Please enter your email we will send you an email that has
       verification code.`.trim(),
+    code: "Code",
     goto_signin: 'Go To Signin',
     last_seen_at: 'last seen at {0}',
     online: 'online',
@@ -83,7 +89,12 @@ export default {
     username_or_password_is_incorrect:
       'نام کاربری یا گذرواژه شما صحیح نمی باشد',
     required_parameters_cannot_be_empty: 'فیلد ها نمیتواند خالی باشد',
+    cant_be_empty: "نمیتواند خالی باشد!",
     server_side_error: 'خطایی در سمت سرور رخ داده است لطفا بعدا دوباره امتحان کنید.',
+    verific_code_limit:
+      `حداکثر تلاش برای برای دریافت کد ورود!
+      لطفا بعد از این {0} زمان دوباره تلاش کنید.
+      `,
     signup: 'ثبت نام',
     signin: 'ورود',
     submit: 'ارسال',
@@ -131,6 +142,7 @@ export default {
             `.trim(),
     signin_intro_text: `
       لطفا ایمیل خودتان را وارد کنید. ما ایمیلی حاوی کد ورود برایتان ارسال خواهیم کرد.`.trim(),
+      code: "کد ورود",
     goto_signin: 'صفحه ورود',
     last_seen_at: 'آخرین بازدید در {0}',
     online: 'آنلاین',

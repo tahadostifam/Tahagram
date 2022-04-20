@@ -23,15 +23,15 @@ declare module "express-session" {
 export default {
     SigninAction: async (req: Request, res: Response, next: NextFunction) => {
         const verific_code = RandomVerificCode();
-        const email = req.body.channel_username = slugify(req.body.email, {
+        const email = (req.body.channel_username = slugify(req.body.email, {
             lower: true,
             strict: false,
             locale: "vi",
-        });
+        }));
         const user: IUser = await User.findOne({
             email: email,
         });
-        
+
         if (user) {
             if (user.verific_limit_date != null && isUserLimited(String(user.verific_limit_date))) {
                 return status_codes.verific_code_limit(Date.parse(user.verific_limit_date), req, res, next);
@@ -41,22 +41,23 @@ export default {
                     {
                         verific_code: verific_code,
                         verific_code_expire: makeVerificCodeExpireDate(),
-                        verific_limit_date: null
+                        verific_limit_date: null,
                     }
                 );
-                doSendEmail()
+                doSendEmail();
             }
         } else {
             await new User({
+                username: CleanEmailAt(email),
                 email: email,
                 verific_code: verific_code,
                 verific_try_count: 0,
                 verific_code_expire: makeVerificCodeExpireDate(),
             }).save();
-            doSendEmail()
+            doSendEmail();
         }
 
-        function doSendEmail(){
+        function doSendEmail() {
             status_codes.verific_email_sent(req, res, next);
             // Commented just in devel mode
             // sendMail(
@@ -69,7 +70,7 @@ export default {
             //     "Logging In Account (First Time)"
             // )
             //     .then(async () => {
-    
+
             //         status_codes.verific_email_sent(req, res, next);
             //     })
             //     .catch(() => {
@@ -84,7 +85,7 @@ export default {
         const user: IUser = await User.findOne({
             email: email,
         });
-        
+
         async function response_bad_verific_code() {
             await User.findOneAndUpdate(
                 {
@@ -98,6 +99,7 @@ export default {
             );
             status_codes.bad_verific_code(req, res, next);
         }
+
         if (user) {
             const current_verific_code: number | undefined = user.verific_try_count;
             if (current_verific_code && Number(current_verific_code) >= 5) {
@@ -106,18 +108,18 @@ export default {
                         email: email,
                     },
                     {
-                        verific_limit_date: makeVerificCodeExpireDate()
+                        verific_limit_date: makeVerificCodeExpireDate(),
                     }
-                )
-                
+                );
+
                 status_codes.maximum_try_count(req, res, next);
             } else {
                 try {
                     if (user.verific_code === parseInt(verific_code)) {
                         const verific_code_expire_date = user.verific_code_expire;
                         if (verific_code_expire_date && !isVerificCodeExpired(String(verific_code_expire_date))) {
-                            req.session.user_id = user._id
-                            ResponseUserData(user, req, res, next)
+                            req.session.user_id = user._id;
+                            ResponseUserData(user, req, res, next);
                             // the input_code is valid | success!
                             await User.findOneAndUpdate(
                                 {
@@ -148,25 +150,25 @@ export default {
     AuthenticationAction: async (req: Request, res: Response, next: NextFunction) => {
         if (req.session.user_id) {
             const user: IUser = await User.findOne({
-                _id: req.session.user_id
+                _id: req.session.user_id,
             });
             if (!user) return status_codes.invalid_token(req, res, next);
 
-            ResponseUserData(user, req, res, next)
-            
+            ResponseUserData(user, req, res, next);
         } else {
             status_codes.invalid_token(req, res, next);
         }
     },
 };
 
-async function ResponseUserData(user: IUser, req: Request, res: Response, next: NextFunction){
+async function ResponseUserData(user: IUser, req: Request, res: Response, next: NextFunction) {
     const final_profile_photos = user.profile_photos.reverse();
     await getUserChats(user).then((chats) => {
         getUserChatsMessages(req.body.username, user.chats).then((chats_messages) => {
             res.send({
                 message: "success",
                 data: {
+                    email: user.email,
                     full_name: user.full_name,
                     username: user.username,
                     bio: user.bio,
@@ -322,27 +324,27 @@ export function CleanEmailAt(email: string): string {
 }
 
 export function makeVerificCodeExpireDate() {
-    let currentDate = new Date()
-    currentDate.setMinutes(currentDate.getMinutes() + 10)
-    return currentDate.toString()
+    let currentDate = new Date();
+    currentDate.setMinutes(currentDate.getMinutes() + 10);
+    return currentDate.toString();
 }
 
 export function isVerificCodeExpired(date: string) {
     if (!date) {
-        return false
+        return false;
     }
     return Date.parse(date) > Date.now();
 }
 
 export function isUserLimited(date: string) {
     if (!date) {
-        return false
+        return false;
     }
     return Date.parse(date) > Date.now();
 }
 
 export function makeUserLimitDate() {
-    let currentDate = new Date()
-    currentDate.setHours(currentDate.getHours() + 3)
-    return currentDate.toString()
+    let currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 3);
+    return currentDate.toString();
 }

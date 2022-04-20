@@ -15,6 +15,7 @@ export interface IWebSocket extends WebSocket {
 export interface IUser {
     _id: string;
     full_name: string;
+    email: string;
     username: string;
     verific_code?: number;
     verific_try_count?: number;

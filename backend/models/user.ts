@@ -36,7 +36,8 @@ var schema = new mongoose.Schema({
     },
     username: {
         type: String,
-        unique: true,        
+        unique: true,
+        required: true  
     },
     bio: {
         type: String,

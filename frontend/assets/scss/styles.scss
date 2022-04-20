@@ -49,6 +49,15 @@ body,
     font-family: 'OpenSans', 'Vazir' !important;
   }
   .v-input {
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield !important;
+    }
     &.v-text-field .v-input__control .v-input__slot:before {
       border-color: #ffffff63;
     }

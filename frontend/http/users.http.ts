@@ -1,75 +1,72 @@
-import axios from "axios"
-import { HttpCallbackBase } from "./base"
-import configs from "~/configs/configs"
+import axios from 'axios';
+import { IUserData } from '../lib/interfaces';
+import { HttpCallbackBase } from './base';
+import configs from '~/configs/configs';
 
-export interface ISubmitValidateCodeFormSuccess extends HttpCallbackBase {
-    
+export interface SigninActionError extends HttpCallbackBase {
+  limit_start?: number;
+  limit_end?: number;
 }
 
-export interface ISubmitValidateCodeFormError extends HttpCallbackBase {
-    message: string
-}
+export default class UsersHttp {
+  SigninAction(email: string) {
+    return new Promise(
+      (
+        resolve: (callback: HttpCallbackBase) => void,
+        reject: (callback: HttpCallbackBase) => void
+      ) => {
+        axios
+          .post(`${configs.http_url}/users/signin`, {
+            email,
+          })
+          .then((cb) => {
+            if (cb.status === 200 && cb.data.message === 'verific email sent') {
+              resolve({ message: 'success' });
+            } else {
+              reject(cb.data);
+              console.log(cb.data);
+            }
+          })
+          .catch((cb) => {
+            reject(cb.response.data);
+            console.log(cb.response.data);
+          });
+      }
+    );
+  }
 
-export interface IUserSigninError extends HttpCallbackBase {
-    message: string,
-}
-
-export default class UsersHttp {    
-    SigninAction(email: string) {
-        return new Promise<void>((resolve, reject: (callback: IUserSigninError) => void) => {
-            axios.post(`${configs.http_url}/users/signin`, {
-                email
-            }).then((cb) => {
-                if (cb.status === 200 && cb.data.message === "verific email sent") {
-                    resolve()
-                } else {
-                    const callbackData: IUserSigninError = {
-                        message: cb.data.message,
-                        status: 1
-                    }
-                    reject(callbackData);
-                    console.log(cb.data.message);
-                    
-                }
-            }).catch((cb) => {
-                const callbackData: IUserSigninError = {
-                    message: cb.data.message,
-                    status: 1
-                }
-                reject(callbackData);
-                console.log(cb.data.message); 
-            })
-        })
-    },
-    SubmitValidateCodeForm(email: string, verific_code: string) {
-        return new Promise((resolve: (callback: ISubmitValidateCodeFormSuccess) => void, reject: (callback: ISubmitValidateCodeFormError) => void) => {
-            axios.post(`${configs.http_url}/users/signin_with_code`, {
-                email,
-                verific_code
-            }).then((cb) => {
-                // ANCHOR
-                if (cb.status === 200 && cb.data.message === "verific email sent") {
-                    resolve(cb.data as ISubmitValidateCodeFormSuccess)
-                }
-                else if (
-                    cb.data.message === "bad_verific_code" && 
-                    cb.data.message === "verific_code_expired" &&
-                    cb.data.message === "verific_code_limit" && 
-                    cb.data.message === "maximum_try_count" 
-                ) {
-                    reject({message: cb.data.message});
-                    console.log(cb.data.message);
-                }
-                
-                else {
-                    reject({message: cb.data.message});
-                    console.log(cb.data.message);
-                    
-                }
-            }).catch((cb) => {
-                reject({message: cb.data.message});
-                console.log(cb.data.message); 
-            })
-        })
-    }
+  SubmitValidateCodeForm(email: string, verificCode: string) {
+    return new Promise(
+      (
+        resolve: (callback: IUserData) => void,
+        reject: (callback: HttpCallbackBase) => void
+      ) => {
+        axios
+          .post(`${configs.http_url}/users/signin_with_code`, {
+            email,
+            verific_code: verificCode,
+          })
+          .then((cb) => {
+            if (cb.data.message === 'success') {
+              resolve(cb.data as IUserData);
+            } else if (
+              cb.data.message === 'bad_verific_code' &&
+              cb.data.message === 'verific_code_expired' &&
+              cb.data.message === 'verific_code_limit' &&
+              cb.data.message === 'maximum_try_count'
+            ) {
+              reject(cb.data.message);
+              console.log(cb.data.message);
+            } else {
+              reject(cb.data.message);
+              console.log(cb.data.message);
+            }
+          })
+          .catch((cb) => {
+            reject(cb.response.data);
+            console.log(cb.response.data);
+          });
+      }
+    );
+  }
 }
