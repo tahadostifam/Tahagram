@@ -1,10 +1,5 @@
 ## ChatApp [BETA]
 
-### New Version [19 March, 2022]
-
-im working on a new version of this project
-please see this [link](https://github.com/tahadostifam/ChatApp/tree/v-1.0)
-
 ### Bio
 Full Chat-Application (a mini clone of Telegram) developed using Nodejs & Nuxtjs
 
