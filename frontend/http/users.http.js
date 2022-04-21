@@ -33,8 +33,9 @@ export default class UsersHttp {
           verific_code: verificCode,
         })
         .then((cb) => {
+          console.log(cb);
           if (cb.data.message === 'success') {
-            resolve(cb.IUserData)
+            resolve(cb)
           } else if (
             cb.data.message === 'verific code is not valid' &&
             cb.data.message === 'verific code expired' &&
@@ -49,6 +50,7 @@ export default class UsersHttp {
           }
         })
         .catch((cb) => {
+          console.log(cb);
           reject(cb.response.data)
           console.error(cb.response.data)
         })

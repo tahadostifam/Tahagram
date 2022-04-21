@@ -10,7 +10,8 @@
 
         <v-text-field
           v-model="email"
-          hint="Only email, yahoo, outlock"
+          class="rounded-text-field"
+          hint="Only email, yahoo, outlook"
           type="text"
           :placeholder="$t('email')"
           outlined
@@ -70,6 +71,7 @@
 
         <v-text-field
           v-model="verific_code"
+          class="rounded-text-field"
           type="text"
           :label="$t('code')"
           single-line
@@ -204,10 +206,13 @@ export default {
           this.$data.email.trim(),
           this.$data.verific_code.trim()
         )
-        .then(() => {
-          console.log('success signin');
+        .then((cb) => {
+          this.$store.commit('users/setUserData', cb.data.data)
+          console.log(this.$store.state.users);
         })
         .catch((cb) => {
+          console.error(cb);
+
           this.clearFormErrors();
 
           switch (cb.message) {

@@ -49,14 +49,11 @@ body,
     font-family: 'OpenSans', 'Vazir' !important;
   }
   .v-input {
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none !important;
-    }
-
-    /* Firefox */
-    input[type=number] {
-      -moz-appearance: textfield !important;
+    &.rounded-text-field{
+      .v-input__slot{
+        background: transparent !important;
+        border-radius: 19px !important;
+      }
     }
     &.v-text-field .v-input__control .v-input__slot:before {
       border-color: #ffffff63;
@@ -72,6 +69,9 @@ body,
   }
   .v-btn {
     letter-spacing: normal;
+    &.rounded-lg{
+      border-radius: 19px !important;
+    }
   }
   .v-snack[dir='rtl'] {
     .v-snack__wrapper {
