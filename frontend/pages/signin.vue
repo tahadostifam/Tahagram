@@ -147,9 +147,6 @@ export default Vue.extend({
               const limitEndDate = new Date(cb.limit_end).toLocaleString(
                 'fa-IR'
               );
-              // limitEndString.lcal
-              // let limitEndString = "";
-              // limitEndString +=
               this.addFormError([
                 {
                   message: this.$t('verific_code_limit', [limitEndDate]),
@@ -191,12 +188,28 @@ export default Vue.extend({
           this.clearFormErrors();
           switch (cb.message) {
             case 'bad_verific_code':
+              this.addFormError([
+                {
+                  message: vm.$t('bad_verific_code'),
+                  type: EFormError.Error,
+                },
+              ]);
               break;
             case 'verific_code_expired':
-              break;
-            case 'verific_code_limit':
+              this.addFormError([
+                {
+                  message: vm.$t('verific_code_expired'),
+                  type: EFormError.Error,
+                },
+              ]);
               break;
             case 'maximum_try_count':
+              this.addFormError([
+                {
+                  message: vm.$t('maximum_try_count'),
+                  type: EFormError.Error,
+                },
+              ]);
               break;
             default:
               this.addFormError([
@@ -214,7 +227,7 @@ export default Vue.extend({
       const verificCode = this.$data.verific_code.trim();
       if (verificCode.length + 1 > inputMaxLength - 1) {
         this.submitSecondForm()
-        this.$data.verific_code = verificCode.slice(0, inputMaxLength);
+        this.$data.verific_code = verificCode.slice(0, inputMaxLength - 1);
       }
     },
   },

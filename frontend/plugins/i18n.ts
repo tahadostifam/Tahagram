@@ -85,7 +85,7 @@ export default {
     invalid_email: "Invalid Email!",
     bad_verific_code: "Incorrect!",
     verific_code_expired: "Verification code expired.",
-    maximum_try_count: "Maximum number of attempts.",
+    maximum_try_count: "Maximum count of attempts.",
   },
   fa: {
     bad_verific_code: "کد تایید صحیح نمی باشد!",
