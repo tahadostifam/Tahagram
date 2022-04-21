@@ -183,7 +183,7 @@ export default Vue.extend({
               );
               this.addFormError([
                 {
-                  message: this.$t('verific_code_limit', [limitEndDate]),
+                  message: this.$t('verific_code_limit', [limitEndDate]).toString(),
                   type: EFormError.Error,
                 },
               ]);
@@ -191,7 +191,7 @@ export default Vue.extend({
               // State -> Unknown Error
               this.addFormError([
                 {
-                  message: this.$t('server_side_error'),
+                  message: this.$t('server_side_error').toString(),
                   type: EFormError.Error,
                 },
               ]);
@@ -201,7 +201,7 @@ export default Vue.extend({
       } else {
         this.addFormError([
           {
-            message: this.$t('required_parameters_cannot_be_empty'),
+            message: this.$t('required_parameters_cannot_be_empty').toString(),
             type: EFormError.Error,
           },
         ]);
@@ -225,7 +225,7 @@ export default Vue.extend({
             case 'verific code is not valid':
               this.addFormError([
                 {
-                  message: vm.$t('bad_verific_code'),
+                  message: vm.$t('bad_verific_code').toString(),
                   type: EFormError.Error,
                 },
               ]);
@@ -233,7 +233,7 @@ export default Vue.extend({
             case 'verific code expired':
               this.addFormError([
                 {
-                  message: vm.$t('verific_code_expired'),
+                  message: vm.$t('verific_code_expired').toString(),
                   type: EFormError.Error,
                 },
               ]);
@@ -241,7 +241,7 @@ export default Vue.extend({
             case 'maximum verific code try count':
               this.addFormError([
                 {
-                  message: vm.$t('maximum_try_count'),
+                  message: vm.$t('maximum_try_count').toString(),
                   type: EFormError.Error,
                 },
               ]);
@@ -249,7 +249,7 @@ export default Vue.extend({
             default:
               this.addFormError([
                 {
-                  message: vm.$t('server_side_error'),
+                  message: vm.$t('server_side_error').toString(),
                   type: EFormError.Error,
                 },
               ]);
