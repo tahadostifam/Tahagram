@@ -62,4 +62,23 @@ export default class UsersHttp {
         })
     })
   }
+
+  AuthenticationAction() {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${configs.http_url}/users/authentication`, {})
+        .then((cb) => {
+          if (cb.status === 200 && cb.data.message === 'success') {
+            resolve({ message: 'success' })
+          } else {
+            reject()
+            console.error(cb.data)
+          }
+        })
+        .catch((cb) => {
+          reject()
+          console.error(cb.response.data)
+        })
+    })
+  }
 }
