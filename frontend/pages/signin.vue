@@ -206,8 +206,7 @@ export default {
           this.$data.verific_code.trim()
         )
         .then((cb) => {
-          this.$store.commit('users/setUserData', cb.data.data)
-          this.$router.push({ path: this.$i18n.locale + "/"})
+          this.$router.push({ path: "/" + this.$i18n.locale + "/"})
         })
         .catch((cb) => {
           console.error(cb);

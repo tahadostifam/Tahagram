@@ -35,13 +35,8 @@ export default class UsersHttp {
           verific_code: verificCode,
         },)
         .then((cb) => {
-          console.log(cb);
           if (cb.data.message === 'success') {
-            console.log(cb);
-            // const dataToCallback = {
-            // }
-            // resolve(dataToCallback);
-            resolve(cb);
+            resolve();
           } else if (
             cb.data.message === 'verific code is not valid' &&
             cb.data.message === 'verific code expired' &&
@@ -56,7 +51,6 @@ export default class UsersHttp {
           }
         })
         .catch((cb) => {
-          console.log(cb);
           reject(cb.response.data)
           console.error(cb.response.data)
         })
@@ -69,7 +63,7 @@ export default class UsersHttp {
         .post(`${configs.http_url}/users/authentication`, {})
         .then((cb) => {
           if (cb.status === 200 && cb.data.message === 'success') {
-            resolve({ message: 'success' })
+            resolve(cb.data.data)
           } else {
             reject()
             console.error(cb.data)

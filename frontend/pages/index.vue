@@ -2,8 +2,8 @@
   <div>
     <div v-if="!userSignedIn">
     </div>
-    <div>
-      Welcome {{ $store.state }}
+    <div v-else>
+      <Main/>
     </div>
   </div>
 </template>
@@ -21,7 +21,9 @@ export default {
     }
   },
   mounted(){
-    usersHttp.AuthenticationAction().then(() => {
+    const vm = this;
+    usersHttp.AuthenticationAction().then((cb) => {
+      vm.$store.commit("users/setUserData", cb)
       this.$data.userSignedIn = true;
     }).catch(() => {
       this.$router.push({ path: '/' + this.$i18n.locale + '/signin' });
