@@ -117,7 +117,8 @@ export default {
                 try {
                     if (user.verific_code === parseInt(verific_code)) {
                         const verific_code_expire_date = user.verific_code_expire;
-                        if (verific_code_expire_date && !isVerificCodeExpired(String(verific_code_expire_date))) {
+
+                        if (verific_code_expire_date && isVerificCodeExpired(String(verific_code_expire_date))) {
                             req.session.user_id = user._id;
                             ResponseUserData(user, req, res, next);
                             // the input_code is valid | success!

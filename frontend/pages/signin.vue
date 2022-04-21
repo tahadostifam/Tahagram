@@ -70,15 +70,47 @@
 
         <v-text-field
           v-model="verific_code"
-          type="number"
+          type="text"
           :label="$t('code')"
           single-line
           outlined
+          hide-details
           filled
           :color="$configs.theme_color"
           :maxlength=6
-          @keydown="verificCodeChange"
+          autocomplete="false"
+          required
         ></v-text-field>
+
+        <div
+          v-if="form_errors"
+          class="form_errors mb-5 mt-3"
+          :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
+        >
+          <p
+            v-for="(item, index) in form_errors"
+            :key="index"
+            class="item"
+            :class="{
+              'item-success': item.type === 'success',
+              'item-error': item.type === 'error',
+            }"
+          >
+            {{ item.message }}
+          </p>
+        </div>
+
+        <v-btn
+          :disabled="verific_code.trim().length < 6"
+          x-large
+          class="rounded-lg"
+          style="width: 100%"
+          :loading="submit_verific_code_button_loading_state"
+          :color="$configs.theme_color"
+          depressed
+          @click="submitSecondForm"
+          >{{ $t('submit') }}</v-btn
+        >
       </div>
     </div>
   </div>
@@ -112,6 +144,7 @@ export default Vue.extend({
       remember_me: true,
       form_errors: [],
       submit_button_loading_state: false,
+      submit_verific_code_button_loading_state: false,
       email_sended: false,
       verific_code: '',
     };
@@ -140,6 +173,7 @@ export default Vue.extend({
           () => {
             // State -> Success
             this.$set(this.$data, 'email_sended', true);
+            this.clearFormErrors();
           },
           (cb: SigninActionError) => {
             if (cb.message === 'verific_code_limit' && cb.limit_end) {
@@ -186,8 +220,9 @@ export default Vue.extend({
         })
         .catch((cb: HttpCallbackBase) => {
           this.clearFormErrors();
+
           switch (cb.message) {
-            case 'bad_verific_code':
+            case 'verific code is not valid':
               this.addFormError([
                 {
                   message: vm.$t('bad_verific_code'),
@@ -195,7 +230,7 @@ export default Vue.extend({
                 },
               ]);
               break;
-            case 'verific_code_expired':
+            case 'verific code expired':
               this.addFormError([
                 {
                   message: vm.$t('verific_code_expired'),
@@ -203,7 +238,7 @@ export default Vue.extend({
                 },
               ]);
               break;
-            case 'maximum_try_count':
+            case 'maximum verific code try count':
               this.addFormError([
                 {
                   message: vm.$t('maximum_try_count'),
@@ -221,14 +256,6 @@ export default Vue.extend({
               break;
           }
         });
-    },
-    verificCodeChange() {
-      const inputMaxLength = 6;
-      const verificCode = this.$data.verific_code.trim();
-      if (verificCode.length + 1 > inputMaxLength - 1) {
-        this.submitSecondForm()
-        this.$data.verific_code = verificCode.slice(0, inputMaxLength - 1);
-      }
     },
   },
 });

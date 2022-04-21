@@ -24,12 +24,12 @@ export default class UsersHttp {
               resolve({ message: 'success' });
             } else {
               reject(cb.data);
-              console.log(cb.data);
+              console.error(cb.data);
             }
           })
           .catch((cb) => {
             reject(cb.response.data);
-            console.log(cb.response.data);
+            console.error(cb.response.data);
           });
       }
     );
@@ -50,21 +50,21 @@ export default class UsersHttp {
             if (cb.data.message === 'success') {
               resolve(cb.data as IUserData);
             } else if (
-              cb.data.message === 'bad_verific_code' &&
-              cb.data.message === 'verific_code_expired' &&
+              cb.data.message === 'verific code is not valid' &&
+              cb.data.message === 'verific code expired' &&
               cb.data.message === 'verific_code_limit' &&
-              cb.data.message === 'maximum_try_count'
+              cb.data.message === 'maximum verific code try count'
             ) {
-              reject(cb.data.message);
-              console.log(cb.data.message);
+              reject({message: cb.data.message});
+              console.error(cb.data.message);
             } else {
-              reject(cb.data.message);
-              console.log(cb.data.message);
+              reject({message: cb.data.message});
+              console.error(cb.data.message);
             }
           })
           .catch((cb) => {
             reject(cb.response.data);
-            console.log(cb.response.data);
+            console.error(cb.response.data);
           });
       }
     );
