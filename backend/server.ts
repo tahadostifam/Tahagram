@@ -1,6 +1,6 @@
 const configs = require("./configs/configs.json");
 const secrets = require("./configs/secrets.json");
-import express, { Request, Express } from "express";
+import express, { Express } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import * as database from "./lib/database";
@@ -9,11 +9,10 @@ import { initSocket } from "./socket/socket";
 const app: Express = express();
 require("express-ws")(app);
 import session from "express-session";
-const randomToken = require("random-token");
 
 app.set("base", "/api");
 app.enable("trust proxy");
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://127.0.0.1:3000", credentials: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(

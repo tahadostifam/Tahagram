@@ -3,6 +3,8 @@
 import axios from 'axios'
 import configs from '~/configs/configs'
 
+axios.defaults.withCredentials = true
+
 export default class UsersHttp {
   SigninAction(email) {
     return new Promise((resolve, reject) => {
@@ -31,11 +33,15 @@ export default class UsersHttp {
         .post(`${configs.http_url}/users/signin_with_code`, {
           email,
           verific_code: verificCode,
-        })
+        },)
         .then((cb) => {
           console.log(cb);
           if (cb.data.message === 'success') {
-            resolve(cb)
+            console.log(cb);
+            // const dataToCallback = {
+            // }
+            // resolve(dataToCallback);
+            resolve(cb);
           } else if (
             cb.data.message === 'verific code is not valid' &&
             cb.data.message === 'verific code expired' &&

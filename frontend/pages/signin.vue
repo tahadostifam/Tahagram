@@ -119,7 +119,6 @@
 </template>
 
 <script>
-// import Cookies from "js-cookie";
 import configs from '../configs/configs';
 import isValidEmail from '../lib/input_rules';
 import UsersHttp from '../http/users.http';
@@ -208,7 +207,7 @@ export default {
         )
         .then((cb) => {
           this.$store.commit('users/setUserData', cb.data.data)
-          console.log(this.$store.state.users);
+          this.$router.push({ path: this.$i18n.locale + "/" + "chat"})
         })
         .catch((cb) => {
           console.error(cb);

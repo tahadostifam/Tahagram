@@ -120,6 +120,7 @@ export default {
 
                         if (verific_code_expire_date && isVerificCodeExpired(String(verific_code_expire_date))) {
                             req.session.user_id = user._id;
+
                             ResponseUserData(user, req, res, next);
                             // the input_code is valid | success!
                             await User.findOneAndUpdate(
