@@ -116,26 +116,15 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 // import Cookies from "js-cookie";
-import Vue from 'vue';
 import configs from '../configs/configs';
 import isValidEmail from '../lib/input_rules';
-import UsersHttp, { SigninActionError } from '../http/users.http';
-import { HttpCallbackBase } from '../http/base';
+import UsersHttp from '../http/users.http';
 
 const usersHttp = new UsersHttp();
 
-enum EFormError {
-  Success = 'success',
-  Error = 'error',
-}
-interface IFormError {
-  message: string;
-  type: EFormError;
-}
-
-export default Vue.extend({
+export default {
   name: 'SigninPage',
   data() {
     return {
@@ -151,7 +140,7 @@ export default Vue.extend({
   },
   methods: {
     isValidEmail,
-    addFormError(items: Array<IFormError>) {
+    addFormError(items) {
       items.forEach((item) => {
         this.$data.form_errors.push({
           message: item.message,
@@ -175,7 +164,7 @@ export default Vue.extend({
             this.$set(this.$data, 'email_sended', true);
             this.clearFormErrors();
           },
-          (cb: SigninActionError) => {
+          (cb) => {
             if (cb.message === 'verific_code_limit' && cb.limit_end) {
               // State -> Limit of getting verification code
               const limitEndDate = new Date(cb.limit_end).toLocaleString(
@@ -184,7 +173,7 @@ export default Vue.extend({
               this.addFormError([
                 {
                   message: this.$t('verific_code_limit', [limitEndDate]).toString(),
-                  type: EFormError.Error,
+                  type: "error",
                 },
               ]);
             } else {
@@ -192,7 +181,7 @@ export default Vue.extend({
               this.addFormError([
                 {
                   message: this.$t('server_side_error').toString(),
-                  type: EFormError.Error,
+                  type: "error",
                 },
               ]);
             }
@@ -202,7 +191,7 @@ export default Vue.extend({
         this.addFormError([
           {
             message: this.$t('required_parameters_cannot_be_empty').toString(),
-            type: EFormError.Error,
+            type: "error",
           },
         ]);
       }
@@ -218,7 +207,7 @@ export default Vue.extend({
         .then(() => {
           console.log('success signin');
         })
-        .catch((cb: HttpCallbackBase) => {
+        .catch((cb) => {
           this.clearFormErrors();
 
           switch (cb.message) {
@@ -226,7 +215,7 @@ export default Vue.extend({
               this.addFormError([
                 {
                   message: vm.$t('bad_verific_code').toString(),
-                  type: EFormError.Error,
+                  type: "error",
                 },
               ]);
               break;
@@ -234,7 +223,7 @@ export default Vue.extend({
               this.addFormError([
                 {
                   message: vm.$t('verific_code_expired').toString(),
-                  type: EFormError.Error,
+                  type: "error",
                 },
               ]);
               break;
@@ -242,7 +231,7 @@ export default Vue.extend({
               this.addFormError([
                 {
                   message: vm.$t('maximum_try_count').toString(),
-                  type: EFormError.Error,
+                  type: "error",
                 },
               ]);
               break;
@@ -250,7 +239,7 @@ export default Vue.extend({
               this.addFormError([
                 {
                   message: vm.$t('server_side_error').toString(),
-                  type: EFormError.Error,
+                  type: "error",
                 },
               ]);
               break;
@@ -258,5 +247,5 @@ export default Vue.extend({
         });
     },
   },
-});
+};
 </script>

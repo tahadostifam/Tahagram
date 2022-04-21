@@ -1,5 +1,5 @@
-import configs from './configs/configs';
-import I18nMessages from './plugins/i18n';
+import configs from './configs/configs'
+import I18nMessages from './plugins/i18n'
 
 export default {
   head: {
@@ -20,16 +20,19 @@ export default {
 
   css: ['~/assets/dist/styles.css'],
 
-  plugins: [
-    '~/plugins/configs.ts',
-    '~/plugins/directives.ts'
-  ],
+  plugins: ['~/plugins/configs.js', '~/plugins/directives.js'],
 
   components: true,
 
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify'],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
 
-  modules: ['@nuxtjs/pwa', "@nuxtjs/i18n"],
+  modules: ['@nuxtjs/pwa', '@nuxtjs/i18n'],
+
+  pwa: {
+    manifest: {
+      lang: 'en',
+    },
+  },
 
   loading: false,
 
@@ -37,12 +40,6 @@ export default {
     locales: ['en', 'fa'],
     vueI18n: {
       messages: I18nMessages,
-    },
-  },
-
-  pwa: {
-    manifest: {
-      lang: 'en',
     },
   },
 
@@ -66,4 +63,4 @@ export default {
   },
 
   telemetry: false,
-};
+}
