@@ -85,8 +85,8 @@ export default {
         const user: IUser = await User.findOne({
             email: email,
         });
-
-        async function response_bad_verific_code() {
+        
+        async function responseBadVerificCode() {
             await User.findOneAndUpdate(
                 {
                     email: email,
@@ -139,14 +139,14 @@ export default {
                             status_codes.verific_code_expired(req, res, next);
                         }
                     } else {
-                        response_bad_verific_code();
+                        responseBadVerificCode();
                     }
                 } catch {
-                    response_bad_verific_code();
+                    responseBadVerificCode();
                 }
             }
         } else {
-            response_bad_verific_code();
+            responseBadVerificCode();
         }
     },
 
