@@ -9,9 +9,8 @@
 </template>
 
 <script>
-import 'vue-advanced-cropper/dist/style.css';
-import { EmojiPicker } from 'vue-emoji-picker';
-import { Cropper } from 'vue-advanced-cropper';
+// import { EmojiPicker } from 'vue-emoji-picker';
+// import { Cropper } from 'vue-advanced-cropper';
 import parseLastSeen from '../mixins/parse_date';
 // import ViewUserProfile from "../components/view_user_profile.vue";
 
@@ -22,8 +21,8 @@ const usersHttp = new UsersHttp();
 export default {
   name: 'IndexPage',
   components: {
-    EmojiPicker,
-    Cropper,
+    // EmojiPicker,
+    // Cropper,
   },
   mixins: [parseLastSeen],
   data() {
@@ -717,30 +716,18 @@ export default {
 
     //   this.show_view_image_modal(list, true);
     // },
-    show_view_image_modal(list, show_remove_button) { // ANCHOR
+    showViewImageModal(list, showRemoveButton) {
       this.$set(this.$data.view_image, 'list', list);
       this.$set(this.$data.view_image, 'show', true);
       this.$set(
         this.$data.view_image,
         'show_remove_button',
-        show_remove_button
+        showRemoveButton
       );
     },
-    initilizing_socket_again() {
-      return new Promise((resolve) => {
-        setTimeout(async () => {
-          console.error('socket is empty!');
-          await window.initSocket();
-          resolve();
-        }, 1000);
-      });
-    },
-    insert(emoji) {
-      this.send_text_message_input += emoji;
-    },
-    show_contextmenu_of_message(e, message_id) {
+    showMessageContextMenu(e, messageId) {
       e.preventDefault();
-      this.$set(this.$data, 'message_context_menu_message_id', message_id);
+      this.$set(this.$data, 'message_context_menu_message_id', messageId);
       this.$set(this.$data.context_menu_for_messages, 'show', false);
       this.$set(this.$data.context_menu_for_messages, 'x', e.clientX);
       this.$set(this.$data.context_menu_for_messages, 'y', e.clientY);
@@ -751,19 +738,19 @@ export default {
     leaving_chat_button() {
       this.$set(this.$data, 'show_chat_view', false);
     },
-    handle_escape_button() {
+    handleKeyButtons() {
       const vm = this;
       document.addEventListener('keydown', (e) => {
-        if (e.code == 'Escape') {
-          if (vm.$data.show_nav_drawer == true) {
+        if (e.code === 'Escape') {
+          if (vm.$data.show_nav_drawer === true) {
             return vm.$set(vm.$data, 'show_nav_drawer', false);
-          } else if (vm.$data.view_image.show == true) {
+          } else if (vm.$data.view_image.show === true) {
             return vm.$set(vm.$data.view_image, 'show', false);
-          } else if (vm.$data.settings_dialog_active_section != 'home') {
+          } else if (vm.$data.settings_dialog_active_section !== 'home') {
             return vm.$set(vm.$data, 'settings_dialog_active_section', 'home');
-          } else if (vm.$data.show_settings_dialog == true) {
+          } else if (vm.$data.show_settings_dialog === true) {
             return vm.$set(vm.$data, 'show_settings_dialog', false);
-          } else if (vm.$data.show_chat_view == true) {
+          } else if (vm.$data.show_chat_view === true) {
             vm.$set(vm.$data.active_chat, 'chat_id', null);
             vm.$set(vm.$data.active_chat, 'username', null);
             vm.$set(vm.$data.active_chat, 'full_name', null);
@@ -774,13 +761,13 @@ export default {
         }
       });
     },
-    handle_upload_profile_photo(e) {
+    uploadProfilePhoto(e) {
       const file = e.files[0];
-      const local_path = URL.createObjectURL(file);
-      this.$set(this.$data.crop_profile_photo, 'src', local_path);
+      const localPath = URL.createObjectURL(file);
+      this.$set(this.$data.crop_profile_photo, 'src', localPath);
       this.$set(this.$data.crop_profile_photo, 'show', true);
     },
-    upload_croped_profile_photo() {
+    uploadCroppedProfilePhoto() {
       this.$set(this.$data.crop_profile_photo, 'button_loading_state', true);
       this.$set(this.$data.crop_profile_photo, 'show', false);
 
@@ -789,46 +776,14 @@ export default {
         const croppedImage = canvas.toDataURL('image/png');
         const imageFile = window.dataURLtoFile(croppedImage, 'profile_photo');
         if (imageFile) {
-          if (vm.username && vm.$store.state.auth.auth.auth_token) {
-            const request_body = new FormData();
-            request_body.append('photo', imageFile);
+          if (this.username && this.$store.state.auth.auth.auth_token) {
+            const requestBody = new FormData();
+            requestBody.append('photo', imageFile);
 
             this.$set(this.$data, 'photo_uploading_state', true);
 
-            this.$axios
-              .$post('/api/profile_photos/upload_photo', request_body, {
-                headers: {
-                  username: vm.username,
-                  auth_token: vm.$store.state.auth.auth.auth_token,
-                },
-              })
-              .then((response) => {
-                if (response.message == 'profile photo uploaded') {
-                  this.$store.commit(
-                    'auth/addProfilePhoto',
-                    response.profile_photo_filename
-                  );
-                  this.$set(
-                    this.$data,
-                    'user_default_avatar',
-                    this.gimme_profile_photo_link_addr({
-                      filename: response.profile_photo_filename,
-                    })
-                  );
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-                this.error_occurred();
-              })
-              .finally(() => {
-                this.$set(
-                  this.$data.crop_profile_photo,
-                  'button_loading_state',
-                  false
-                );
-                this.$set(this.$data, 'photo_uploading_state', false);
-              });
+            // TODO
+
           } else {
             console.log(
               'username or auth_token not found on sending photo as message'
@@ -842,57 +797,60 @@ export default {
           'uploading profile photo failed! :: cropped image canvas is empty'
         );
     },
-    watch_profile_photos_change() {
-      if (this.$store.state.auth.user_info) {
+    watchProfilePhotoChanges() {
+      // TODO
+      // if (this.$store.state.auth.user_info) {
+      //   this.$store.watch(
+      //     (state) => state.auth.user_info,
+      //     (value) => {
+      //       if (
+      //         value &&
+      //         value.profile_photos &&
+      //         value.profile_photos.length > 0
+      //       ) {
+      //         this.$set(
+      //           this.$data,
+      //           'user_default_avatar',
+      //           this.gimme_profile_photo_link_addr(value.profile_photos[0])
+      //         );
+      //       }
+      //     }
+      //   );
+      // }
+    },
+    watchUserInfoChanges() {
+      if (this.$store.state.users.userInfo) {
         this.$store.watch(
-          (state) => state.auth.user_info,
+          (state) => state.users.userInfo,
           (value) => {
-            if (
-              value &&
-              value.profile_photos &&
-              value.profile_photos.length > 0
-            ) {
-              this.$set(
-                this.$data,
-                'user_default_avatar',
-                this.gimme_profile_photo_link_addr(value.profile_photos[0])
-              );
-            }
+            // TODO
+            // try {
+            //   if (value && value[0].filename) {
+            //     this.$set(this.$data, 'user_info', value);
+            //   }
+            // } catch {}
           }
         );
       }
     },
-    watch_user_info_changes() {
-      if (this.$store.state.auth.user_info) {
-        this.$store.watch(
-          (state) => state.auth.user_info,
-          (value) => {
-            try {
-              if (value && value[0].filename) {
-                this.$set(this.$data, 'user_info', value);
-              }
-            } catch {}
-          }
-        );
-      }
-    },
-    crop_profile_photo_onchange({ coordinates, canvas }) {
+    cropProfilePhotoOnChange({ coordinates, canvas }) {
       this.$set(this.$data.crop_profile_photo, 'canvas', canvas);
     },
-    crop_media_to_send_onchange({ coordinates, canvas }) {
+    cropPhotoMessageOnChange({ coordinates, canvas }) {
       this.$set(this.$data.crop_media_to_send, 'canvas', canvas);
     },
-    delete_message() {
-      const message_id = this.$data.message_context_menu_message_id;
-      const chat_id = this.$data.active_chat.chat_id;
-      if (message_id && chat_id) {
-        ws.send(
-          JSON.stringify({
-            event: 'delete_message',
-            chat_id,
-            message_id,
-          })
-        );
+    deleteMessage() {
+      const messageId = this.$data.message_context_menu_message_id;
+      const chatId = this.$data.active_chat.chat_id;
+      if (messageId && chatId) {
+        // TODO
+        // ws.send(
+        //   JSON.stringify({
+        //     event: 'delete_message',
+        //     chat_id,
+        //     message_id,
+        //   })
+        // );
       }
     },
     logout() {
