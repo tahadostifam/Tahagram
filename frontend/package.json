@@ -15,6 +15,7 @@
   "dependencies": {
     "@nuxtjs/i18n": "^7.2.1",
     "@nuxtjs/pwa": "^3.3.5",
+    "@types/source-map": "^0.5.2",
     "axios": "^0.26.1",
     "core-js": "^3.19.3",
     "nuxt": "^2.15.8",
