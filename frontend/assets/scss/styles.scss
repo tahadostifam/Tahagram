@@ -479,12 +479,13 @@ body,
 body .v-application .v-navigation-drawer {
   z-index: 90;
   background-color: #181818;
-  #user_info_at_nav_drawer {
+  #avatar_at_nav_drawer {
     position: absolute;
     width: 100%;
     left: 0;
     right: 0;
     top: 0;
+    background: vars.$theme_color;
   }
   .v-item-group {
     padding-top: 100px;

@@ -7,7 +7,7 @@
   >
     <v-list nav>
       <v-list-item
-        id="user_info_at_nav_drawer"
+        id="avatar_at_nav_drawer"
         class="py-5 px-4 bg-theme rounded-0"
       >
         <div
@@ -23,7 +23,7 @@
           />
         </div>
 
-        <v-list-item-title class="ml-3">{{
+        <v-list-item-title class="ml-3" style="font-weight: 600">{{
           userName
         }}</v-list-item-title>
       </v-list-item>
