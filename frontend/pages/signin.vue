@@ -3,7 +3,7 @@
     <div id="signin_form">
       <img id="logo" src="~/assets/images/logo.png" alt="Logo" />
 
-      <div v-if="!email_sended" id="signin_form_content">
+      <div v-if="!emailSended" id="signin_form_content">
         <p class="text-center mb-10" dir="auto">
           {{ $t('signin_intro_text') }}
         </p>
@@ -27,12 +27,12 @@
         ></v-checkbox>
 
         <div
-          v-if="form_errors"
-          class="form_errors mb-3"
+          v-if="formErrors"
+          class="formErrors mb-3"
           :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
         >
           <p
-            v-for="(item, index) in form_errors"
+            v-for="(item, index) in formErrors"
             :key="index"
             class="item"
             :class="{
@@ -85,12 +85,12 @@
         ></v-text-field>
 
         <div
-          v-if="form_errors"
-          class="form_errors mb-5 mt-3"
+          v-if="formErrors"
+          class="formErrors mb-5 mt-3"
           :dir="$i18n.locale == 'fa' ? 'rtl' : 'ltr'"
         >
           <p
-            v-for="(item, index) in form_errors"
+            v-for="(item, index) in formErrors"
             :key="index"
             class="item"
             :class="{
@@ -132,10 +132,10 @@ export default {
       themeColor: configs.themeColor,
       email: 'mr.tahadostifam@gmail.com',
       remember_me: true,
-      form_errors: [],
+      formErrors: [],
       submit_button_loading_state: false,
       submit_verific_code_button_loading_state: false,
-      email_sended: false,
+      emailSended: false,
       verific_code: '',
     };
   },
@@ -143,14 +143,14 @@ export default {
     isValidEmail,
     addFormError(items) {
       items.forEach((item) => {
-        this.$data.form_errors.push({
+        this.$data.formErrors.push({
           message: item.message,
           type: item.type,
         });
       });
     },
     clearFormErrors() {
-      this.$set(this.$data, 'form_errors', []);
+      this.$set(this.$data, 'formErrors', []);
     },
     submitFirstForm() {
       this.clearFormErrors();
@@ -162,7 +162,7 @@ export default {
         usersHttp.SigninAction(email).then(
           () => {
             // State -> Success
-            this.$set(this.$data, 'email_sended', true);
+            this.$set(this.$data, 'emailSended', true);
             this.clearFormErrors();
           },
           (cb) => {

@@ -1,28 +1,23 @@
-.custom_input {
-  width: 100%;
-  height: 40px;
-  background-color: vars.$color_4;
-  outline: none;
-  border-radius: 50px;
-  color: #fff;
-  padding: 0 12px;
-  transition: border-color 0.3s ease;
-  border: 1px solid vars.$color_5;
-
-  &:hover {
-    border-color: vars.$color_6;
-  }
-
-  &:focus {
-    border: 2px solid vars.$theme_color;
+body,
+.v-application {
+  .v-input {
+    &.rounded-text-field {
+      .v-input__slot {
+        background: transparent !important;
+        border-radius: 19px !important;
+      }
+    }
+    &.v-text-field .v-input__control .v-input__slot:before {
+      border-color: #ffffff63;
+    }
+    &.v-text-field:not(.v-input--has-state):hover
+      > .v-input__control
+      > .v-input__slot:before {
+      border-color: #ffffff63;
+    }
   }
 }
 
-#search_input_clear_button {
-  position: absolute;
-  right: 18px;
-  top: 17px;
-  .v-icon {
-    color: vars.$color_6;
-  }
+.solid_input{
+  // ANCHOR
 }

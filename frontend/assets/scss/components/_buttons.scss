@@ -1,0 +1,9 @@
+body,
+.v-application {
+  .v-btn {
+    letter-spacing: normal;
+    &.rounded-lg {
+      border-radius: 19px !important;
+    }
+  }
+}

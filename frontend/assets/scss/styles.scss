@@ -1,6 +1,9 @@
 @use 'variables' as vars;
+@import 'components/public';
 @import 'components/forms';
-
+@import 'components/inputs';
+@import 'components/buttons';
+@import 'components/containers';
 
 @font-face {
   font-family: 'CherryBomb';
@@ -15,70 +18,4 @@
 @font-face {
   font-family: 'Vazir';
   src: url('../fonts/Vazir/Vazir.ttf');
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: vars.$color_3;
-  border-radius: 50px;
-}
-
-html {
-  overflow-y: hidden !important;
-}
-
-body,
-.v-application {
-  a {
-    color: vars.$theme_color;
-  }
-  overflow-x: hidden;
-  &,
-  .text-h6,
-  .v-dialog .text-h6 {
-    font-family: 'OpenSans', 'Vazir' !important;
-  }
-  .v-input {
-    &.rounded-text-field{
-      .v-input__slot{
-        background: transparent !important;
-        border-radius: 19px !important;
-      }
-    }
-    &.v-text-field .v-input__control .v-input__slot:before {
-      border-color: #ffffff63;
-    }
-    &.v-text-field:not(.v-input--has-state):hover
-      > .v-input__control
-      > .v-input__slot:before {
-      border-color: #ffffff63;
-    }
-  }
-  .v-dialog {
-    background-color: vars.$color_1;
-  }
-  .v-btn {
-    letter-spacing: normal;
-    &.rounded-lg{
-      border-radius: 19px !important;
-    }
-  }
-  .v-snack[dir='rtl'] {
-    .v-snack__wrapper {
-      padding-left: 9px;
-    }
-    .v-snack__content {
-      padding-left: 0;
-    }
-  }
 }

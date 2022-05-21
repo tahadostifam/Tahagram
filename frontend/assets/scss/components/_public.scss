@@ -1,0 +1,40 @@
+@use '../variables' as vars;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: vars.$color_3;
+  border-radius: 50px;
+}
+
+html {
+  overflow-y: hidden !important;
+}
+
+body,
+.v-application {
+  a {
+    color: vars.$theme_color;
+  }
+  overflow-x: hidden;
+  &,
+  span,
+  h1,
+  h2,
+  h3,
+  strong,
+  i,
+  b,
+  div {
+    font-family: 'OpenSans', 'Vazir' !important;
+  }
+}

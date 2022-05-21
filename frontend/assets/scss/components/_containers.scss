@@ -1,0 +1,27 @@
+#main_container {
+  width: 100%;
+  height: 100vh;
+
+  --chats_list_side_width: 27vw;
+
+  @media (max-width: 1250px) {
+    --chats_list_side_width: 33vw;
+  }
+
+  #chats_list_side {
+    display: block;
+    float: left;
+    width: var(--chats_list_side_width);
+    height: 100vh;
+
+    background-color: vars.$color_1;
+  }
+
+  #chat_side {
+    width: calc(100% - var(--chats_list_side_width));
+    height: 100vh;
+    display: block;
+    float: right;
+    border-left: 1px solid vars.$border_colors;
+  }
+}
