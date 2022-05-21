@@ -9,7 +9,7 @@ export default class UsersHttp {
   SigninAction(email) {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${configs.http_url}/users/signin`, {
+        .post(`${configs.apiUrl}/users/signin`, {
           email,
         })
         .then((cb) => {
@@ -30,7 +30,7 @@ export default class UsersHttp {
   SubmitValidateCodeForm(email, verificCode) {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${configs.http_url}/users/signin_with_code`, {
+        .post(`${configs.apiUrl}/users/signin_with_code`, {
           email,
           verific_code: verificCode,
         },)
@@ -60,7 +60,7 @@ export default class UsersHttp {
   AuthenticationAction() {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${configs.http_url}/users/authentication`, {})
+        .post(`${configs.apiUrl}/users/authentication`, {})
         .then((cb) => {
           if (cb.status === 200 && cb.data.message === 'success') {
             resolve(cb.data.data)

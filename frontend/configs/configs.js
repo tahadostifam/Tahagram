@@ -1,8 +1,8 @@
 export default {
-  theme_color: "#674FFF",
-  socket_url: "ws://127.0.0.1:2345",
-  http_url: "http://127.0.0.1:8000/api",
-  avatar_random_colors: [
+  themeColor: "#674FFF",
+  socketUrl: "ws://127.0.0.1:2345",
+  apiUrl: "http://127.0.0.1:8000/api",
+  avatarRandomColors: [
     ["pink"],
     ["deep-purple", "darken-1"],
     ["red", "darken-4"],

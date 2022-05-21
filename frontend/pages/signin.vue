@@ -16,14 +16,14 @@
           :placeholder="$t('email')"
           outlined
           filled
-          :color="$configs.theme_color"
+          :color="$configs.themeColor"
         ></v-text-field>
 
         <v-checkbox
           v-model="remember_me"
           class="mt-2 pa-0"
           :label="$t('remember_me')"
-          :color="$configs.theme_color"
+          :color="$configs.themeColor"
         ></v-checkbox>
 
         <div
@@ -53,7 +53,7 @@
             class="rounded-lg"
             style="width: 100%"
             :loading="submit_button_loading_state"
-            :color="$configs.theme_color"
+            :color="$configs.themeColor"
             depressed
             @click="submitFirstForm"
             >{{ $t('submit') }}</v-btn
@@ -78,7 +78,7 @@
           outlined
           hide-details
           filled
-          :color="$configs.theme_color"
+          :color="$configs.themeColor"
           :maxlength=6
           autocomplete="false"
           required
@@ -108,7 +108,7 @@
           class="rounded-lg"
           style="width: 100%"
           :loading="submit_verific_code_button_loading_state"
-          :color="$configs.theme_color"
+          :color="$configs.themeColor"
           depressed
           @click="submitSecondForm"
           >{{ $t('submit') }}</v-btn
@@ -129,7 +129,7 @@ export default {
   name: 'SigninPage',
   data() {
     return {
-      theme_color: configs.theme_color,
+      themeColor: configs.themeColor,
       email: 'mr.tahadostifam@gmail.com',
       remember_me: true,
       form_errors: [],

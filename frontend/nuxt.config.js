@@ -49,7 +49,7 @@ export default {
       dark: true,
       themes: {
         dark: {
-          primary: configs.theme_color,
+          primary: configs.themeColor,
         },
       },
     },
