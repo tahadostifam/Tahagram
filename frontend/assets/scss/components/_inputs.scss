@@ -18,6 +18,31 @@ body,
   }
 }
 
-.solid_input{
-  // ANCHOR
+.solid_input {
+  position: relative;
+  background-color: vars.$color_7;
+  padding: 0 10px;
+  border-radius: 50px;
+  height: 45px;
+  input {
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    outline: none;
+    padding-right: 10px;
+    padding-left: 35px;
+    caret-color: vars.$theme_color;
+  }
+  border: 1px solid vars.$theme_color;
+  input:focus > &{
+    border-width: 2px;
+  }
+  .icon {
+    position: absolute;
+    left: 13px;
+    top: 10px;
+    i {
+      color: #aaaaaa;
+    }
+  }
 }
